@@ -1,0 +1,158 @@
+/* Mobile Responsiveness Overrides for DekhaHok */
+
+@media (max-width: 768px) {
+    /* Navigation */
+    .mobile-menu {
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+    
+    .mobile-menu.hidden {
+        display: none;
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    .mobile-menu.active {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Hero Section */
+    section.relative.min-h-screen {
+        padding-top: 7rem !important; /* Increased again to be absolutely sure */
+        min-height: auto !important;
+        padding-bottom: 3rem !important;
+    }
+
+    /* Target the "Now in Dhaka City" badge container */
+    .inline-flex.items-center.space-x-2.bg-white\/80 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    h1 {
+        font-size: 2.8rem !important;
+        line-height: 1.1 !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    h1 .pb-2, h1 .pb-4 {
+        padding-bottom: 0 !important;
+    }
+
+    #animation-stage {
+        height: 280px !important;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    #central-venue .bg-white {
+        width: 220px !important;
+        padding: 1rem !important;
+    }
+
+    /* Booking Form - Group Cards */
+    .group-size-btn {
+        padding: 1.5rem !important;
+        text-align: left !important;
+        align-items: flex-start !important;
+    }
+
+    .group-size-btn h3 {
+        font-size: 1.25rem !important;
+    }
+
+    .group-size-btn p {
+        font-size: 0.8rem !important;
+    }
+
+    .premium-card .text-3xl {
+        font-size: 1.75rem !important;
+    }
+
+    .glass-card {
+        padding: 1.5rem 1rem !important;
+    }
+
+    /* Date Selection Grid */
+    .date-btn {
+        padding: 0.75rem 0.5rem !important;
+    }
+
+    .date-btn .text-lg {
+        font-size: 1rem !important;
+    }
+
+    /* Track Booking */
+    #trackingInput {
+        width: 100%;
+    }
+    
+    #track .flex.gap-3 {
+        flex-direction: column;
+    }
+    
+    #track button {
+        width: 100%;
+    }
+
+    /* Success Modal */
+    #modalContent {
+        padding: 1.5rem !important;
+        margin: 1rem;
+    }
+
+    #modalTrackingId {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.75rem !important;
+    }
+
+    /* Pricing Card Improvement */
+    #reservationFee {
+        font-size: 2rem !important;
+    }
+
+    .premium-card .bg-white {
+        padding: 1.5rem !important;
+    }
+    
+    .venue-btn {
+        padding: 1rem !important;
+    }
+    
+    .venue-btn span {
+        font-size: 1rem !important;
+    }
+
+    .max-w-4xl, .max-w-7xl {
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+    }
+}
+
+/* Modal positioning on small screens */
+@media (max-width: 640px) {
+    #successModal {
+        align-items: flex-start;
+        padding-top: 10vh;
+        overflow-y: auto;
+    }
+}
+
+/* Fix for iOS zoom on focus */
+input, textarea, select {
+    font-size: 16px !important;
+}
+
+/* Improve tap targets */
+button, a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

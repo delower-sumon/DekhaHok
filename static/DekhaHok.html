@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DekhaHok</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23ea580c'/><stop offset='1' stop-color='%23c2410c'/></linearGradient></defs><rect width='24' height='24' rx='5' fill='url(%23g)'/><path d='M19.5 11.5c0 1.3-.3 2.5-.9 3.5l1.4 4-4-1.4c-1 .6-2.2.9-3.5.9-4.1 0-7.5-3.4-7.5-7.5S8.4 4 12.5 4s7.5 3.4 7.5 7.5z' fill='%23fff'/></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/mobile.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google Translate Script (Hidden) -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'bn',
+                includedLanguages: 'en',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <style>
+        /* Hide the Google Translate bar and widget */
+        .goog-te-banner-frame.skiptranslate,
+        .goog-te-gadget {
+            display: none !important;
+        }
+
+        body {
+            top: 0px !important;
+        }
+
+        .goog-tooltip {
+            display: none !important;
+        }
+
+        .goog-tooltip:hover {
+            display: none !important;
+        }
+
+        .goog-text-highlight {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-card border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="flex items-center space-x-2 hover:opacity-90 transition">
+                    <div
+                        class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-2xl font-bold gradient-text">DekhaHok</span>
+                    <span
+                        class="text-xs text-orange-600 font-medium bg-orange-100 px-2 py-1 rounded-full ml-2">Beta</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#book" class="text-gray-600 hover:text-orange-600 transition">বুক করুন</a>
+                    <a href="#how-it-works" class="text-gray-600 hover:text-orange-600 transition">কিভাবে কাজ করে</a>
+                    <a href="#track" class="text-gray-600 hover:text-orange-600 transition">বুকিং ট্র্যাক করুন</a>
+                    <a href="#safety" class="text-gray-600 hover:text-orange-600 transition">নিরাপত্তা</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="scrollToBook()"
+                        class="hidden sm:flex btn-primary text-white px-6 py-2 rounded-full font-medium text-sm">
+                        দেখা করুন
+                    </button>
+                    <button id="langBtn" onclick="toggleTranslation()" title="Translate to English"
+                        class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-xs font-bold text-gray-500 hover:border-orange-400 hover:text-orange-600 transition-colors">
+                        En
+                    </button>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn"
+                        class="md:hidden p-2 text-gray-600 hover:text-orange-600 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu"
+            class="hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-orange-100 p-6 flex-col space-y-4 shadow-xl z-40 mobile-menu">
+            <a href="#book" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span>বুক করুন</span>
+            </a>
+            <a href="#how-it-works" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                <span>কিভাবে কাজ করে</span>
+            </a>
+            <a href="#track" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                <span>বুকিং ট্র্যাক করুন</span>
+            </a>
+            <a href="#safety" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                <i data-lucide="shield" class="w-5 h-5"></i>
+                <span>নিরাপত্তা</span>
+            </a>
+            <button onclick="scrollToBook(); toggleMobileMenu();"
+                class="btn-primary text-white w-full py-3 rounded-xl font-bold flex items-center justify-center space-x-2">
+                <span>দেখা করুন</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Animation -->
+    <section class="relative min-h-screen flex items-center justify-center pt-6 overflow-hidden pattern-bg">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+                class="absolute top-20 left-10 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
+            </div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-red-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"
+                style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <!-- Left Content -->
+            <div class="text-center lg:text-left space-y-1 mt-1">
+                <div
+                    class="inline-flex items-center space-x-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-orange-200">
+                    <span class="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span class="text-sm font-medium text-orange-800">Now in Dhaka City</span>
+                </div>
+
+                <h1 class="text-5xl lg:text-7xl font-bold leading-[1.3] overflow-visible">
+                    <!-- এখানেও gradient-text এবং inline-block যোগ করা হয়েছে -->
+                    <span class="gradient-text inline-block pb-2">দেখা হোক,</span>
+
+                    <br> <!-- লাইন ব্রেকের জন্য -->
+
+                    <span class="gradient-text inline-block pb-4 leading-normal">হোক বন্ধুত্ব..</span>
+                </h1>
+
+                <p class="text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-loose mt-0">
+                    ঢাকার জনপ্রিয় পাবলিক প্লেস বা রেস্তোরাঁয় ২ বা ৫ জনের গ্রুপে যোগ দিন দারুণ সব আড্ডায়। কোনো অ্যাপ বা
+                    সোয়াইপিং নয়—সাক্ষাতে গড়ে তুলুন প্রাণবন্ত বন্ধুত্ব।
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
+                    <button onclick="scrollToBook()"
+                        class="btn-primary text-white px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center space-x-2 group">
+                        <span>সিট বুক করুন</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <button onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})"
+                        class="bg-white text-orange-600 border-2 border-orange-200 px-8 py-4 rounded-full font-semibold text-lg hover:border-orange-400 transition">
+                        কীভাবে কাজ করে
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-center lg:justify-start space-x-3 pt-3 text-sm text-gray-500">
+                    <div class="flex -space-x-2">
+                        <img src="http://static.photos/people/200x200/1"
+                            class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+                        <img src="http://static.photos/people/200x200/2"
+                            class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+                        <img src="http://static.photos/people/200x200/3"
+                            class="w-8 h-8 rounded-full border-2 border-white" alt="User">
+                    </div>
+                    <span>৫০০+ ঢাকাইয়া আমাদের সাথে যোগ দিয়েছেন</span>
+                </div>
+            </div>
+
+            <!-- Right Content - Animation Container -->
+            <div class="relative h-[350px] lg:h-[500px] flex items-center justify-center">
+                <!-- Animation Stage -->
+                <div id="animation-stage" class="relative w-full h-full">
+                    <div class="absolute inset-0 opacity-10"
+                        style="background-image: radial-gradient(#ea580c 1px, transparent 1px); background-size: 40px 40px;">
+                    </div>
+
+                    <svg class="absolute inset-0 w-full h-full" id="connection-svg">
+                        <defs>
+                            <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#fdba74;stop-opacity:0" />
+                                <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path id="path-1" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
+                            stroke-dasharray="1000" stroke-dashoffset="1000" class="path-line" />
+                        <path id="path-2" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
+                            stroke-dasharray="1000" stroke-dashoffset="1000" class="path-line" />
+                        <path id="path-3" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
+                            stroke-dasharray="1000" stroke-dashoffset="1000" class="path-line" />
+                    </svg>
+
+                    <div id="node-1"
+                        class="absolute w-8 h-8 bg-blue-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                    </div>
+                    <div id="node-2"
+                        class="absolute w-8 h-8 bg-pink-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                    </div>
+                    <div id="node-3"
+                        class="absolute w-8 h-8 bg-green-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                    </div>
+
+                    <div id="central-venue"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 opacity-0 scale-50 transition-all duration-700">
+                        <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-orange-400 text-center w-56">
+                            <div
+                                class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i data-lucide="map-pin" class="w-6 h-6 text-orange-600"></i>
+                            </div>
+                            <p class="text-xs uppercase tracking-widest text-orange-600 font-bold">Confirmed Meetup</p>
+                            <p class="font-bold text-gray-800 text-lg">Meetup Point</p>
+                            <p class="text-xs text-gray-500">Tomorrow, 7:00 PM</p>
+                            <div class="flex justify-center -space-x-2 mt-4">
+                                <img src="http://static.photos/people/200x200/1" alt="User 1"
+                                    class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover" />
+                                <img src="http://static.photos/people/200x200/2" alt="User 2"
+                                    class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover" />
+                                <img src="http://static.photos/people/200x200/3" alt="User 3"
+                                    class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-6 h-6 text-orange-400"></i>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="book" class="py-24 bg-white relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-0 left-0 w-full h-full"
+                style="background-image: radial-gradient(circle at 2px 2px, rgba(234, 88, 12, 0.2) 1px, transparent 0); background-size: 32px 32px;">
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 scroll-reveal">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">সিট বুক করুন</h2>
+                <p class="text-xl text-gray-600">নতুন কারো সাথে দেখা করতে চান? প্রয়োজনীয় তথ্য দিয়ে সহায়তা করুন। </p>
+            </div>
+
+            <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-12 scroll-reveal">
+                <form id="bookingForm" class="space-y-8" onsubmit="handleBooking(event)">
+                    <!-- Group Size Selection -->
+                    <div>
+                        <label class="block text-xl font-bold text-gray-900 mb-6 text-center">আপনার কাঙ্ক্ষিত গ্রুপ
+                            নির্বাচন করুন</label>
+                        <div class="grid grid-cols-2 gap-6 max-w-xl mx-auto">
+                            <!-- 2 People Card -->
+                            <button type="button" onclick="selectGroupSize(2)"
+                                class="group-size-btn active premium-card p-6 flex flex-col items-center text-center"
+                                data-size="2">
+                                <div class="absolute top-4 left-4">
+                                    <div class="check-mark opacity-0 transition-opacity">
+                                        <i data-lucide="check" class="w-3 h-3"></i>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-6">
+                                    <i data-lucide="users" class="w-6 h-6 text-orange-600"></i>
+                                </div>
+                                <h3 class="text-2xl font-black text-gray-900 mb-1">1 - 1</h3>
+                                <div class="text-sm font-semibold text-gray-500 mb-4">২ জন</div>
+                                <p class="text-gray-400 text-xs mb-8 leading-relaxed px-2">গভীর আলাপ এবং একান্তে দারুণ
+                                    সময় কাটানোর জন্য উপযুক্ত।</p>
+                                <div class="mt-auto pt-4 border-t border-gray-100 w-full">
+                                    <div class="flex items-baseline justify-center gap-1">
+                                        <span class="text-3xl font-black text-gray-900">৳৪৯৯</span>
+                                        <span
+                                            class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">/person</span>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <!-- 5 People Card -->
+                            <button type="button" onclick="selectGroupSize(5)"
+                                class="group-size-btn premium-card p-6 flex flex-col items-center text-center"
+                                data-size="5">
+                                <div class="absolute top-4 left-4">
+                                    <div class="check-mark opacity-0 transition-opacity">
+                                        <i data-lucide="check" class="w-3 h-3"></i>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-6">
+                                    <i data-lucide="users-2" class="w-6 h-6 text-orange-600"></i>
+                                </div>
+                                <h3 class="text-2xl font-black text-gray-900 mb-1">জমজমাট আড্ডা</h3>
+                                <div class="text-sm font-semibold text-gray-500 mb-4">৫ জন</div>
+                                <p class="text-gray-400 text-xs mb-8 leading-relaxed px-2">প্রাণবন্ত আলোচনা এবং
+                                    বৈচিত্র্যময় দৃষ্টিভঙ্গির ছোট একটি গ্রুপ সেটআপ।</p>
+                                <div class="mt-auto pt-4 border-t border-gray-100 w-full">
+                                    <div class="flex items-baseline justify-center gap-1">
+                                        <span class="text-3xl font-black text-gray-900">৳২৪৯</span>
+                                        <span
+                                            class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">/person</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <input type="hidden" id="groupSize" value="2">
+                    </div>
+
+                    <!-- Personal Details -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">আপনার নাম</label>
+                            <input type="text" id="fullName" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
+                                placeholder="Your name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ইমেইল</label>
+                            <input type="email" id="email"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
+                                placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ফোন <span
+                                    class="text-red-500">*</span></label>
+                            <input type="tel" id="phone" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
+                                placeholder="01XXXXXXXXX">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">বয়স</label>
+                            <input type="number" id="age" min="5" max="80"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
+                                placeholder="25">
+                            <p id="ageNote" class="text-sm text-red-500 mt-2 font-medium hidden">
+                                <i data-lucide="alert-circle" class="w-4 h-4 inline-block mr-1"></i>
+                                ১৮ বছরের নিচে আবেদন গ্রহণ করা হয় না।
+                            </p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">আপনার বর্তমান এলাকা
+                                (Dhaka)</label>
+                            <input type="text" id="currentLocation" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
+                                placeholder="e.g. Dhanmondi, Mirpur">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">পছন্দের এলাকা (Meetup
+                                point)</label>
+                            <select id="preferredLocation" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition bg-white cursor-pointer">
+                                <option value="" disabled selected>নির্বাচন করুন...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-900 mb-4">আপনার পছন্দ সম্পর্কে কিছু
+                            বলুন</label>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">কেমন আড্ডা আপনি পছন্দ
+                                    করেন?</label>
+                                <textarea id="conversationStyle" required rows="3"
+                                    class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition resize-none"
+                                    placeholder="আমি ফিলোসফি, ট্রাভেল স্টোরি এবং এন্টারপ্রেনারশিপ নিয়ে কথা বলতে ভালোবাসি।..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">আপনি যার সাথে দেখা করতে চান
+                                    তাদের সম্পর্কে কিছু বলুন?</label>
+                                <textarea id="preferredPeople" rows="3"
+                                    class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition resize-none"
+                                    placeholder="খোলা মনের মানুষ যারা গভীর আড্ডা আর সুস্বাদু খাবার পছন্দ করেন।.."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-lg font-medium text-gray-700 mb-4">জায়গা নির্ধারন করুণ</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-3">
+                                        <button type="button" onclick="selectVenue('public_place', this)"
+                                            class="venue-btn active btn-toggle w-full flex flex-col items-center justify-center p-6 rounded-2xl">
+                                            <i data-lucide="map" class="w-6 h-6 mb-2"></i>
+                                            <span class="font-semibold text-lg">পাবলিক প্লেস</span>
+                                            <p class="text-xs mt-2 opacity-60">খোলামেলা এবং নিরাপদ জায়গা</p>
+                                        </button>
+                                        <p id="publicNote" class="text-[11px] text-orange-600 font-medium">
+                                            <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+                                            শুধুমাত্র নিরাপদ কিছু বাছাইক্রিত পাবলিক প্লেসের ক্ষেত্রে প্রযোজ্য।
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <button type="button" onclick="selectVenue('restaurant', this)"
+                                            class="venue-btn btn-toggle w-full flex flex-col items-center justify-center p-6 rounded-2xl">
+                                            <i data-lucide="utensils" class="w-6 h-6 mb-2"></i>
+                                            <span class="font-semibold text-lg">রেস্তোরাঁ</span>
+                                            <p class="text-xs mt-2 opacity-60">মনোরম পরিবেশে খাবারের সাথে আড্ডা</p>
+                                        </button>
+                                        <p id="restaurantNote" class="text-[11px] text-orange-600 font-medium hidden">
+                                            <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+                                            অবশ্যই নিজস্ব বিল দেয়ার সক্ষমতা থাকতে হবে।
+                                        </p>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="venueType" name="venueType" value="public_place">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date Selection -->
+                    <!-- Date Selection Container -->
+                    <div class="max-w-md mx-auto p-6 bg-white rounded-3xl shadow-sm border border-gray-100">
+                        <label class="block text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <span class="w-2 h-6 bg-orange-500 rounded-full"></span>
+                            তারিখ ও সময় নির্বাচন করুন
+                        </label>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Friday -->
+                            <div class="space-y-4">
+                                <div class="text-center py-2 bg-gray-50 rounded-lg">
+                                    <div class="text-lg font-semibold text-gray-500 uppercase tracking-wider">শুক্রবার
+                                        <span id="fridayDateLabel"
+                                            class="text-sm block text-gray-400 normal-case mt-1"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-3">
+                                    <button type="button" id="slot-fri-5pm" data-time="17:00" onclick="selectDate(this)"
+                                        class="date-btn group p-4 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-700 transition-all duration-300 shadow-md shadow-orange-100 ring-2 ring-orange-100 ring-offset-2">
+                                        <div class="font-bold text-lg">05:00 PM</div>
+                                    </button>
+
+                                    <button type="button" id="slot-fri-7pm" data-time="19:00" onclick="selectDate(this)"
+                                        class="date-btn group p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-600 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600 transition-all duration-300">
+                                        <div class="font-bold text-lg">07:00 PM</div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Saturday -->
+                            <div class="space-y-4">
+                                <div class="text-center py-2 bg-gray-50 rounded-lg">
+                                    <div class="text-lg font-semibold text-gray-500 uppercase tracking-wider">শনিবার
+                                        <span id="saturdayDateLabel"
+                                            class="text-sm block text-gray-400 normal-case mt-1"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-3">
+                                    <button type="button" id="slot-sat-5pm" data-time="17:00" onclick="selectDate(this)"
+                                        class="date-btn group p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-600 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600 transition-all duration-300">
+                                        <div class="font-bold text-lg">05:00 PM</div>
+                                    </button>
+
+                                    <button type="button" id="slot-sat-7pm" data-time="19:00" onclick="selectDate(this)"
+                                        class="date-btn group p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-600 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600 transition-all duration-300">
+                                        <div class="font-bold text-lg">07:00 PM</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Pricing Section Redesign -->
+                    <div class="premium-card p-1 bg-gradient-to-br from-orange-400 to-red-600">
+                        <div class="bg-white rounded-[22px] p-8 md:p-10">
+                            <div
+                                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Reservation</h3>
+                                    <p class="text-gray-500">Premium experience with curated matching</p>
+                                </div>
+                                <div class="text-left md:text-right">
+                                    <div class="text-4xl font-black text-gray-900" id="reservationFee">৳৪৯৯</div>
+                                    <p class="text-sm text-orange-600 font-bold uppercase tracking-wider">One-time
+                                        payment</p>
+                                </div>
+                            </div>
+
+                            <div class="grid sm:grid-cols-2 gap-4 mb-10">
+                                <div class="flex items-center gap-3 text-gray-700">
+                                    <div
+                                        class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="check" class="w-3 h-3 text-green-600"></i>
+                                    </div>
+                                    <span>নিরাপদ ও সুন্দর জায়গা</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-700">
+                                    <div
+                                        class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="check" class="w-3 h-3 text-green-600"></i>
+                                    </div>
+                                    <span>স্মার্ট প্রোফাইল ম্যাচিং</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-700">
+                                    <div
+                                        class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="check" class="w-3 h-3 text-green-600"></i>
+                                    </div>
+                                    <span>টেবিল রিজার্ভেশন ফি</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-700">
+                                    <div
+                                        class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="check" class="w-3 h-3 text-green-600"></i>
+                                    </div>
+                                    <span>ওয়েলকামিং ড্রিংক</span>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="btn-primary w-full text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center space-x-3 shadow-lg shadow-orange-200">
+                                <span>এখনই বুক করুন</span>
+                                <i data-lucide="lock" class="w-6 h-6"></i>
+                            </button>
+
+                            <div class="mt-6 flex items-center justify-center gap-4 grayscale opacity-50">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Secure
+                                    Payment</span>
+                                <img src="https://securepay.sslcommerz.com/gw/asset/img/ssl-logo.png" alt="SSLCommerz"
+                                    class="h-4">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">কিভাবে কাজ করে?</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">আড্ডায় যোগ দিতে অনুসরণ করুন ৪টি সহজ ধাপ</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="scroll-reveal relative">
+                    <div
+                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
+                            1</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">গ্রুপ নির্বাচন</h3>
+                        <p class="text-gray-600 leading-relaxed">আপনার পছন্দের গ্রুপের আকার এবং সদস্য সংখ্যা বাছাই করুন।
+                        </p>
+                        <div class="mt-6 flex space-x-2">
+                            <div
+                                class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-xs font-bold text-orange-700">
+                                2</div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-xs font-bold text-orange-700">
+                                3</div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-xs font-bold text-orange-700">
+                                4</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="scroll-reveal relative" style="transition-delay: 0.1s;">
+                    <div
+                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
+                            2</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">পছন্দ জানান</h3>
+                        <p class="text-gray-600 leading-relaxed">আপনার আড্ডার ইচ্ছা, বিষয় এবং পছন্দগুলো আমাদের সাথে
+                            শেয়ার করুন।</p>
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-white rounded-full text-xs text-orange-600 border border-orange-200">Deep
+                                Talks</span>
+                            <span
+                                class="px-3 py-1 bg-white rounded-full text-xs text-orange-600 border border-orange-200">Fun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="scroll-reveal relative" style="transition-delay: 0.2s;">
+                    <div
+                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
+                            3</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">ম্যাচিং ও ভেন্যু</h3>
+                        <p class="text-gray-600 leading-relaxed">আমাদের অ্যালগরিদম আপনার জন্য সেরা গ্রুপ ও ভেন্যু
+                            নির্ধারণ করবে।</p>
+                        <div class="mt-6 flex items-center space-x-2 text-orange-600">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                            <span class="text-sm font-medium">Gulshan, Banani & more</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="scroll-reveal relative" style="transition-delay: 0.3s;">
+                    <div
+                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
+                            4</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">উপস্থিত হোন</h3>
+                        <p class="text-gray-600 leading-relaxed">নির্ধারিত সময়ে ভেন্যুতে পৌঁছে নতুন মানুষদের সাথে আড্ডায়
+                            মেতে উঠুন।</p>
+                        <div class="mt-6 flex items-center space-x-2 text-orange-600">
+                            <i data-lucide="coffee" class="w-4 h-4"></i>
+                            <span class="text-sm font-medium">First drink on us!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Track Your Booking Section -->
+    <section id="track" class="py-20 bg-gray-50">
+        <div class="max-w-lg mx-auto px-4 text-center space-y-6">
+            <div class="scroll-reveal">
+                <h2 class="text-3xl font-bold gradient-text mb-2">বুকিং ট্র্যাক করুন</h2>
+                <p class="text-gray-500">আপনার ট্র্যাকিং আইডি অথবা মোবাইল নম্বর দিয়ে বুকিং স্ট্যাটাস চেক করুন।</p>
+            </div>
+            <div class="flex gap-3 scroll-reveal">
+                <input id="trackingInput" type="text" placeholder="ID or Phone Number"
+                    class="flex-1 border border-gray-200 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-orange-400 font-mono bg-white">
+                <button onclick="checkBookingStatus()"
+                    class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm whitespace-nowrap">
+                    চেক করুন
+                </button>
+            </div>
+            <div id="trackingResult"
+                class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-left space-y-3 scroll-reveal">
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety & Trust Section -->
+    <section id="safety" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">নিরাপত্তা আমাদের কাছে সবার আগে</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">যাচাইকৃত ভেন্যু</h3>
+                                <p class="text-gray-600">আমরা শুধুমাত্র ঢাকার নিরাপদ ও সেরা রেস্তোরাঁগুলোর সাথে
+                                    পার্টনারশিপ করি।</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="user-check" class="w-6 h-6 text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">সদস্য যাচাই</h3>
+                                <p class="text-gray-600">চমৎকার আড্ডার অভিজ্ঞতা নিশ্চিত করতে প্রতিটি সদস্যের প্রোফাইল
+                                    গুরুত্ব সহকারে যাচাই করা হয়।</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="phone-call" class="w-6 h-6 text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">সার্বক্ষণিক সাপোর্ট</h3>
+                                <p class="text-gray-600">আড্ডার সময়কাল বা অন্য যেকোনো প্রয়োজনে আমাদের সাপোর্ট টিম সবসময়
+                                    প্রস্তুত।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-reveal relative">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-500 rounded-3xl transform rotate-3 opacity-20">
+                    </div>
+                    <img src="http://static.photos/restaurant/640x360/42" alt="Safe meeting space"
+                        class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl max-w-xs">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="flex -space-x-2">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-white"></div>
+                                <div class="w-8 h-8 bg-pink-500 rounded-full border-2 border-white"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-700">Matched!</span>
+                        </div>
+                        <p class="text-sm text-gray-600">"Had an amazing conversation about photography at North End.
+                            Can't wait for the next one!"</p>
+                        <div class="flex items-center mt-3 text-orange-600 text-sm font-medium">
+                            <span>— Sarah, Gulshan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
+                            <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <span class="text-2xl font-bold">DekhaHok</span>
+                    </div>
+                    <p class="text-gray-400 max-w-sm">ঢাকার জনপ্রিয় পাবলিক প্লেস বা রেস্তোরাঁয় ২ বা ৫ জনের গ্রুপে যোগ
+                        দিন দারুণ সব আড্ডায়। কোনো অ্যাপ বা সোয়াইপিং নয়—সাক্ষাতে গড়ে তুলুন প্রাণবন্ত বন্ধুত্ব।</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">লিংকস</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-orange-400 transition">কিভাবে কাজ করে</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition">নিরাপত্তা</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition">জিজ্ঞাসা</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition">পার্টনারশিপ রেস্তোরাঁ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">যোগাযোগ</h4>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-600 transition">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-600 transition">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-600 transition">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">© 2024 DekhaHok. All rights reserved. Made with ❤️ in Dhaka.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center transform scale-95 opacity-0 transition-all duration-300"
+            id="modalContent">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+                <i data-lucide="check-circle" class="w-10 h-10 text-green-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Booking Received!</h3>
+            <p class="text-gray-500 text-sm mb-5">আমরা আপনাকে একটি গ্রুপে যুক্ত করব এবং জানাবো।</p>
+
+            <!-- Tracking ID — the most important thing to show -->
+            <div class="bg-orange-50 border border-orange-200 rounded-2xl p-5 mb-5">
+                <p class="text-xs text-orange-500 font-semibold uppercase tracking-widest mb-2">আপনার ট্র্যাকিং আইডি</p>
+                <p id="modalTrackingId" class="text-3xl font-bold font-mono text-orange-700 tracking-widest"></p>
+                <p class="text-xs text-gray-400 mt-2">এই আইডিটি সেভ করুন — স্ট্যাটাস চেক করতে লাগবে</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-4 mb-6 text-left space-y-2">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="users" class="w-4 h-4 text-orange-500"></i>
+                    <span class="text-sm font-medium text-gray-700">Group of <span id="modalGroupSize">2</span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="calendar" class="w-4 h-4 text-orange-500"></i>
+                    <span id="modalDateSlot" class="text-sm font-medium text-gray-700"></span>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" class="btn-primary w-full text-white py-3 rounded-xl font-semibold">
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ── Icons ────────────────────────────────────────────────────────────────
+        lucide.createIcons();
+
+        // ── Scroll Reveal ─────────────────────────────────────────────────────────
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+        // ── Date Slot Initialisation ──────────────────────────────────────────────
+        // Always show the FIXED slots for the coming Friday and Saturday.
+        // JS only injects the calendar date — the times (5PM / 7PM) are fixed in HTML.
+        (function initDateSlots() {
+            const DAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+            const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            function getNextWeekday(targetDay) {
+                // targetDay: 5 = Friday, 6 = Saturday
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const d = new Date(today);
+                let diff = targetDay - today.getDay();
+                if (diff <= 0) diff += 7;   // always upcoming, never today-or-past
+                d.setDate(today.getDate() + diff);
+                return d;
+            }
+
+            function toISO(d) {
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                return `${d.getFullYear()}-${mm}-${dd}`;
+            }
+
+            function toLabel(d) {
+                return `${d.getDate()} ${MONTHS_EN[d.getMonth()]}`;
+            }
+
+            const friday = getNextWeekday(5);
+            const saturday = getNextWeekday(6);
+
+            // Inject dates into day-header labels
+            document.getElementById('fridayDateLabel').textContent = toLabel(friday);
+            document.getElementById('saturdayDateLabel').textContent = toLabel(saturday);
+
+            // Inject data-date onto all 4 slot buttons
+            document.getElementById('slot-fri-5pm').dataset.date = toISO(friday);
+            document.getElementById('slot-fri-7pm').dataset.date = toISO(friday);
+            document.getElementById('slot-sat-5pm').dataset.date = toISO(saturday);
+            document.getElementById('slot-sat-7pm').dataset.date = toISO(saturday);
+
+            // Auto-select Friday 5PM as default
+            selectDate(document.getElementById('slot-fri-5pm'));
+
+            // Initialize selection UI
+            selectGroupSize(2);
+            selectVenue('public_place', document.querySelector('.venue-btn'));
+        })();
+
+        // ── Date Selection ────────────────────────────────────────────────────────
+        function selectDate(btn) {
+            document.querySelectorAll('.date-btn').forEach(b => {
+                b.classList.remove('border-orange-500', 'bg-orange-50', 'text-orange-700',
+                    'shadow-md', 'shadow-orange-100', 'ring-2', 'ring-orange-100', 'ring-offset-2');
+                b.classList.add('border-gray-100', 'bg-white', 'text-gray-600');
+            });
+            btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-600');
+            btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-700',
+                'shadow-md', 'shadow-orange-100', 'ring-2', 'ring-orange-100', 'ring-offset-2');
+        }
+
+        // ── Group Size ────────────────────────────────────────────────────────────
+        function selectGroupSize(size) {
+            document.getElementById('groupSize').value = size;
+            const feeEl = document.getElementById('reservationFee');
+            feeEl.textContent = size === 2 ? '৳৪৯৯' : '৳২৪৯';
+
+            document.querySelectorAll('.group-size-btn').forEach(btn => {
+                const isSelected = parseInt(btn.dataset.size) === size;
+                btn.classList.toggle('active', isSelected);
+                const check = btn.querySelector('.check-mark');
+                if (check) {
+                    check.classList.toggle('opacity-0', !isSelected);
+                    check.classList.toggle('opacity-100', isSelected);
+                }
+            });
+        }
+
+        function selectVenue(type, btn) {
+            document.getElementById('venueType').value = type;
+            document.querySelectorAll('.venue-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const isRestaurant = type === 'restaurant';
+            document.getElementById('restaurantNote').classList.toggle('hidden', !isRestaurant);
+            document.getElementById('publicNote').classList.toggle('hidden', isRestaurant);
+        }
+
+        // ── Age Validation Logic ──────────────────────────────────────────────────
+        function handleAgeChange() {
+            const ageInput = document.getElementById('age');
+            const age = parseInt(ageInput.value);
+            const ageNote = document.getElementById('ageNote');
+            
+            if (!isNaN(age) && age > 0 && age < 18) {
+                ageNote.classList.remove('hidden');
+                ageInput.classList.add('border-red-500', 'bg-red-50');
+                ageInput.classList.remove('border-gray-300');
+            } else {
+                ageNote.classList.add('hidden');
+                ageInput.classList.remove('border-red-500', 'bg-red-50');
+                ageInput.classList.add('border-gray-300');
+            }
+        }
+        document.getElementById('age').addEventListener('input', handleAgeChange);
+
+        // ── Scroll Helpers ────────────────────────────────────────────────────────
+        function scrollToBook() {
+            document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                const t = document.querySelector(this.getAttribute('href'));
+                if (t) {
+                    const offset = 80;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = t.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ── Mobile Menu Logic ─────────────────────────────────────────────────────
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btnIcon = document.querySelector('#mobileMenuBtn i');
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => menu.classList.add('active'), 10);
+                btnIcon.setAttribute('data-lucide', 'x');
+                lucide.createIcons();
+            } else {
+                menu.classList.remove('active');
+                setTimeout(() => menu.classList.add('hidden'), 300);
+                btnIcon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            }
+        }
+        document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+
+        // ── Form Submission ───────────────────────────────────────────────────────
+        async function handleBooking(e) {
+            e.preventDefault();
+
+            // Age Check
+            const ageInput = document.getElementById('age');
+            const age = parseInt(ageInput.value);
+            if (!isNaN(age) && age < 18) {
+                showFormError('দুঃখিত, আপনার বয়স ১৮ বছরের নিচে হওয়ায় আপনি বুকিং করতে পারবেন না।');
+                ageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                ageInput.classList.add('border-red-500', 'bg-red-50');
+                return;
+            }
+
+            // Get active slot button
+            const activeSlot = document.querySelector('.date-btn.border-orange-500');
+            if (!activeSlot || !activeSlot.dataset.date) {
+                showFormError('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
+                return;
+            }
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+            submitBtn.disabled = true;
+
+            const payload = {
+                name: document.getElementById('fullName').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim() || null,
+                age: parseInt(document.getElementById('age').value) || null,
+                group_size: parseInt(document.getElementById('groupSize').value),
+                preferred_date: activeSlot.dataset.date,
+                preferred_time: activeSlot.dataset.time,
+                venue_type: document.getElementById('venueType').value,
+                conversation_style: document.getElementById('conversationStyle').value.trim() || null,
+                preferred_people: document.getElementById('preferredPeople').value.trim() || null,
+                current_location: document.getElementById('currentLocation').value.trim() || null,
+                preferred_location: document.getElementById('preferredLocation').value.trim() || null,
+            };
+
+            try {
+                const res = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    const msg = Array.isArray(data.detail)
+                        ? data.detail.map(d => d.msg).join(', ')
+                        : (data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                    showFormError(msg);
+                    return;
+                }
+
+                // ── Success: show modal ──
+                document.getElementById('modalTrackingId').textContent = data.tracking_id;
+                document.getElementById('modalGroupSize').textContent = payload.group_size;
+                const timeLabel = payload.preferred_time === '17:00' ? '5:00 PM' : '7:00 PM';
+                document.getElementById('modalDateSlot').textContent = `${activeSlot.dataset.date} — ${timeLabel}`;
+
+                const modal = document.getElementById('successModal');
+                const modalContent = document.getElementById('modalContent');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+
+                e.target.reset();
+                selectGroupSize(2);
+                // Re-init date slots after reset
+                const firstSlot = document.getElementById('slot-fri-5pm');
+                if (firstSlot) selectDate(firstSlot);
+
+            } catch (err) {
+                showFormError('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
+            } finally {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function showFormError(msg) {
+            let el = document.getElementById('formError');
+            if (!el) {
+                el = document.createElement('p');
+                el.id = 'formError';
+                el.className = 'text-red-500 text-sm mt-3 text-center font-medium';
+                document.querySelector('button[type="submit"]').insertAdjacentElement('afterend', el);
+            }
+            el.textContent = msg;
+            setTimeout(() => { if (el) el.textContent = ''; }, 5000);
+        }
+
+        // ── Modal Close ───────────────────────────────────────────────────────────
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+        document.getElementById('successModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ── Booking Status Tracker ────────────────────────────────────────────────
+        async function checkBookingStatus() {
+            const id = document.getElementById('trackingInput').value.trim();
+            if (!id || id.length < 5) return;
+
+            const resultEl = document.getElementById('trackingResult');
+            resultEl.classList.remove('hidden');
+            resultEl.innerHTML = '<div class="flex justify-center py-6"><div class="w-7 h-7 border-2 border-orange-400 border-t-transparent rounded-full animate-spin"></div></div>';
+
+            try {
+                const res = await fetch(`/api/bookings/track/${id}`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    resultEl.innerHTML = `<p class="text-red-500 text-sm text-center py-2">${data.detail || 'ট্র্যাকিং আইডি পাওয়া যায়নি।'}</p>`;
+                    return;
+                }
+
+                const statusColor = {
+                    processing: 'bg-yellow-100 text-yellow-800',
+                    confirmed: 'bg-green-100 text-green-800',
+                    completed: 'bg-blue-100 text-blue-800',
+                }[data.booking_status] || 'bg-gray-100 text-gray-700';
+
+                const statusBn = {
+                    processing: 'প্রক্রিয়াধীন',
+                    confirmed: 'নিশ্চিত ✅',
+                    completed: 'সম্পন্ন',
+                }[data.booking_status] || data.booking_status;
+
+                const confirmedBlock = (data.booking_status === 'confirmed' || data.booking_status === 'completed') && data.assigned_venue
+                    ? `<div class="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
+                         <p class="text-xs font-semibold text-green-700 mb-2">✅ আপনার মিটআপ নিশ্চিত হয়েছে!</p>
+                         <p class="text-sm text-gray-700 mb-1">📍 <strong>${data.assigned_venue}</strong></p>
+                         <p class="text-sm text-gray-700">📅 ${data.meet_date} &nbsp;⏰ ${data.meet_time}</p>
+                       </div>`
+                    : `<p class="text-sm text-gray-400 mt-3 text-center">আমরা আপনার জন্য গ্রুপ তৈরি করছি। শীঘ্রই জানানো হবে।</p>`;
+
+                const timeLabel = data.preferred_time === '17:00:00' ? '5:00 PM' : '7:00 PM';
+                const venueBn = data.venue_type === 'restaurant' ? '🍽 রেস্তোরাঁ' : '🌳 পাবলিক প্লেস';
+
+                resultEl.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-0.5">বুকিং</p>
+                            <p class="font-semibold text-gray-800">${data.name}</p>
+                            <p class="text-xs font-mono text-orange-500 mt-0.5">${data.tracking_id}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColor}">${statusBn}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-sm">
+                        <div class="bg-gray-50 rounded-xl p-3">
+                            <p class="text-xs text-gray-400 mb-1">গ্রুপ</p>
+                            <p class="font-semibold">${data.group_size}-জন</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-3">
+                            <p class="text-xs text-gray-400 mb-1">তারিখ ও সময়</p>
+                            <p class="font-semibold text-xs">${data.preferred_date}</p>
+                            <p class="text-xs text-gray-500">${timeLabel}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-3">
+                            <p class="text-xs text-gray-400 mb-1">পেমেন্ট</p>
+                            <p class="font-semibold text-xs ${data.payment_status === 'paid' ? 'text-green-600' : 'text-red-500'}">${data.payment_status === 'paid' ? 'পরিশোধিত' : 'বাকি'}</p>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400 text-center">${venueBn}</div>
+                    ${confirmedBlock}
+                `;
+            } catch (err) {
+                resultEl.innerHTML = '<p class="text-red-500 text-sm text-center py-2">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>';
+            }
+        }
+
+        // Allow Enter key in tracking input
+        document.getElementById('trackingInput') && document.getElementById('trackingInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') checkBookingStatus();
+        });
+
+        // ── Hero Animation ────────────────────────────────────────────────────────
+        function startMotion() {
+            const canvas = document.getElementById('animation-stage');
+            const nodes = [1, 2, 3].map(i => document.getElementById(`node-${i}`));
+            const paths = [1, 2, 3].map(i => document.getElementById(`path-${i}`));
+            const venue = document.getElementById('central-venue');
+            const venueName = venue.querySelector('p.font-bold');
+
+            const venueNames = ["Sultan's Dine", "Dhanmondi Lake", "North End", "Ramna Park", "সোহরাওয়ার্দী উদ্যান"];
+            let venueIndex = 0;
+
+            const reset = () => {
+                venue.style.opacity = '0';
+                venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                nodes.forEach(n => { n.style.opacity = '0'; n.style.transform = 'scale(1)'; });
+                paths.forEach(p => p.style.strokeDashoffset = '1000');
+            };
+
+            const animate = () => {
+                venueName.textContent = venueNames[venueIndex];
+                venueIndex = (venueIndex + 1) % venueNames.length;
+
+                const starts = [
+                    { l: '10%', t: '20%', d: 'M 10% 20% Q 20% 50% 50% 50%' },
+                    { l: '85%', t: '15%', d: 'M 85% 15% Q 70% 30% 50% 50%' },
+                    { l: '70%', t: '85%', d: 'M 70% 85% Q 60% 70% 50% 50%' }
+                ];
+                starts.forEach((pos, i) => {
+                    nodes[i].style.left = pos.l; nodes[i].style.top = pos.t;
+                    nodes[i].style.opacity = '1';
+                    paths[i].setAttribute('d', pos.d);
+                });
+                setTimeout(() => paths.forEach(p => p.style.strokeDashoffset = '0'), 500);
+                setTimeout(() => nodes.forEach(n => { n.style.left = '48%'; n.style.top = '48%'; }), 1000);
+                setTimeout(() => {
+                    nodes.forEach(n => n.style.opacity = '0');
+                    venue.style.opacity = '1';
+                    venue.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 1800);
+                setTimeout(() => { reset(); setTimeout(animate, 1000); }, 6000);
+            };
+
+            reset();
+            animate();
+        }
+        setTimeout(startMotion, 1000);
+
+        // ── Load Locations (Public) ────────────────────────────────────────────────
+        async function loadLocations() {
+            try {
+                const res = await fetch('/api/locations');
+                const locations = await res.json();
+                const select = document.getElementById('preferredLocation');
+                if (!select) return;
+
+                // Clear and keep first option
+                select.innerHTML = '<option value="" disabled selected>নির্বাচন করুন...</option>';
+
+                locations.forEach(loc => {
+                    const opt = document.createElement('option');
+                    opt.value = loc.name;
+                    opt.textContent = loc.name;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.error('Error loading locations:', err);
+            }
+        }
+        loadLocations();
+
+        // ── Translation Helper ──────────────────────────────────────────────────
+        function toggleTranslation() {
+            const btn = document.getElementById('langBtn');
+            const isBangla = btn.textContent.trim() === 'En';
+
+            if (isBangla) {
+                // Trigger Google Translate to English
+                const select = document.querySelector('select.goog-te-combo');
+                if (select) {
+                    select.value = 'en';
+                    select.dispatchEvent(new Event('change'));
+                    btn.textContent = 'Bn';
+                    document.documentElement.lang = 'en';
+                } else {
+                    // If script not loaded yet, try again or show error
+                    showFormError('Translation engine is loading... please try again in a second.');
+                }
+            } else {
+                // Restore to Original (Bangla)
+                const iframe = document.querySelector('iframe.goog-te-banner-frame');
+                if (iframe) {
+                    const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const restoreBtn = innerDoc.getElementById(':1.restore');
+                    if (restoreBtn) restoreBtn.click();
+                }
+                // Fallback: simple reload if restore fails or widget behaves differently
+                if (!isBangla) {
+                    btn.textContent = 'En';
+                    document.documentElement.lang = 'bn';
+                    window.location.reload();
+                }
+            }
+        }
+    </script>
+    <div id="google_translate_element" style="display:none"></div>
+
+</body>
+
+</html>
