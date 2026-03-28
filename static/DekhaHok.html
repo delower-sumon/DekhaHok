@@ -161,12 +161,13 @@
 
                     <br> <!-- লাইন ব্রেকের জন্য -->
 
-                    <span class="gradient-text inline-block pb-4 leading-normal" data-en="friend tomorrow..">হোক বন্ধুত্ব..</span>
+                    <span class="gradient-text inline-block pb-4 leading-normal" data-en="friend tomorrow..">হোক
+                        বন্ধুত্ব..</span>
                 </h1>
 
                 <p class="text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-loose mt-0">
-                    ঢাকার জনপ্রিয় পাবলিক প্লেস বা রেস্তোরাঁয় ২ বা ৫ জনের গ্রুপে যোগ দিন দারুণ সব আড্ডায়। কোনো অ্যাপ বা
-                    সোয়াইপিং নয়—সাক্ষাতে গড়ে তুলুন প্রাণবন্ত বন্ধুত্ব।
+                    জনপ্রিয় পাবলিক প্লেস বা রেস্তোরাঁয় ২ বা ৫ জনের গ্রুপে যোগ দিন দারুণ সব আড্ডায়। জনপ্রিয় রেস্তোরাঁ
+                    বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে তুলুন প্রাণবন্ত বন্ধুত্ব।
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
@@ -811,8 +812,10 @@
                     <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl max-w-xs">
                         <div class="flex items-center space-x-3 mb-2">
                             <div class="flex -space-x-2">
-                                <img src="http://static.photos/people/200x200/1" class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
-                                <img src="http://static.photos/people/200x200/2" class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
+                                <img src="http://static.photos/people/200x200/1"
+                                    class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
+                                <img src="http://static.photos/people/200x200/2"
+                                    class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
                             </div>
                             <span class="text-sm font-semibold text-gray-700">Matched!</span>
                         </div>
@@ -840,34 +843,56 @@
                         </div>
                         <span class="text-2xl font-bold">DekhaHok</span>
                     </div>
-                    <p class="text-gray-400 max-w-sm">জনপ্রিয় পাবলিক প্লেস বা রেস্তোরাঁয় ২ বা ৫ জনের গ্রুপে যোগ
-                        দিন এবং দেখা করুন। কোনো অ্যাপ বা সোয়াইপিং নয়—সাক্ষাতে গড়ে তুলুন প্রাণবন্ত বন্ধুত্ব।</p>
+                    <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
+                        তুলুন প্রাণবন্ত
+                        বন্ধুত্ব।</p>
                 </div>
 
                 <div>
                     <h4 class="font-bold mb-4">লিংকস</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-orange-400 transition">কিভাবে কাজ করে</a></li>
-                        <li><a href="#" class="hover:text-orange-400 transition">নিরাপত্তা</a></li>
-                        <li><a href="#" class="hover:text-orange-400 transition">জিজ্ঞাসা</a></li>
-                        <li><a href="#" class="hover:text-orange-400 transition">পার্টনারশিপ রেস্তোরাঁ</a></li>
+                        <li><a href="#how-it-works" class="hover:text-orange-400 transition"
+                                onclick="scrollToSection(event, '#how-it-works')">কিভাবে কাজ করে</a></li>
+                        <li><a href="#safety" class="hover:text-orange-400 transition"
+                                onclick="scrollToSection(event, '#safety')">নিরাপত্তা</a></li>
+                        <li><a href="https://wa.me/8801884477720" target="_blank"
+                                class="hover:text-orange-400 transition">জিজ্ঞাসা</a></li>
+                        <li><a href="javascript:void(0)" onclick="openPartnershipModal()"
+                                class="hover:text-orange-400 transition">পার্টনারশিপ রেস্তোরাঁ</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="font-bold mb-4">যোগাযোগ</h4>
                     <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-600 transition">
-                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        <a href="javascript:void(0)"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-orange-600 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-white">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
                         </a>
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-600 transition">
-                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        <a href="javascript:void(0)"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-orange-600 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-white">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                            </svg>
                         </a>
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-600 transition">
-                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        <a href="javascript:void(0)"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-orange-600 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-white">
+                                <path
+                                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z">
+                                </path>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -876,8 +901,10 @@
             <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-500 text-sm">© 2024 DekhaHok. All rights reserved. Made with ❤️ in Dhaka.</p>
                 <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
-                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition">Terms of Service</a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('privacy')"
+                        class="hover:text-white transition">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('terms')"
+                        class="hover:text-white transition">Terms of Service</a>
                 </div>
             </div>
         </div>
@@ -989,6 +1016,88 @@
                 <span>পেমেন্ট নিশ্চিত করুন</span>
                 <i data-lucide="shield-check" class="w-5 h-5"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- Partnership Modal -->
+    <div id="partnershipModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
+            id="partnershipModalContent">
+
+            <!-- Default Form View -->
+            <div id="partnershipFormView">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">পার্টনারশিপ আবেদন</h3>
+                    <button onclick="closePartnershipModal()" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <p class="text-gray-600 mb-6">আপনার রেস্তোরাঁ বা জায়গাকে আমাদের সাথে যুক্ত করতে নিচের তথ্যগুলো দিন।</p>
+
+                <form id="partnershipForm" class="space-y-4" onsubmit="submitPartnership(event)">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">রেস্তোরাঁর নাম</label>
+                        <input type="text" id="partnerRestaurantName" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-400 transition"
+                            placeholder="আপনার রেস্তোরাঁর নাম">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">যোগাযোগের নাম্বার</label>
+                        <input type="tel" id="partnerContactNumber" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-400 transition"
+                            placeholder="01XXXXXXXXX">
+                    </div>
+
+                    <button type="submit" id="partnerSubmitBtn"
+                        class="btn-primary w-full text-white py-4 mt-2 rounded-xl font-bold shadow-lg shadow-orange-200">
+                        আবেদন জমা দিন
+                    </button>
+                </form>
+            </div>
+
+            <!-- Success Modal View (Reveals internally without switching layers) -->
+            <div id="partnershipSuccessView" class="hidden text-center py-6">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">আবেদন জমা হয়েছে!</h3>
+                <p class="text-gray-500 mb-6">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।</p>
+                <button onclick="closePartnershipModal()"
+                    class="bg-gray-900 w-full text-white py-3 rounded-xl font-bold mt-2 shadow-lg shadow-gray-200 hover:bg-black transition">
+                    ঠিক আছে
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Legal Modal (Privacy Policy & Terms of Service) -->
+    <div id="legalModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col transform scale-95 opacity-0 transition-all duration-300 relative"
+            id="legalModalContent">
+
+            <div class="flex items-center justify-between mb-4 flex-shrink-0">
+                <h3 id="legalModalTitle" class="text-2xl font-bold text-gray-900">Legal</h3>
+                <button onclick="closeLegalModal()"
+                    class="text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Content Area -->
+            <div id="legalTextContent" class="overflow-y-auto flex-grow pr-3 space-y-4 text-sm text-gray-600 text-left">
+                <!-- content injected dynamically by JS -->
+            </div>
+
+            <div class="pt-5 mt-4 border-t border-gray-100 flex-shrink-0">
+                <button onclick="closeLegalModal()"
+                    class="btn-primary w-full text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-200 transition-transform active:scale-95">
+                    বুঝতে পেরেছি
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1576,7 +1685,7 @@
                     const restoreBtn = innerDoc.getElementById(':1.restore');
                     if (restoreBtn) restoreBtn.click();
                 }
-                
+
                 // Manual cleanup
                 elementsToPatch.forEach(el => {
                     if (el.dataset.bn) el.textContent = el.dataset.bn;
@@ -1731,6 +1840,128 @@
         document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keydown', e => {
             if (e.key === 'Enter') sendChatMsg();
         });
+
+        // Navigation Helper for internal links on the same page
+        function scrollToSection(e, selector) {
+            e.preventDefault();
+            const el = document.querySelector(selector);
+            if (el) {
+                const navHeight = 80;
+                const pos = el.getBoundingClientRect().top + window.scrollY - navHeight;
+                window.scrollTo({ top: pos, behavior: 'smooth' });
+            }
+        }
+
+        // ── Partnership Request Handle ──────────────────────────────────────────
+        function openPartnershipModal() {
+            const modal = document.getElementById('partnershipModal');
+            const content = document.getElementById('partnershipModalContent');
+
+            // Reset to form view
+            document.getElementById('partnershipFormView').classList.remove('hidden');
+            document.getElementById('partnershipSuccessView').classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closePartnershipModal() {
+            const modal = document.getElementById('partnershipModal');
+            const content = document.getElementById('partnershipModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        async function submitPartnership(e) {
+            e.preventDefault();
+            const btn = document.getElementById('partnerSubmitBtn');
+            const name = document.getElementById('partnerRestaurantName').value.trim();
+            const phone = document.getElementById('partnerContactNumber').value.trim();
+
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/partnerships', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ restaurant_name: name, contact_number: phone })
+                });
+
+                if (res.ok) {
+                    document.getElementById('partnershipFormView').classList.add('hidden');
+                    document.getElementById('partnershipSuccessView').classList.remove('hidden');
+                    document.getElementById('partnershipForm').reset();
+                    lucide.createIcons();
+                } else {
+                    alert('কোথাও সমস্যা হচ্ছে, আবার চেষ্টা করুন।');
+                }
+            } catch (e) {
+                alert('ইন্টারনেট সংযোগ যাচাই করুন।');
+            } finally {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            }
+        }
+
+        // ── Legal Modals ────────────────────────────────────────────────────────
+        const legalContents = {
+            privacy: `
+                <div class="space-y-4">
+                    <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
+                    <p>DekhaHok আপনার ব্যক্তিগত তথ্যের সুরক্ষায় প্রতিশ্রুতিবদ্ধ। আমাদের অ্যাপটি ব্যবহারের সময় আমরা কীভাবে তথ্য সংগ্রহ ও ব্যবহার করি তা নিচে দেওয়া হলো:</p>
+                    <ul class="space-y-3 mt-4">
+                        <li><strong class="text-gray-900">তথ্য সংগ্রহ:</strong> রেজিস্ট্রেশনের সময় আমরা আপনার নাম, ফোন নম্বর এবং সোশ্যাল মিডিয়া প্রোফাইল লিংক সংগ্রহ করি। এটি মূলত আপনার পরিচয় নিশ্চিত করার জন্য করা হয়।</li>
+                        <li><strong class="text-gray-900">তথ্যের ব্যবহার:</strong> সংগৃহীত তথ্য শুধুমাত্র আপনার জন্য উপযুক্ত ম্যাচ (Duo বা Panchayat) খুঁজে বের করতে এবং পার্টনার রেস্টুরেন্টে বুকিং নিশ্চিত করতে ব্যবহার করা হয়।</li>
+                        <li><strong class="text-gray-900">তৃতীয় পক্ষের সাথে তথ্য শেয়ার:</strong> আমরা আপনার তথ্য কোনো তৃতীয় পক্ষের কাছে বিক্রি করি না। শুধুমাত্র আপনার গ্রুপ মেম্বারদের সাথে আপনার নাম (প্রাথমিক পরিচয় হিসেবে) এবং রেস্টুরেন্টের সাথে বুকিংয়ের জন্য প্রয়োজনীয় তথ্য শেয়ার করা হয়।</li>
+                        <li><strong class="text-gray-900">ডেটা সিকিউরিটি:</strong> আপনার সকল তথ্য নিরাপদ সার্ভারে সংরক্ষিত থাকে। আপনি চাইলে যেকোনো সময় আমাদের সাথে যোগাযোগ করে আপনার অ্যাকাউন্ট বা তথ্য মুছে ফেলতে পারেন।</li>
+                    </ul>
+                </div>
+            `,
+            terms: `
+                <div class="space-y-4">
+                    <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
+                    <p>DekhaHok প্ল্যাটফর্মটি ব্যবহারের মাধ্যমে আপনি নিচের শর্তাবলীতে সম্মত হচ্ছেন:</p>
+                    <ul class="space-y-3 mt-4">
+                        <li><strong class="text-gray-900">যোগ্যতা:</strong> এই অ্যাপটি ব্যবহারের জন্য আপনার বয়স কমপক্ষে ১৮ বছর হতে হবে এবং আপনাকে বাংলাদেশের নাগরিক হতে হবে।</li>
+                        <li><strong class="text-gray-900">সঠিক তথ্য প্রদান:</strong> রেজিস্ট্রেশনের সময় সঠিক তথ্য প্রদান করা বাধ্যতামূলক। ভুল বা ভুয়া তথ্য প্রদান করলে আপনার অ্যাকাউন্টটি স্থায়ীভাবে স্থগিত করা হতে পারে।</li>
+                        <li><strong class="text-gray-900">আচরণবিধি:</strong> এটি একটি সামাজিক মেলবন্ধনের প্ল্যাটফর্ম। মিটিং চলাকালীন কোনো প্রকার হয়রানি, অশোভন আচরণ বা অবৈধ কার্যক্রম কঠোরভাবে নিষিদ্ধ। কারো ব্যক্তিগত আচরণের জন্য DekhaHok দায়বদ্ধ নয়, তবে অভিযোগের ভিত্তিতে আমরা যথাযথ ব্যবস্থা গ্রহণ করব।</li>
+                        <li><strong class="text-gray-900">রিফান্ড পলিসি:</strong> একবার বুকিং সম্পন্ন হলে তা সাধারণত পরিবর্তনযোগ্য নয়। যদি DekhaHok বা রেস্টুরেন্ট কোনো কারণে মিটিং বাতিল করে, তবেই পূর্ণ রিফান্ড প্রদান করা হবে। রিফান্ড প্রসেস হতে ৭-১০ কার্যদিবস সময় লাগতে পারে।</li>
+                        <li><strong class="text-gray-900">নিরাপত্তা সতর্কতা:</strong> অফলাইন মিটিং চলাকালীন আপনার ব্যক্তিগত নিরাপত্তা এবং মালামালের দায়িত্ব আপনার নিজের। জনাকীর্ণ এবং পাবলিক প্লেসে (যেমন আমাদের পার্টনার ক্যাফে) দেখা করার জন্য আমরা উৎসাহিত করি।</li>
+                        <li><strong class="text-gray-900">আইনি বাধ্যবাধকতা:</strong> বাংলাদেশের প্রচলিত আইন অনুযায়ী কোনো অনৈতিক বা রাষ্ট্রবিরোধী কাজে এই প্ল্যাটফর্ম ব্যবহার করা যাবে না।</li>
+                    </ul>
+                </div>
+            `
+        };
+
+        function openLegalModal(type) {
+            const modal = document.getElementById('legalModal');
+            const contentContainer = document.getElementById('legalModalContent');
+            const textContainer = document.getElementById('legalTextContent');
+            const titleEl = document.getElementById('legalModalTitle');
+
+            titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
+            textContainer.innerHTML = legalContents[type];
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                contentContainer.classList.remove('scale-95', 'opacity-0');
+                contentContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeLegalModal() {
+            const modal = document.getElementById('legalModal');
+            const contentContainer = document.getElementById('legalModalContent');
+            contentContainer.classList.remove('scale-100', 'opacity-100');
+            contentContainer.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
     </script>
 
     <!-- Real-time Group Chat Overlay -->

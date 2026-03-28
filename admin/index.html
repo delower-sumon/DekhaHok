@@ -170,6 +170,10 @@
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
         <span>📍</span><span>Areas/Locations</span>
       </button>
+      <button onclick="showSection('partners')" data-section="partners"
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+        <span>🤝</span><span>Partnerships</span>
+      </button>
       <div class="flex-1"></div>
       <button onclick="logout()" class="px-3 py-2 text-sm text-gray-400 hover:text-red-500 text-left transition">
         ← Logout
@@ -262,6 +266,29 @@
               </tr>
             </thead>
             <tbody id="locationsTableBody" class="divide-y divide-gray-50">
+              <!-- filled by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── Partnerships Section ───────────────────────────────────────── -->
+      <section id="section-partners" class="section hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <h1 class="text-2xl font-bold text-gray-800">Partnership Requests</h1>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+              <tr>
+                <th class="px-6 py-3 text-left">Restaurant/Place</th>
+                <th class="px-6 py-3 text-left">Contact</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Date</th>
+                <th class="px-6 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="partnersTableBody" class="divide-y divide-gray-50">
               <!-- filled by JS -->
             </tbody>
           </table>
@@ -473,6 +500,7 @@
       if (name === 'bookings') loadBookings();
       if (name === 'groups') loadGroups();
       if (name === 'locations') loadAdminLocations();
+      if (name === 'partners') loadPartners();
       
       // Close sidebar on mobile after selection
       if (window.innerWidth < 768) {
@@ -801,6 +829,60 @@
       document.getElementById('groupModal').classList.remove('hidden');
     }
 
+    // ── Partnerships ───────────────────────────────────────────────────────────
+    async function loadPartners() {
+      const res = await adminFetch('/api/admin/partnerships');
+      const partners = await res.json();
+      const tbody = document.getElementById('partnersTableBody');
+      if (!partners.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">No requests yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = partners.map(p => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 font-medium text-gray-900">${p.restaurant_name}</td>
+          <td class="px-6 py-4 text-gray-500">${p.contact_number}</td>
+          <td class="px-6 py-4">
+            <select onchange="updatePartnerStatus(${p.id}, this.value)" class="text-xs border border-gray-200 rounded px-2 py-1 outline-none bg-white font-medium ${p.status === 'pending' ? 'text-yellow-600' : p.status === 'done' ? 'text-green-600' : 'text-blue-600'}">
+              <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
+              <option value="contacted" ${p.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="done" ${p.status === 'done' ? 'selected' : ''}>Done</option>
+            </select>
+          </td>
+          <td class="px-6 py-4 text-gray-500 text-xs">${new Date(p.created_at).toLocaleString()}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="deletePartner(${p.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updatePartnerStatus(id, status) {
+      const res = await adminFetch(`/api/admin/partnerships/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        toast('Partnership updated ✓');
+        loadPartners();
+      } else {
+        toast('Failed to update', true);
+      }
+    }
+
+    async function deletePartner(id) {
+      const confirmed = await customConfirm('Are you sure you want to delete this partnership record?');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/partnerships/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        toast('Partnership deleted ✓');
+        loadPartners();
+      } else {
+        toast('Failed to delete', true);
+      }
+    }
     function closeGroupModal() {
       document.getElementById('groupModal').classList.add('hidden');
     }

@@ -16,7 +16,7 @@ from models import (
     AdminBookingUpdate, GroupCreate, GroupAssign, GroupUpdate,
     LocationCreate, LocationResponse,
     MeetingPointCreate, MeetingPointResponse,
-    RatingCreate, MessageCreate
+    RatingCreate, MessageCreate, PartnershipCreate, PartnershipUpdate
 )
 
 load_dotenv()
@@ -361,10 +361,73 @@ def list_locations_public():
         release_conn(conn)
     return [{"id": r[0], "name": r[1], "is_active": r[2]} for r in rows]
 
+@app.post("/api/partnerships")
+def create_partnership(payload: PartnershipCreate):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO partnership_requests (restaurant_name, contact_number)
+            VALUES (%s, %s)
+            """,
+            (payload.restaurant_name, payload.contact_number)
+        )
+        conn.commit()
+        cursor.close()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail="Could not submit request.")
+    finally:
+        release_conn(conn)
+    return {"message": "Partnership request submitted successfully."}
+
 
 # ===========================================================================
 # ADMIN
 # ===========================================================================
+
+@app.get("/api/admin/partnerships")
+def admin_list_partnerships(x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, restaurant_name, contact_number, status, created_at FROM partnership_requests ORDER BY created_at DESC")
+        rows = cursor.fetchall()
+        return [{"id": r[0], "restaurant_name": r[1], "contact_number": r[2], "status": r[3], "created_at": str(r[4])} for r in rows]
+    finally:
+        release_conn(conn)
+
+@app.patch("/api/admin/partnerships/{partnership_id}")
+def admin_update_partnership(partnership_id: int, payload: PartnershipUpdate, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE partnership_requests SET status = %s WHERE id = %s", (payload.status, partnership_id))
+        conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Partnership request not found.")
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"message": "Partnership updated."}
+
+@app.delete("/api/admin/partnerships/{partnership_id}")
+def admin_delete_partnership(partnership_id: int, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM partnership_requests WHERE id = %s", (partnership_id,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Partnership request not found.")
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"message": "Partnership deleted."}
 
 @app.get("/api/admin/dashboard")
 def admin_dashboard(x_admin_key: str = Header(...)):

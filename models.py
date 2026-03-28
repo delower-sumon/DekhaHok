@@ -194,3 +194,11 @@ class LocationResponse(BaseModel):
     name: str
     is_active: bool
     points: list[MeetingPointResponse] = []
+
+class PartnershipCreate(BaseModel):
+    restaurant_name: str
+    contact_number: str
+
+class PartnershipUpdate(BaseModel):
+    status: str
+

@@ -106,6 +106,14 @@ CREATE TABLE IF NOT EXISTS group_chats (
     message      TEXT NOT NULL,
     created_at   TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS partnership_requests (
+    id SERIAL PRIMARY KEY,
+    restaurant_name VARCHAR(200) NOT NULL,
+    contact_number VARCHAR(50) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
 """
 
 
