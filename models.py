@@ -100,6 +100,9 @@ class TrackingResponse(BaseModel):
     meet_time:      Optional[str] = None
     payment_method:     Optional[str] = None
     payment_sender_digits: Optional[str] = None
+    group_members: Optional[list] = [] # list of {name, phone, age, rating}
+    rejection_reason: Optional[str] = None
+    assigned_group_id: Optional[int] = None
 
 
 # ---------------------------------------------------------------------------
@@ -110,6 +113,7 @@ class AdminBookingUpdate(BaseModel):
     payment_status: Optional[str] = None
     booking_status: Optional[str] = None
     admin_notes:    Optional[str] = None
+    rejection_reason: Optional[str] = None
 
     @field_validator("payment_status")
     @classmethod
@@ -121,7 +125,7 @@ class AdminBookingUpdate(BaseModel):
     @field_validator("booking_status")
     @classmethod
     def validate_booking(cls, v):
-        if v is not None and v not in ("processing", "confirmed", "completed"):
+        if v is not None and v not in ("processing", "confirmed", "completed", "unsuccessful"):
             raise ValueError("Invalid booking_status")
         return v
 
@@ -143,6 +147,25 @@ class GroupUpdate(BaseModel):
     meet_time:  Optional[str] = None
     group_size: Optional[int] = None
     status:     Optional[str] = None
+
+
+class RatingCreate(BaseModel):
+    ratee_id: int
+    group_id: int
+    score: int
+    comment: Optional[str] = None
+
+    @field_validator("score")
+    @classmethod
+    def validate_score(cls, v):
+        if not (1 <= v <= 5):
+            raise ValueError("Score must be between 1 and 5")
+        return v
+
+
+class MessageCreate(BaseModel):
+    group_id: int
+    message: str
 
 
 class LocationCreate(BaseModel):

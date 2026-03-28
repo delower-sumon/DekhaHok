@@ -98,6 +98,14 @@ CREATE TABLE IF NOT EXISTS group_members (
     FOREIGN KEY (group_id)   REFERENCES meetup_groups(id) ON DELETE CASCADE,
     FOREIGN KEY (booking_id) REFERENCES bookings(id)      ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS group_chats (
+    id           SERIAL PRIMARY KEY,
+    group_id     INT NOT NULL REFERENCES meetup_groups(id) ON DELETE CASCADE,
+    sender_id    INT NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+    message      TEXT NOT NULL,
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
 """
 
 
@@ -118,6 +126,21 @@ def init_db():
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_sender_digits VARCHAR(10)")
         cursor.execute("ALTER TABLE meetup_groups ALTER COLUMN group_code TYPE VARCHAR(20)")
         cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS point_type VARCHAR(20) DEFAULT 'public_place'")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS rejection_reason TEXT")
+        
+        # User Ratings table creation moved here for robustness
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS user_ratings (
+                id           SERIAL PRIMARY KEY,
+                rater_id     INT NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+                ratee_id     INT NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+                group_id     INT NOT NULL REFERENCES meetup_groups(id) ON DELETE CASCADE,
+                score        SMALLINT NOT NULL CHECK (score >= 1 AND score <= 5),
+                comment      TEXT,
+                created_at   TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE (rater_id, ratee_id, group_id)
+            )
+        """)
         
         # Initial locations
         initial_locations = [

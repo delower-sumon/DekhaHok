@@ -15,7 +15,8 @@ from models import (
     BookingCreate, BookingResponse, TrackingResponse,
     AdminBookingUpdate, GroupCreate, GroupAssign, GroupUpdate,
     LocationCreate, LocationResponse,
-    MeetingPointCreate, MeetingPointResponse
+    MeetingPointCreate, MeetingPointResponse,
+    RatingCreate, MessageCreate
 )
 
 load_dotenv()
@@ -148,7 +149,8 @@ def track_booking(tracking_id: str):
                 b.tracking_id, b.name, b.group_size, b.preferred_date,
                 b.preferred_time, b.venue_type, b.booking_status, b.payment_status, b.fee_amount,
                 g.venue_name, g.meet_date, g.meet_time, b.current_location, b.preferred_location,
-                b.payment_method, b.payment_sender_digits, b.preferred_meeting_point
+                b.payment_method, b.payment_sender_digits, b.preferred_meeting_point,
+                b.id, g.id, b.rejection_reason
             FROM bookings b
             LEFT JOIN group_members gm ON gm.booking_id = b.id
             LEFT JOIN meetup_groups g  ON g.id = gm.group_id
@@ -159,6 +161,30 @@ def track_booking(tracking_id: str):
             (tracking_id.upper(), tracking_id),
         )
         row = cursor.fetchone()
+        
+        group_members = []
+        if row and row[18]: # group_id exists
+            booking_id = row[17]
+            group_id = row[18]
+            cursor.execute(
+                """
+                SELECT b.name, b.phone, b.age, b.id,
+                       (SELECT AVG(score) FROM user_ratings WHERE ratee_id = b.id) as avg_rating
+                FROM group_members gm
+                JOIN bookings b ON b.id = gm.booking_id
+                WHERE gm.group_id = %s AND b.id != %s
+                """,
+                (group_id, booking_id)
+            )
+            members = cursor.fetchall()
+            for m in members:
+                group_members.append({
+                    "name": m[0],
+                    "phone": m[1],
+                    "age": m[2],
+                    "id": m[3],
+                    "rating": round(float(m[4]), 1) if m[4] is not None else 0
+                })
         cursor.close()
     finally:
         release_conn(conn)
@@ -196,7 +222,129 @@ def track_booking(tracking_id: str):
         payment_method=row[14],
         payment_sender_digits=row[15],
         preferred_meeting_point=row[16],
+        group_members=group_members,
+        rejection_reason=row[19],
+        assigned_group_id=row[18]
     )
+
+
+@app.post("/api/bookings/rate")
+def rate_mate(payload: RatingCreate, tracking_id: str = Header(...)):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # Get rater_id from tracking_id (or phone)
+        cursor.execute("SELECT id FROM bookings WHERE tracking_id = %s OR phone = %s ORDER BY created_at DESC LIMIT 1", (tracking_id.upper(), tracking_id))
+        rater = cursor.fetchone()
+        if not rater:
+            raise HTTPException(status_code=404, detail="Rater not found.")
+        rater_id = rater[0]
+
+        # Ensure rater and ratee are in the same group
+        cursor.execute(
+            """
+            SELECT group_id FROM group_members 
+            WHERE group_id = %s AND booking_id IN (%s, %s)
+            """,
+            (payload.group_id, rater_id, payload.ratee_id)
+        )
+        if len(cursor.fetchall()) < 2:
+            raise HTTPException(status_code=403, detail="You can only rate people in your group.")
+
+        cursor.execute(
+            """
+            INSERT INTO user_ratings (rater_id, ratee_id, group_id, score, comment)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (rater_id, ratee_id, group_id) DO UPDATE 
+            SET score = EXCLUDED.score, comment = EXCLUDED.comment
+            """,
+            (rater_id, payload.ratee_id, payload.group_id, payload.score, payload.comment)
+        )
+        conn.commit()
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"message": "Rating submitted successfully!"}
+
+
+@app.get("/api/bookings/chat/{group_id}")
+def get_chat_messages(group_id: int, tracking_id: str = Header(...)):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # Verify user is in the group (can match tracking_id or phone)
+        cursor.execute(
+            """
+            SELECT 1 FROM group_members gm 
+            JOIN bookings b ON b.id = gm.booking_id 
+            WHERE gm.group_id = %s AND (b.tracking_id = %s OR b.phone = %s)
+            """,
+            (group_id, tracking_id.upper(), tracking_id)
+        )
+        if not cursor.fetchone():
+            raise HTTPException(status_code=403, detail="Not authorized to access this chat.")
+
+        # Check group status (no chat if completed)
+        cursor.execute("SELECT status FROM meetup_groups WHERE id = %s", (group_id,))
+        g_status = cursor.fetchone()
+        if g_status and g_status[0] == 'completed':
+            return [] # Chat is deleted
+
+        cursor.execute(
+            """
+            SELECT c.message, b.name, c.created_at, b.id = (SELECT id FROM bookings WHERE tracking_id = %s OR phone = %s ORDER BY created_at DESC LIMIT 1) as is_me
+            FROM group_chats c
+            JOIN bookings b ON b.id = c.sender_id
+            WHERE c.group_id = %s
+            ORDER BY c.created_at ASC
+            """,
+            (tracking_id.upper(), tracking_id, group_id)
+        )
+        rows = cursor.fetchall()
+        cursor.close()
+    finally:
+        release_conn(conn)
+    
+    return [
+        {"message": r[0], "sender": r[1], "time": r[2].isoformat(), "is_me": r[3]}
+        for r in rows
+    ]
+
+
+@app.post("/api/bookings/chat")
+def send_chat_message(payload: MessageCreate, tracking_id: str = Header(...)):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # Get sender_id (match tracking_id or phone)
+        cursor.execute("SELECT id FROM bookings WHERE tracking_id = %s OR phone = %s ORDER BY created_at DESC LIMIT 1", (tracking_id.upper(), tracking_id))
+        sender = cursor.fetchone()
+        if not sender: raise HTTPException(status_code=404, detail="Sender not found.")
+        sender_id = sender[0]
+
+        # Verify group status
+        cursor.execute("SELECT status FROM meetup_groups WHERE id = %s", (payload.group_id,))
+        g_status = cursor.fetchone()
+        if not g_status or g_status[0] == 'completed':
+            raise HTTPException(status_code=403, detail="Chat is disabled for completed meetups.")
+
+        # Ensure user is in the group
+        cursor.execute(
+            "SELECT 1 FROM group_members WHERE group_id = %s AND booking_id = %s",
+            (payload.group_id, sender_id)
+        )
+        if not cursor.fetchone():
+            raise HTTPException(status_code=403, detail="You are not in this group.")
+
+        cursor.execute(
+            "INSERT INTO group_chats (group_id, sender_id, message) VALUES (%s, %s, %s)",
+            (payload.group_id, sender_id, payload.message)
+        )
+        conn.commit()
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"message": "Sent"}
 
 
 # --- LOCATIONS (PUBLIC) ---
@@ -335,6 +483,7 @@ def admin_update_booking(
     if payload.payment_status is not None: updates["payment_status"] = payload.payment_status
     if payload.booking_status is not None: updates["booking_status"] = payload.booking_status
     if payload.admin_notes    is not None: updates["admin_notes"]    = payload.admin_notes
+    if payload.rejection_reason is not None: updates["rejection_reason"] = payload.rejection_reason
 
     if not updates:
         raise HTTPException(status_code=400, detail="Nothing to update.")
@@ -384,7 +533,6 @@ def admin_delete_booking(booking_id: int, x_admin_key: str = Header(...)):
         release_conn(conn)
     return {"message": "Booking deleted."}
 
-
 @app.get("/api/admin/groups")
 def admin_list_groups(x_admin_key: str = Header(...)):
     require_admin(x_admin_key)
@@ -394,31 +542,75 @@ def admin_list_groups(x_admin_key: str = Header(...)):
         cursor.execute(
             """
             SELECT g.id, g.group_code, g.venue_name, g.meet_date, g.meet_time,
-                   g.group_size, g.status, COUNT(gm.id) AS member_count
+                   g.group_size, g.status
             FROM meetup_groups g
-            LEFT JOIN group_members gm ON gm.group_id = g.id
-            GROUP BY g.id
             ORDER BY g.meet_date DESC
             """
         )
-        rows = cursor.fetchall()
+        group_rows = cursor.fetchall()
+
+        results = []
+        for gr in group_rows:
+            gid = gr[0]
+            # Fetch members for this group
+            cursor.execute(
+                """
+                SELECT b.id, b.name, b.phone, b.tracking_id
+                FROM group_members gm
+                JOIN bookings b ON b.id = gm.booking_id
+                WHERE gm.group_id = %s
+                """,
+                (gid,),
+            )
+            member_rows = cursor.fetchall()
+            members = [
+                {"id": m[0], "name": m[1], "phone": m[2], "tracking_id": m[3]}
+                for m in member_rows
+            ]
+
+            results.append({
+                "id":           gr[0],
+                "group_code":   gr[1],
+                "venue_name":   gr[2],
+                "meet_date":    str(gr[3]),
+                "meet_time":    format_time_12h(gr[4]),
+                "group_size":   gr[5],
+                "status":       gr[6],
+                "member_count": len(members),
+                "members":      members,
+            })
         cursor.close()
     finally:
         release_conn(conn)
 
-    return [
-        {
-            "id":           r[0],
-            "group_code":   r[1],
-            "venue_name":   r[2],
-            "meet_date":    str(r[3]),
-            "meet_time":    format_time_12h(r[4]),
-            "group_size":   r[5],
-            "status":       r[6],
-            "member_count": r[7],
-        }
-        for r in rows
-    ]
+    return results
+
+
+@app.delete("/api/admin/groups/{group_id}/members/{booking_id}")
+def admin_remove_group_member(
+    group_id: int,
+    booking_id: int,
+    x_admin_key: str = Header(...),
+):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM group_members WHERE group_id = %s AND booking_id = %s",
+            (group_id, booking_id),
+        )
+        cursor.execute(
+            "UPDATE bookings SET assigned_group_id = NULL, booking_status = 'processing' WHERE id = %s",
+            (booking_id,),
+        )
+        conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Member not found in group.")
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"message": "Member removed from group."}
 
 
 @app.post("/api/admin/groups", status_code=201)
@@ -516,6 +708,11 @@ def admin_update_group(
     try:
         cursor = conn.cursor()
         cursor.execute(f"UPDATE meetup_groups SET {set_clause} WHERE id = %s", values)
+        
+        if updates.get("status") == 'completed':
+            # Phase 3 requirement: chat should be deleted after the meetup status is completed
+            cursor.execute("DELETE FROM group_chats WHERE group_id = %s", (group_id,))
+
         conn.commit()
         if cursor.rowcount == 0:
             raise HTTPException(status_code=404, detail="Group not found.")

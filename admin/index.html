@@ -33,6 +33,11 @@
       color: #065f46;
     }
 
+    .status-unsuccessful {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
     .status-completed {
       background: #dbeafe;
       color: #1e40af;
@@ -201,6 +206,7 @@
             <option value="processing">Processing</option>
             <option value="confirmed">Confirmed</option>
             <option value="completed">Completed</option>
+            <option value="unsuccessful">Unsuccessful</option>
           </select>
           <select id="filterPayment" onchange="loadBookings()"
             class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400">
@@ -271,9 +277,10 @@
       <h2 class="text-xl font-bold text-gray-800">Create New Group</h2>
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-medium text-gray-500 mb-1">Venue Name</label>
-          <input id="g_venue" type="text" placeholder="e.g. Shisha House, Gulshan"
-            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          <label class="block text-xs font-medium text-gray-500 mb-1">Venue (from Meeting Points)</label>
+          <select id="g_venue" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+            <option value="">Select a venue...</option>
+          </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -315,8 +322,9 @@
       <input id="eg_id" type="hidden">
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-medium text-gray-500 mb-1">Venue Name</label>
-          <input id="eg_venue" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          <label class="block text-xs font-medium text-gray-500 mb-1">Venue (from Meeting Points)</label>
+          <select id="eg_venue" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -389,7 +397,13 @@
           <option value="processing">Processing</option>
           <option value="confirmed">Confirmed</option>
           <option value="completed">Completed</option>
+          <option value="unsuccessful">Unsuccessful</option>
         </select>
+      </div>
+      <div id="rejection_container" class="hidden">
+        <label class="block text-xs font-medium text-gray-500 mb-1">Rejection Reason (if Unsuccessful)</label>
+        <textarea id="edit_rejection" rows="2" placeholder="e.g. Payment mismatch, Underage..."
+          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400 resize-none"></textarea>
       </div>
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">Admin Notes</label>
@@ -624,7 +638,10 @@
                 ${b.payment_method || '-'} / *${b.payment_sender_digits || '--'}
               </div>
             </td>
-            <td class="px-4 py-3">${statusBadge(b.booking_status)}</td>
+            <td class="px-4 py-3">
+              ${statusBadge(b.booking_status)}
+              ${b.booking_status === 'unsuccessful' ? `<div class="text-[10px] text-red-500 mt-1 italic">${b.rejection_reason || 'No reason specified'}</div>` : ''}
+            </td>
             <td class="px-4 py-3 space-x-2">
               <button onclick="openEditModal(${JSON.stringify(b).replace(/"/g, '&quot;')})"
                 class="text-xs text-orange-600 hover:underline font-medium">Edit</button>
@@ -643,6 +660,15 @@
       document.getElementById('edit_payment').value = b.payment_status;
       document.getElementById('edit_status').value = b.booking_status;
       document.getElementById('edit_notes').value = b.admin_notes || '';
+      document.getElementById('edit_rejection').value = b.rejection_reason || '';
+      
+      // Show/hide rejection field
+      const toggleRejection = (s) => {
+        document.getElementById('rejection_container').classList.toggle('hidden', s !== 'unsuccessful');
+      };
+      
+      document.getElementById('edit_status').onchange = (e) => toggleRejection(e.target.value);
+      toggleRejection(b.booking_status);
       
       document.getElementById('info_method').textContent = b.payment_method || '-';
       document.getElementById('info_digits').textContent = b.payment_sender_digits || '--';
@@ -660,6 +686,7 @@
         payment_status: document.getElementById('edit_payment').value,
         booking_status: document.getElementById('edit_status').value,
         admin_notes: document.getElementById('edit_notes').value,
+        rejection_reason: document.getElementById('edit_rejection').value,
       };
       const res = await adminFetch(`/api/admin/bookings/${id}`, {
         method: 'PATCH',
@@ -706,10 +733,31 @@
       container.innerHTML = groups.map(g => `
     <div class="bg-white rounded-2xl border border-gray-100 p-5 md:p-6">
       <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
-        <div>
+        <div class="flex-1">
           <p class="font-mono text-xs text-orange-600 font-semibold">${g.group_code}</p>
           <h3 class="font-semibold text-gray-800 mt-1 text-lg">${g.venue_name}</h3>
           <p class="text-sm text-gray-500 mt-1">📅 ${g.meet_date} &nbsp;⏰ ${g.meet_time} &nbsp;👥 ${g.group_size}-person</p>
+          
+          <div class="mt-4 p-4 bg-gray-50 border border-gray-100 rounded-2xl">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                <i data-lucide="users" class="w-3 h-3"></i> Assigned Members
+            </p>
+            <div class="space-y-2">
+                ${(g.members || []).map(m => `
+                    <div class="flex items-center justify-between text-sm py-1 border-b border-gray-200/50 last:border-0 group">
+                        <div>
+                            <span class="font-medium text-gray-800">${m.name}</span>
+                            <span class="text-xs text-gray-400 ml-2">${m.phone}</span>
+                            <span class="text-xs font-mono text-orange-500 ml-2">(${m.tracking_id})</span>
+                        </div>
+                        <button onclick="removeMemberAction(${g.id}, ${m.id})" 
+                                class="hidden group-hover:block text-red-500 text-xs hover:underline font-medium">
+                            Remove
+                        </button>
+                    </div>
+                `).join('') || '<p class="text-xs text-gray-300 italic">No members assigned yet.</p>'}
+            </div>
+          </div>
         </div>
         <div class="flex flex-wrap items-center gap-2 md:gap-3">
           <span class="text-sm text-gray-400 w-full md:w-auto mb-1 md:mb-0">${g.member_count}/${g.group_size} members</span>
@@ -724,10 +772,32 @@
       </div>
     </div>
   `).join('');
+      lucide.createIcons();
+    }
+
+    async function removeMemberAction(groupId, bookingId) {
+        const confirmed = await customConfirm('Remove this member from the group? They will be set back to "Processing" status.');
+        if (!confirmed) return;
+        const res = await adminFetch(`/api/admin/groups/${groupId}/members/${bookingId}`, {
+            method: 'DELETE'
+        });
+        if (res.ok) {
+            toast('Member removed ✓');
+            loadGroups();
+        } else {
+            toast('Failed to remove member', true);
+        }
     }
 
     // ── Create Group ───────────────────────────────────────────────────────────
-    function openCreateGroup() {
+    async function openCreateGroup() {
+      // Load venues
+      const res = await fetch('/api/all-points');
+      const points = await res.json();
+      const select = document.getElementById('g_venue');
+      select.innerHTML = '<option value="">Select a venue...</option>' + 
+        points.map(p => `<option value="${p.name}">${p.name} (${p.point_type === 'restaurant' ? 'Restaurant' : 'Public'})</option>`).join('');
+      
       document.getElementById('groupModal').classList.remove('hidden');
     }
 
@@ -759,9 +829,14 @@
     }
 
     // ── Edit Group ─────────────────────────────────────────────────────────────
-    function openEditGroupModal(g) {
+    async function openEditGroupModal(g) {
+      // Load venues
+      const res = await fetch('/api/all-points');
+      const points = await res.json();
+      const select = document.getElementById('eg_venue');
+      select.innerHTML = points.map(p => `<option value="${p.name}" ${g.venue_name === p.name ? 'selected' : ''}>${p.name} (${p.point_type === 'restaurant' ? 'Restaurant' : 'Public'})</option>`).join('');
+      
       document.getElementById('eg_id').value = g.id;
-      document.getElementById('eg_venue').value = g.venue_name;
       document.getElementById('eg_date').value = g.meet_date;
       document.getElementById('eg_time').value = g.meet_time;
       document.getElementById('eg_status').value = g.status;

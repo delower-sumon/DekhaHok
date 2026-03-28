@@ -3,45 +3,27 @@
 
 (DONE) *give an alert like we used in restaurant when radio button is clicked, we need to show  "১৮ বছরের নিচে হলে সাথে অভিভাবক থাকতে হবে।" this message if the users input age is less than 18
 
-*mobile friendly ui for main site :
-Please audit and improve the mobile responsiveness of this web project. Test on viewport widths of 375px (mobile), 768px (tablet), and 1024+ (desktop).
+(DONE) *mobile friendly ui for main site : need future modifications
 
-Check for these issues:
+(DONE) * rewrite two pages in bangla 
 
-1. **Layout Problems**
-- Content overflow or horizontal scroll
-- Text too small to read
-- Touch targets smaller than 44x44px
-- Elements overlapping or stacked incorrectly
+(DONE)* add payment gateway
 
-2. **Navigation**
-- Hamburger menus working on mobile
-- Fixed headers not blocking content
-- Back buttons accessible in modals
 
-3. **Spacing & Padding**
-- Adequate margins on mobile (at least 16px)
-- No content touching screen edges
-- Comfortable spacing between clickable elements
+Going beyond: 
 
-4. **Images & Media**
-- Images scaling properly
-- No fixed widths breaking layout
-- Videos/animations not causing performance issues
+(DONE)*Admin "Meetup Groups" section retouch :
+ Venue names from Area/Locations should be available in "Meetup Groups" section and it should be selectable while creating a group to assign people to it.
+ after the admin assign a person to a group make sure to make it visible for admin to see the assigned people in their groups, let the user remove someone from the group to send him back to unassigned if needed to reassign in another group again 
 
-5. **Forms & Inputs**
-- Form fields large enough to tap
-- Labels visible above inputs
-- Keyboards not covering input fields
+(DONE)* make a way to see the unsuccessful bookings and the reason for being unsuccessful, the records or logs should be sortable by date and deletable to make sure not to increase data size in db (this is very important)
+(DONE)* make users see assigned peoples or their group mates when assigned by the admin(name, phone number, age, rating if any)
+(DONE)* make users chat with each other while in the precessing stage untill the meetup status is completed(chat should be deleted after the meetup status is completed) and place this feature in the booking track preview we have for the user
+(DONE)* make users rate each other after the meetup and show the rating of that user(nameifany or mobile number)
 
-6. **Performance**
-- No layout shift on load
-- Smooth scrolling
-- Modals fitting within viewport
 
-Fix all issues found and ensure a smooth, native-like mobile experience.
+(DONE)* find a way to curate the English autotranslation for the international users, the translation should be more natural and logical and human-like 
 
-(DONE) 
-(DONE) *navbar: it is blocking a text line of hero section"দেখা হোক,". reduce the hero section's extra unused white spaces from top and bottom and adjust the hero section so that it doesnt overlap
 
-(DONE) *group option cards: in mobile view the texts and object place them in good order so that it looks better
+Even Beyon: 
+* Expand into Chittagong and other major cities in Bangladesh
