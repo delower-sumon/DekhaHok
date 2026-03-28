@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import date, time
 from typing import Optional
 from pydantic import BaseModel, field_validator
@@ -21,6 +22,9 @@ class BookingCreate(BaseModel):
     preferred_people:   Optional[str] = None
     current_location:   Optional[str] = None
     preferred_location: Optional[str] = None
+    preferred_meeting_point: Optional[str] = None
+    payment_method:     str         # "bkash" or "nagad"
+    payment_sender_digits: str      # last 2 digits
 
     @field_validator("group_size")
     @classmethod
@@ -58,6 +62,20 @@ class BookingCreate(BaseModel):
             raise ValueError("Age must be between 18 and 80")
         return v
 
+    @field_validator("payment_method")
+    @classmethod
+    def validate_payment_method(cls, v):
+        if v.lower() not in ("bkash", "nagad", "upay"):
+            raise ValueError("Invalid payment method")
+        return v.lower()
+
+    @field_validator("payment_sender_digits")
+    @classmethod
+    def validate_digits(cls, v):
+        if not re.match(r"^\d{2}$", v):
+            raise ValueError("Sender digits must be exactly 2 digits")
+        return v
+
 
 class BookingResponse(BaseModel):
     tracking_id: str
@@ -76,9 +94,12 @@ class TrackingResponse(BaseModel):
     fee_amount:     float
     current_location:   Optional[str] = None
     preferred_location: Optional[str] = None
+    preferred_meeting_point: Optional[str] = None
     assigned_venue: Optional[str] = None
     meet_date:      Optional[date] = None
     meet_time:      Optional[str] = None
+    payment_method:     Optional[str] = None
+    payment_sender_digits: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -128,7 +149,25 @@ class LocationCreate(BaseModel):
     name: str
 
 
+
+class MeetingPointCreate(BaseModel):
+    location_id: int
+    name: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    point_type: str = "public_place"
+
+class MeetingPointResponse(BaseModel):
+    id: int
+    location_id: int
+    name: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    point_type: str = "public_place"
+    is_active: bool
+
 class LocationResponse(BaseModel):
     id: int
     name: str
     is_active: bool
+    points: list[MeetingPointResponse] = []

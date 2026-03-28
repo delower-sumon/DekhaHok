@@ -14,7 +14,8 @@ from database import get_conn, release_conn, init_db
 from models import (
     BookingCreate, BookingResponse, TrackingResponse,
     AdminBookingUpdate, GroupCreate, GroupAssign, GroupUpdate,
-    LocationCreate, LocationResponse
+    LocationCreate, LocationResponse,
+    MeetingPointCreate, MeetingPointResponse
 )
 
 load_dotenv()
@@ -95,8 +96,9 @@ def create_booking(payload: BookingCreate):
                 INSERT INTO bookings
                     (tracking_id, name, phone, email, age, group_size,
                      preferred_date, preferred_time, venue_type,
-                     conversation_style, preferred_people, current_location, preferred_location, fee_amount)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     conversation_style, preferred_people, current_location, preferred_location, 
+                     preferred_meeting_point, payment_method, payment_sender_digits, fee_amount)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     tracking_id,
@@ -112,6 +114,9 @@ def create_booking(payload: BookingCreate):
                     payload.preferred_people,
                     payload.current_location,
                     payload.preferred_location,
+                    payload.preferred_meeting_point,
+                    payload.payment_method,
+                    payload.payment_sender_digits,
                     fee,
                 ),
             )
@@ -142,7 +147,8 @@ def track_booking(tracking_id: str):
             SELECT
                 b.tracking_id, b.name, b.group_size, b.preferred_date,
                 b.preferred_time, b.venue_type, b.booking_status, b.payment_status, b.fee_amount,
-                g.venue_name, g.meet_date, g.meet_time, b.current_location, b.preferred_location
+                g.venue_name, g.meet_date, g.meet_time, b.current_location, b.preferred_location,
+                b.payment_method, b.payment_sender_digits, b.preferred_meeting_point
             FROM bookings b
             LEFT JOIN group_members gm ON gm.booking_id = b.id
             LEFT JOIN meetup_groups g  ON g.id = gm.group_id
@@ -187,6 +193,9 @@ def track_booking(tracking_id: str):
         meet_time=format_time_12h(meet_time),
         current_location=row[12],
         preferred_location=row[13],
+        payment_method=row[14],
+        payment_sender_digits=row[15],
+        preferred_meeting_point=row[16],
     )
 
 
@@ -270,8 +279,8 @@ def admin_list_bookings(
             f"""
             SELECT id, tracking_id, name, phone, email, age, group_size,
                    preferred_date, preferred_time, venue_type, conversation_style, preferred_people,
-                   current_location, preferred_location,
-                   fee_amount, payment_status, booking_status,
+                   current_location, preferred_location, preferred_meeting_point,
+                   fee_amount, payment_status, payment_method, payment_sender_digits, booking_status,
                    assigned_group_id, admin_notes, created_at
             FROM bookings
             {where}
@@ -298,14 +307,17 @@ def admin_list_bookings(
             "venue_type":        r[9],
             "conversation_style": r[10],
             "preferred_people":  r[11],
-            "current_location":  r[12],
+            "current_location":   r[12],
             "preferred_location": r[13],
-            "fee_amount":        float(r[14]),
-            "payment_status":    r[15],
-            "booking_status":    r[16],
-            "assigned_group_id": r[17],
-            "admin_notes":       r[18],
-            "created_at":        str(r[19]),
+            "preferred_meeting_point": r[14],
+            "fee_amount":        float(r[15]),
+            "payment_status":    r[16],
+            "payment_method":    r[17],
+            "payment_sender_digits": r[18],
+            "booking_status":    r[19],
+            "assigned_group_id": r[20],
+            "admin_notes":       r[21],
+            "created_at":        str(r[22]),
         }
         for r in rows
     ]
@@ -333,6 +345,16 @@ def admin_update_booking(
     conn = get_conn()
     try:
         cursor = conn.cursor()
+        
+        # Check if setting to 'completed' and booking has a phone number
+        if payload.booking_status == 'completed':
+            cursor.execute("SELECT phone, booking_status FROM bookings WHERE id = %s", (booking_id,))
+            row = cursor.fetchone()
+            # Only enforce validation if it wasn't already 'completed'
+            if row and row[1] != 'completed':
+                if not row[0] or len(row[0].strip()) < 11:
+                    raise HTTPException(status_code=400, detail="Cannot complete booking: Missing or invalid mobile number.")
+
         cursor.execute(f"UPDATE bookings SET {set_clause} WHERE id = %s", values)
         conn.commit()
         if cursor.rowcount == 0:
@@ -342,6 +364,25 @@ def admin_update_booking(
         release_conn(conn)
 
     return {"message": "Booking updated."}
+
+
+@app.delete("/api/admin/bookings/{booking_id}")
+def admin_delete_booking(booking_id: int, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # group_members should be deleted by CASCADE if schema setup correctly, 
+        # but the schema says ON DELETE CASCADE for booking_id in group_members.
+        # Let's ensure it.
+        cursor.execute("DELETE FROM bookings WHERE id = %s", (booking_id,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Booking not found.")
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"message": "Booking deleted."}
 
 
 @app.get("/api/admin/groups")
@@ -496,12 +537,39 @@ def admin_list_locations(x_admin_key: str = Header(...)):
     conn = get_conn()
     try:
         cursor = conn.cursor()
+        # Fetch all locations
         cursor.execute("SELECT id, name, is_active FROM locations ORDER BY created_at DESC")
-        rows = cursor.fetchall()
+        loc_rows = cursor.fetchall()
+        
+        # Fetch all meeting points and group them by location_id
+        cursor.execute("SELECT id, location_id, name, is_active, latitude, longitude, point_type FROM meeting_points")
+        point_rows = cursor.fetchall()
+        
+        points_map = {}
+        for pr in point_rows:
+            lid = pr[1]
+            if lid not in points_map:
+                points_map[lid] = []
+            points_map[lid].append({
+                "id": pr[0], "location_id": lid, "name": pr[2], "is_active": pr[3],
+                "latitude": float(pr[4]) if pr[4] is not None else None,
+                "longitude": float(pr[5]) if pr[5] is not None else None,
+                "point_type": pr[6]
+            })
+
+        results = []
+        for loc in loc_rows:
+            results.append({
+                "id": loc[0],
+                "name": loc[1],
+                "is_active": loc[2],
+                "points": points_map.get(loc[0], [])
+            })
+            
         cursor.close()
     finally:
         release_conn(conn)
-    return [{"id": r[0], "name": r[1], "is_active": r[2]} for r in rows]
+    return results
 
 
 @app.post("/api/admin/locations", status_code=201)
@@ -520,6 +588,83 @@ def admin_create_location(payload: LocationCreate, x_admin_key: str = Header(...
     finally:
         release_conn(conn)
     return {"id": location_id, "message": "Location created."}
+
+
+@app.get("/api/locations/{location_id}/points", response_model=list[MeetingPointResponse])
+def list_meeting_points(location_id: int):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, location_id, name, is_active, latitude, longitude, point_type FROM meeting_points WHERE location_id = %s AND is_active = TRUE", (location_id,))
+        rows = cursor.fetchall()
+        return [MeetingPointResponse(id=r[0], location_id=r[1], name=r[2], is_active=r[3], latitude=float(r[4]) if r[4] is not None else None, longitude=float(r[5]) if r[5] is not None else None, point_type=r[6]) for r in rows]
+    finally:
+        release_conn(conn)
+
+
+@app.get("/api/all-points", response_model=list[MeetingPointResponse])
+def list_all_meeting_points():
+    """Returns all active meeting points for the map."""
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, location_id, name, is_active, latitude, longitude, point_type FROM meeting_points WHERE is_active = TRUE")
+        rows = cursor.fetchall()
+        return [MeetingPointResponse(id=r[0], location_id=r[1], name=r[2], is_active=r[3], latitude=float(r[4]) if r[4] is not None else None, longitude=float(r[5]) if r[5] is not None else None, point_type=r[6]) for r in rows]
+    finally:
+        release_conn(conn)
+
+
+@app.post("/api/admin/locations/{location_id}/points", response_model=MeetingPointResponse)
+def create_meeting_point(location_id: int, payload: MeetingPointCreate, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO meeting_points (location_id, name, latitude, longitude, point_type) VALUES (%s, %s, %s, %s, %s) RETURNING id, location_id, name, is_active, latitude, longitude, point_type",
+            (location_id, payload.name, payload.latitude, payload.longitude, payload.point_type)
+        )
+        row = cursor.fetchone()
+        conn.commit()
+        return MeetingPointResponse(id=row[0], location_id=row[1], name=row[2], is_active=row[3], latitude=float(row[4]) if row[4] is not None else None, longitude=float(row[5]) if row[5] is not None else None, point_type=row[6])
+    finally:
+        release_conn(conn)
+
+
+@app.delete("/api/admin/points/{point_id}")
+def delete_meeting_point(point_id: int, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM meeting_points WHERE id = %s", (point_id,))
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Meeting point not found")
+        conn.commit()
+        return {"message": "Meeting point deleted"}
+    finally:
+        release_conn(conn)
+
+
+@app.patch("/api/admin/points/{point_id}")
+def admin_update_point(
+    point_id: int,
+    payload: MeetingPointCreate,
+    x_admin_key: str = Header(...),
+):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE meeting_points SET name = %s, latitude = %s, longitude = %s, point_type = %s WHERE id = %s",
+            (payload.name, payload.latitude, payload.longitude, payload.point_type, point_id)
+        )
+        conn.commit()
+    finally:
+        release_conn(conn)
+    return {"message": "Point updated."}
 
 
 @app.patch("/api/admin/locations/{location_id}")

@@ -98,8 +98,27 @@
 
   <!-- ── Toast ─────────────────────────────────────────────────────────── -->
   <div id="toast"
-    class="fixed top-5 right-5 z-50 bg-gray-800 text-white px-5 py-3 rounded-xl text-sm opacity-0 pointer-events-none">
+    class="fixed top-12 right-5 z-50 bg-gray-900 text-white px-6 py-4 rounded-2xl text-sm font-semibold shadow-2xl transition-all duration-300 translate-y-[-120%] opacity-0 pointer-events-none">
     Message
+  </div>
+
+  <!-- ── Custom Confirm Modal ─────────────────────────────────────────────────── -->
+  <div id="confirmModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[60] backdrop-blur-sm p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm transform scale-95 opacity-0 transition-all duration-300" id="confirmModalContent">
+      <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
+        <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500"></i>
+      </div>
+      <h3 class="text-lg font-bold text-gray-900 mb-2">Are you sure?</h3>
+      <p id="confirmModalText" class="text-sm text-gray-500 mb-6">This action cannot be undone.</p>
+      <div class="flex gap-3">
+        <button id="confirmCancelBtn" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
+          Cancel
+        </button>
+        <button id="confirmOkBtn" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition">
+          Confirm
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- ── App Shell ──────────────────────────────────────────────────────── -->
@@ -350,6 +369,11 @@
     <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm space-y-4">
       <h2 class="text-xl font-bold text-gray-800">Update Booking</h2>
       <input id="edit_id" type="hidden">
+      <div id="edit_payment_info" class="p-3 bg-gray-50 rounded-xl mb-2">
+        <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Manual Payment Info</p>
+        <p class="text-xs font-semibold text-gray-700">Method: <span id="info_method">-</span></p>
+        <p class="text-xs font-semibold text-gray-700">Last 2 digits: <span id="info_digits">-</span></p>
+      </div>
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">Payment Status</label>
         <select id="edit_payment"
@@ -454,9 +478,16 @@
     function toast(msg, isError = false) {
       const el = document.getElementById('toast');
       el.textContent = msg;
-      el.className = `fixed top-5 right-5 z-50 ${isError ? 'bg-red-600' : 'bg-gray-800'} text-white px-5 py-3 rounded-xl text-sm`;
-      el.style.opacity = '1';
-      setTimeout(() => { el.style.opacity = '0'; }, 3000);
+      el.className = `fixed top-12 right-5 z-50 ${isError ? 'bg-red-600' : 'bg-gray-900'} text-white px-6 py-4 rounded-2xl text-sm font-semibold shadow-2xl transition-all duration-300`;
+      
+      // Reveal
+      el.classList.remove('translate-y-[-120%]', 'opacity-0', 'pointer-events-none');
+      el.classList.add('translate-y-0', 'opacity-100');
+      
+      setTimeout(() => {
+        el.classList.add('translate-y-[-120%]', 'opacity-0');
+        setTimeout(() => el.classList.add('pointer-events-none'), 300);
+      }, 4000);
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
@@ -468,6 +499,37 @@
           'X-Admin-Key': ADMIN_KEY,
           ...(opts.headers || {}),
         },
+      });
+    }
+
+    function customConfirm(text) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        const content = document.getElementById('confirmModalContent');
+        const textEl = document.getElementById('confirmModalText');
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+
+        textEl.textContent = text || 'This action cannot be undone.';
+        modal.classList.remove('hidden');
+        lucide.createIcons(); // ensure icons in modal are rendered
+        setTimeout(() => {
+          content.classList.remove('scale-95', 'opacity-0');
+          content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        const onOk = () => { cleanup(); resolve(true); };
+        const onCancel = () => { cleanup(); resolve(false); };
+        const cleanup = () => {
+          content.classList.remove('scale-100', 'opacity-100');
+          content.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => modal.classList.add('hidden'), 300);
+          okBtn.removeEventListener('click', onOk);
+          cancelBtn.removeEventListener('click', onCancel);
+        };
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
       });
     }
 
@@ -556,11 +618,18 @@
             </td>
             <td class="px-4 py-3 text-gray-500">${b.venue_type === 'restaurant' ? '🍽 Restaurant' : '🌳 Public Place'}</td>
             <td class="px-4 py-3">৳${b.fee_amount}</td>
-            <td class="px-4 py-3">${paymentBadge(b.payment_status)}</td>
+             <td class="px-4 py-3">
+              ${paymentBadge(b.payment_status)}
+              <div class="text-[10px] mt-1 text-gray-400 font-mono">
+                ${b.payment_method || '-'} / *${b.payment_sender_digits || '--'}
+              </div>
+            </td>
             <td class="px-4 py-3">${statusBadge(b.booking_status)}</td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 space-x-2">
               <button onclick="openEditModal(${JSON.stringify(b).replace(/"/g, '&quot;')})"
                 class="text-xs text-orange-600 hover:underline font-medium">Edit</button>
+              <button onclick="deleteBooking(${b.id})"
+                class="text-xs text-red-500 hover:underline font-medium">Delete</button>
             </td>
           </tr>
         `).join('')}
@@ -574,6 +643,10 @@
       document.getElementById('edit_payment').value = b.payment_status;
       document.getElementById('edit_status').value = b.booking_status;
       document.getElementById('edit_notes').value = b.admin_notes || '';
+      
+      document.getElementById('info_method').textContent = b.payment_method || '-';
+      document.getElementById('info_digits').textContent = b.payment_sender_digits || '--';
+      
       document.getElementById('editModal').classList.remove('hidden');
     }
 
@@ -597,7 +670,25 @@
         closeEditModal();
         loadBookings();
       } else {
-        toast('Update failed', true);
+        const err = await res.json();
+        toast(err.detail || 'Update failed', true);
+      }
+    }
+
+    async function deleteBooking(id) {
+      const confirmed = await customConfirm('Are you sure you want to delete this booking? This action cannot be undone.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/bookings/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast('Booking deleted ✓');
+        loadBookings();
+        if (document.getElementById('section-dashboard').classList.contains('hidden') === false) {
+            loadDashboard();
+        }
+      } else {
+        toast('Delete failed', true);
       }
     }
 
@@ -768,6 +859,7 @@
     async function loadAdminLocations() {
       const res = await adminFetch('/api/admin/locations');
       const locations = await res.json();
+      console.log('Loaded admin locations:', locations); // DEBUG
       const body = document.getElementById('locationsTableBody');
 
       if (!locations.length) {
@@ -776,8 +868,35 @@
       }
 
       body.innerHTML = locations.map(loc => `
-        <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 font-medium text-gray-800">${loc.name}</td>
+        <tr class="hover:bg-gray-50 align-top">
+          <td class="px-6 py-4">
+            <div class="font-medium text-gray-800">${loc.name}</div>
+            <div class="mt-4 p-3 bg-gray-50/50 rounded-xl border border-gray-100">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center">
+                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> Meeting Points
+              </p>
+              <div id="points-${loc.id}" class="space-y-1.5 ml-1 text-xs text-gray-600">
+                 ${renderPointsHtml(loc.points, loc.id)}
+              </div>
+              <div class="mt-3 pt-3 border-t border-gray-200/50 space-y-2">
+                <input type="text" id="newPoint-${loc.id}" placeholder="Point/Branch name..." 
+                  class="text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-400 w-full">
+                <div class="flex gap-2">
+                    <input type="text" id="lat-${loc.id}" placeholder="Lat: 23.7xx" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-1/2">
+                    <input type="text" id="lng-${loc.id}" placeholder="Lng: 90.3xx" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-1/2">
+                </div>
+                <select id="type-${loc.id}" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-full bg-white">
+                  <option value="public_place">Public Place</option>
+                  <option value="restaurant">Partner Restaurant</option>
+                </select>
+                <div class="flex items-center justify-between">
+                    <a href="https://www.latlong.net/" target="_blank" class="text-[9px] text-blue-500 hover:underline">Find Coords ↗</a>
+                    <button onclick="addMeetingPoint(${loc.id})" 
+                      class="text-[10px] bg-gray-800 text-white px-4 py-1.5 rounded-lg font-bold hover:bg-gray-900 transition">Add Point</button>
+                </div>
+              </div>
+            </div>
+          </td>
           <td class="px-6 py-4">
             <span class="badge ${loc.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
               ${loc.is_active ? 'Active' : 'Inactive'}
@@ -793,6 +912,177 @@
           </td>
         </tr>
       `).join('');
+      lucide.createIcons();
+    }
+
+    function renderPointsHtml(points, locId) {
+        if (!points || !points.length) {
+            return `<span class="text-gray-400 italic">No points added.</span>`;
+        }
+        return points.map(p => `
+            <div class="flex flex-col group py-1.5 border-b border-gray-50 last:border-0" id="point-display-${p.id}">
+                <div class="flex items-center justify-between">
+                    <div class="flex flex-col">
+                        <span class="font-medium text-gray-800 flex items-center gap-2">
+                            • ${p.name}
+                            <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${p.point_type === 'restaurant' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-orange-50 text-orange-600 border-orange-100'}">
+                                ${p.point_type === 'restaurant' ? 'Partner Restaurant' : 'Public Place'}
+                            </span>
+                        </span>
+                        ${p.latitude ? `<span class="text-[9px] text-gray-400 ml-3 font-mono">${p.latitude}, ${p.longitude}</span>` : ''}
+                    </div>
+                    <div class="hidden group-hover:flex items-center gap-1">
+                        <button onclick="togglePointEdit(${p.id}, true)" class="p-1 hover:bg-blue-50 text-blue-500 rounded transition" title="Edit">
+                            <i data-lucide="edit" class="w-3 h-3"></i>
+                        </button>
+                        <button onclick="deleteMeetingPoint(${p.id}, ${locId})" class="p-1 hover:bg-red-50 text-red-500 rounded transition" title="Delete">
+                            <i data-lucide="trash-2" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="point-edit-${p.id}" class="hidden p-3 bg-white rounded-xl shadow-inner border-2 border-blue-100 my-2 space-y-2">
+                 <input type="text" id="edit-name-${p.id}" value="${p.name}" placeholder="Name" class="text-xs w-full px-2 py-1.5 border border-gray-200 rounded-lg">
+                 <div class="flex gap-2">
+                     <input type="text" id="edit-lat-${p.id}" value="${p.latitude || ''}" placeholder="Lat" class="text-[10px] w-1/2 px-2 py-1.5 border border-gray-200 rounded-lg">
+                     <input type="text" id="edit-lng-${p.id}" value="${p.longitude || ''}" placeholder="Lng" class="text-[10px] w-1/2 px-2 py-1.5 border border-gray-200 rounded-lg">
+                 </div>
+                 <select id="edit-type-${p.id}" class="text-[10px] w-full px-2 py-1.5 border border-gray-200 rounded-lg">
+                     <option value="public_place" ${p.point_type === 'public_place' ? 'selected' : ''}>Public Place</option>
+                     <option value="restaurant" ${p.point_type === 'restaurant' ? 'selected' : ''}>Partner Restaurant</option>
+                 </select>
+                 <div class="flex justify-end gap-3 items-center">
+                     <button onclick="togglePointEdit(${p.id}, false)" class="text-[10px] text-gray-400 font-bold hover:text-gray-600 transition">Cancel</button>
+                     <button onclick="saveEditPoint(${p.id}, ${locId})" class="text-[10px] bg-blue-600 text-white font-bold px-4 py-1.5 rounded-lg hover:bg-blue-700 shadow-sm transition">Update</button>
+                 </div>
+            </div>
+        `).join('');
+    }
+
+    async function loadMeetingPointsForAdmin(locId) {
+        const res = await fetch(`${API}/api/locations/${locId}/points`);
+        const points = await res.json();
+        const container = document.getElementById(`points-${locId}`);
+        if (!points.length) {
+            container.innerHTML = `<span class="text-gray-400 italic">No points added.</span>`;
+            return;
+        }
+        container.innerHTML = points.map(p => `
+            <div class="flex items-center justify-between group py-0.5">
+                <span>• ${p.name}</span>
+                <button onclick="deleteMeetingPoint(${p.id}, ${locId})" 
+                  class="hidden group-hover:block text-red-500 hover:text-red-700 transition">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i>
+                </button>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    async function addMeetingPoint(locId) {
+        const btn = event.target;
+        const input = document.getElementById(`newPoint-${locId}`);
+        const latInput = document.getElementById(`lat-${locId}`);
+        const lngInput = document.getElementById(`lng-${locId}`);
+        const typeSelect = document.getElementById(`type-${locId}`);
+        
+        const name = input.value.trim();
+        const lat = latInput.value.trim();
+        const lng = lngInput.value.trim();
+        const point_type = typeSelect.value;
+        
+        if (!name) return;
+        
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '⏳';
+
+        const payload = { 
+            location_id: locId, 
+            name,
+            latitude: lat ? parseFloat(lat) : null,
+            longitude: lng ? parseFloat(lng) : null,
+            point_type
+        };
+
+        const res = await adminFetch(`/api/admin/locations/${locId}/points`, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+
+        if (res.ok) {
+            toast(`"${name}" added ✓`);
+            input.value = '';
+            latInput.value = '';
+            lngInput.value = '';
+            loadAdminLocations(); // refresh everything to get points
+        } else {
+            toast('Failed to add meetup point', true);
+        }
+    }
+
+    async function deleteMeetingPoint(pointId, locId) {
+        const confirmed = await customConfirm('Delete this meeting point?');
+        if (!confirmed) return;
+        const res = await adminFetch(`/api/admin/points/${pointId}`, {
+            method: 'DELETE'
+        });
+        if (res.ok) {
+            loadAdminLocations();
+        } else {
+            toast('Failed to delete point', true);
+        }
+    }
+
+    function togglePointEdit(id, show) {
+        document.getElementById(`point-display-${id}`).classList.toggle('hidden', show);
+        document.getElementById(`point-edit-${id}`).classList.toggle('hidden', !show);
+        if (show) lucide.createIcons();
+    }
+
+    async function saveEditPoint(id, locId) {
+        const name = document.getElementById(`edit-name-${id}`).value.trim();
+        const lat = document.getElementById(`edit-lat-${id}`).value.trim();
+        const lng = document.getElementById(`edit-lng-${id}`).value.trim();
+        const point_type = document.getElementById(`edit-type-${id}`).value;
+
+        if (!name) return toast('Name is required', true);
+
+        const res = await adminFetch(`/api/admin/points/${id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                location_id: locId,
+                name,
+                latitude: lat ? parseFloat(lat) : null,
+                longitude: lng ? parseFloat(lng) : null,
+                point_type
+            })
+        });
+
+        if (res.ok) {
+            toast('Point updated ✓');
+            loadAdminLocations();
+        } else {
+            toast('Update failed', true);
+        }
+    }
+
+    async function deleteLocation(id) {
+      const confirmed = await customConfirm('Are you sure? This will delete the location and all its meeting points.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/locations/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast('Location deleted ✓');
+        loadAdminLocations();
+      } else {
+        toast('Delete failed', true);
+      }
     }
 
     async function addLocation() {

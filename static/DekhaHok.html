@@ -9,6 +9,13 @@
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23ea580c'/><stop offset='1' stop-color='%23c2410c'/></linearGradient></defs><rect width='24' height='24' rx='5' fill='url(%23g)'/><path d='M19.5 11.5c0 1.3-.3 2.5-.9 3.5l1.4 4-4-1.4c-1 .6-2.2.9-3.5.9-4.1 0-7.5-3.4-7.5-7.5S8.4 4 12.5 4s7.5 3.4 7.5 7.5z' fill='%23fff'/></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        .leaflet-popup-content-wrapper { border-radius: 1rem; border-top: 4px solid #ea580c; }
+        .leaflet-popup-tip { border-top: 10px solid #ea580c; }
+    </style>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
         rel="stylesheet">
@@ -245,7 +252,7 @@
     </section>
 
     <!-- Booking Section -->
-    <section id="book" class="py-24 bg-white relative overflow-hidden">
+    <section id="book" class="py-16 bg-white relative overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-30">
             <div class="absolute top-0 left-0 w-full h-full"
@@ -359,8 +366,7 @@
                                 placeholder="e.g. Dhanmondi, Mirpur">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">পছন্দের এলাকা (Meetup
-                                point)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">পছন্দের এলাকা (Area)</label>
                             <select id="preferredLocation" required
                                 class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition bg-white cursor-pointer">
                                 <option value="" disabled selected>নির্বাচন করুন...</option>
@@ -479,6 +485,7 @@
                     </div>
 
 
+
                     <!-- Pricing Section Redesign -->
                     <div class="premium-card p-1 bg-gradient-to-br from-orange-400 to-red-600">
                         <div class="bg-white rounded-[22px] p-8 md:p-10">
@@ -543,8 +550,106 @@
         </div>
     </section>
 
+    <!-- Track Your Booking Section (Compact Desktop Redesign) -->
+    <section id="track" class="py-12 bg-gray-50 relative overflow-hidden">
+        <!-- Decoration side gradients -->
+        <div class="absolute top-1/2 left-0 w-80 h-80 bg-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute top-1/2 right-0 w-64 h-64 bg-red-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-x-1/2 -translate-y-1/2"></div>
+
+        <div class="max-w-2xl mx-auto px-4 relative z-10">
+            <div class="glass-card rounded-[3rem] shadow-2xl border-4 border-white p-8 md:p-14 text-center bg-white/90 backdrop-blur-xl space-y-10 scroll-reveal">
+                <!-- Header Icon & Title -->
+                <div class="space-y-4">
+                    <div class="w-20 h-20 bg-white rounded-3xl shadow-xl flex items-center justify-center mx-auto border border-gray-50 relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl opacity-10 blur-sm"></div>
+                        <i data-lucide="map-pin" class="w-10 h-10 text-orange-600 relative z-10"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-black text-gray-900 mb-3 tracking-tight">বুকিং ট্র্যাক করুন</h2>
+                        <p class="text-gray-500 leading-relaxed">আপনার ট্র্যাকিং আইডি অথবা মোবাইল নম্বর দিয়ে সরাসরি বুকিং স্ট্যাটাস চেক করুন।</p>
+                    </div>
+                </div>
+
+                <!-- Input Group -->
+                <div class="space-y-6">
+                    <div class="relative group">
+                        <!-- Shadow Glow -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-orange-400 to-red-600 rounded-[2rem] blur opacity-10 group-hover:opacity-20 transition duration-500"></div>
+                        
+                        <div class="relative flex flex-col md:flex-row gap-4">
+                            <input id="trackingInput" type="text" placeholder="DH-XXXXXXXX or 017..."
+                                class="flex-1 border-2 border-gray-100 bg-white rounded-2xl px-6 py-5 text-lg font-mono focus:outline-none focus:border-orange-400 shadow-inner placeholder:text-gray-300">
+                            <button onclick="checkBookingStatus()"
+                                class="btn-primary text-white px-10 py-5 rounded-2xl font-black text-lg whitespace-nowrap shadow-xl shadow-orange-100 hover:shadow-orange-200 transform active:scale-95 transition-all">
+                                ট্র্যাক করুন
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2 py-2 bg-orange-50/50 rounded-full border border-orange-100/50 w-fit mx-auto px-6">
+                        <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                        <p class="text-xs font-bold text-orange-800 uppercase tracking-widest">রিয়েল-টাইম স্ট্যাটাস আপডেট</p>
+                    </div>
+
+                    <!-- Simplified Container for Results -->
+                    <div id="trackingResult"
+                        class="hidden bg-gray-50 rounded-[2rem] shadow-inner border border-gray-100 p-8 text-left space-y-4">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section (Moved & Styled) -->
+    <section class="py-16 bg-white overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center max-w-2xl mx-auto mb-12 space-y-8 scroll-reveal">
+                <div class="space-y-4">
+                    <h2 class="text-4xl font-black text-gray-900 leading-tight">আমাদের পছন্দের মিলনস্থল <span class="text-orange-600">(ঢাকা)</span></h2>
+                    <p class="text-lg text-gray-500 leading-relaxed">আমরা বর্তমানে সারা ঢাকা শহর জুড়ে বিস্তৃত। আপনার কাছের পয়েন্টটি দেখে নিন এবং আমাদের আড্ডায় যোগ দিন।</p>
+                </div>
+                
+                <div id="map-stats" class="inline-flex gap-8 bg-gray-50 p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+                    <div class="text-center">
+                        <p class="text-2xl font-black text-orange-600" id="stat-cities">১</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">শহর</p>
+                    </div>
+                    <div class="text-center px-8 border-x border-gray-200">
+                        <p class="text-2xl font-black text-orange-600" id="stat-areas">৮+</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">এলাকা</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-black text-orange-600" id="stat-points">০</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">পয়েন্ট</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card rounded-[3rem] shadow-2xl p-2 md:p-3 scroll-reveal overflow-hidden border-8 border-gray-50 bg-gray-100 relative">
+                <div id="map" class="w-full h-[500px] md:h-[700px] rounded-[2.5rem] z-10"></div>
+                
+                <!-- Map Legend -->
+                <div class="absolute bottom-10 left-10 z-[20] bg-white/90 backdrop-blur p-4 rounded-2xl shadow-2xl border border-white/50 hidden md:block">
+                    <p class="text-xs font-bold text-gray-900 mb-3 flex items-center">
+                        <i data-lucide="info" class="w-3 h-3 mr-1.5 text-orange-500"></i> ম্যাপ লিজেন্ড
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 bg-orange-600 rounded-full shadow-sm shadow-orange-200"></div>
+                            <span class="text-[11px] font-medium text-gray-700">অ্যাক্টিভ মিটআপ পয়েন্ট</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full shadow-sm shadow-blue-200"></div>
+                            <span class="text-[11px] font-medium text-gray-700">পার্টনার রেস্তোরাঁ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-24 bg-white">
+    <section id="how-it-works" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 scroll-reveal">
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">কিভাবে কাজ করে?</h2>
@@ -633,29 +738,10 @@
         </div>
     </section>
 
-    <!-- Track Your Booking Section -->
-    <section id="track" class="py-20 bg-gray-50">
-        <div class="max-w-lg mx-auto px-4 text-center space-y-6">
-            <div class="scroll-reveal">
-                <h2 class="text-3xl font-bold gradient-text mb-2">বুকিং ট্র্যাক করুন</h2>
-                <p class="text-gray-500">আপনার ট্র্যাকিং আইডি অথবা মোবাইল নম্বর দিয়ে বুকিং স্ট্যাটাস চেক করুন।</p>
-            </div>
-            <div class="flex gap-3 scroll-reveal">
-                <input id="trackingInput" type="text" placeholder="ID or Phone Number"
-                    class="flex-1 border border-gray-200 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-orange-400 font-mono bg-white">
-                <button onclick="checkBookingStatus()"
-                    class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm whitespace-nowrap">
-                    চেক করুন
-                </button>
-            </div>
-            <div id="trackingResult"
-                class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-left space-y-3 scroll-reveal">
-            </div>
-        </div>
-    </section>
+
 
     <!-- Safety & Trust Section -->
-    <section id="safety" class="py-24 bg-white">
+    <section id="safety" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="scroll-reveal">
@@ -723,6 +809,8 @@
             </div>
         </div>
     </section>
+
+
 
     <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -809,6 +897,75 @@
 
             <button onclick="closeModal()" class="btn-primary w-full text-white py-3 rounded-xl font-semibold">
                 Got it!
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
+            id="paymentModalContent">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">পেমেন্ট সম্পন্ন করুন</h3>
+                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="bg-orange-50 border border-orange-100 rounded-2xl p-5 mb-6">
+                <p class="text-sm text-gray-600 mb-3">
+                    বুকিং সম্পন্ন করতে অনুগ্রহ করে <span id="paymentModalFee" class="font-bold text-gray-900">৳৪৯৯</span> নিচে দেওয়া নাম্বারে <span class="font-bold text-orange-600">Send Money</span> করুন।
+                </p>
+                <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-orange-200">
+                    <div>
+                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">বিকাশ / নগদ / উপায় (পার্সোনাল)</p>
+                        <p class="text-xl font-bold text-gray-800">01884477720</p>
+                    </div>
+                    <button onclick="copyNumber()" id="copyBtn" class="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition relative" title="Copy Number">
+                        <i data-lucide="copy" id="copyIcon" class="w-5 h-5"></i>
+                        <i data-lucide="check-circle-2" id="checkIcon" class="w-5 h-5 text-green-600 hidden"></i>
+                    </button>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-2 font-medium italic">* No extra charge needed.</p>
+            </div>
+
+            <div class="space-y-4 mb-6 text-left">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">পেমেন্ট মেথড নির্বাচন করুন</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button type="button" onclick="selectPaymentMethod('bkash')" id="btn-bkash"
+                            class="payment-method-btn flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 transition-all active ring-2 ring-orange-100">
+                            <span class="text-xs font-bold text-pink-600">bKash</span>
+                        </button>
+                        <button type="button" onclick="selectPaymentMethod('nagad')" id="btn-nagad"
+                            class="payment-method-btn flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 transition-all">
+                            <span class="text-xs font-bold text-orange-600">Nagad</span>
+                        </button>
+                        <button type="button" onclick="selectPaymentMethod('upay')" id="btn-upay"
+                            class="payment-method-btn flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 transition-all">
+                            <span class="text-xs font-bold text-blue-600">Upay</span>
+                        </button>
+                    </div>
+                    <input type="hidden" id="paymentMethod" value="bkash">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">আপনার নম্বরের শেষ ২ ডিজিট</label>
+                    <input type="text" id="paymentDigits" required maxlength="2"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-400 transition"
+                        placeholder="যেমন: ৪৫">
+                </div>
+            </div>
+
+            <p class="text-xs text-orange-600 font-medium mb-6 bg-orange-50 p-3 rounded-xl border border-orange-100">
+                <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+                মিটআপ আয়োজন করতে না পারলে (১ সপ্তাহের মধ্যে) সফলভাবে ক্যাশব্যাক বা রিফান্ড করা হবে।
+            </p>
+
+            <button id="finalSubmitBtn" onclick="submitBooking()"
+                class="btn-primary w-full text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-orange-200 flex items-center justify-center gap-2">
+                <span>পেমেন্ট নিশ্চিত করুন</span>
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
             </button>
         </div>
     </div>
@@ -992,8 +1149,53 @@
                 return;
             }
 
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            // Instead of immediate submit, show payment modal
+            document.getElementById('paymentModalFee').textContent = document.getElementById('reservationFee').textContent;
+            openPaymentModal();
+        }
+
+        let pendingPayload = null;
+
+        function openPaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            const modalContent = document.getElementById('paymentModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            const modalContent = document.getElementById('paymentModalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function selectPaymentMethod(method) {
+            document.getElementById('paymentMethod').value = method;
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('border-orange-500', 'ring-2', 'ring-orange-100');
+                btn.classList.add('border-gray-100');
+            });
+            const activeBtn = document.getElementById(`btn-${method}`);
+            activeBtn.classList.remove('border-gray-100');
+            activeBtn.classList.add('border-orange-500', 'ring-2', 'ring-orange-100');
+        }
+
+        async function submitBooking() {
+            const lastDigits = document.getElementById('paymentDigits').value.trim();
+            if (lastDigits.length !== 2) {
+                alert('অনুগ্রহ করে আপনার নম্বরের শেষ ২ ডিজিট প্রদান করুন।');
+                return;
+            }
+
+            const activeSlot = document.querySelector('.date-btn.border-orange-500');
+            const submitBtn = document.getElementById('finalSubmitBtn');
             const originalContent = submitBtn.innerHTML;
+            
             submitBtn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
             submitBtn.disabled = true;
 
@@ -1009,7 +1211,10 @@
                 conversation_style: document.getElementById('conversationStyle').value.trim() || null,
                 preferred_people: document.getElementById('preferredPeople').value.trim() || null,
                 current_location: document.getElementById('currentLocation').value.trim() || null,
-                preferred_location: document.getElementById('preferredLocation').value.trim() || null,
+                preferred_location: document.getElementById('preferredLocation').value || null,
+                payment_method: document.getElementById('paymentMethod').value,
+                payment_sender_digits: lastDigits,
+                preferred_meeting_point: null,
             };
 
             try {
@@ -1024,35 +1229,51 @@
                     const msg = Array.isArray(data.detail)
                         ? data.detail.map(d => d.msg).join(', ')
                         : (data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-                    showFormError(msg);
+                    alert(msg);
                     return;
                 }
 
-                // ── Success: show modal ──
+                closePaymentModal();
+                
+                // ── Success: show success modal ──
                 document.getElementById('modalTrackingId').textContent = data.tracking_id;
                 document.getElementById('modalGroupSize').textContent = payload.group_size;
                 const timeLabel = payload.preferred_time === '17:00' ? '5:00 PM' : '7:00 PM';
                 document.getElementById('modalDateSlot').textContent = `${activeSlot.dataset.date} — ${timeLabel}`;
 
-                const modal = document.getElementById('successModal');
-                const modalContent = document.getElementById('modalContent');
-                modal.classList.remove('hidden');
+                const sModal = document.getElementById('successModal');
+                const sModalContent = document.getElementById('modalContent');
+                sModal.classList.remove('hidden');
                 setTimeout(() => {
-                    modalContent.classList.remove('scale-95', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
+                    sModalContent.classList.remove('scale-95', 'opacity-0');
+                    sModalContent.classList.add('scale-100', 'opacity-100');
                 }, 10);
 
-                e.target.reset();
+                document.getElementById('bookingForm').reset();
                 selectGroupSize(2);
-                // Re-init date slots after reset
                 const firstSlot = document.getElementById('slot-fri-5pm');
                 if (firstSlot) selectDate(firstSlot);
 
             } catch (err) {
-                showFormError('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
+                alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
             } finally {
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
+            }
+        }
+
+        function copyNumber() {
+            navigator.clipboard.writeText('01884477720');
+            const copyIcon = document.getElementById('copyIcon');
+            const checkIcon = document.getElementById('checkIcon');
+            
+            if (copyIcon && checkIcon) {
+                copyIcon.classList.add('hidden');
+                checkIcon.classList.remove('hidden');
+                setTimeout(() => {
+                    copyIcon.classList.remove('hidden');
+                    checkIcon.classList.add('hidden');
+                }, 5000);
             }
         }
 
@@ -1213,9 +1434,7 @@
                 const select = document.getElementById('preferredLocation');
                 if (!select) return;
 
-                // Clear and keep first option
                 select.innerHTML = '<option value="" disabled selected>নির্বাচন করুন...</option>';
-
                 locations.forEach(loc => {
                     const opt = document.createElement('option');
                     opt.value = loc.name;
@@ -1261,6 +1480,77 @@
                 }
             }
         }
+        
+        // ── Map Integration ────────────────────────────────────────────────────────
+        let map;
+        async function initMap() {
+            const dhaka = [23.75, 90.41]; // Centered on Dhaka
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+
+            // Use Standard OSM for more "normal" look as requested
+            map = L.map('map', {
+                scrollWheelZoom: false,
+                zoomControl: false
+            }).setView(dhaka, 12);
+            
+            L.control.zoom({ position: 'topright' }).addTo(map);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            try {
+                const res = await fetch('/api/all-points');
+                const points = await res.json();
+                
+                // Update stats
+                document.getElementById('stat-points').textContent = points.length;
+                const restaurantCount = points.filter(p => p.point_type === 'restaurant').length;
+                const areaCount = [...new Set(points.map(p => p.location_id))].length;
+                document.getElementById('stat-areas').textContent = areaCount + '+';
+
+                points.forEach(p => {
+                    if (p.latitude && p.longitude) {
+                        const isRestaurant = p.point_type === 'restaurant';
+                        const bgColor = isRestaurant ? '#3b82f6' : '#ea580c';
+                        const borderColor = isRestaurant ? '#93c5fd' : '#ffedd5';
+                        const labelColor = isRestaurant ? 'text-blue-500' : 'text-orange-500';
+                        const typeName = isRestaurant ? 'Partner Restaurant' : 'Meetup Point';
+
+                        // Custom Marker Pin Style (Matches Orange Pin in Screenshot)
+                        const customIcon = L.divIcon({
+                            html: `
+                                <div class="relative group">
+                                    <div class="flex items-center">
+                                       <div class="relative w-8 h-8 flex items-center justify-center">
+                                            <div class="absolute inset-0 bg-[${bgColor}] rounded-full rounded-bl-none rotate-[45deg] translate-y-[-2px] shadow-lg border-2 border-white"></div>
+                                            <div class="absolute w-2.5 h-2.5 bg-white rounded-full z-10 translate-y-[-2px]"></div>
+                                       </div>
+                                       <div class="ml-2 bg-white/95 backdrop-blur-sm border-2 border-[${borderColor}] px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap transform transition-all group-hover:scale-105">
+                                            <p class="text-[10px] font-black text-gray-900 leading-none mb-0.5">${p.name}</p>
+                                            <p class="text-[8px] font-bold ${labelColor} uppercase tracking-tighter leading-none">${typeName}</p>
+                                       </div>
+                                    </div>
+                                </div>
+                            `,
+                            className: 'custom-map-marker',
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 32]
+                        });
+
+                        const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
+                        
+                        marker.on('click', () => {
+                            map.setView([p.latitude, p.longitude], 15, { animate: true });
+                        });
+                    }
+                });
+            } catch (err) {
+                console.error('Map points loading failed:', err);
+            }
+        }
+        initMap();
     </script>
     <div id="google_translate_element" style="display:none"></div>
 

@@ -11,7 +11,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 _pool = pool.ThreadedConnectionPool(
     minconn=1,
-    maxconn=5,
+    maxconn=10,
     dsn=os.getenv("DATABASE_URL"),
 )
 
@@ -42,6 +42,17 @@ CREATE TABLE IF NOT EXISTS locations (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS meeting_points (
+    id SERIAL PRIMARY KEY,
+    location_id INT NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS bookings (
     id                SERIAL PRIMARY KEY,
     tracking_id       VARCHAR(12)  NOT NULL UNIQUE,
@@ -57,8 +68,11 @@ CREATE TABLE IF NOT EXISTS bookings (
     preferred_people  TEXT,
     current_location  VARCHAR(200),
     preferred_location VARCHAR(200),
+    preferred_meeting_point VARCHAR(200),
     fee_amount        NUMERIC(8,2) NOT NULL DEFAULT 0.00,
     payment_status    VARCHAR(10)  NOT NULL DEFAULT 'unpaid',
+    payment_method    VARCHAR(20),
+    payment_sender_digits VARCHAR(10),
     booking_status    VARCHAR(15)  NOT NULL DEFAULT 'processing',
     assigned_group_id INT,
     admin_notes       TEXT,
@@ -97,7 +111,13 @@ def init_db():
         # Migrations for existing DB
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS current_location VARCHAR(200)")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS preferred_location VARCHAR(200)")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS preferred_meeting_point VARCHAR(200)")
+        cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS latitude DECIMAL(10, 8)")
+        cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS longitude DECIMAL(11, 8)")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_method VARCHAR(20)")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_sender_digits VARCHAR(10)")
         cursor.execute("ALTER TABLE meetup_groups ALTER COLUMN group_code TYPE VARCHAR(20)")
+        cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS point_type VARCHAR(20) DEFAULT 'public_place'")
         
         # Initial locations
         initial_locations = [
