@@ -106,24 +106,24 @@
         </div>
         <!-- Mobile Menu Overlay -->
         <div id="mobileMenu"
-            class="hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-orange-100 p-6 flex-col space-y-4 shadow-xl z-40 mobile-menu">
+            class="hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-orange-100 p-4 flex-col space-y-3 shadow-xl z-40 mobile-menu">
             <a href="#book" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 <span>বুক করুন</span>
             </a>
             <a href="#how-it-works" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
                 <i data-lucide="help-circle" class="w-5 h-5"></i>
                 <span>কিভাবে কাজ করে</span>
             </a>
             <a href="#track" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
                 <i data-lucide="map-pin" class="w-5 h-5"></i>
                 <span>বুকিং ট্র্যাক করুন</span>
             </a>
             <a href="#safety" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3">
+                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
                 <i data-lucide="shield" class="w-5 h-5"></i>
                 <span>নিরাপত্তা</span>
             </a>
@@ -166,8 +166,7 @@
                 </h1>
 
                 <p class="text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-loose mt-0">
-                    ২ বা ৫ জনের গ্রুপে জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে তুলুন প্রাণবন্ত
-                    বন্ধুত্ব।
+                    "ঢাকা জুড়েই আমাদের আয়োজন; আপনার পছন্দের স্থানটি বেছে নিয়ে আজই যুক্ত হোন!"
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
@@ -176,9 +175,9 @@
                         <span>সিট বুক করুন</span>
                         <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                     </button>
-                    <button onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})"
+                    <button onclick="document.getElementById('track').scrollIntoView({behavior: 'smooth'})"
                         class="bg-white text-orange-600 border-2 border-orange-200 px-8 py-4 rounded-full font-semibold text-lg hover:border-orange-400 transition">
-                        কীভাবে কাজ করে
+                        বুকিং ট্র্যাক করুন
                     </button>
                 </div>
 
@@ -294,8 +293,6 @@
                                 </div>
                                 <h3 class="text-xl font-black text-gray-900 mb-0.5">দ্বৈত</h3>
                                 <div class="text-xs font-semibold text-gray-500 mb-2">২ জন</div>
-                                <p class="text-gray-400 text-[10px] mb-4 leading-relaxed px-1">যখন কেবল ২ জন মানুষ
-                                    একসাথে দেখা করতে চান।</p>
                                 <div class="mt-auto pt-2 border-t border-gray-100 w-full">
                                     <div class="flex items-baseline justify-center gap-1">
                                         <span class="text-2xl font-black text-gray-900">৳৪৯৯</span>
@@ -319,8 +316,6 @@
                                 </div>
                                 <h3 class="text-xl font-black text-gray-900 mb-0.5">পঞ্চায়েত</h3>
                                 <div class="text-xs font-semibold text-gray-500 mb-2">৫ জন</div>
-                                <p class="text-gray-400 text-[10px] mb-4 leading-relaxed px-1">৫ জনের মিলনমেলা,
-                                    যেখানে আড্ডা হবে জমজমাট।</p>
                                 <div class="mt-auto pt-2 border-t border-gray-100 w-full">
                                     <div class="flex items-baseline justify-center gap-1">
                                         <span class="text-2xl font-black text-gray-900">৳২৪৯</span>
@@ -536,38 +531,41 @@
                                 <span>বুক করুন</span>
                                 <i data-lucide="lock" class="w-6 h-6"></i>
                             </button>
-
+                            <!-- Payment Option Logo's disabled for now 
                             <div class="mt-6 flex flex-col items-center justify-center gap-3">
                                 <div class="flex items-center gap-1.5 opacity-60">
                                     <i data-lucide="shield-check" class="w-3.5 h-3.5 text-gray-500"></i>
                                     <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Secure
                                         Payment</span>
                                 </div>
+                                
                                 <div class="flex items-center justify-center gap-3.5 opacity-100 mt-1">
-                                    <!-- bKash -->
+                                    
                                     <div
                                         class="flex items-center justify-center w-[72px] h-[36px] bg-white rounded-md border border-gray-200">
-                                        <img src="https://download.logo.wine/logo/BKash/BKash-Logo.wine.png" alt="bKash"
+                                        <img src="/static/assets/bkash-logo.png" alt="bKash"
                                             class="h-[90%] w-[90%] object-contain">
                                     </div>
-                                    <!-- Nagad -->
+                                    
                                     <div
                                         class="flex items-center justify-center w-[72px] h-[36px] bg-white rounded-md border border-gray-200">
-                                        <img src="https://download.logo.wine/logo/Nagad/Nagad-Logo.wine.png" alt="Nagad"
+                                        <img src="/static/assets/nagad-logo.png" alt="Nagad"
                                             class="h-[80%] w-[80%] object-contain">
                                     </div>
-                                    <!-- Upay -->
+                                    
                                     <div
                                         class="flex items-center justify-center w-[72px] h-[36px] bg-white rounded-md border border-gray-200">
-                                        <img src="https://static.vecteezy.com/system/resources/previews/068/764/291/non_2x/upay-logo-mobile-banking-app-icon-transparent-background-free-png.png"
-                                            alt="Upay" class="h-[85%] w-[85%] object-contain">
+                                        <img src="/static/assets/upay-logo.png" alt="Upay"
+                                            class="h-[85%] w-[85%] object-contain">
                                     </div>
-                                </div>
-                            </div>
+                                </div> 
+                            -->
+
                         </div>
                     </div>
-                </form>
             </div>
+            </form>
+        </div>
         </div>
     </section>
 
