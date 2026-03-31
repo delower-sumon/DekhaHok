@@ -248,12 +248,14 @@
 
             <!-- Success View -->
             <div id="partnershipSuccessView" class="hidden text-center py-8 space-y-4">
-                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div
+                    class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i data-lucide="check-circle" class="w-10 h-10"></i>
                 </div>
                 <h4 class="text-xl font-bold text-gray-900">আবেদন সফল!</h4>
                 <p class="text-sm text-gray-500">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব। ধন্যবাদ!</p>
-                <button onclick="closePartnershipModal()" class="text-emerald-600 font-bold hover:underline">বন্ধ করুন</button>
+                <button onclick="closePartnershipModal()" class="text-emerald-600 font-bold hover:underline">বন্ধ
+                    করুন</button>
             </div>
         </div>
     </div>
@@ -308,7 +310,7 @@
     </div>
 
     <!-- Premium Trust Banner (Inspired by Fitra Image 5 Top) -->
-    <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-8 flex justify-center">
+    <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-2 flex justify-center">
         <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
             <span class="text-xs font-bold text-gray-700">৩২০৪ জন ঢাকার মানুষ আমাদের উপর ভরসা করছেন — শুভকামনা!</span>
@@ -317,7 +319,7 @@
     </div>
 
     <!-- Hero Section with Animation -->
-    <section class="relative flex items-center justify-center pt-8 pb-16 overflow-hidden pattern-bg">
+    <section class="relative flex items-center justify-center pt-4 pb-16 overflow-hidden pattern-bg">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div
@@ -912,9 +914,9 @@
                         <div class="flex justify-between items-start mb-4">
                             <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০৩</span>
                             <div class="flex items-center gap-1">
-                                <i data-lucide="cpu" class="w-3 h-3 text-emerald-500"></i>
-                                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">AI
-                                    Engine</span>
+                                <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+                                <span
+                                    class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">VERIFIED</span>
                             </div>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-2">স্মার্ট ম্যাচিং</h3>
@@ -1055,503 +1057,501 @@
         </div>
     </section>
 
-        <!-- Visual Spacer for clear separation -->
-        <div class="h-10 bg-white section-bg-subtle border-t border-gray-50"></div>
+    <!-- Visual Spacer for clear separation -->
+    <div class="h-6 bg-white section-bg-subtle border-t border-gray-50"></div>
 
-        <footer class="relative z-[999] bg-gray-900 text-white pt-16 pb-8"
-            style="pointer-events: auto !important; margin-bottom: 0;">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid md:grid-cols-4 gap-8 mb-8">
-                    <div class="col-span-2">
-                        <div class="flex items-center space-x-2 mb-4 cursor-pointer group"
-                            onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                            <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok"
-                                class="footer-logo group-hover:scale-110 transition-transform">
-                            <span
-                                class="text-2xl font-bold group-hover:text-emerald-400 transition-colors">DekhaHok</span>
-                        </div>
-                        <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
-                            তুলুন প্রাণবন্ত
-                            বন্ধুত্ব।</p>
+    <footer class="relative z-[999] bg-gray-900 text-white pt-16 pb-8"
+        style="pointer-events: auto !important; margin-bottom: 0;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-2 mb-4 cursor-pointer group"
+                        onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                        <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok"
+                            class="footer-logo group-hover:scale-110 transition-transform">
+                        <span class="text-2xl font-bold group-hover:text-emerald-400 transition-colors">DekhaHok</span>
                     </div>
-
-                    <div>
-                        <h4 class="font-bold mb-4">লিংকস</h4>
-                        <ul class="space-y-2 text-gray-400">
-                            <li><a href="#how-it-works" class="hover:text-emerald-400 transition block"
-                                    onclick="scrollToSection(event, '#how-it-works')">কিভাবে কাজ করে</a></li>
-                            <li><a href="#safety" class="hover:text-emerald-400 transition block"
-                                    onclick="scrollToSection(event, '#safety')">নিরাপত্তা</a></li>
-                            <li><a href="javascript:void(0)" onclick="openPartnershipModal()"
-                                    class="hover:text-emerald-400 transition block">পার্টনারশিপ আবেদন</a></li>
-                            <li><a href="javascript:void(0)" onclick="openLegalModal('privacy')"
-                                    class="hover:text-emerald-400 transition block">গোপনীয়তা নীতি</a></li>
-                            <li><a href="javascript:void(0)" onclick="openLegalModal('terms')"
-                                    class="hover:text-emerald-400 transition block">ব্যবহারের শর্তাবলী</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 class="font-bold mb-4">যোগাযোগ</h4>
-                        <div class="flex space-x-4">
-                            <a href="https://facebook.com/dekhahok" target="_blank"
-                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="text-white">
-                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                                </svg>
-                            </a>
-                            <a href="https://instagram.com/dekhahok" target="_blank"
-                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:scale-110 transition-all duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="text-white">
-                                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-                                </svg>
-                            </a>
-                            <a href="https://wa.me/8801884477720" target="_blank"
-                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all duration-300">
-                                <i data-lucide="phone-call" class="w-5 h-5"></i>
-                            </a>
-                        </div>
-                    </div>
+                    <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
+                        তুলুন প্রাণবন্ত
+                        বন্ধুত্ব।</p>
                 </div>
 
-                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center mb-12">
-                    <p class="text-gray-500 text-sm text-center md:text-left">
-                        © 2024 DekhaHok.<br class="md:hidden">
-                        All rights reserved.<br class="md:hidden">
-                        Made with <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                            fill="url(#heartGrad)" style="filter: drop-shadow(0 0 6px rgba(16,185,129,0.5));"
-                            class="inline-block align-middle">
-                            <defs>
-                                <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#10B981" />
-                                    <stop offset="50%" stop-color="#34D399" />
-                                    <stop offset="100%" stop-color="#10B981" />
-                                </linearGradient>
-                            </defs>
-                            <path
-                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg> in Dhaka.
-                    </p>
-                    <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
-                        <a href="javascript:void(0)" onclick="openLegalModal('privacy')"
-                            class="hover:text-white pointer-events-auto transition">Privacy Policy</a>
-                        <a href="javascript:void(0)" onclick="openLegalModal('terms')"
-                            class="hover:text-white pointer-events-auto transition">Terms of Service</a>
-                    </div>
+                <div>
+                    <h4 class="font-bold mb-4">লিংকস</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#how-it-works" class="hover:text-emerald-400 transition block"
+                                onclick="scrollToSection(event, '#how-it-works')">কিভাবে কাজ করে</a></li>
+                        <li><a href="#safety" class="hover:text-emerald-400 transition block"
+                                onclick="scrollToSection(event, '#safety')">নিরাপত্তা</a></li>
+                        <li><a href="javascript:void(0)" onclick="openPartnershipModal()"
+                                class="hover:text-emerald-400 transition block">পার্টনারশিপ আবেদন</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('privacy')"
+                                class="hover:text-emerald-400 transition block">গোপনীয়তা নীতি</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('terms')"
+                                class="hover:text-emerald-400 transition block">ব্যবহারের শর্তাবলী</a></li>
+                    </ul>
                 </div>
 
-                <!-- Final Gracious Conclusion Banner (Premium Wide Style) -->
-                <div class="mt-20 flex justify-center w-full px-4 sm:px-6">
-                    <div
-                        class="w-full max-w-4xl bg-white/5 backdrop-blur-xl px-1 sm:px-8 py-5 rounded-[40px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left transition-all hover:bg-white/[0.08] hover:border-emerald-500/20 group">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="p-3 bg-emerald-500/20 rounded-2xl group-hover:bg-emerald-500/30 transition-colors">
-                                <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path
-                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                </svg>
-                            </div>
-                            <div class="h-10 w-[1px] bg-white/10 hidden sm:block"></div>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="text-white font-bold tracking-tight">ধন্যবাদ আমাদের সাথে থাকার জন্য!</h4>
-                            <p class="text-sm text-gray-500 font-medium">আপনার প্রতিটি সুন্দর মুহূর্ত হোক নিরাপদ ও
-                                আনন্দময়। <span
-                                    class="text-emerald-500 ml-1 opacity-70 group-hover:opacity-100 transition-opacity">♥</span>
-                            </p>
-                        </div>
-                        <div
-                            class="hidden lg:flex items-center gap-2 ml-4 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                            <span class="relative flex h-2 w-2">
-                                <span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                            <span class="text-[10px] uppercase font-black text-emerald-400 tracking-tighter">Live from
-                                Dhaka</span>
-                        </div>
+                <div>
+                    <h4 class="font-bold mb-4">যোগাযোগ</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://facebook.com/dekhahok" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-white">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/dekhahok" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-white">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/8801884477720" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all duration-300">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-        </footer>
 
-        <script>
-            // ── Icons ────────────────────────────────────────────────────────────────
-            // Initialise Lucide icons across the page
-            lucide.createIcons();
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center mb-6">
+                <p class="text-gray-500 text-sm text-center md:text-left">
+                    © 2024 DekhaHok.<br class="md:hidden">
+                    All rights reserved.<br class="md:hidden">
+                    Made with <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                        fill="url(#heartGrad)" style="filter: drop-shadow(0 0 6px rgba(16,185,129,0.5));"
+                        class="inline-block align-middle">
+                        <defs>
+                            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981" />
+                                <stop offset="50%" stop-color="#34D399" />
+                                <stop offset="100%" stop-color="#10B981" />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg> in Dhaka.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
+                    <a href="javascript:void(0)" onclick="openLegalModal('privacy')"
+                        class="hover:text-white pointer-events-auto transition">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('terms')"
+                        class="hover:text-white pointer-events-auto transition">Terms of Service</a>
+                </div>
+            </div>
 
-            // ── Scroll Reveal ─────────────────────────────────────────────────────────
-            // Uses Intersection Observer to add 'active' class to elements with 'scroll-reveal'
-            // when they become visible in the viewport.
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-            document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+            <!-- Final Gracious Conclusion Banner (Premium Wide Style) -->
+            <div class="mt-10 flex justify-center w-full px-4 sm:px-6">
+                <div
+                    class="w-full max-w-4xl bg-white/5 backdrop-blur-xl px-1 sm:px-8 py-5 rounded-[40px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left transition-all hover:bg-white/[0.08] hover:border-emerald-500/20 group">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-emerald-500/20 rounded-2xl group-hover:bg-emerald-500/30 transition-colors">
+                            <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                        </div>
+                        <div class="h-10 w-[1px] bg-white/10 hidden sm:block"></div>
+                    </div>
+                    <div class="space-y-1">
+                        <h4 class="text-white font-bold tracking-tight">ধন্যবাদ আমাদের সাথে থাকার জন্য!</h4>
+                        <p class="text-sm text-gray-500 font-medium">আপনার প্রতিটি সুন্দর মুহূর্ত হোক নিরাপদ ও
+                            আনন্দময়। <span
+                                class="text-emerald-500 ml-1 opacity-70 group-hover:opacity-100 transition-opacity">♥</span>
+                        </p>
+                    </div>
+                    <div
+                        class="hidden lg:flex items-center gap-2 ml-4 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-[10px] uppercase font-black text-emerald-400 tracking-tighter">Live from
+                            Dhaka</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-            // ── Date Slot Initialisation ──────────────────────────────────────────────
-            // Dynamically calculates the next available Friday and Saturday for meetups.
-            // Automatically selects the first slot by default.
-            (function initDateSlots() {
-                const DAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
-                const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    <script>
+        // ── Icons ────────────────────────────────────────────────────────────────
+        // Initialise Lucide icons across the page
+        lucide.createIcons();
 
-                function getNextWeekday(targetDay) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const d = new Date(today);
-                    let diff = targetDay - today.getDay();
-                    if (diff <= 0) diff += 7;
-                    d.setDate(today.getDate() + diff);
-                    return d;
-                }
+        // ── Scroll Reveal ─────────────────────────────────────────────────────────
+        // Uses Intersection Observer to add 'active' class to elements with 'scroll-reveal'
+        // when they become visible in the viewport.
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 
-                function toISO(d) {
-                    const mm = String(d.getMonth() + 1).padStart(2, '0');
-                    const dd = String(d.getDate()).padStart(2, '0');
-                    return `${d.getFullYear()}-${mm}-${dd}`;
-                }
+        // ── Date Slot Initialisation ──────────────────────────────────────────────
+        // Dynamically calculates the next available Friday and Saturday for meetups.
+        // Automatically selects the first slot by default.
+        (function initDateSlots() {
+            const DAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+            const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-                function toLabel(d) {
-                    return `${d.getDate()} ${MONTHS_EN[d.getMonth()]}`;
-                }
+            function getNextWeekday(targetDay) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const d = new Date(today);
+                let diff = targetDay - today.getDay();
+                if (diff <= 0) diff += 7;
+                d.setDate(today.getDate() + diff);
+                return d;
+            }
 
-                const friday = getNextWeekday(5);
-                const saturday = getNextWeekday(6);
+            function toISO(d) {
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                return `${d.getFullYear()}-${mm}-${dd}`;
+            }
 
-                document.getElementById('fridayDateLabel').textContent = toLabel(friday);
-                document.getElementById('saturdayDateLabel').textContent = toLabel(saturday);
+            function toLabel(d) {
+                return `${d.getDate()} ${MONTHS_EN[d.getMonth()]}`;
+            }
 
-                document.getElementById('slot-fri-5pm').dataset.date = toISO(friday);
-                document.getElementById('slot-fri-7pm').dataset.date = toISO(friday);
-                document.getElementById('slot-sat-5pm').dataset.date = toISO(saturday);
-                document.getElementById('slot-sat-7pm').dataset.date = toISO(saturday);
+            const friday = getNextWeekday(5);
+            const saturday = getNextWeekday(6);
 
-                selectDate(document.getElementById('slot-fri-5pm'));
-                selectGroupSize(2);
-                selectVenue('public_place', document.querySelector('.venue-btn'));
-            })();
+            document.getElementById('fridayDateLabel').textContent = toLabel(friday);
+            document.getElementById('saturdayDateLabel').textContent = toLabel(saturday);
 
-            // ── Date Selection ────────────────────────────────────────────────────────
-            function selectDate(btn) {
-                document.querySelectorAll('.date-btn').forEach(b => {
-                    b.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
-                        'shadow-md', 'shadow-emerald-100', 'ring-2', 'ring-emerald-100', 'ring-offset-2');
-                    b.classList.add('border-gray-100', 'bg-white', 'text-gray-600');
-                });
-                btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-600');
-                btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
+            document.getElementById('slot-fri-5pm').dataset.date = toISO(friday);
+            document.getElementById('slot-fri-7pm').dataset.date = toISO(friday);
+            document.getElementById('slot-sat-5pm').dataset.date = toISO(saturday);
+            document.getElementById('slot-sat-7pm').dataset.date = toISO(saturday);
+
+            selectDate(document.getElementById('slot-fri-5pm'));
+            selectGroupSize(2);
+            selectVenue('public_place', document.querySelector('.venue-btn'));
+        })();
+
+        // ── Date Selection ────────────────────────────────────────────────────────
+        function selectDate(btn) {
+            document.querySelectorAll('.date-btn').forEach(b => {
+                b.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
                     'shadow-md', 'shadow-emerald-100', 'ring-2', 'ring-emerald-100', 'ring-offset-2');
-            }
-
-            // ── Group Size ────────────────────────────────────────────────────────────
-            function selectGroupSize(size) {
-                document.getElementById('groupSize').value = size;
-                const feeEl = document.getElementById('reservationFee');
-                feeEl.textContent = size === 2 ? '৳৪৯৯' : '৳২৪৯';
-
-                document.querySelectorAll('.group-size-btn').forEach(btn => {
-                    const isSelected = parseInt(btn.dataset.size) === size;
-                    btn.classList.toggle('active', isSelected);
-                    const check = btn.querySelector('.check-mark');
-                    if (check) {
-                        check.classList.toggle('opacity-0', !isSelected);
-                        check.classList.toggle('opacity-100', isSelected);
-                    }
-                });
-            }
-
-            function selectVenue(type, btn) {
-                document.getElementById('venueType').value = type;
-                document.querySelectorAll('.venue-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const isRestaurant = type === 'restaurant';
-                document.getElementById('restaurantNote').classList.toggle('hidden', !isRestaurant);
-                document.getElementById('publicNote').classList.toggle('hidden', isRestaurant);
-            }
-
-            // ── Age Validation Logic ──────────────────────────────────────────────────
-            function handleAgeChange() {
-                const ageInput = document.getElementById('age');
-                const age = parseInt(ageInput.value);
-                const ageNote = document.getElementById('ageNote');
-
-                if (!isNaN(age) && age > 0 && age < 18) {
-                    ageNote.classList.remove('hidden');
-                    ageInput.classList.add('border-emerald-500', 'bg-emerald-50');
-                    ageInput.classList.remove('border-gray-300');
-                } else {
-                    ageNote.classList.add('hidden');
-                    ageInput.classList.remove('border-emerald-500', 'bg-emerald-50');
-                    ageInput.classList.add('border-gray-300');
-                }
-            }
-            document.getElementById('age').addEventListener('input', handleAgeChange);
-
-            // ── Scroll Helpers ────────────────────────────────────────────────────────
-            function scrollToBook() {
-                document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
-            }
-            document.querySelectorAll('a[href^="#"]').forEach(a => {
-                a.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const t = document.querySelector(this.getAttribute('href'));
-                    if (t) {
-                        const offset = 80;
-                        const bodyRect = document.body.getBoundingClientRect().top;
-                        const elementRect = t.getBoundingClientRect().top;
-                        const elementPosition = elementRect - bodyRect;
-                        const offsetPosition = elementPosition - offset;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
+                b.classList.add('border-gray-100', 'bg-white', 'text-gray-600');
             });
+            btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-600');
+            btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
+                'shadow-md', 'shadow-emerald-100', 'ring-2', 'ring-emerald-100', 'ring-offset-2');
+        }
 
-            // ── Mobile Menu Logic ─────────────────────────────────────────────────────
-            function toggleMobileMenu() {
-                const menu = document.getElementById('mobileMenu');
-                const btnIcon = document.querySelector('#mobileMenuBtn i');
+        // ── Group Size ────────────────────────────────────────────────────────────
+        function selectGroupSize(size) {
+            document.getElementById('groupSize').value = size;
+            const feeEl = document.getElementById('reservationFee');
+            feeEl.textContent = size === 2 ? '৳৪৯৯' : '৳২৪৯';
 
-                if (menu.classList.contains('hidden')) {
-                    menu.classList.remove('hidden');
-                    setTimeout(() => menu.classList.add('active'), 10);
-                    btnIcon.setAttribute('data-lucide', 'x');
-                    lucide.createIcons();
-                } else {
-                    menu.classList.remove('active');
-                    setTimeout(() => menu.classList.add('hidden'), 300);
-                    btnIcon.setAttribute('data-lucide', 'menu');
-                    lucide.createIcons();
+            document.querySelectorAll('.group-size-btn').forEach(btn => {
+                const isSelected = parseInt(btn.dataset.size) === size;
+                btn.classList.toggle('active', isSelected);
+                const check = btn.querySelector('.check-mark');
+                if (check) {
+                    check.classList.toggle('opacity-0', !isSelected);
+                    check.classList.toggle('opacity-100', isSelected);
                 }
-            }
-            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+            });
+        }
 
-            // ── Form Submission ───────────────────────────────────────────────────────
-            /**
-             * Handles the primary booking form submission.
-             * Validates age (18+) and ensures a date/time slot is selected
-             * before opening the payment modal.
-             */
-            async function handleBooking(e) {
+        function selectVenue(type, btn) {
+            document.getElementById('venueType').value = type;
+            document.querySelectorAll('.venue-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const isRestaurant = type === 'restaurant';
+            document.getElementById('restaurantNote').classList.toggle('hidden', !isRestaurant);
+            document.getElementById('publicNote').classList.toggle('hidden', isRestaurant);
+        }
+
+        // ── Age Validation Logic ──────────────────────────────────────────────────
+        function handleAgeChange() {
+            const ageInput = document.getElementById('age');
+            const age = parseInt(ageInput.value);
+            const ageNote = document.getElementById('ageNote');
+
+            if (!isNaN(age) && age > 0 && age < 18) {
+                ageNote.classList.remove('hidden');
+                ageInput.classList.add('border-emerald-500', 'bg-emerald-50');
+                ageInput.classList.remove('border-gray-300');
+            } else {
+                ageNote.classList.add('hidden');
+                ageInput.classList.remove('border-emerald-500', 'bg-emerald-50');
+                ageInput.classList.add('border-gray-300');
+            }
+        }
+        document.getElementById('age').addEventListener('input', handleAgeChange);
+
+        // ── Scroll Helpers ────────────────────────────────────────────────────────
+        function scrollToBook() {
+            document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function (e) {
                 e.preventDefault();
+                const t = document.querySelector(this.getAttribute('href'));
+                if (t) {
+                    const offset = 80;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = t.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
 
-                const ageInput = document.getElementById('age');
-                const age = parseInt(ageInput.value);
-                if (!isNaN(age) && age < 18) {
-                    showFormError('দুঃখিত, আপনার বয়স ১৮ বছরের নিচে হওয়ায় আপনি বুকিং করতে পারবেন না।');
-                    ageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    ageInput.classList.add('border-emerald-500', 'bg-emerald-50');
-                    return;
-                }
-
-                const activeSlot = document.querySelector('.date-btn.border-emerald-500');
-                if (!activeSlot || !activeSlot.dataset.date) {
-                    showFormError('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
-                    return;
-                }
-
-                document.getElementById('paymentModalFee').textContent = document.getElementById('reservationFee').textContent;
-                openPaymentModal();
-            }
-
-            function openPaymentModal() {
-                const modal = document.getElementById('paymentModal');
-                const modalContent = document.getElementById('paymentModalContent');
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-95', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            }
-
-            function closePaymentModal() {
-                const modal = document.getElementById('paymentModal');
-                const modalContent = document.getElementById('paymentModalContent');
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-
-            function selectPaymentMethod(method) {
-                document.getElementById('paymentMethod').value = method;
-                document.querySelectorAll('.payment-method-btn').forEach(btn => {
-                    btn.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-100');
-                    btn.classList.add('border-gray-100');
-                });
-                const activeBtn = document.getElementById(`btn-${method}`);
-                activeBtn.classList.remove('border-gray-100');
-                activeBtn.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-100');
-            }
-
-            async function submitBooking() {
-                const lastDigits = document.getElementById('paymentDigits').value.trim();
-                if (lastDigits.length !== 2) {
-                    alert('অনুগ্রহ করে আপনার নম্বরের শেষ ২ ডিজিট প্রদান করুন।');
-                    return;
-                }
-
-                const activeSlot = document.querySelector('.date-btn.border-emerald-500');
-                const submitBtn = document.getElementById('finalSubmitBtn');
-                const originalContent = submitBtn.innerHTML;
-
-                submitBtn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
-                submitBtn.disabled = true;
-
-                const payload = {
-                    name: document.getElementById('name').value.trim(),
-                    phone: document.getElementById('phone').value.trim(),
-                    age: parseInt(document.getElementById('age').value) || null,
-                    group_size: parseInt(document.getElementById('groupSize').value),
-                    preferred_date: activeSlot.dataset.date,
-                    preferred_time: activeSlot.dataset.time,
-                    venue_type: document.getElementById('venueType').value,
-                    conversation_style: document.getElementById('conversationStyle').value.trim() || null,
-                    preferred_people: document.getElementById('preferredPeople').value.trim() || null,
-                    payment_method: document.getElementById('paymentMethod').value,
-                    payment_sender_digits: lastDigits,
-                };
-
-                try {
-                    const res = await fetch('/api/bookings', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload),
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
                     });
-                    const data = await res.json();
-
-                    if (!res.ok) {
-                        alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-                        return;
-                    }
-
-                    closePaymentModal();
-
-                    document.getElementById('modalTrackingId').textContent = data.tracking_id;
-                    document.getElementById('modalGroupSize').textContent = payload.group_size;
-                    const timeLabel = payload.preferred_time === '17:00' ? '5:00 PM' : '7:00 PM';
-                    document.getElementById('modalDateSlot').textContent = `${activeSlot.dataset.date} — ${timeLabel}`;
-
-                    const sModal = document.getElementById('successModal');
-                    const sModalContent = document.getElementById('modalContent');
-                    sModal.classList.remove('hidden');
-                    setTimeout(() => {
-                        sModalContent.classList.remove('scale-95', 'opacity-0');
-                        sModalContent.classList.add('scale-100', 'opacity-100');
-                    }, 10);
-
-                    document.getElementById('bookingForm').reset();
-                    selectGroupSize(2);
-                    const firstSlot = document.getElementById('slot-fri-5pm');
-                    if (firstSlot) selectDate(firstSlot);
-
-                } catch (err) {
-                    alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
-                } finally {
-                    submitBtn.innerHTML = originalContent;
-                    submitBtn.disabled = false;
                 }
+            });
+        });
+
+        // ── Mobile Menu Logic ─────────────────────────────────────────────────────
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btnIcon = document.querySelector('#mobileMenuBtn i');
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => menu.classList.add('active'), 10);
+                btnIcon.setAttribute('data-lucide', 'x');
+                lucide.createIcons();
+            } else {
+                menu.classList.remove('active');
+                setTimeout(() => menu.classList.add('hidden'), 300);
+                btnIcon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            }
+        }
+        document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+
+        // ── Form Submission ───────────────────────────────────────────────────────
+        /**
+         * Handles the primary booking form submission.
+         * Validates age (18+) and ensures a date/time slot is selected
+         * before opening the payment modal.
+         */
+        async function handleBooking(e) {
+            e.preventDefault();
+
+            const ageInput = document.getElementById('age');
+            const age = parseInt(ageInput.value);
+            if (!isNaN(age) && age < 18) {
+                showFormError('দুঃখিত, আপনার বয়স ১৮ বছরের নিচে হওয়ায় আপনি বুকিং করতে পারবেন না।');
+                ageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                ageInput.classList.add('border-emerald-500', 'bg-emerald-50');
+                return;
             }
 
-            function copyNumber() {
-                navigator.clipboard.writeText('01884477720');
-                const copyIcon = document.getElementById('copyIcon');
-                const checkIcon = document.getElementById('checkIcon');
+            const activeSlot = document.querySelector('.date-btn.border-emerald-500');
+            if (!activeSlot || !activeSlot.dataset.date) {
+                showFormError('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
+                return;
+            }
 
-                if (copyIcon && checkIcon) {
-                    copyIcon.classList.add('hidden');
-                    checkIcon.classList.remove('hidden');
-                    setTimeout(() => {
-                        copyIcon.classList.remove('hidden');
-                        checkIcon.classList.add('hidden');
-                    }, 5000);
+            document.getElementById('paymentModalFee').textContent = document.getElementById('reservationFee').textContent;
+            openPaymentModal();
+        }
+
+        function openPaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            const modalContent = document.getElementById('paymentModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            const modalContent = document.getElementById('paymentModalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function selectPaymentMethod(method) {
+            document.getElementById('paymentMethod').value = method;
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-100');
+                btn.classList.add('border-gray-100');
+            });
+            const activeBtn = document.getElementById(`btn-${method}`);
+            activeBtn.classList.remove('border-gray-100');
+            activeBtn.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-100');
+        }
+
+        async function submitBooking() {
+            const lastDigits = document.getElementById('paymentDigits').value.trim();
+            if (lastDigits.length !== 2) {
+                alert('অনুগ্রহ করে আপনার নম্বরের শেষ ২ ডিজিট প্রদান করুন।');
+                return;
+            }
+
+            const activeSlot = document.querySelector('.date-btn.border-emerald-500');
+            const submitBtn = document.getElementById('finalSubmitBtn');
+            const originalContent = submitBtn.innerHTML;
+
+            submitBtn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+            submitBtn.disabled = true;
+
+            const payload = {
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                age: parseInt(document.getElementById('age').value) || null,
+                group_size: parseInt(document.getElementById('groupSize').value),
+                preferred_date: activeSlot.dataset.date,
+                preferred_time: activeSlot.dataset.time,
+                venue_type: document.getElementById('venueType').value,
+                conversation_style: document.getElementById('conversationStyle').value.trim() || null,
+                preferred_people: document.getElementById('preferredPeople').value.trim() || null,
+                payment_method: document.getElementById('paymentMethod').value,
+                payment_sender_digits: lastDigits,
+            };
+
+            try {
+                const res = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                    return;
                 }
-            }
 
-            function showFormError(msg) {
-                let el = document.getElementById('formError');
-                if (!el) {
-                    el = document.createElement('p');
-                    el.id = 'formError';
-                    el.className = 'text-red-500 text-sm mt-3 text-center font-medium';
-                    document.querySelector('button[type="submit"]').insertAdjacentElement('afterend', el);
+                closePaymentModal();
+
+                document.getElementById('modalTrackingId').textContent = data.tracking_id;
+                document.getElementById('modalGroupSize').textContent = payload.group_size;
+                const timeLabel = payload.preferred_time === '17:00' ? '5:00 PM' : '7:00 PM';
+                document.getElementById('modalDateSlot').textContent = `${activeSlot.dataset.date} — ${timeLabel}`;
+
+                const sModal = document.getElementById('successModal');
+                const sModalContent = document.getElementById('modalContent');
+                sModal.classList.remove('hidden');
+                setTimeout(() => {
+                    sModalContent.classList.remove('scale-95', 'opacity-0');
+                    sModalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+
+                document.getElementById('bookingForm').reset();
+                selectGroupSize(2);
+                const firstSlot = document.getElementById('slot-fri-5pm');
+                if (firstSlot) selectDate(firstSlot);
+
+            } catch (err) {
+                alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
+            } finally {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function copyNumber() {
+            navigator.clipboard.writeText('01884477720');
+            const copyIcon = document.getElementById('copyIcon');
+            const checkIcon = document.getElementById('checkIcon');
+
+            if (copyIcon && checkIcon) {
+                copyIcon.classList.add('hidden');
+                checkIcon.classList.remove('hidden');
+                setTimeout(() => {
+                    copyIcon.classList.remove('hidden');
+                    checkIcon.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        function showFormError(msg) {
+            let el = document.getElementById('formError');
+            if (!el) {
+                el = document.createElement('p');
+                el.id = 'formError';
+                el.className = 'text-red-500 text-sm mt-3 text-center font-medium';
+                document.querySelector('button[type="submit"]').insertAdjacentElement('afterend', el);
+            }
+            el.textContent = msg;
+            setTimeout(() => { if (el) el.textContent = ''; }, 5000);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        /**
+         * Tracking System: Fetches real-time status of a booking using Tracking ID.
+         * Displays status, assigned group members, and enables group chat
+         * once the meetup is confirmed.
+         */
+        async function checkBookingStatus() {
+            const id = document.getElementById('trackingInput').value.trim();
+            if (!id || id.length < 5) return;
+
+            const resultEl = document.getElementById('trackingResult');
+            resultEl.classList.remove('hidden');
+            resultEl.innerHTML = '<div class="flex justify-center py-6"><div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div></div>';
+
+            try {
+                const res = await fetch(`/api/bookings/track/${id}`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    resultEl.innerHTML = `<p class="text-red-500 text-sm text-center py-2">${data.detail || 'ট্র্যাকিং আইডি পাওয়া যায়নি।'}</p>`;
+                    return;
                 }
-                el.textContent = msg;
-                setTimeout(() => { if (el) el.textContent = ''; }, 5000);
-            }
 
-            function closeModal() {
-                const modal = document.getElementById('successModal');
-                const modalContent = document.getElementById('modalContent');
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
+                const statusColor = {
+                    processing: 'bg-emerald-50 text-emerald-700',
+                    confirmed: 'bg-green-100 text-green-800',
+                    completed: 'bg-green-100 text-green-800',
+                }[data.booking_status] || 'bg-gray-100 text-gray-700';
 
-            /**
-             * Tracking System: Fetches real-time status of a booking using Tracking ID.
-             * Displays status, assigned group members, and enables group chat
-             * once the meetup is confirmed.
-             */
-            async function checkBookingStatus() {
-                const id = document.getElementById('trackingInput').value.trim();
-                if (!id || id.length < 5) return;
+                const statusBn = {
+                    processing: 'প্রক্রিয়াধীন',
+                    confirmed: 'নিশ্চিত ✅',
+                    completed: 'সম্পন্ন',
+                }[data.booking_status] || data.booking_status;
 
-                const resultEl = document.getElementById('trackingResult');
-                resultEl.classList.remove('hidden');
-                resultEl.innerHTML = '<div class="flex justify-center py-6"><div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div></div>';
-
-                try {
-                    const res = await fetch(`/api/bookings/track/${id}`);
-                    const data = await res.json();
-
-                    if (!res.ok) {
-                        resultEl.innerHTML = `<p class="text-red-500 text-sm text-center py-2">${data.detail || 'ট্র্যাকিং আইডি পাওয়া যায়নি।'}</p>`;
-                        return;
-                    }
-
-                    const statusColor = {
-                        processing: 'bg-emerald-50 text-emerald-700',
-                        confirmed: 'bg-green-100 text-green-800',
-                        completed: 'bg-green-100 text-green-800',
-                    }[data.booking_status] || 'bg-gray-100 text-gray-700';
-
-                    const statusBn = {
-                        processing: 'প্রক্রিয়াধীন',
-                        confirmed: 'নিশ্চিত ✅',
-                        completed: 'সম্পন্ন',
-                    }[data.booking_status] || data.booking_status;
-
-                    const confirmedBlock = (data.booking_status === 'confirmed' || data.booking_status === 'completed') && data.assigned_venue
-                        ? `<div class="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
+                const confirmedBlock = (data.booking_status === 'confirmed' || data.booking_status === 'completed') && data.assigned_venue
+                    ? `<div class="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
                          <p class="text-xs font-semibold text-green-700 mb-2">✅ আপনার মিটআপ নিশ্চিত হয়েছে!</p>
                          <p class="text-sm text-gray-700 mb-1">📍 <strong>${data.assigned_venue}</strong></p>
                          <p class="text-sm text-gray-700">📅 ${data.meet_date} &nbsp;⏰ ${data.meet_time}</p>
                        </div>`
-                        : data.booking_status === 'unsuccessful'
-                            ? `<div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center"> 
+                    : data.booking_status === 'unsuccessful'
+                        ? `<div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center"> 
                              <p class="text-xs font-bold text-emerald-800 mb-1">❌ বুকিং সফল হয়নি</p>
                              <p class="text-xs text-emerald-700 italic">${data.rejection_reason || 'দুঃখিত, আপনার বুকিং এই মুহূর্তে গ্রহণ করা সম্ভব হয়নি।'}</p>
                            </div>`
-                            : `<p class="text-sm text-gray-400 mt-3 text-center">আমরা আপনার জন্য গ্রুপ তৈরি করছি। শীঘ্রই জানানো হবে।</p>`;
+                        : `<p class="text-sm text-gray-400 mt-3 text-center">আমরা আপনার জন্য গ্রুপ তৈরি করছি। শীঘ্রই জানানো হবে।</p>`;
 
-                    let membersHtml = '';
-                    if (data.group_members && data.group_members.length > 0) {
-                        const groupId = data.assigned_group_id || 0;
-                        const canChat = data.booking_status !== 'completed';
+                let membersHtml = '';
+                if (data.group_members && data.group_members.length > 0) {
+                    const groupId = data.assigned_group_id || 0;
+                    const canChat = data.booking_status !== 'completed';
 
-                        membersHtml = `
+                    membersHtml = `
                         <div class="mt-6 space-y-4">
                             <div class="flex items-center justify-between">
                                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">আপনার আড্ডার সাথীরা</p>
@@ -1591,181 +1591,183 @@
                             </div>
                         </div>
                     `;
-                    }
+                }
 
-                    const timeLabel = data.preferred_time === '17:00:00' ? '5:00 PM' : '7:00 PM';
-                    const venueBn = data.venue_type === 'restaurant' ? '🍽 রেস্তোরাঁ' : '🌳 পাবলিক প্লেস';
+                const timeLabel = data.preferred_time === '17:00:00' ? '5:00 PM' : '7:00 PM';
+                const venueBn = data.venue_type === 'restaurant' ? '🍽 রেস্তোরাঁ' : '🌳 পাবলিক প্লেস';
 
-                    resultEl.innerHTML = `
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <p class="text-xs text-gray-400 mb-0.5">বুকিং</p>
-                            <p class="font-semibold text-gray-800">${data.name}</p>
-                            <p class="text-xs font-mono text-emerald-700 mt-0.5">${data.tracking_id}</p>
+                resultEl.innerHTML = `
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                        <div class="w-full sm:w-auto">
+                            <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-1">বুকিং আইডি ও নাম</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">${data.tracking_id}</span>
+                                <h4 class="font-bold text-gray-900">${data.name}</h4>
+                            </div>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColor}">${statusBn}</span>
+                        <span class="w-full sm:w-auto text-center px-4 py-2 rounded-xl text-xs font-bold shadow-sm ${statusColor}">${statusBn}</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-center text-sm">
-                        <div class="bg-gray-50 rounded-xl p-3">
-                            <p class="text-xs text-gray-400 mb-1">গ্রুপ</p>
-                            <p class="font-semibold">${data.group_size}-জন</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                        <div class="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col justify-center">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">গ্রুপ সাইজ</p>
+                            <p class="font-black text-gray-800 text-lg">${data.group_size} জন</p>
                         </div>
-                        <div class="bg-gray-50 rounded-xl p-3">
-                            <p class="text-xs text-gray-400 mb-1">তারিখ ও সময়</p>
-                            <p class="font-semibold text-xs">${data.preferred_date}</p>
-                            <p class="text-xs text-gray-500">${timeLabel}</p>
+                        <div class="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col justify-center">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">তারিখ ও সময়</p>
+                            <p class="font-black text-gray-800 text-sm">${data.preferred_date}</p>
+                            <p class="text-xs font-bold text-emerald-600 mt-0.5">${timeLabel}</p>
                         </div>
-                        <div class="bg-gray-50 rounded-xl p-3">
-                            <p class="text-xs text-gray-400 mb-1">পেমেন্ট</p>
-                            <p class="font-semibold text-xs ${data.payment_status === 'paid' ? 'text-green-600' : 'text-red-500'}">${data.payment_status === 'paid' ? 'পরিশোধিত' : 'বাকি'}</p>
+                        <div class="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col justify-center">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">পেমেন্ট অবস্থা</p>
+                            <p class="font-black ${data.payment_status === 'paid' ? 'text-green-600' : 'text-rose-500'} text-sm">${data.payment_status === 'paid' ? 'পরিশোধিত' : 'বাকি'}</p>
                         </div>
                     </div>
                     <div class="mt-2 text-xs text-gray-400 text-center">${venueBn}</div>
                     ${confirmedBlock}
                     ${membersHtml}
                 `;
-                    lucide.createIcons();
-                } catch (err) {
-                    resultEl.innerHTML = '<p class="text-red-500 text-sm text-center py-2">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>';
-                }
+                lucide.createIcons();
+            } catch (err) {
+                resultEl.innerHTML = '<p class="text-red-500 text-sm text-center py-2">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>';
             }
+        }
 
-            async function submitRating(trackingId, groupId, rateeId, score) {
-                try {
-                    const res = await fetch('/api/bookings/rate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'tracking-id': trackingId },
-                        body: JSON.stringify({ ratee_id: rateeId, group_id: groupId, score: score })
-                    });
-                    if (res.ok) {
-                        const container = document.getElementById(`rating-container-${rateeId}`);
-                        container.innerHTML = `<p class="text-xs text-green-600 font-bold">ধন্যবাদ! রেটিং সংরক্ষিত হয়েছে।</p>`;
-                    } else {
-                        alert('Rating failed.');
-                    }
-                } catch (err) {
-                    alert('Connection error.');
-                }
-            }
-
-            // ── Hero Animation ────────────────────────────────────────────────────────
-            function startMotion() {
-                const canvas = document.getElementById('animation-stage');
-                const nodes = [1, 2, 3].map(i => document.getElementById(`node-${i}`));
-                const paths = [1, 2, 3].map(i => document.getElementById(`path-${i}`));
-                const venue = document.getElementById('central-venue');
-                const venueName = venue.querySelector('p.font-bold');
-
-                const venueNames = ["Sultan's Dine", "Dhanmondi Lake", "North End", "Ramna Park", "সোহরাওয়ার্দী উদ্যান"];
-                let venueIndex = 0;
-
-                const reset = () => {
-                    venue.style.opacity = '0';
-                    venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
-                    nodes.forEach(n => { n.style.opacity = '0'; n.style.transform = 'scale(1)'; });
-                    paths.forEach(p => p.style.strokeDashoffset = '1000');
-                };
-
-                const animate = () => {
-                    if (!venueName) return;
-                    venueName.textContent = venueNames[venueIndex];
-                    venueIndex = (venueIndex + 1) % venueNames.length;
-
-                    const starts = [
-                        { l: '10%', t: '20%', d: 'M 10% 20% Q 20% 50% 50% 50%' },
-                        { l: '85%', t: '15%', d: 'M 85% 15% Q 70% 30% 50% 50%' },
-                        { l: '70%', t: '85%', d: 'M 70% 85% Q 60% 70% 50% 50%' }
-                    ];
-                    starts.forEach((pos, i) => {
-                        nodes[i].style.left = pos.l; nodes[i].style.top = pos.t;
-                        nodes[i].style.opacity = '1';
-                        paths[i].setAttribute('d', pos.d);
-                    });
-                    setTimeout(() => paths.forEach(p => p.style.strokeDashoffset = '0'), 500);
-                    setTimeout(() => nodes.forEach(n => { n.style.left = '48%'; n.style.top = '48%'; }), 1000);
-                    setTimeout(() => {
-                        nodes.forEach(n => n.style.opacity = '0');
-                        venue.style.opacity = '1';
-                        venue.style.transform = 'translate(-50%, -50%) scale(1)';
-                    }, 1800);
-                    setTimeout(() => { reset(); setTimeout(animate, 1000); }, 6000);
-                };
-
-                reset();
-                animate();
-            }
-            setTimeout(startMotion, 1000);
-
-            // ── Translation Helper ──────────────────────────────────────────────────
-            function toggleTranslation() {
-                const btn = document.getElementById('langBtn');
-                const isBangla = btn.textContent.trim() === 'En';
-                const elementsToPatch = document.querySelectorAll('[data-en]');
-
-                if (isBangla) {
-                    const select = document.querySelector('select.goog-te-combo');
-                    if (select) {
-                        select.value = 'en';
-                        select.dispatchEvent(new Event('change'));
-                        btn.textContent = 'Bn';
-                        document.documentElement.lang = 'en';
-                        setTimeout(() => {
-                            elementsToPatch.forEach(el => {
-                                if (!el.dataset.bn) el.dataset.bn = el.textContent.trim();
-                                el.textContent = el.dataset.en;
-                                el.classList.add('notranslate');
-                            });
-                        }, 500);
-                    }
+        async function submitRating(trackingId, groupId, rateeId, score) {
+            try {
+                const res = await fetch('/api/bookings/rate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'tracking-id': trackingId },
+                    body: JSON.stringify({ ratee_id: rateeId, group_id: groupId, score: score })
+                });
+                if (res.ok) {
+                    const container = document.getElementById(`rating-container-${rateeId}`);
+                    container.innerHTML = `<p class="text-xs text-green-600 font-bold">ধন্যবাদ! রেটিং সংরক্ষিত হয়েছে।</p>`;
                 } else {
-                    const iframe = document.querySelector('iframe.goog-te-banner-frame');
-                    if (iframe) {
-                        const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        const restoreBtn = innerDoc.getElementById(':1.restore');
-                        if (restoreBtn) restoreBtn.click();
-                    }
-                    elementsToPatch.forEach(el => {
-                        if (el.dataset.bn) el.textContent = el.dataset.bn;
-                        el.classList.remove('notranslate');
-                    });
-                    if (!isBangla) {
-                        btn.textContent = 'En';
-                        document.documentElement.lang = 'bn';
-                        window.location.reload();
-                    }
+                    alert('Rating failed.');
+                }
+            } catch (err) {
+                alert('Connection error.');
+            }
+        }
+
+        // ── Hero Animation ────────────────────────────────────────────────────────
+        function startMotion() {
+            const canvas = document.getElementById('animation-stage');
+            const nodes = [1, 2, 3].map(i => document.getElementById(`node-${i}`));
+            const paths = [1, 2, 3].map(i => document.getElementById(`path-${i}`));
+            const venue = document.getElementById('central-venue');
+            const venueName = venue.querySelector('p.font-bold');
+
+            const venueNames = ["Sultan's Dine", "Dhanmondi Lake", "North End", "Ramna Park", "সোহরাওয়ার্দী উদ্যান"];
+            let venueIndex = 0;
+
+            const reset = () => {
+                venue.style.opacity = '0';
+                venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                nodes.forEach(n => { n.style.opacity = '0'; n.style.transform = 'scale(1)'; });
+                paths.forEach(p => p.style.strokeDashoffset = '1000');
+            };
+
+            const animate = () => {
+                if (!venueName) return;
+                venueName.textContent = venueNames[venueIndex];
+                venueIndex = (venueIndex + 1) % venueNames.length;
+
+                const starts = [
+                    { l: '10%', t: '20%', d: 'M 10% 20% Q 20% 50% 50% 50%' },
+                    { l: '85%', t: '15%', d: 'M 85% 15% Q 70% 30% 50% 50%' },
+                    { l: '70%', t: '85%', d: 'M 70% 85% Q 60% 70% 50% 50%' }
+                ];
+                starts.forEach((pos, i) => {
+                    nodes[i].style.left = pos.l; nodes[i].style.top = pos.t;
+                    nodes[i].style.opacity = '1';
+                    paths[i].setAttribute('d', pos.d);
+                });
+                setTimeout(() => paths.forEach(p => p.style.strokeDashoffset = '0'), 500);
+                setTimeout(() => nodes.forEach(n => { n.style.left = '48%'; n.style.top = '48%'; }), 1000);
+                setTimeout(() => {
+                    nodes.forEach(n => n.style.opacity = '0');
+                    venue.style.opacity = '1';
+                    venue.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 1800);
+                setTimeout(() => { reset(); setTimeout(animate, 1000); }, 6000);
+            };
+
+            reset();
+            animate();
+        }
+        setTimeout(startMotion, 1000);
+
+        // ── Translation Helper ──────────────────────────────────────────────────
+        function toggleTranslation() {
+            const btn = document.getElementById('langBtn');
+            const isBangla = btn.textContent.trim() === 'En';
+            const elementsToPatch = document.querySelectorAll('[data-en]');
+
+            if (isBangla) {
+                const select = document.querySelector('select.goog-te-combo');
+                if (select) {
+                    select.value = 'en';
+                    select.dispatchEvent(new Event('change'));
+                    btn.textContent = 'Bn';
+                    document.documentElement.lang = 'en';
+                    setTimeout(() => {
+                        elementsToPatch.forEach(el => {
+                            if (!el.dataset.bn) el.dataset.bn = el.textContent.trim();
+                            el.textContent = el.dataset.en;
+                            el.classList.add('notranslate');
+                        });
+                    }, 500);
+                }
+            } else {
+                const iframe = document.querySelector('iframe.goog-te-banner-frame');
+                if (iframe) {
+                    const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const restoreBtn = innerDoc.getElementById(':1.restore');
+                    if (restoreBtn) restoreBtn.click();
+                }
+                elementsToPatch.forEach(el => {
+                    if (el.dataset.bn) el.textContent = el.dataset.bn;
+                    el.classList.remove('notranslate');
+                });
+                if (!isBangla) {
+                    btn.textContent = 'En';
+                    document.documentElement.lang = 'bn';
+                    window.location.reload();
                 }
             }
+        }
 
-            // ── Map Integration ────────────────────────────────────────────────────────
-            async function initMap() {
-                const map = L.map('map', {
-                    zoomControl: false,
-                    attributionControl: false
-                }).setView([23.8103, 90.4125], 12);
+        // ── Map Integration ────────────────────────────────────────────────────────
+        async function initMap() {
+            const map = L.map('map', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView([23.8103, 90.4125], 12);
 
-                L.control.zoom({ position: 'topright' }).addTo(map);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-                try {
-                    const res = await fetch('/api/all-points');
-                    const points = await res.json();
+            L.control.zoom({ position: 'topright' }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            try {
+                const res = await fetch('/api/all-points');
+                const points = await res.json();
 
-                    // Update stats
-                    document.getElementById('stat-points').textContent = points.length;
-                    const restaurantCount = points.filter(p => p.point_type === 'restaurant').length;
-                    const areaCount = [...new Set(points.map(p => p.location_id))].length;
-                    document.getElementById('stat-areas').textContent = areaCount + '+';
+                // Update stats
+                document.getElementById('stat-points').textContent = points.length;
+                const restaurantCount = points.filter(p => p.point_type === 'restaurant').length;
+                const areaCount = [...new Set(points.map(p => p.location_id))].length;
+                document.getElementById('stat-areas').textContent = areaCount + '+';
 
-                    points.forEach(p => {
-                        if (p.latitude && p.longitude) {
-                            const isRestaurant = p.point_type === 'restaurant';
-                            const bgColor = isRestaurant ? '#3b82f6' : '#ea580c';
-                            const borderColor = isRestaurant ? '#93c5fd' : '#ffedd5';
-                            const labelColor = isRestaurant ? 'text-green-700' : 'text-green-700';
-                            const typeName = isRestaurant ? 'Partner Restaurant' : 'Meetup Point';
+                points.forEach(p => {
+                    if (p.latitude && p.longitude) {
+                        const isRestaurant = p.point_type === 'restaurant';
+                        const bgColor = isRestaurant ? '#3b82f6' : '#ea580c';
+                        const borderColor = isRestaurant ? '#93c5fd' : '#ffedd5';
+                        const labelColor = isRestaurant ? 'text-green-700' : 'text-green-700';
+                        const typeName = isRestaurant ? 'Partner Restaurant' : 'Meetup Point';
 
-                            // Custom Marker Pin Style (Matches Orange Pin in Screenshot)
-                            const customIcon = L.divIcon({
-                                html: `
+                        // Custom Marker Pin Style (Matches Orange Pin in Screenshot)
+                        const customIcon = L.divIcon({
+                            html: `
                                 <div class="relative group">
                                     <div class="flex items-center">
                                        <div class="relative w-8 h-8 flex items-center justify-center">
@@ -1779,59 +1781,59 @@
                                     </div>
                                 </div>
                             `,
-                                className: 'custom-map-marker',
-                                iconSize: [32, 32],
-                                iconAnchor: [16, 32]
-                            });
+                            className: 'custom-map-marker',
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 32]
+                        });
 
-                            const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
+                        const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
 
-                            marker.on('click', () => {
-                                map.setView([p.latitude, p.longitude], 15, { animate: true });
-                            });
-                        }
-                    });
-                } catch (err) {
-                    console.error('Map points loading failed:', err);
-                }
+                        marker.on('click', () => {
+                            map.setView([p.latitude, p.longitude], 15, { animate: true });
+                        });
+                    }
+                });
+            } catch (err) {
+                console.error('Map points loading failed:', err);
             }
-            initMap();
+        }
+        initMap();
 
-            // ── Group Chat logic ───────────────────────────────────────────────────────
-            // Polling-based chat system for confirmed meetup groups.
-            // Automatically cleans up when the chat drawer is closed.
-            let chatInterval;
-            let currentChatGroupId;
-            let currentTrackingId;
+        // ── Group Chat logic ───────────────────────────────────────────────────────
+        // Polling-based chat system for confirmed meetup groups.
+        // Automatically cleans up when the chat drawer is closed.
+        let chatInterval;
+        let currentChatGroupId;
+        let currentTrackingId;
 
-            function openChat(groupId, trackingId) {
-                currentChatGroupId = groupId;
-                currentTrackingId = trackingId;
-                document.getElementById('chatOverlay').classList.remove('hidden');
-                document.getElementById('chatDrawer').classList.add('translate-y-0');
-                document.getElementById('chatDrawer').classList.remove('translate-y-full');
-                loadChatMessages();
-                chatInterval = setInterval(loadChatMessages, 3000);
-                lucide.createIcons();
-            }
+        function openChat(groupId, trackingId) {
+            currentChatGroupId = groupId;
+            currentTrackingId = trackingId;
+            document.getElementById('chatOverlay').classList.remove('hidden');
+            document.getElementById('chatDrawer').classList.add('translate-y-0');
+            document.getElementById('chatDrawer').classList.remove('translate-y-full');
+            loadChatMessages();
+            chatInterval = setInterval(loadChatMessages, 3000);
+            lucide.createIcons();
+        }
 
-            function closeChat() {
-                document.getElementById('chatOverlay').classList.add('hidden');
-                document.getElementById('chatDrawer').classList.add('translate-y-full');
-                document.getElementById('chatDrawer').classList.remove('translate-y-0');
-                clearInterval(chatInterval);
-            }
+        function closeChat() {
+            document.getElementById('chatOverlay').classList.add('hidden');
+            document.getElementById('chatDrawer').classList.add('translate-y-full');
+            document.getElementById('chatDrawer').classList.remove('translate-y-0');
+            clearInterval(chatInterval);
+        }
 
-            async function loadChatMessages() {
-                if (!currentChatGroupId) return;
-                try {
-                    const res = await fetch(`/api/bookings/chat/${currentChatGroupId}`, {
-                        headers: { 'tracking-id': currentTrackingId }
-                    });
-                    const messages = await res.json();
-                    const container = document.getElementById('chatMessages');
+        async function loadChatMessages() {
+            if (!currentChatGroupId) return;
+            try {
+                const res = await fetch(`/api/bookings/chat/${currentChatGroupId}`, {
+                    headers: { 'tracking-id': currentTrackingId }
+                });
+                const messages = await res.json();
+                const container = document.getElementById('chatMessages');
 
-                    const html = messages.map(msg => `
+                const html = messages.map(msg => `
                     <div class="flex flex-col ${msg.is_me ? 'items-end' : 'items-start'}">
                         <span class="text-[10px] text-gray-400 px-1 mb-0.5">${msg.sender}</span>
                         <div class="${msg.is_me ? 'bg-emerald-500 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-gray-100 text-gray-800 rounded-r-2xl rounded-tl-2xl'} px-4 py-2 shadow-sm max-w-[85%]">
@@ -1840,111 +1842,111 @@
                     </div>
                 `).join('') || '<p class="text-center text-gray-300 text-xs py-10">কোনো বার্তা নেই। প্রথম হ্যালো বলুন!</p>';
 
-                    const needsScroll = container.scrollHeight - container.scrollTop === container.clientHeight || container.scrollTop === 0;
-                    container.innerHTML = html;
-                    if (needsScroll) container.scrollTop = container.scrollHeight;
-                } catch (err) { }
-            }
+                const needsScroll = container.scrollHeight - container.scrollTop === container.clientHeight || container.scrollTop === 0;
+                container.innerHTML = html;
+                if (needsScroll) container.scrollTop = container.scrollHeight;
+            } catch (err) { }
+        }
 
-            async function sendChatMsg() {
-                const input = document.getElementById('chatInput');
-                const msg = input.value.trim();
-                if (!msg || !currentChatGroupId) return;
+        async function sendChatMsg() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg || !currentChatGroupId) return;
 
-                input.value = '';
-                try {
-                    const res = await fetch('/api/bookings/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'tracking-id': currentTrackingId },
-                        body: JSON.stringify({ group_id: currentChatGroupId, message: msg })
-                    });
-                    if (res.ok) {
-                        loadChatMessages();
-                    }
-                } catch (err) { }
-            }
-
-            document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keydown', e => {
-                if (e.key === 'Enter') sendChatMsg();
-            });
-
-            // Navigation Helper for internal links on the same page
-            function scrollToSection(e, selector) {
-                if (e) e.preventDefault();
-                const el = document.querySelector(selector);
-                if (el) {
-                    const navHeight = 84;
-                    const elementPosition = el.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
+            input.value = '';
+            try {
+                const res = await fetch('/api/bookings/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'tracking-id': currentTrackingId },
+                    body: JSON.stringify({ group_id: currentChatGroupId, message: msg })
+                });
+                if (res.ok) {
+                    loadChatMessages();
                 }
+            } catch (err) { }
+        }
+
+        document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') sendChatMsg();
+        });
+
+        // Navigation Helper for internal links on the same page
+        function scrollToSection(e, selector) {
+            if (e) e.preventDefault();
+            const el = document.querySelector(selector);
+            if (el) {
+                const navHeight = 84;
+                const elementPosition = el.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
             }
+        }
 
-            // ── Partnership Request Handle ──────────────────────────────────────────
-            // Logic for restaurant/cafe partners to apply for the platform.
-            function openPartnershipModal() {
-                const modal = document.getElementById('partnershipModal');
-                const content = document.getElementById('partnershipModalContent');
+        // ── Partnership Request Handle ──────────────────────────────────────────
+        // Logic for restaurant/cafe partners to apply for the platform.
+        function openPartnershipModal() {
+            const modal = document.getElementById('partnershipModal');
+            const content = document.getElementById('partnershipModalContent');
 
-                // Reset to form view
-                document.getElementById('partnershipFormView').classList.remove('hidden');
-                document.getElementById('partnershipSuccessView').classList.add('hidden');
+            // Reset to form view
+            document.getElementById('partnershipFormView').classList.remove('hidden');
+            document.getElementById('partnershipSuccessView').classList.add('hidden');
 
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
 
-            function closePartnershipModal() {
-                const modal = document.getElementById('partnershipModal');
-                const content = document.getElementById('partnershipModalContent');
-                content.classList.remove('scale-100', 'opacity-100');
-                content.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
+        function closePartnershipModal() {
+            const modal = document.getElementById('partnershipModal');
+            const content = document.getElementById('partnershipModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
 
-            async function submitPartnership(e) {
-                e.preventDefault();
-                const btn = document.getElementById('partnerSubmitBtn');
-                const name = document.getElementById('partnerRestaurantName').value.trim();
-                const phone = document.getElementById('partnerContactNumber').value.trim();
+        async function submitPartnership(e) {
+            e.preventDefault();
+            const btn = document.getElementById('partnerSubmitBtn');
+            const name = document.getElementById('partnerRestaurantName').value.trim();
+            const phone = document.getElementById('partnerContactNumber').value.trim();
 
-                const origText = btn.innerHTML;
-                btn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
-                btn.disabled = true;
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+            btn.disabled = true;
 
-                try {
-                    const res = await fetch('/api/partnerships', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ restaurant_name: name, contact_number: phone })
-                    });
+            try {
+                const res = await fetch('/api/partnerships', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ restaurant_name: name, contact_number: phone })
+                });
 
-                    if (res.ok) {
-                        document.getElementById('partnershipFormView').classList.add('hidden');
-                        document.getElementById('partnershipSuccessView').classList.remove('hidden');
-                        document.getElementById('partnershipForm').reset();
-                        lucide.createIcons();
-                    } else {
-                        alert('কোথাও সমস্যা হচ্ছে, আবার চেষ্টা করুন।');
-                    }
-                } catch (e) {
-                    alert('ইন্টারনেট সংযোগ যাচাই করুন।');
-                } finally {
-                    btn.innerHTML = origText;
-                    btn.disabled = false;
+                if (res.ok) {
+                    document.getElementById('partnershipFormView').classList.add('hidden');
+                    document.getElementById('partnershipSuccessView').classList.remove('hidden');
+                    document.getElementById('partnershipForm').reset();
+                    lucide.createIcons();
+                } else {
+                    alert('কোথাও সমস্যা হচ্ছে, আবার চেষ্টা করুন।');
                 }
+            } catch (e) {
+                alert('ইন্টারনেট সংযোগ যাচাই করুন।');
+            } finally {
+                btn.innerHTML = origText;
+                btn.disabled = false;
             }
+        }
 
-            // ── Legal Modals ────────────────────────────────────────────────────────
-            const legalContents = {
-                privacy: `
+        // ── Legal Modals ────────────────────────────────────────────────────────
+        const legalContents = {
+            privacy: `
                 <div class="space-y-4">
                     <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
                     <p>DekhaHok আপনার ব্যক্তিগত তথ্যের সুরক্ষায় প্রতিশ্রুতিবদ্ধ। আমাদের অ্যাপটি ব্যবহারের সময় আমরা কীভাবে তথ্য সংগ্রহ ও ব্যবহার করি তা নিচে দেওয়া হলো:</p>
@@ -1956,7 +1958,7 @@
                     </ul>
                 </div>
             `,
-                terms: `
+            terms: `
                 <div class="space-y-4">
                     <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
                     <p>DekhaHok প্ল্যাটফর্মটি ব্যবহারের মাধ্যমে আপনি নিচের শর্তাবলীতে সম্মত হচ্ছেন:</p>
@@ -1970,33 +1972,33 @@
                     </ul>
                 </div>
             `
-            };
+        };
 
-            function openLegalModal(type) {
-                const modal = document.getElementById('legalModal');
-                const contentContainer = document.getElementById('legalModalContent');
-                const textContainer = document.getElementById('legalTextContent');
-                const titleEl = document.getElementById('legalModalTitle');
+        function openLegalModal(type) {
+            const modal = document.getElementById('legalModal');
+            const contentContainer = document.getElementById('legalModalContent');
+            const textContainer = document.getElementById('legalTextContent');
+            const titleEl = document.getElementById('legalModalTitle');
 
-                titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
-                textContainer.innerHTML = legalContents[type];
+            titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
+            textContainer.innerHTML = legalContents[type];
 
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    contentContainer.classList.remove('scale-95', 'opacity-0');
-                    contentContainer.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                contentContainer.classList.remove('scale-95', 'opacity-0');
+                contentContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
 
-            function closeLegalModal() {
-                const modal = document.getElementById('legalModal');
-                const contentContainer = document.getElementById('legalModalContent');
-                contentContainer.classList.remove('scale-100', 'opacity-100');
-                contentContainer.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        </script>
-        <div id="google_translate_element" style="display:none; height: 0; width: 0; overflow: hidden;"></div>
+        function closeLegalModal() {
+            const modal = document.getElementById('legalModal');
+            const contentContainer = document.getElementById('legalModalContent');
+            contentContainer.classList.remove('scale-100', 'opacity-100');
+            contentContainer.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+    </script>
+    <div id="google_translate_element" style="display:none; height: 0; width: 0; overflow: hidden;"></div>
 </body>
 
 </html>
