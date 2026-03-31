@@ -1,4 +1,7 @@
-/* Mobile Responsiveness Overrides for DekhaHok */
+/* 
+   Mobile Responsiveness Overrides for DekhaHok 
+   Optimises layouts and tap targets for small screens (320px - 768px).
+*/
 
 @media (max-width: 768px) {
     /* Navigation */
@@ -155,4 +158,15 @@ button, a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+@media (max-width: 640px) {
+  /* Ensure venue cards are chunky and tappable with emerald emphasis on selection */
+  .venue-btn {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+  .venue-btn.active {
+    background: #e6f0ea;
+    border-color: #10b981;
+  }
 }

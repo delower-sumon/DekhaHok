@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DekhaHok</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23ea580c'/><stop offset='1' stop-color='%23c2410c'/></linearGradient></defs><rect width='24' height='24' rx='5' fill='url(%23g)'/><path d='M19.5 11.5c0 1.3-.3 2.5-.9 3.5l1.4 4-4-1.4c-1 .6-2.2.9-3.5.9-4.1 0-7.5-3.4-7.5-7.5S8.4 4 12.5 4s7.5 3.4 7.5 7.5z' fill='%23fff'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon/dekhahok.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Leaflet Map -->
@@ -15,11 +14,11 @@
     <style>
         .leaflet-popup-content-wrapper {
             border-radius: 1rem;
-            border-top: 4px solid #ea580c;
+            border-top: 4px solid #059669;
         }
 
         .leaflet-popup-tip {
-            border-top: 10px solid #ea580c;
+            border-top: 10px solid #10B981;
         }
     </style>
     <link
@@ -48,12 +47,21 @@
 
         body {
             top: 0px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+            min-height: 100vh;
+            background-color: #F9FBFA;
         }
 
-        .goog-tooltip {
-            display: none !important;
+        html {
+            background-color: #F9FBFA;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
+        .goog-tooltip,
         .goog-tooltip:hover {
             display: none !important;
         }
@@ -63,42 +71,48 @@
             border: none !important;
             box-shadow: none !important;
         }
+
+        /* Definitive footer end fix */
+        footer {
+            margin-bottom: 0 !important;
+            position: relative;
+        }
     </style>
 </head>
 
-<body class="text-gray-800 overflow-x-hidden">
+<body class="text-gray-800 overflow-x-hidden flex flex-col min-h-screen">
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-card border-b border-gray-100">
+    <nav class="fixed top-0 w-full z-50 bg-[#F9F9F8] border-b border-[#E5E7EB]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="/" class="flex items-center space-x-2 hover:opacity-90 transition">
-                    <div
-                        class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-                        <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <span class="text-2xl font-bold gradient-text">DekhaHok</span>
+                <a href="/" class="flex items-center space-x-2 hover:opacity-90 transition" aria-label="DekhaHok home">
+                    <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok" class="logo-img" />
+                    <span class="text-2xl font-bold text-[#1F2937]">DekhaHok</span>
                     <span
-                        class="text-xs text-orange-600 font-medium bg-orange-100 px-2 py-1 rounded-full ml-2">Beta</span>
+                        class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full ml-2 border border-emerald-100 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                        Beta
+                    </span>
                 </a>
                 <div class="hidden md:flex space-x-8">
-                    <a href="#book" class="text-gray-600 hover:text-orange-600 transition">বুক করুন</a>
-                    <a href="#how-it-works" class="text-gray-600 hover:text-orange-600 transition">কিভাবে কাজ করে</a>
-                    <a href="#track" class="text-gray-600 hover:text-orange-600 transition">বুকিং ট্র্যাক করুন</a>
-                    <a href="#safety" class="text-gray-600 hover:text-orange-600 transition">নিরাপত্তা</a>
+                    <a href="#book" class="text-gray-600 hover:text-emerald-700 transition">বুক করুন</a>
+                    <a href="#how-it-works" class="text-gray-600 hover:text-emerald-700 transition">কিভাবে কাজ করে</a>
+                    <a href="#track" class="text-gray-600 hover:text-emerald-700 transition">বুকিং ট্র্যাক করুন</a>
+                    <a href="#safety" class="text-gray-600 hover:text-emerald-700 transition">নিরাপত্তা</a>
                 </div>
                 <div class="flex items-center space-x-3">
                     <button onclick="scrollToBook()"
-                        class="hidden sm:flex btn-primary text-white px-6 py-2 rounded-full font-medium text-sm">
+                        class="hidden sm:flex btn-primary text-white px-6 py-2 rounded-full font-bold text-sm transition shadow-sm active:scale-95">
                         দেখা করুন
                     </button>
                     <button id="langBtn" onclick="toggleTranslation()" title="Translate to English"
-                        class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-xs font-bold text-gray-500 hover:border-orange-400 hover:text-orange-600 transition-colors">
+                        class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-xs font-bold text-gray-500 hover:border-emerald-400 hover:text-emerald-600 transition-colors">
                         En
                     </button>
                     <!-- Mobile Menu Button -->
                     <button id="mobileMenuBtn"
-                        class="md:hidden p-2 text-gray-600 hover:text-orange-600 focus:outline-none">
+                        class="md:hidden p-2 text-gray-600 hover:text-emerald-600 focus:outline-none">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
@@ -106,43 +120,210 @@
         </div>
         <!-- Mobile Menu Overlay -->
         <div id="mobileMenu"
-            class="hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-orange-100 p-4 flex-col space-y-3 shadow-xl z-40 mobile-menu">
+            class="hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-[#E5E7EB] p-4 flex-col space-y-3 shadow-xl z-40 mobile-menu">
             <a href="#book" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
+                class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 <span>বুক করুন</span>
             </a>
             <a href="#how-it-works" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
+                class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
                 <i data-lucide="help-circle" class="w-5 h-5"></i>
                 <span>কিভাবে কাজ করে</span>
             </a>
             <a href="#track" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
+                class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
                 <i data-lucide="map-pin" class="w-5 h-5"></i>
                 <span>বুকিং ট্র্যাক করুন</span>
             </a>
             <a href="#safety" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-orange-600 transition flex items-center space-x-3 py-1">
+                class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
                 <i data-lucide="shield" class="w-5 h-5"></i>
                 <span>নিরাপত্তা</span>
             </a>
             <button onclick="scrollToBook(); toggleMobileMenu();"
-                class="btn-primary text-white w-full py-3 rounded-xl font-bold flex items-center justify-center space-x-2">
+                class="btn-primary text-white w-full py-4 rounded-xl font-bold flex items-center justify-center space-x-2 transition active:scale-95 shadow-lg shadow-emerald-50">
                 <span>দেখা করুন</span>
                 <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
         </div>
     </nav>
+    <div class="h-16"></div> <!-- Spacer for fixed nav -->
+
+    <!-- Success Modal -->
+    <div id="successModal"
+        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center transform scale-95 opacity-0 transition-all duration-300"
+            id="modalContent">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+                <i data-lucide="check-circle" class="w-10 h-10 text-green-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Booking Received!</h3>
+            <p class="text-gray-500 text-sm mb-5">আমরা আপনাকে একটি গ্রুপে যুক্ত করব এবং জানাবো।</p>
+
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 mb-5">
+                <p class="text-xs text-emerald-700 font-semibold uppercase tracking-widest mb-2">আপনার ট্র্যাকিং আইডি
+                </p>
+                <p id="modalTrackingId" class="text-3xl font-bold font-mono text-emerald-800 tracking-widest"></p>
+                <p class="text-xs text-gray-400 mt-2">এই আইডিটি সেভ করুন — স্ট্যাটাস চেক করতে লাগবে</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-4 mb-6 text-left space-y-2">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
+                    <span class="text-sm font-medium text-gray-700">Group of <span id="modalGroupSize">2</span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+                    <span id="modalDateSlot" class="text-sm font-medium text-gray-700"></span>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" class="btn-primary w-full text-white py-3 rounded-xl font-semibold">
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal"
+        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
+            id="paymentModalContent">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">পেমেন্ট সম্পন্ন করুন</h3>
+                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-gray-50 rounded-2xl p-4 flex items-center justify-between">
+                    <span class="text-gray-600">মোট টাকা:</span>
+                    <span id="paymentAmount" class="text-2xl font-black text-gray-900"></span>
+                </div>
+                <p class="text-sm text-gray-500">বুকিং কনফার্ম করতে পেমেন্ট সম্পন্ন করুন।</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button
+                        class="border-2 border-gray-100 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-emerald-500 transition">
+                        <img src="/static/assets/bkash.png"
+                            class="h-10 object-contain grayscale hover:grayscale-0 transition" alt="bKash">
+                        <span class="text-[10px] font-bold text-gray-400">বিকাশ</span>
+                    </button>
+                    <button
+                        class="border-2 border-gray-100 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-emerald-500 transition">
+                        <img src="/static/assets/nagad.png"
+                            class="h-10 object-contain grayscale hover:grayscale-0 transition" alt="Nagad">
+                        <span class="text-[10px] font-bold text-gray-400">নগদ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partnership Modal -->
+    <div id="partnershipModal"
+        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
+            id="partnershipModalContent">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">পার্টনারশিপ আবেদন</h3>
+                <button onclick="closePartnershipModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <!-- Form View -->
+            <div id="partnershipFormView" class="space-y-4">
+                <form id="partnershipForm" onsubmit="submitPartnership(event)" class="space-y-4">
+                    <input type="text" id="partnerRestaurantName" placeholder="রেস্টুরেন্ট/ক্যাফে নাম" required
+                        class="w-full px-4 py-3 rounded-xl border border-gray-100 focus:outline-none focus:border-emerald-500 bg-gray-50">
+                    <input type="text" id="partnerLocation" placeholder="এলাকা" required
+                        class="w-full px-4 py-3 rounded-xl border border-gray-100 focus:outline-none focus:border-emerald-500 bg-gray-50">
+                    <input type="tel" id="partnerContactNumber" placeholder="ফোন নম্বর" required
+                        class="w-full px-4 py-3 rounded-xl border border-gray-100 focus:outline-none focus:border-emerald-500 bg-gray-50">
+                    <button type="submit" id="partnerSubmitBtn"
+                        class="btn-primary w-full py-4 text-white font-bold rounded-xl shadow-lg shadow-emerald-50">আবেদন
+                        জমা দিন</button>
+                </form>
+            </div>
+
+            <!-- Success View -->
+            <div id="partnershipSuccessView" class="hidden text-center py-8 space-y-4">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="check-circle" class="w-10 h-10"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-900">আবেদন সফল!</h4>
+                <p class="text-sm text-gray-500">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব। ধন্যবাদ!</p>
+                <button onclick="closePartnershipModal()" class="text-emerald-600 font-bold hover:underline">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legal Modal -->
+    <div id="legalModal"
+        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col transform scale-95 opacity-0 transition-all duration-300 relative"
+            id="legalModalContent">
+            <div class="flex items-center justify-between mb-6 flex-shrink-0">
+                <h3 class="text-2xl font-bold text-gray-900" id="legalModalTitle">Policy</h3>
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="legalTextContent"
+                class="overflow-y-auto pr-4 text-sm text-gray-600 leading-relaxed custom-scrollbar py-2"></div>
+        </div>
+    </div>
+
+    <!-- Group Chat Overlay -->
+    <div id="chatOverlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[2000] hidden" onclick="closeChat()">
+        <div id="chatDrawer"
+            class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] h-[80vh] flex flex-col p-6 shadow-2xl transition-transform transform translate-y-full"
+            onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">গ্রুপ আড্ডা</h3>
+                        <p class="text-xs text-green-500 flex items-center gap-1"><span
+                                class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> সরাসরি কথা বলুন</p>
+                    </div>
+                </div>
+                <button onclick="closeChat()" class="p-2 hover:bg-gray-100 rounded-full transition text-gray-400">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="chatMessages" class="flex-1 overflow-y-auto mb-4 scroll-smooth"></div>
+            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <input type="text" id="chatInput" placeholder="আপনার বার্তা লিখুন..."
+                    class="flex-1 bg-gray-50 border border-gray-100 rounded-2xl px-5 py-3 text-sm focus:outline-none">
+                <button onclick="sendChatMsg()"
+                    class="w-11 h-11 bg-emerald-500 text-white rounded-2xl flex items-center justify-center">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Trust Banner (Inspired by Fitra Image 5 Top) -->
+    <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-8 flex justify-center">
+        <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-xs font-bold text-gray-700">৩২০৪ জন ঢাকার মানুষ আমাদের উপর ভরসা করছেন — শুভকামনা!</span>
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
+        </div>
+    </div>
 
     <!-- Hero Section with Animation -->
-    <section class="relative min-h-screen flex items-center justify-center pt-6 overflow-hidden pattern-bg">
+    <section class="relative flex items-center justify-center pt-8 pb-16 overflow-hidden pattern-bg">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div
-                class="absolute top-20 left-10 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
+                class="absolute top-20 left-10 w-64 h-64 bg-emerald-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
             </div>
-            <div class="absolute bottom-20 right-10 w-96 h-96 bg-red-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"
                 style="animation-delay: 1s;"></div>
         </div>
 
@@ -150,9 +331,9 @@
             <!-- Left Content -->
             <div class="text-center lg:text-left space-y-1 mt-1">
                 <div
-                    class="inline-flex items-center space-x-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-orange-200">
-                    <span class="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
-                    <span class="text-sm font-medium text-orange-800">Now in Dhaka City</span>
+                    class="inline-flex items-center space-x-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-emerald-200">
+                    <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-sm font-medium text-emerald-700">Now in Dhaka City</span>
                 </div>
 
                 <h1 class="text-5xl lg:text-7xl font-bold leading-[1.3] overflow-visible">
@@ -172,11 +353,11 @@
                 <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
                     <button onclick="scrollToBook()"
                         class="btn-primary text-white px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center space-x-2 group">
-                        <span>সিট বুক করুন</span>
+                        <span>বুক করুন</span>
                         <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                     </button>
                     <button onclick="document.getElementById('track').scrollIntoView({behavior: 'smooth'})"
-                        class="bg-white text-orange-600 border-2 border-orange-200 px-8 py-4 rounded-full font-semibold text-lg hover:border-orange-400 transition">
+                        class="bg-white text-[#2D5A43] border-2 border-emerald-100 px-8 py-4 rounded-full font-bold text-lg hover:border-emerald-300 hover:text-emerald-800 transition shadow-sm">
                         বুকিং ট্র্যাক করুন
                     </button>
                 </div>
@@ -199,14 +380,15 @@
                 <!-- Animation Stage -->
                 <div id="animation-stage" class="relative w-full h-full">
                     <div class="absolute inset-0 opacity-10"
-                        style="background-image: radial-gradient(#ea580c 1px, transparent 1px); background-size: 40px 40px;">
+                        style="background-image: radial-gradient(#10B981 1px, transparent 1px); background-size: 40px 40px;">
                     </div>
 
                     <svg class="absolute inset-0 w-full h-full" id="connection-svg">
                         <defs>
                             <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#fdba74;stop-opacity:0" />
-                                <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#105745;stop-opacity:1" />
+                                <stop offset="60%" style="stop-color:#0A4732;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <path id="path-1" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
@@ -218,7 +400,7 @@
                     </svg>
 
                     <div id="node-1"
-                        class="absolute w-8 h-8 bg-blue-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                        class="absolute w-8 h-8 bg-green-500 rounded-full z-20 transition-all duration-1000 opacity-0">
                     </div>
                     <div id="node-2"
                         class="absolute w-8 h-8 bg-pink-500 rounded-full z-20 transition-all duration-1000 opacity-0">
@@ -229,12 +411,12 @@
 
                     <div id="central-venue"
                         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 opacity-0 scale-50 transition-all duration-700">
-                        <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-orange-400 text-center w-56">
+                        <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-emerald-200 text-center w-56">
                             <div
-                                class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i data-lucide="map-pin" class="w-6 h-6 text-orange-600"></i>
+                                class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i data-lucide="map-pin" class="w-6 h-6 text-green-700"></i>
                             </div>
-                            <p class="text-xs uppercase tracking-widest text-orange-600 font-bold">Confirmed Meetup</p>
+                            <p class="text-xs uppercase tracking-widest text-emerald-600 font-bold">Confirmed Meetup</p>
                             <p class="font-bold text-gray-800 text-lg">Meetup Point</p>
                             <p class="text-xs text-gray-500">Tomorrow, 7:00 PM</p>
                             <div class="flex justify-center -space-x-2 mt-4">
@@ -253,16 +435,26 @@
 
         <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i data-lucide="chevron-down" class="w-6 h-6 text-orange-400"></i>
+            <i data-lucide="chevron-down" class="w-6 h-6 text-emerald-400"></i>
         </div>
     </section>
 
+    <!-- Trust Strip -->
+    <div
+        class="trust-strip-fitra flex items-center justify-center gap-6 py-3 border-y border-gray-100 bg-[#F9FBFA] text-[10px] font-bold text-gray-400 uppercase tracking-widest scroll-reveal">
+        <span>যাচাইকৃত স্থান</span>
+        <div class="w-1 h-1 rounded-full bg-emerald-200"></div>
+        <span>পরিচয় যাচাইকৃত মেম্বার</span>
+        <div class="w-1 h-1 rounded-full bg-emerald-200"></div>
+        <span>নিরাপদ পরিবেশ</span>
+    </div>
+
     <!-- Booking Section -->
-    <section id="book" class="py-16 bg-white relative overflow-hidden">
+    <section id="book" class="py-16 section-bg-subtle overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-30">
             <div class="absolute top-0 left-0 w-full h-full"
-                style="background-image: radial-gradient(circle at 2px 2px, rgba(234, 88, 12, 0.2) 1px, transparent 0); background-size: 32px 32px;">
+                style="background-image: radial-gradient(circle at 2px 2px, rgba(16, 185, 129, 0.2) 1px, transparent 0); background-size: 32px 32px;">
             </div>
         </div>
 
@@ -288,8 +480,8 @@
                                         <i data-lucide="check" class="w-3 h-3"></i>
                                     </div>
                                 </div>
-                                <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center mb-3">
-                                    <i data-lucide="users-2" class="w-5 h-5 text-orange-600"></i>
+                                <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center mb-3">
+                                    <i data-lucide="users-2" class="w-5 h-5 text-emerald-700"></i>
                                 </div>
                                 <h3 class="text-xl font-black text-gray-900 mb-0.5">দ্বৈত</h3>
                                 <div class="text-xs font-semibold text-gray-500 mb-2">২ জন</div>
@@ -311,8 +503,8 @@
                                         <i data-lucide="check" class="w-3 h-3"></i>
                                     </div>
                                 </div>
-                                <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center mb-3">
-                                    <i data-lucide="dice-5" class="w-6 h-6 text-orange-600"></i>
+                                <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center mb-3">
+                                    <i data-lucide="dice-5" class="w-6 h-6 text-emerald-700"></i>
                                 </div>
                                 <h3 class="text-xl font-black text-gray-900 mb-0.5">পঞ্চায়েত</h3>
                                 <div class="text-xs font-semibold text-gray-500 mb-2">৫ জন</div>
@@ -328,51 +520,31 @@
                         <input type="hidden" id="groupSize" value="2">
                     </div>
 
-                    <!-- Personal Details -->
+                    <!-- Fitra-style Input Refinement -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">আপনার নাম</label>
-                            <input type="text" id="fullName" required
-                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
-                                placeholder="Your name">
+                            <label class="badge-pill bg-gray-100 text-gray-600">আপনার নাম</label>
+                            <input type="text" id="name" required
+                                class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
+                                placeholder="পুরো নাম লিখুন">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">ইমেইল</label>
-                            <input type="email" id="email"
-                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
-                                placeholder="you@example.com">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">ফোন <span
-                                    class="text-red-500">*</span></label>
+                            <label class="badge-pill bg-gray-100 text-gray-600">ফোন নম্বর</label>
                             <input type="tel" id="phone" required
-                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
+                                class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
                                 placeholder="01XXXXXXXXX">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">বয়স</label>
-                            <input type="number" id="age" min="5" max="80"
-                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
-                                placeholder="25">
-                            <p id="ageNote" class="text-sm text-red-500 mt-2 font-medium hidden">
-                                <i data-lucide="alert-circle" class="w-4 h-4 inline-block mr-1"></i>
-                                ১৮ বছরের নিচে আবেদন গ্রহণ করা হয় না।
-                            </p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">আপনার বর্তমান এলাকা
-                                (Dhaka)</label>
-                            <input type="text" id="currentLocation" required
-                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition"
-                                placeholder="e.g. Dhanmondi, Mirpur">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">পছন্দের এলাকা (Area)</label>
-                            <select id="preferredLocation" required
-                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition bg-white cursor-pointer">
-                                <option value="" disabled selected>নির্বাচন করুন...</option>
-                            </select>
-                        </div>
+                    </div>
+
+                    <div>
+                        <label class="badge-pill bg-gray-100 text-gray-600">আপনার বয়স</label>
+                        <input type="number" id="age" min="5" max="80"
+                            class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
+                            placeholder="25">
+                        <p id="ageNote" class="text-xs text-red-500 mt-2 font-medium hidden">
+                            <i data-lucide="alert-circle" class="w-3 h-3 inline-block mr-1"></i>
+                            ১৮ বছরের নিচে আবেদন গ্রহণ করা হয় না।
+                        </p>
                     </div>
 
                     <!-- Preferences -->
@@ -386,39 +558,39 @@
                                     করেন?</label>
                                 <textarea id="conversationStyle" required rows="3"
                                     class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition resize-none"
-                                    placeholder="আমি ফিলোসফি, ট্রাভেল স্টোরি এবং এন্টারপ্রেনারশিপ নিয়ে কথা বলতে ভালোবাসি।..."></textarea>
+                                    placeholder="এন্টারপ্রেনারশিপ, ফিলোসফি, ট্রাভেল স্টোরি..."></textarea>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">আপনি যার সাথে দেখা করতে চান
-                                    তাদের সম্পর্কে কিছু বলুন?</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">আপনার প্রত্যাশা সম্পর্কে
+                                    কিছু বলুন?</label>
                                 <textarea id="preferredPeople" rows="3"
                                     class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition resize-none"
-                                    placeholder="খোলা মনের মানুষ যারা গভীর আড্ডা আর সুস্বাদু খাবার পছন্দ করেন।.."></textarea>
+                                    placeholder="ভালো মানুষ, ব্যবসায়ী, সেলিব্রিটি, .."></textarea>
                             </div>
 
                             <div>
                                 <label class="block text-lg font-medium text-gray-700 mb-4">জায়গা নির্ধারন করুণ <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-emerald-600">*</span></label>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-3">
                                         <button type="button" onclick="selectVenue('public_place', this)"
-                                            class="venue-btn active btn-toggle w-full flex flex-col items-center justify-center p-6 rounded-2xl">
+                                            class="venue-btn btn-toggle w-full flex flex-col items-center justify-center p-6 rounded-2xl bg-white text-emerald-700 border border-emerald-100">
                                             <i data-lucide="map" class="w-6 h-6 mb-2"></i>
                                             <span class="font-semibold text-lg">পাবলিক প্লেস</span>
                                         </button>
-                                        <p id="publicNote" class="text-[11px] text-orange-600 font-medium">
+                                        <p id="publicNote" class="text-[11px] text-emerald-700 font-medium">
                                             <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
                                             শুধুমাত্র নিরাপদ কিছু বাছাইক্রিত পাবলিক প্লেসের ক্ষেত্রে প্রযোজ্য।
                                         </p>
                                     </div>
                                     <div class="space-y-3">
                                         <button type="button" onclick="selectVenue('restaurant', this)"
-                                            class="venue-btn btn-toggle w-full flex flex-col items-center justify-center p-6 rounded-2xl">
+                                            class="venue-btn btn-toggle w-full flex flex-col items-center justify-center p-6 rounded-2xl bg-white text-emerald-700">
                                             <i data-lucide="utensils" class="w-6 h-6 mb-2"></i>
                                             <span class="font-semibold text-lg">রেস্তোরাঁ</span>
                                         </button>
-                                        <p id="restaurantNote" class="text-[11px] text-orange-600 font-medium hidden">
+                                        <p id="restaurantNote" class="text-[11px] text-emerald-700 font-medium hidden">
                                             <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
                                             আমরা নিজস্ব বিল দেয়ার সক্ষমতা থাকাকে উৎসাহিত করি।
                                         </p>
@@ -433,8 +605,8 @@
                     <!-- Date Selection Container -->
                     <div class="max-w-md mx-auto p-6 bg-white rounded-3xl shadow-sm border border-gray-100">
                         <label class="block text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <span class="w-2 h-6 bg-orange-500 rounded-full"></span>
-                            তারিখ ও সময় নির্বাচন করুন <span class="text-red-500">*</span>
+                            <span class="w-2 h-6 bg-green-600 rounded-full"></span>
+                            তারিখ ও সময় নির্বাচন করুন <span class="text-emerald-600">*</span>
                         </label>
 
                         <div class="grid grid-cols-2 gap-6">
@@ -449,12 +621,12 @@
 
                                 <div class="flex flex-col gap-3">
                                     <button type="button" id="slot-fri-5pm" data-time="17:00" onclick="selectDate(this)"
-                                        class="date-btn group p-4 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-700 transition-all duration-300 shadow-md shadow-orange-100 ring-2 ring-orange-100 ring-offset-2">
+                                        class="date-btn group p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 transition-all duration-300 shadow-md shadow-emerald-100 ring-2 ring-emerald-100 ring-offset-2">
                                         <div class="font-bold text-lg">05:00 PM</div>
                                     </button>
 
                                     <button type="button" id="slot-fri-7pm" data-time="19:00" onclick="selectDate(this)"
-                                        class="date-btn group p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-600 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600 transition-all duration-300">
+                                        class="date-btn group p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50/60 hover:text-emerald-800 transition-all duration-300">
                                         <div class="font-bold text-lg">07:00 PM</div>
                                     </button>
                                 </div>
@@ -471,12 +643,12 @@
 
                                 <div class="flex flex-col gap-3">
                                     <button type="button" id="slot-sat-5pm" data-time="17:00" onclick="selectDate(this)"
-                                        class="date-btn group p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-600 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600 transition-all duration-300">
+                                        class="date-btn group p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50/60 hover:text-emerald-800 transition-all duration-300">
                                         <div class="font-bold text-lg">05:00 PM</div>
                                     </button>
 
                                     <button type="button" id="slot-sat-7pm" data-time="19:00" onclick="selectDate(this)"
-                                        class="date-btn group p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-600 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600 transition-all duration-300">
+                                        class="date-btn group p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50/60 hover:text-emerald-800 transition-all duration-300">
                                         <div class="font-bold text-lg">07:00 PM</div>
                                     </button>
                                 </div>
@@ -487,7 +659,7 @@
 
 
                     <!-- Pricing Section Redesign -->
-                    <div class="premium-card p-1 bg-gradient-to-br from-orange-400 to-red-600">
+                    <div class="premium-card p-1 bg-emerald-50">
                         <div class="bg-white rounded-[22px] p-8 md:p-10">
                             <div
                                 class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
@@ -497,7 +669,7 @@
                                 </div>
                                 <div class="text-left md:text-right">
                                     <div class="text-4xl font-black text-gray-900" id="reservationFee">৳৪৯৯</div>
-                                    <p class="text-sm text-orange-600 font-bold uppercase tracking-wider">One-time
+                                    <p class="text-sm font-bold uppercase tracking-wider text-emerald-700">One-time
                                         payment</p>
                                 </div>
                             </div>
@@ -527,45 +699,23 @@
                             </div>
 
                             <button type="submit"
-                                class="btn-primary w-full text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center space-x-3 shadow-lg shadow-orange-200">
+                                class="btn-primary w-full text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center space-x-3 shadow-lg shadow-green-200">
                                 <span>বুক করুন</span>
                                 <i data-lucide="lock" class="w-6 h-6"></i>
                             </button>
-                            <!-- Payment Option Logo's disabled for now 
+
                             <div class="mt-6 flex flex-col items-center justify-center gap-3">
                                 <div class="flex items-center gap-1.5 opacity-60">
-                                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-gray-500"></i>
-                                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Secure
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-700"></i>
+                                    <span
+                                        class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Secure
                                         Payment</span>
                                 </div>
-                                
-                                <div class="flex items-center justify-center gap-3.5 opacity-100 mt-1">
-                                    
-                                    <div
-                                        class="flex items-center justify-center w-[72px] h-[36px] bg-white rounded-md border border-gray-200">
-                                        <img src="/static/assets/bkash-logo.png" alt="bKash"
-                                            class="h-[90%] w-[90%] object-contain">
-                                    </div>
-                                    
-                                    <div
-                                        class="flex items-center justify-center w-[72px] h-[36px] bg-white rounded-md border border-gray-200">
-                                        <img src="/static/assets/nagad-logo.png" alt="Nagad"
-                                            class="h-[80%] w-[80%] object-contain">
-                                    </div>
-                                    
-                                    <div
-                                        class="flex items-center justify-center w-[72px] h-[36px] bg-white rounded-md border border-gray-200">
-                                        <img src="/static/assets/upay-logo.png" alt="Upay"
-                                            class="h-[85%] w-[85%] object-contain">
-                                    </div>
-                                </div> 
-                            -->
-
+                            </div>
                         </div>
                     </div>
+                </form>
             </div>
-            </form>
-        </div>
         </div>
     </section>
 
@@ -573,10 +723,10 @@
     <section id="track" class="py-12 bg-gray-50 relative overflow-hidden">
         <!-- Decoration side gradients -->
         <div
-            class="absolute top-1/2 left-0 w-80 h-80 bg-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2">
+            class="absolute top-1/2 left-0 w-80 h-80 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2">
         </div>
         <div
-            class="absolute top-1/2 right-0 w-64 h-64 bg-red-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-x-1/2 -translate-y-1/2">
+            class="absolute top-1/2 right-0 w-64 h-64 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-x-1/2 -translate-y-1/2">
         </div>
 
         <div class="max-w-2xl mx-auto px-4 relative z-10">
@@ -587,9 +737,9 @@
                     <div
                         class="w-20 h-20 bg-white rounded-3xl shadow-xl flex items-center justify-center mx-auto border border-gray-50 relative">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl opacity-10 blur-sm">
+                            class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl opacity-10 blur-sm">
                         </div>
-                        <i data-lucide="map-pin" class="w-10 h-10 text-orange-600 relative z-10"></i>
+                        <i data-lucide="map-pin" class="w-10 h-10 text-emerald-700 relative z-10"></i>
                     </div>
                     <div>
                         <h2 class="text-4xl font-black text-gray-900 mb-3 tracking-tight">বুকিং ট্র্যাক করুন</h2>
@@ -603,23 +753,23 @@
                     <div class="relative group">
                         <!-- Shadow Glow -->
                         <div
-                            class="absolute -inset-1 bg-gradient-to-r from-orange-400 to-red-600 rounded-[2rem] blur opacity-10 group-hover:opacity-20 transition duration-500">
+                            class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-[2rem] blur opacity-10 group-hover:opacity-20 transition duration-500">
                         </div>
 
                         <div class="relative flex flex-col md:flex-row gap-4">
                             <input id="trackingInput" type="text" placeholder="DH-XXXXXXXX or 017..."
-                                class="flex-1 border-2 border-gray-100 bg-white rounded-2xl px-6 py-5 text-lg font-mono focus:outline-none focus:border-orange-400 shadow-inner placeholder:text-gray-300">
+                                class="flex-1 border-2 border-gray-100 bg-white rounded-2xl px-6 py-5 text-lg font-mono focus:outline-none focus:border-emerald-400 shadow-inner placeholder:text-gray-300">
                             <button onclick="checkBookingStatus()"
-                                class="btn-primary text-white px-10 py-5 rounded-2xl font-black text-lg whitespace-nowrap shadow-xl shadow-orange-100 hover:shadow-orange-200 transform active:scale-95 transition-all">
+                                class="btn-primary text-white px-10 py-5 rounded-2xl font-black text-lg whitespace-nowrap shadow-xl shadow-emerald-200 hover:shadow-emerald-300 transform active:scale-95 transition-all">
                                 ট্র্যাক করুন
                             </button>
                         </div>
                     </div>
 
                     <div
-                        class="flex items-center justify-center gap-2 py-2 bg-orange-50/50 rounded-full border border-orange-100/50 w-fit mx-auto px-6">
-                        <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                        <p class="text-xs font-bold text-orange-800 uppercase tracking-widest">স্ট্যাটাস চেক করুন।</p>
+                        class="flex items-center justify-center gap-2 py-2 bg-emerald-50/50 rounded-full border border-emerald-100/50 w-fit mx-auto px-6">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <p class="text-xs font-bold text-emerald-700 uppercase tracking-widest">স্ট্যাটাস চেক করুন।</p>
                     </div>
 
                     <!-- Simplified Container for Results -->
@@ -632,12 +782,12 @@
     </section>
 
     <!-- Map Section (Moved & Styled) -->
-    <section class="py-16 bg-white overflow-hidden relative">
+    <section class="py-12 bg-white overflow-hidden relative">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center max-w-2xl mx-auto mb-12 space-y-8 scroll-reveal">
                 <div class="space-y-4">
-                    <h2 class="text-4xl font-black text-gray-900 leading-tight">পছন্দের জায়গাসমূহ<span
-                            class="text-orange-600">(ঢাকা)</span></h2>
+                    <h2 class="text-4xl font-black text-gray-900 leading-tight">পছন্দের জায়গাসমূহ <span
+                            class="text-emerald-700">(ঢাকা)</span></h2>
                     <p class="text-lg text-gray-500 leading-relaxed">ঢাকা জুড়েই আমাদের আয়োজন; আপনার পছন্দের স্থানটি
                         বেছে নিয়ে আজই যুক্ত হোন!</p>
                 </div>
@@ -645,15 +795,15 @@
                 <div id="map-stats"
                     class="inline-flex gap-8 bg-gray-50 p-6 rounded-[2rem] border border-gray-100 shadow-sm">
                     <div class="text-center">
-                        <p class="text-2xl font-black text-orange-600" id="stat-cities">1</p>
+                        <p class="text-2xl font-black text-emerald-700" id="stat-cities">1</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">ঢাকা</p>
                     </div>
                     <div class="text-center px-8 border-x border-gray-200">
-                        <p class="text-2xl font-black text-orange-600" id="stat-areas">8+</p>
+                        <p class="text-2xl font-black text-emerald-700" id="stat-areas">8+</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">এলাকা</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-2xl font-black text-orange-600" id="stat-points">3</p>
+                        <p class="text-2xl font-black text-emerald-700" id="stat-points">3</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">পয়েন্ট</p>
                     </div>
                 </div>
@@ -667,15 +817,15 @@
                 <div
                     class="absolute bottom-10 left-10 z-[20] bg-white/90 backdrop-blur p-4 rounded-2xl shadow-2xl border border-white/50 hidden md:block">
                     <p class="text-xs font-bold text-gray-900 mb-3 flex items-center">
-                        <i data-lucide="info" class="w-3 h-3 mr-1.5 text-orange-500"></i> ম্যাপ লিজেন্ড
+                        <i data-lucide="info" class="w-3 h-3 mr-1.5 text-emerald-600"></i> ম্যাপ লিজেন্ড
                     </p>
                     <div class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 bg-orange-600 rounded-full shadow-sm shadow-orange-200"></div>
+                            <div class="w-3 h-3 bg-green-600 rounded-full shadow-sm shadow-green-200"></div>
                             <span class="text-[11px] font-medium text-gray-700">অ্যাক্টিভ মিটআপ পয়েন্ট</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 bg-blue-500 rounded-full shadow-sm shadow-blue-200"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full shadow-sm shadow-green-200"></div>
                             <span class="text-[11px] font-medium text-gray-700">পার্টনার রেস্তোরাঁ</span>
                         </div>
                     </div>
@@ -685,88 +835,144 @@
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-16 bg-white">
+    <section id="how-it-works" class="py-16 section-bg-subtle border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 scroll-reveal">
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">কিভাবে কাজ করে?</h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">দেখা করে বন্ধু জিতে নিতে অনুসরণ করুন ৪টি সহজ ধাপ</p>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-8">
+            <div class="grid md:grid-cols-4 gap-6">
                 <!-- Step 1 -->
-                <div class="scroll-reveal relative">
-                    <div
-                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
-                        <div
-                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
-                            1</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">গ্রুপ নির্বাচন</h3>
-                        <p class="text-gray-600 leading-relaxed">আপনার পছন্দের গ্রুপের আকার এবং সদস্য সংখ্যা বাছাই করুন।
-                        </p>
-                        <div class="mt-6 flex space-x-2">
-                            <div
-                                class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-xs font-bold text-orange-700">
-                                2</div>
-                            <div
-                                class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-xs font-bold text-orange-700">
-                                3</div>
-                            <div
-                                class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-xs font-bold text-orange-700">
-                                4</div>
+                <div class="scroll-reveal">
+                    <div class="premium-card p-8 h-full bg-white border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০১</span>
+                            <div class="flex -space-x-2">
+                                <div
+                                    class="w-6 h-6 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-[8px] font-bold text-emerald-700">
+                                    ৩k+</div>
+                                <div class="w-6 h-6 rounded-full border-2 border-white bg-emerald-500"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">গ্রুপ নির্বাচন</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed mb-6">আপনার পছন্দের গ্রুপ সাইজ এবং ধরণ নির্বাচন
+                            করুন আমাদের ভেরিফাইড মেম্বারদের সাথে যুক্ত হতে।</p>
+
+                        <div class="mt-auto">
+                            <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
+                                <span
+                                    class="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-lg border border-emerald-100 whitespace-nowrap">৳৪৯৯
+                                    (দ্বৈত)</span>
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100 whitespace-nowrap">৳২৪৯
+                                    (পঞ্চায়েত)</span>
+                            </div>
+                            <div class="w-full h-1 bg-emerald-50 rounded-full overflow-hidden">
+                                <div class="w-1/4 h-full bg-emerald-600"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Step 2 -->
-                <div class="scroll-reveal relative" style="transition-delay: 0.1s;">
-                    <div
-                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
-                        <div
-                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
-                            2</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">পছন্দ জানান</h3>
-                        <p class="text-gray-600 leading-relaxed">আপনার ইচ্ছা, বিষয় এবং পছন্দগুলো আমাদের সাথে
-                            শেয়ার করুন।</p>
-                        <div class="mt-6 flex flex-wrap gap-2">
-                            <span
-                                class="px-3 py-1 bg-white rounded-full text-xs text-orange-600 border border-orange-200">Deep
-                                Talks</span>
-                            <span
-                                class="px-3 py-1 bg-white rounded-full text-xs text-orange-600 border border-orange-200">Fun</span>
+                <div class="scroll-reveal" style="transition-delay: 0.1s;">
+                    <div class="premium-card p-8 h-full bg-white border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০২</span>
+                            <div class="flex items-center gap-1">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Matching
+                                    Live</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">পছন্দ জানান</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed mb-6">আপনার প্রিয় বিষয় এবং আড্ডার ধরণ আমাদের
+                            জানান যাতে আমরা সঠিক জোড়া বা গ্রুপ খুঁজে পাই।</p>
+
+                        <div class="mt-auto">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100">ফিলোসফি</span>
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100">ক্যারিয়ার</span>
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100">ভ্রমণ</span>
+                            </div>
+                            <div class="w-full h-1 bg-emerald-50 rounded-full overflow-hidden">
+                                <div class="w-2/4 h-full bg-emerald-600"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Step 3 -->
-                <div class="scroll-reveal relative" style="transition-delay: 0.2s;">
-                    <div
-                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
-                        <div
-                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
-                            3</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">ম্যাচিং ও ভেন্যু</h3>
-                        <p class="text-gray-600 leading-relaxed">আমরা আপনার জন্য সেরা গ্রুপ ও ভেন্যু
-                            নির্বাচন করব।</p>
-                        <div class="mt-6 flex items-center space-x-2 text-orange-600">
-                            <i data-lucide="map-pin" class="w-4 h-4"></i>
-                            <span class="text-sm font-medium">Gulshan, Banani & more</span>
+                <div class="scroll-reveal" style="transition-delay: 0.2s;">
+                    <div class="premium-card p-8 h-full bg-white border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০৩</span>
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="cpu" class="w-3 h-3 text-emerald-500"></i>
+                                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">AI
+                                    Engine</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">স্মার্ট ম্যাচিং</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed mb-6">আমাদের অ্যালগরিদম আপনার জন্য সবচেয়ে
+                            কাছাকাছি রুচি সম্পন্ন ব্যক্তিদের সাথে একটি নিরাপদ ভেন্যু ঠিক করবে।</p>
+
+                        <div class="mt-auto">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100">অ্যালগরিদম</span>
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100">সুরক্ষিত</span>
+                                <span
+                                    class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-bold rounded-lg border border-gray-100">স্থান
+                                    নির্বাচন</span>
+                            </div>
+                            <div class="w-full h-1 bg-emerald-50 rounded-full overflow-hidden">
+                                <div class="w-3/4 h-full bg-emerald-600"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Step 4 -->
-                <div class="scroll-reveal relative" style="transition-delay: 0.3s;">
+                <div class="scroll-reveal" style="transition-delay: 0.3s;">
                     <div
-                        class="bg-orange-50 rounded-3xl p-8 h-full border border-orange-100 hover:shadow-xl transition-shadow">
-                        <div
-                            class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg">
-                            4</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">উপস্থিত হোন</h3>
-                        <p class="text-gray-600 leading-relaxed">নির্ধারিত সময়ে ভেন্যুতে পৌঁছে নতুন মানুষদের সাথে আড্ডায়
-                            মেতে উঠুন।</p>
-                        <div class="mt-6 flex items-center space-x-2 text-orange-600">
-                            <i data-lucide="coffee" class="w-4 h-4"></i>
-                            <span class="text-sm font-medium">সবার সাথে ভাল ব্যবহার করুন!</span>
+                        class="premium-card p-8 h-full bg-gradient-to-br from-[#2D5A43] to-[#164230] text-white border-none shadow-xl shadow-emerald-900/20 relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="badge-pill bg-white/10 text-white font-bold border border-white/20">ধাপ
+                                ০৪</span>
+                            <div class="px-2 py-1 bg-white/10 rounded-lg backdrop-blur">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-300">New
+                                    Friend Awaits</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">হয়ে যান বন্ধু!</h3>
+                        <p class="text-sm text-emerald-50/80 leading-relaxed font-medium mb-8">নির্ধারিত সময় ও স্থানে
+                            পৌঁছে নতুন মানুষের সাথে সময় কাটান এবং গড়ে তুলুন দারুণ ফ্রেন্ডশিপ।</p>
+                        <div class="mt-auto flex items-center justify-between">
+                            <div class="flex -space-x-3">
+                                <img src="http://static.photos/people/200x200/1"
+                                    class="w-10 h-10 rounded-full border-4 border-[#1F3D2B] object-cover ring-2 ring-emerald-500/30"
+                                    alt="Member">
+                                <img src="http://static.photos/people/200x200/2"
+                                    class="w-10 h-10 rounded-full border-4 border-[#1F3D2B] object-cover ring-2 ring-emerald-500/30"
+                                    alt="Member">
+                                <div
+                                    class="w-10 h-10 rounded-full border-4 border-[#1F3D2B] bg-[#1F3D2B] flex items-center justify-center ring-2 ring-emerald-500/30">
+                                    <img src="/static/assets/dekhahok_logo.svg" alt="logo"
+                                        class="w-6 h-6 brightness-0 invert">
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span
+                                    class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Community</span>
+                                <span class="text-xs font-black">Join Dhaka's Best</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -777,7 +983,7 @@
 
 
     <!-- Safety & Trust Section -->
-    <section id="safety" class="py-16 bg-white">
+    <section id="safety" class="pt-16 pb-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="scroll-reveal">
@@ -785,8 +991,8 @@
                     <div class="space-y-6">
                         <div class="flex items-start space-x-4">
                             <div
-                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="shield-check" class="w-6 h-6 text-orange-600"></i>
+                                class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-emerald-700"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-lg text-gray-900">যাচাইকৃত ভেন্যু</h3>
@@ -797,8 +1003,8 @@
 
                         <div class="flex items-start space-x-4">
                             <div
-                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="user-check" class="w-6 h-6 text-orange-600"></i>
+                                class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="user-check" class="w-6 h-6 text-emerald-700"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-lg text-gray-900">সদস্য যাচাই</h3>
@@ -810,8 +1016,8 @@
 
                         <div class="flex items-start space-x-4">
                             <div
-                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="phone-call" class="w-6 h-6 text-orange-600"></i>
+                                class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="phone-call" class="w-6 h-6 text-emerald-700"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-lg text-gray-900">সার্বক্ষণিক সাপোর্ট</h3>
@@ -824,7 +1030,7 @@
 
                 <div class="scroll-reveal relative">
                     <div
-                        class="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-500 rounded-3xl transform rotate-3 opacity-20">
+                        class="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl transform rotate-3 opacity-20">
                     </div>
                     <img src="http://static.photos/restaurant/640x360/42" alt="Safe meeting space"
                         class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
@@ -838,9 +1044,9 @@
                             </div>
                             <span class="text-sm font-semibold text-gray-700">Matched!</span>
                         </div>
-                        <p class="text-sm text-gray-600">"Had an amazing conversation about photography at North End.
-                            Can't wait for the next one!"</p>
-                        <div class="flex items-center mt-3 text-orange-600 text-sm font-medium">
+                        <p class="text-sm text-gray-600">"Prothome ektu voy korchilo but i really had an amazing evening
+                            at North End."</p>
+                        <div class="flex items-center mt-3 text-emerald-700 text-sm font-medium">
                             <span>— Sarah, Gulshan</span>
                         </div>
                     </div>
@@ -849,663 +1055,509 @@
         </div>
     </section>
 
+        <!-- Visual Spacer for clear separation -->
+        <div class="h-10 bg-white section-bg-subtle border-t border-gray-50"></div>
 
-
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div class="col-span-2">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div
-                            class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-                            <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+        <footer class="relative z-[999] bg-gray-900 text-white pt-16 pb-8"
+            style="pointer-events: auto !important; margin-bottom: 0;">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-4 gap-8 mb-8">
+                    <div class="col-span-2">
+                        <div class="flex items-center space-x-2 mb-4 cursor-pointer group"
+                            onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                            <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok"
+                                class="footer-logo group-hover:scale-110 transition-transform">
+                            <span
+                                class="text-2xl font-bold group-hover:text-emerald-400 transition-colors">DekhaHok</span>
                         </div>
-                        <span class="text-2xl font-bold">DekhaHok</span>
+                        <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
+                            তুলুন প্রাণবন্ত
+                            বন্ধুত্ব।</p>
                     </div>
-                    <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
-                        তুলুন প্রাণবন্ত
-                        বন্ধুত্ব।</p>
-                </div>
 
-                <div>
-                    <h4 class="font-bold mb-4">লিংকস</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#how-it-works" class="hover:text-orange-400 transition"
-                                onclick="scrollToSection(event, '#how-it-works')">কিভাবে কাজ করে</a></li>
-                        <li><a href="#safety" class="hover:text-orange-400 transition"
-                                onclick="scrollToSection(event, '#safety')">নিরাপত্তা</a></li>
-                        <li><a href="https://wa.me/8801884477720" target="_blank"
-                                class="hover:text-orange-400 transition">জিজ্ঞাসা</a></li>
-                        <li><a href="javascript:void(0)" onclick="openPartnershipModal()"
-                                class="hover:text-orange-400 transition">পার্টনারশিপ রেস্তোরাঁ</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-bold mb-4">যোগাযোগ</h4>
-                    <div class="flex space-x-4">
-                        <a href="javascript:void(0)"
-                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-orange-600 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="text-white">
-                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                            </svg>
-                        </a>
-                        <a href="javascript:void(0)"
-                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-orange-600 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="text-white">
-                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-                            </svg>
-                        </a>
-                        <a href="javascript:void(0)"
-                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-orange-600 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="text-white">
-                                <path
-                                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z">
-                                </path>
-                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-500 text-sm">© 2024 DekhaHok. All rights reserved. Made with ❤️ in Dhaka.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
-                    <a href="javascript:void(0)" onclick="openLegalModal('privacy')"
-                        class="hover:text-white transition">Privacy Policy</a>
-                    <a href="javascript:void(0)" onclick="openLegalModal('terms')"
-                        class="hover:text-white transition">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Success Modal -->
-    <div id="successModal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center transform scale-95 opacity-0 transition-all duration-300"
-            id="modalContent">
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-                <i data-lucide="check-circle" class="w-10 h-10 text-green-600"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Booking Received!</h3>
-            <p class="text-gray-500 text-sm mb-5">আমরা আপনাকে একটি গ্রুপে যুক্ত করব এবং জানাবো।</p>
-
-            <!-- Tracking ID — the most important thing to show -->
-            <div class="bg-orange-50 border border-orange-200 rounded-2xl p-5 mb-5">
-                <p class="text-xs text-orange-500 font-semibold uppercase tracking-widest mb-2">আপনার ট্র্যাকিং আইডি</p>
-                <p id="modalTrackingId" class="text-3xl font-bold font-mono text-orange-700 tracking-widest"></p>
-                <p class="text-xs text-gray-400 mt-2">এই আইডিটি সেভ করুন — স্ট্যাটাস চেক করতে লাগবে</p>
-            </div>
-
-            <div class="bg-gray-50 rounded-xl p-4 mb-6 text-left space-y-2">
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="users" class="w-4 h-4 text-orange-500"></i>
-                    <span class="text-sm font-medium text-gray-700">Group of <span id="modalGroupSize">2</span></span>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="calendar" class="w-4 h-4 text-orange-500"></i>
-                    <span id="modalDateSlot" class="text-sm font-medium text-gray-700"></span>
-                </div>
-            </div>
-
-            <button onclick="closeModal()" class="btn-primary w-full text-white py-3 rounded-xl font-semibold">
-                Got it!
-            </button>
-        </div>
-    </div>
-
-    <!-- Payment Modal -->
-    <div id="paymentModal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
-            id="paymentModalContent">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-gray-900">পেমেন্ট সম্পন্ন করুন</h3>
-                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-
-            <div class="bg-orange-50 border border-orange-100 rounded-2xl p-5 mb-6">
-                <p class="text-sm text-gray-600 mb-3">
-                    বুকিং সম্পন্ন করতে অনুগ্রহ করে <span id="paymentModalFee"
-                        class="font-bold text-gray-900">৳৪৯৯</span> নিচে দেওয়া নাম্বারে <span
-                        class="font-bold text-orange-600">Send Money</span> করুন।
-                </p>
-                <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-orange-200">
                     <div>
-                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">বিকাশ / নগদ / উপায়
-                            (পার্সোনাল)</p>
-                        <p class="text-xl font-bold text-gray-800">01884477720</p>
+                        <h4 class="font-bold mb-4">লিংকস</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#how-it-works" class="hover:text-emerald-400 transition block"
+                                    onclick="scrollToSection(event, '#how-it-works')">কিভাবে কাজ করে</a></li>
+                            <li><a href="#safety" class="hover:text-emerald-400 transition block"
+                                    onclick="scrollToSection(event, '#safety')">নিরাপত্তা</a></li>
+                            <li><a href="javascript:void(0)" onclick="openPartnershipModal()"
+                                    class="hover:text-emerald-400 transition block">পার্টনারশিপ আবেদন</a></li>
+                            <li><a href="javascript:void(0)" onclick="openLegalModal('privacy')"
+                                    class="hover:text-emerald-400 transition block">গোপনীয়তা নীতি</a></li>
+                            <li><a href="javascript:void(0)" onclick="openLegalModal('terms')"
+                                    class="hover:text-emerald-400 transition block">ব্যবহারের শর্তাবলী</a></li>
+                        </ul>
                     </div>
-                    <button onclick="copyNumber()" id="copyBtn"
-                        class="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition relative"
-                        title="Copy Number">
-                        <i data-lucide="copy" id="copyIcon" class="w-5 h-5"></i>
-                        <i data-lucide="check-circle-2" id="checkIcon" class="w-5 h-5 text-green-600 hidden"></i>
-                    </button>
-                </div>
-                <p class="text-[10px] text-gray-400 mt-2 font-medium italic">* No extra charge needed.</p>
-            </div>
 
-            <div class="space-y-4 mb-6 text-left">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">পেমেন্ট মেথড নির্বাচন করুন</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button type="button" onclick="selectPaymentMethod('bkash')" id="btn-bkash"
-                            class="payment-method-btn flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 transition-all active ring-2 ring-orange-100">
-                            <span class="text-xs font-bold text-pink-600">bKash</span>
-                        </button>
-                        <button type="button" onclick="selectPaymentMethod('nagad')" id="btn-nagad"
-                            class="payment-method-btn flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 transition-all">
-                            <span class="text-xs font-bold text-orange-600">Nagad</span>
-                        </button>
-                        <button type="button" onclick="selectPaymentMethod('upay')" id="btn-upay"
-                            class="payment-method-btn flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 transition-all">
-                            <span class="text-xs font-bold text-blue-600">Upay</span>
-                        </button>
-                    </div>
-                    <input type="hidden" id="paymentMethod" value="bkash">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">আপনার নম্বরের শেষ ২ ডিজিট</label>
-                    <input type="text" id="paymentDigits" required maxlength="2"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-400 transition"
-                        placeholder="যেমন: ৪৫">
-                </div>
-            </div>
-
-            <p class="text-xs text-orange-600 font-medium mb-6 bg-orange-50 p-3 rounded-xl border border-orange-100">
-                <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
-                মিটআপ আয়োজন করতে না পারলে (১ সপ্তাহের মধ্যে) সফলভাবে ক্যাশব্যাক বা রিফান্ড করা হবে।
-            </p>
-
-            <button id="finalSubmitBtn" onclick="submitBooking()"
-                class="btn-primary w-full text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-orange-200 flex items-center justify-center gap-2">
-                <span>পেমেন্ট নিশ্চিত করুন</span>
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Partnership Modal -->
-    <div id="partnershipModal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
-            id="partnershipModalContent">
-
-            <!-- Default Form View -->
-            <div id="partnershipFormView">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-2xl font-bold text-gray-900">পার্টনারশিপ আবেদন</h3>
-                    <button onclick="closePartnershipModal()" class="text-gray-400 hover:text-gray-600">
-                        <i data-lucide="x" class="w-6 h-6"></i>
-                    </button>
-                </div>
-
-                <p class="text-gray-600 mb-6">আপনার রেস্তোরাঁ বা জায়গাকে আমাদের সাথে যুক্ত করতে নিচের তথ্যগুলো দিন।</p>
-
-                <form id="partnershipForm" class="space-y-4" onsubmit="submitPartnership(event)">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">রেস্তোরাঁর নাম</label>
-                        <input type="text" id="partnerRestaurantName" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-400 transition"
-                            placeholder="আপনার রেস্তোরাঁর নাম">
+                        <h4 class="font-bold mb-4">যোগাযোগ</h4>
+                        <div class="flex space-x-4">
+                            <a href="https://facebook.com/dekhahok" target="_blank"
+                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="text-white">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a href="https://instagram.com/dekhahok" target="_blank"
+                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:scale-110 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="text-white">
+                                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                                </svg>
+                            </a>
+                            <a href="https://wa.me/8801884477720" target="_blank"
+                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all duration-300">
+                                <i data-lucide="phone-call" class="w-5 h-5"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">যোগাযোগের নাম্বার</label>
-                        <input type="tel" id="partnerContactNumber" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-400 transition"
-                            placeholder="01XXXXXXXXX">
-                    </div>
-
-                    <button type="submit" id="partnerSubmitBtn"
-                        class="btn-primary w-full text-white py-4 mt-2 rounded-xl font-bold shadow-lg shadow-orange-200">
-                        আবেদন জমা দিন
-                    </button>
-                </form>
-            </div>
-
-            <!-- Success Modal View (Reveals internally without switching layers) -->
-            <div id="partnershipSuccessView" class="hidden text-center py-6">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-2">আবেদন জমা হয়েছে!</h3>
-                <p class="text-gray-500 mb-6">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।</p>
-                <button onclick="closePartnershipModal()"
-                    class="bg-gray-900 w-full text-white py-3 rounded-xl font-bold mt-2 shadow-lg shadow-gray-200 hover:bg-black transition">
-                    ঠিক আছে
-                </button>
+
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center mb-12">
+                    <p class="text-gray-500 text-sm text-center md:text-left">
+                        © 2024 DekhaHok.<br class="md:hidden">
+                        All rights reserved.<br class="md:hidden">
+                        Made with <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                            fill="url(#heartGrad)" style="filter: drop-shadow(0 0 6px rgba(16,185,129,0.5));"
+                            class="inline-block align-middle">
+                            <defs>
+                                <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#10B981" />
+                                    <stop offset="50%" stop-color="#34D399" />
+                                    <stop offset="100%" stop-color="#10B981" />
+                                </linearGradient>
+                            </defs>
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg> in Dhaka.
+                    </p>
+                    <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
+                        <a href="javascript:void(0)" onclick="openLegalModal('privacy')"
+                            class="hover:text-white pointer-events-auto transition">Privacy Policy</a>
+                        <a href="javascript:void(0)" onclick="openLegalModal('terms')"
+                            class="hover:text-white pointer-events-auto transition">Terms of Service</a>
+                    </div>
+                </div>
+
+                <!-- Final Gracious Conclusion Banner (Premium Wide Style) -->
+                <div class="mt-20 flex justify-center w-full px-4 sm:px-6">
+                    <div
+                        class="w-full max-w-4xl bg-white/5 backdrop-blur-xl px-1 sm:px-8 py-5 rounded-[40px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left transition-all hover:bg-white/[0.08] hover:border-emerald-500/20 group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="p-3 bg-emerald-500/20 rounded-2xl group-hover:bg-emerald-500/30 transition-colors">
+                                <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg>
+                            </div>
+                            <div class="h-10 w-[1px] bg-white/10 hidden sm:block"></div>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-white font-bold tracking-tight">ধন্যবাদ আমাদের সাথে থাকার জন্য!</h4>
+                            <p class="text-sm text-gray-500 font-medium">আপনার প্রতিটি সুন্দর মুহূর্ত হোক নিরাপদ ও
+                                আনন্দময়। <span
+                                    class="text-emerald-500 ml-1 opacity-70 group-hover:opacity-100 transition-opacity">♥</span>
+                            </p>
+                        </div>
+                        <div
+                            class="hidden lg:flex items-center gap-2 ml-4 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            <span class="text-[10px] uppercase font-black text-emerald-400 tracking-tighter">Live from
+                                Dhaka</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </footer>
 
-        </div>
-    </div>
+        <script>
+            // ── Icons ────────────────────────────────────────────────────────────────
+            // Initialise Lucide icons across the page
+            lucide.createIcons();
 
-    <!-- Legal Modal (Privacy Policy & Terms of Service) -->
-    <div id="legalModal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col transform scale-95 opacity-0 transition-all duration-300 relative"
-            id="legalModalContent">
+            // ── Scroll Reveal ─────────────────────────────────────────────────────────
+            // Uses Intersection Observer to add 'active' class to elements with 'scroll-reveal'
+            // when they become visible in the viewport.
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 
-            <div class="flex items-center justify-between mb-4 flex-shrink-0">
-                <h3 id="legalModalTitle" class="text-2xl font-bold text-gray-900">Legal</h3>
-                <button onclick="closeLegalModal()"
-                    class="text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+            // ── Date Slot Initialisation ──────────────────────────────────────────────
+            // Dynamically calculates the next available Friday and Saturday for meetups.
+            // Automatically selects the first slot by default.
+            (function initDateSlots() {
+                const DAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+                const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            <!-- Scrollable Content Area -->
-            <div id="legalTextContent" class="overflow-y-auto flex-grow pr-3 space-y-4 text-sm text-gray-600 text-left">
-                <!-- content injected dynamically by JS -->
-            </div>
-
-            <div class="pt-5 mt-4 border-t border-gray-100 flex-shrink-0">
-                <button onclick="closeLegalModal()"
-                    class="btn-primary w-full text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-200 transition-transform active:scale-95">
-                    বুঝতে পেরেছি
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ── Icons ────────────────────────────────────────────────────────────────
-        lucide.createIcons();
-
-        // ── Scroll Reveal ─────────────────────────────────────────────────────────
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-
-        // ── Date Slot Initialisation ──────────────────────────────────────────────
-        // Always show the FIXED slots for the coming Friday and Saturday.
-        // JS only injects the calendar date — the times (5PM / 7PM) are fixed in HTML.
-        (function initDateSlots() {
-            const DAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
-            const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-            function getNextWeekday(targetDay) {
-                // targetDay: 5 = Friday, 6 = Saturday
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const d = new Date(today);
-                let diff = targetDay - today.getDay();
-                if (diff <= 0) diff += 7;   // always upcoming, never today-or-past
-                d.setDate(today.getDate() + diff);
-                return d;
-            }
-
-            function toISO(d) {
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                return `${d.getFullYear()}-${mm}-${dd}`;
-            }
-
-            function toLabel(d) {
-                return `${d.getDate()} ${MONTHS_EN[d.getMonth()]}`;
-            }
-
-            const friday = getNextWeekday(5);
-            const saturday = getNextWeekday(6);
-
-            // Inject dates into day-header labels
-            document.getElementById('fridayDateLabel').textContent = toLabel(friday);
-            document.getElementById('saturdayDateLabel').textContent = toLabel(saturday);
-
-            // Inject data-date onto all 4 slot buttons
-            document.getElementById('slot-fri-5pm').dataset.date = toISO(friday);
-            document.getElementById('slot-fri-7pm').dataset.date = toISO(friday);
-            document.getElementById('slot-sat-5pm').dataset.date = toISO(saturday);
-            document.getElementById('slot-sat-7pm').dataset.date = toISO(saturday);
-
-            // Auto-select Friday 5PM as default
-            selectDate(document.getElementById('slot-fri-5pm'));
-
-            // Initialize selection UI
-            selectGroupSize(2);
-            selectVenue('public_place', document.querySelector('.venue-btn'));
-        })();
-
-        // ── Date Selection ────────────────────────────────────────────────────────
-        function selectDate(btn) {
-            document.querySelectorAll('.date-btn').forEach(b => {
-                b.classList.remove('border-orange-500', 'bg-orange-50', 'text-orange-700',
-                    'shadow-md', 'shadow-orange-100', 'ring-2', 'ring-orange-100', 'ring-offset-2');
-                b.classList.add('border-gray-100', 'bg-white', 'text-gray-600');
-            });
-            btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-600');
-            btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-700',
-                'shadow-md', 'shadow-orange-100', 'ring-2', 'ring-orange-100', 'ring-offset-2');
-        }
-
-        // ── Group Size ────────────────────────────────────────────────────────────
-        function selectGroupSize(size) {
-            document.getElementById('groupSize').value = size;
-            const feeEl = document.getElementById('reservationFee');
-            feeEl.textContent = size === 2 ? '৳৪৯৯' : '৳২৪৯';
-
-            document.querySelectorAll('.group-size-btn').forEach(btn => {
-                const isSelected = parseInt(btn.dataset.size) === size;
-                btn.classList.toggle('active', isSelected);
-                const check = btn.querySelector('.check-mark');
-                if (check) {
-                    check.classList.toggle('opacity-0', !isSelected);
-                    check.classList.toggle('opacity-100', isSelected);
-                }
-            });
-        }
-
-        function selectVenue(type, btn) {
-            document.getElementById('venueType').value = type;
-            document.querySelectorAll('.venue-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const isRestaurant = type === 'restaurant';
-            document.getElementById('restaurantNote').classList.toggle('hidden', !isRestaurant);
-            document.getElementById('publicNote').classList.toggle('hidden', isRestaurant);
-        }
-
-        // ── Age Validation Logic ──────────────────────────────────────────────────
-        function handleAgeChange() {
-            const ageInput = document.getElementById('age');
-            const age = parseInt(ageInput.value);
-            const ageNote = document.getElementById('ageNote');
-
-            if (!isNaN(age) && age > 0 && age < 18) {
-                ageNote.classList.remove('hidden');
-                ageInput.classList.add('border-red-500', 'bg-red-50');
-                ageInput.classList.remove('border-gray-300');
-            } else {
-                ageNote.classList.add('hidden');
-                ageInput.classList.remove('border-red-500', 'bg-red-50');
-                ageInput.classList.add('border-gray-300');
-            }
-        }
-        document.getElementById('age').addEventListener('input', handleAgeChange);
-
-        // ── Scroll Helpers ────────────────────────────────────────────────────────
-        function scrollToBook() {
-            document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
-        }
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', function (e) {
-                e.preventDefault();
-                const t = document.querySelector(this.getAttribute('href'));
-                if (t) {
-                    const offset = 80;
-                    const bodyRect = document.body.getBoundingClientRect().top;
-                    const elementRect = t.getBoundingClientRect().top;
-                    const elementPosition = elementRect - bodyRect;
-                    const offsetPosition = elementPosition - offset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // ── Mobile Menu Logic ─────────────────────────────────────────────────────
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            const btnIcon = document.querySelector('#mobileMenuBtn i');
-
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                setTimeout(() => menu.classList.add('active'), 10);
-                btnIcon.setAttribute('data-lucide', 'x');
-                lucide.createIcons();
-            } else {
-                menu.classList.remove('active');
-                setTimeout(() => menu.classList.add('hidden'), 300);
-                btnIcon.setAttribute('data-lucide', 'menu');
-                lucide.createIcons();
-            }
-        }
-        document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
-
-        // ── Form Submission ───────────────────────────────────────────────────────
-        async function handleBooking(e) {
-            e.preventDefault();
-
-            // Age Check
-            const ageInput = document.getElementById('age');
-            const age = parseInt(ageInput.value);
-            if (!isNaN(age) && age < 18) {
-                showFormError('দুঃখিত, আপনার বয়স ১৮ বছরের নিচে হওয়ায় আপনি বুকিং করতে পারবেন না।');
-                ageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                ageInput.classList.add('border-red-500', 'bg-red-50');
-                return;
-            }
-
-            // Get active slot button
-            const activeSlot = document.querySelector('.date-btn.border-orange-500');
-            if (!activeSlot || !activeSlot.dataset.date) {
-                showFormError('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
-                return;
-            }
-
-            // Instead of immediate submit, show payment modal
-            document.getElementById('paymentModalFee').textContent = document.getElementById('reservationFee').textContent;
-            openPaymentModal();
-        }
-
-        let pendingPayload = null;
-
-        function openPaymentModal() {
-            const modal = document.getElementById('paymentModal');
-            const modalContent = document.getElementById('paymentModalContent');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closePaymentModal() {
-            const modal = document.getElementById('paymentModal');
-            const modalContent = document.getElementById('paymentModalContent');
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        function selectPaymentMethod(method) {
-            document.getElementById('paymentMethod').value = method;
-            document.querySelectorAll('.payment-method-btn').forEach(btn => {
-                btn.classList.remove('border-orange-500', 'ring-2', 'ring-orange-100');
-                btn.classList.add('border-gray-100');
-            });
-            const activeBtn = document.getElementById(`btn-${method}`);
-            activeBtn.classList.remove('border-gray-100');
-            activeBtn.classList.add('border-orange-500', 'ring-2', 'ring-orange-100');
-        }
-
-        async function submitBooking() {
-            const lastDigits = document.getElementById('paymentDigits').value.trim();
-            if (lastDigits.length !== 2) {
-                alert('অনুগ্রহ করে আপনার নম্বরের শেষ ২ ডিজিট প্রদান করুন।');
-                return;
-            }
-
-            const activeSlot = document.querySelector('.date-btn.border-orange-500');
-            const submitBtn = document.getElementById('finalSubmitBtn');
-            const originalContent = submitBtn.innerHTML;
-
-            submitBtn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
-            submitBtn.disabled = true;
-
-            const payload = {
-                name: document.getElementById('fullName').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                email: document.getElementById('email').value.trim() || null,
-                age: parseInt(document.getElementById('age').value) || null,
-                group_size: parseInt(document.getElementById('groupSize').value),
-                preferred_date: activeSlot.dataset.date,
-                preferred_time: activeSlot.dataset.time,
-                venue_type: document.getElementById('venueType').value,
-                conversation_style: document.getElementById('conversationStyle').value.trim() || null,
-                preferred_people: document.getElementById('preferredPeople').value.trim() || null,
-                current_location: document.getElementById('currentLocation').value.trim() || null,
-                preferred_location: document.getElementById('preferredLocation').value || null,
-                payment_method: document.getElementById('paymentMethod').value,
-                payment_sender_digits: lastDigits,
-                preferred_meeting_point: null,
-            };
-
-            try {
-                const res = await fetch('/api/bookings', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                });
-                const data = await res.json();
-
-                if (!res.ok) {
-                    const msg = Array.isArray(data.detail)
-                        ? data.detail.map(d => d.msg).join(', ')
-                        : (data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-                    alert(msg);
-                    return;
+                function getNextWeekday(targetDay) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const d = new Date(today);
+                    let diff = targetDay - today.getDay();
+                    if (diff <= 0) diff += 7;
+                    d.setDate(today.getDate() + diff);
+                    return d;
                 }
 
-                closePaymentModal();
+                function toISO(d) {
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    return `${d.getFullYear()}-${mm}-${dd}`;
+                }
 
-                // ── Success: show success modal ──
-                document.getElementById('modalTrackingId').textContent = data.tracking_id;
-                document.getElementById('modalGroupSize').textContent = payload.group_size;
-                const timeLabel = payload.preferred_time === '17:00' ? '5:00 PM' : '7:00 PM';
-                document.getElementById('modalDateSlot').textContent = `${activeSlot.dataset.date} — ${timeLabel}`;
+                function toLabel(d) {
+                    return `${d.getDate()} ${MONTHS_EN[d.getMonth()]}`;
+                }
 
-                const sModal = document.getElementById('successModal');
-                const sModalContent = document.getElementById('modalContent');
-                sModal.classList.remove('hidden');
-                setTimeout(() => {
-                    sModalContent.classList.remove('scale-95', 'opacity-0');
-                    sModalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
+                const friday = getNextWeekday(5);
+                const saturday = getNextWeekday(6);
 
-                document.getElementById('bookingForm').reset();
+                document.getElementById('fridayDateLabel').textContent = toLabel(friday);
+                document.getElementById('saturdayDateLabel').textContent = toLabel(saturday);
+
+                document.getElementById('slot-fri-5pm').dataset.date = toISO(friday);
+                document.getElementById('slot-fri-7pm').dataset.date = toISO(friday);
+                document.getElementById('slot-sat-5pm').dataset.date = toISO(saturday);
+                document.getElementById('slot-sat-7pm').dataset.date = toISO(saturday);
+
+                selectDate(document.getElementById('slot-fri-5pm'));
                 selectGroupSize(2);
-                const firstSlot = document.getElementById('slot-fri-5pm');
-                if (firstSlot) selectDate(firstSlot);
+                selectVenue('public_place', document.querySelector('.venue-btn'));
+            })();
 
-            } catch (err) {
-                alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
-            } finally {
-                submitBtn.innerHTML = originalContent;
-                submitBtn.disabled = false;
+            // ── Date Selection ────────────────────────────────────────────────────────
+            function selectDate(btn) {
+                document.querySelectorAll('.date-btn').forEach(b => {
+                    b.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
+                        'shadow-md', 'shadow-emerald-100', 'ring-2', 'ring-emerald-100', 'ring-offset-2');
+                    b.classList.add('border-gray-100', 'bg-white', 'text-gray-600');
+                });
+                btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-600');
+                btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
+                    'shadow-md', 'shadow-emerald-100', 'ring-2', 'ring-emerald-100', 'ring-offset-2');
             }
-        }
 
-        function copyNumber() {
-            navigator.clipboard.writeText('01884477720');
-            const copyIcon = document.getElementById('copyIcon');
-            const checkIcon = document.getElementById('checkIcon');
+            // ── Group Size ────────────────────────────────────────────────────────────
+            function selectGroupSize(size) {
+                document.getElementById('groupSize').value = size;
+                const feeEl = document.getElementById('reservationFee');
+                feeEl.textContent = size === 2 ? '৳৪৯৯' : '৳২৪৯';
 
-            if (copyIcon && checkIcon) {
-                copyIcon.classList.add('hidden');
-                checkIcon.classList.remove('hidden');
-                setTimeout(() => {
-                    copyIcon.classList.remove('hidden');
-                    checkIcon.classList.add('hidden');
-                }, 5000);
+                document.querySelectorAll('.group-size-btn').forEach(btn => {
+                    const isSelected = parseInt(btn.dataset.size) === size;
+                    btn.classList.toggle('active', isSelected);
+                    const check = btn.querySelector('.check-mark');
+                    if (check) {
+                        check.classList.toggle('opacity-0', !isSelected);
+                        check.classList.toggle('opacity-100', isSelected);
+                    }
+                });
             }
-        }
 
-        function showFormError(msg) {
-            let el = document.getElementById('formError');
-            if (!el) {
-                el = document.createElement('p');
-                el.id = 'formError';
-                el.className = 'text-red-500 text-sm mt-3 text-center font-medium';
-                document.querySelector('button[type="submit"]').insertAdjacentElement('afterend', el);
+            function selectVenue(type, btn) {
+                document.getElementById('venueType').value = type;
+                document.querySelectorAll('.venue-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const isRestaurant = type === 'restaurant';
+                document.getElementById('restaurantNote').classList.toggle('hidden', !isRestaurant);
+                document.getElementById('publicNote').classList.toggle('hidden', isRestaurant);
             }
-            el.textContent = msg;
-            setTimeout(() => { if (el) el.textContent = ''; }, 5000);
-        }
 
-        // ── Modal Close ───────────────────────────────────────────────────────────
-        function closeModal() {
-            const modal = document.getElementById('successModal');
-            const modalContent = document.getElementById('modalContent');
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-        document.getElementById('successModal').addEventListener('click', function (e) {
-            if (e.target === this) closeModal();
-        });
+            // ── Age Validation Logic ──────────────────────────────────────────────────
+            function handleAgeChange() {
+                const ageInput = document.getElementById('age');
+                const age = parseInt(ageInput.value);
+                const ageNote = document.getElementById('ageNote');
 
-        // ── Booking Status Tracker ────────────────────────────────────────────────
-        async function checkBookingStatus() {
-            const id = document.getElementById('trackingInput').value.trim();
-            if (!id || id.length < 5) return;
+                if (!isNaN(age) && age > 0 && age < 18) {
+                    ageNote.classList.remove('hidden');
+                    ageInput.classList.add('border-emerald-500', 'bg-emerald-50');
+                    ageInput.classList.remove('border-gray-300');
+                } else {
+                    ageNote.classList.add('hidden');
+                    ageInput.classList.remove('border-emerald-500', 'bg-emerald-50');
+                    ageInput.classList.add('border-gray-300');
+                }
+            }
+            document.getElementById('age').addEventListener('input', handleAgeChange);
 
-            const resultEl = document.getElementById('trackingResult');
-            resultEl.classList.remove('hidden');
-            resultEl.innerHTML = '<div class="flex justify-center py-6"><div class="w-7 h-7 border-2 border-orange-400 border-t-transparent rounded-full animate-spin"></div></div>';
+            // ── Scroll Helpers ────────────────────────────────────────────────────────
+            function scrollToBook() {
+                document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
+            }
+            document.querySelectorAll('a[href^="#"]').forEach(a => {
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const t = document.querySelector(this.getAttribute('href'));
+                    if (t) {
+                        const offset = 80;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = t.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
 
-            try {
-                const res = await fetch(`/api/bookings/track/${id}`);
-                const data = await res.json();
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
 
-                if (!res.ok) {
-                    resultEl.innerHTML = `<p class="text-red-500 text-sm text-center py-2">${data.detail || 'ট্র্যাকিং আইডি পাওয়া যায়নি।'}</p>`;
+            // ── Mobile Menu Logic ─────────────────────────────────────────────────────
+            function toggleMobileMenu() {
+                const menu = document.getElementById('mobileMenu');
+                const btnIcon = document.querySelector('#mobileMenuBtn i');
+
+                if (menu.classList.contains('hidden')) {
+                    menu.classList.remove('hidden');
+                    setTimeout(() => menu.classList.add('active'), 10);
+                    btnIcon.setAttribute('data-lucide', 'x');
+                    lucide.createIcons();
+                } else {
+                    menu.classList.remove('active');
+                    setTimeout(() => menu.classList.add('hidden'), 300);
+                    btnIcon.setAttribute('data-lucide', 'menu');
+                    lucide.createIcons();
+                }
+            }
+            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+
+            // ── Form Submission ───────────────────────────────────────────────────────
+            /**
+             * Handles the primary booking form submission.
+             * Validates age (18+) and ensures a date/time slot is selected
+             * before opening the payment modal.
+             */
+            async function handleBooking(e) {
+                e.preventDefault();
+
+                const ageInput = document.getElementById('age');
+                const age = parseInt(ageInput.value);
+                if (!isNaN(age) && age < 18) {
+                    showFormError('দুঃখিত, আপনার বয়স ১৮ বছরের নিচে হওয়ায় আপনি বুকিং করতে পারবেন না।');
+                    ageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    ageInput.classList.add('border-emerald-500', 'bg-emerald-50');
                     return;
                 }
 
-                const statusColor = {
-                    processing: 'bg-yellow-100 text-yellow-800',
-                    confirmed: 'bg-green-100 text-green-800',
-                    completed: 'bg-blue-100 text-blue-800',
-                }[data.booking_status] || 'bg-gray-100 text-gray-700';
+                const activeSlot = document.querySelector('.date-btn.border-emerald-500');
+                if (!activeSlot || !activeSlot.dataset.date) {
+                    showFormError('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
+                    return;
+                }
 
-                const statusBn = {
-                    processing: 'প্রক্রিয়াধীন',
-                    confirmed: 'নিশ্চিত ✅',
-                    completed: 'সম্পন্ন',
-                }[data.booking_status] || data.booking_status;
+                document.getElementById('paymentModalFee').textContent = document.getElementById('reservationFee').textContent;
+                openPaymentModal();
+            }
 
-                const confirmedBlock = (data.booking_status === 'confirmed' || data.booking_status === 'completed') && data.assigned_venue
-                    ? `<div class="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
+            function openPaymentModal() {
+                const modal = document.getElementById('paymentModal');
+                const modalContent = document.getElementById('paymentModalContent');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closePaymentModal() {
+                const modal = document.getElementById('paymentModal');
+                const modalContent = document.getElementById('paymentModalContent');
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            function selectPaymentMethod(method) {
+                document.getElementById('paymentMethod').value = method;
+                document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                    btn.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-100');
+                    btn.classList.add('border-gray-100');
+                });
+                const activeBtn = document.getElementById(`btn-${method}`);
+                activeBtn.classList.remove('border-gray-100');
+                activeBtn.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-100');
+            }
+
+            async function submitBooking() {
+                const lastDigits = document.getElementById('paymentDigits').value.trim();
+                if (lastDigits.length !== 2) {
+                    alert('অনুগ্রহ করে আপনার নম্বরের শেষ ২ ডিজিট প্রদান করুন।');
+                    return;
+                }
+
+                const activeSlot = document.querySelector('.date-btn.border-emerald-500');
+                const submitBtn = document.getElementById('finalSubmitBtn');
+                const originalContent = submitBtn.innerHTML;
+
+                submitBtn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+                submitBtn.disabled = true;
+
+                const payload = {
+                    name: document.getElementById('name').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    age: parseInt(document.getElementById('age').value) || null,
+                    group_size: parseInt(document.getElementById('groupSize').value),
+                    preferred_date: activeSlot.dataset.date,
+                    preferred_time: activeSlot.dataset.time,
+                    venue_type: document.getElementById('venueType').value,
+                    conversation_style: document.getElementById('conversationStyle').value.trim() || null,
+                    preferred_people: document.getElementById('preferredPeople').value.trim() || null,
+                    payment_method: document.getElementById('paymentMethod').value,
+                    payment_sender_digits: lastDigits,
+                };
+
+                try {
+                    const res = await fetch('/api/bookings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        return;
+                    }
+
+                    closePaymentModal();
+
+                    document.getElementById('modalTrackingId').textContent = data.tracking_id;
+                    document.getElementById('modalGroupSize').textContent = payload.group_size;
+                    const timeLabel = payload.preferred_time === '17:00' ? '5:00 PM' : '7:00 PM';
+                    document.getElementById('modalDateSlot').textContent = `${activeSlot.dataset.date} — ${timeLabel}`;
+
+                    const sModal = document.getElementById('successModal');
+                    const sModalContent = document.getElementById('modalContent');
+                    sModal.classList.remove('hidden');
+                    setTimeout(() => {
+                        sModalContent.classList.remove('scale-95', 'opacity-0');
+                        sModalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+
+                    document.getElementById('bookingForm').reset();
+                    selectGroupSize(2);
+                    const firstSlot = document.getElementById('slot-fri-5pm');
+                    if (firstSlot) selectDate(firstSlot);
+
+                } catch (err) {
+                    alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
+                } finally {
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.disabled = false;
+                }
+            }
+
+            function copyNumber() {
+                navigator.clipboard.writeText('01884477720');
+                const copyIcon = document.getElementById('copyIcon');
+                const checkIcon = document.getElementById('checkIcon');
+
+                if (copyIcon && checkIcon) {
+                    copyIcon.classList.add('hidden');
+                    checkIcon.classList.remove('hidden');
+                    setTimeout(() => {
+                        copyIcon.classList.remove('hidden');
+                        checkIcon.classList.add('hidden');
+                    }, 5000);
+                }
+            }
+
+            function showFormError(msg) {
+                let el = document.getElementById('formError');
+                if (!el) {
+                    el = document.createElement('p');
+                    el.id = 'formError';
+                    el.className = 'text-red-500 text-sm mt-3 text-center font-medium';
+                    document.querySelector('button[type="submit"]').insertAdjacentElement('afterend', el);
+                }
+                el.textContent = msg;
+                setTimeout(() => { if (el) el.textContent = ''; }, 5000);
+            }
+
+            function closeModal() {
+                const modal = document.getElementById('successModal');
+                const modalContent = document.getElementById('modalContent');
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            /**
+             * Tracking System: Fetches real-time status of a booking using Tracking ID.
+             * Displays status, assigned group members, and enables group chat
+             * once the meetup is confirmed.
+             */
+            async function checkBookingStatus() {
+                const id = document.getElementById('trackingInput').value.trim();
+                if (!id || id.length < 5) return;
+
+                const resultEl = document.getElementById('trackingResult');
+                resultEl.classList.remove('hidden');
+                resultEl.innerHTML = '<div class="flex justify-center py-6"><div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div></div>';
+
+                try {
+                    const res = await fetch(`/api/bookings/track/${id}`);
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        resultEl.innerHTML = `<p class="text-red-500 text-sm text-center py-2">${data.detail || 'ট্র্যাকিং আইডি পাওয়া যায়নি।'}</p>`;
+                        return;
+                    }
+
+                    const statusColor = {
+                        processing: 'bg-emerald-50 text-emerald-700',
+                        confirmed: 'bg-green-100 text-green-800',
+                        completed: 'bg-green-100 text-green-800',
+                    }[data.booking_status] || 'bg-gray-100 text-gray-700';
+
+                    const statusBn = {
+                        processing: 'প্রক্রিয়াধীন',
+                        confirmed: 'নিশ্চিত ✅',
+                        completed: 'সম্পন্ন',
+                    }[data.booking_status] || data.booking_status;
+
+                    const confirmedBlock = (data.booking_status === 'confirmed' || data.booking_status === 'completed') && data.assigned_venue
+                        ? `<div class="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
                          <p class="text-xs font-semibold text-green-700 mb-2">✅ আপনার মিটআপ নিশ্চিত হয়েছে!</p>
                          <p class="text-sm text-gray-700 mb-1">📍 <strong>${data.assigned_venue}</strong></p>
                          <p class="text-sm text-gray-700">📅 ${data.meet_date} &nbsp;⏰ ${data.meet_time}</p>
                        </div>`
-                    : data.booking_status === 'unsuccessful'
-                        ? `<div class="mt-4 p-4 bg-red-50 rounded-xl border border-red-100 text-center">
-                             <p class="text-xs font-bold text-red-600 mb-1">❌ বুকিং সফল হয়নি</p>
-                             <p class="text-xs text-red-500 italic">${data.rejection_reason || 'দুঃখিত, আপনার বুকিং এই মুহূর্তে গ্রহণ করা সম্ভব হয়নি।'}</p>
+                        : data.booking_status === 'unsuccessful'
+                            ? `<div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center"> 
+                             <p class="text-xs font-bold text-emerald-800 mb-1">❌ বুকিং সফল হয়নি</p>
+                             <p class="text-xs text-emerald-700 italic">${data.rejection_reason || 'দুঃখিত, আপনার বুকিং এই মুহূর্তে গ্রহণ করা সম্ভব হয়নি।'}</p>
                            </div>`
-                        : `<p class="text-sm text-gray-400 mt-3 text-center">আমরা আপনার জন্য গ্রুপ তৈরি করছি। শীঘ্রই জানানো হবে।</p>`;
+                            : `<p class="text-sm text-gray-400 mt-3 text-center">আমরা আপনার জন্য গ্রুপ তৈরি করছি। শীঘ্রই জানানো হবে।</p>`;
 
-                let membersHtml = '';
-                if (data.group_members && data.group_members.length > 0) {
-                    const groupId = data.assigned_group_id || 0;
-                    const canChat = data.booking_status !== 'completed';
+                    let membersHtml = '';
+                    if (data.group_members && data.group_members.length > 0) {
+                        const groupId = data.assigned_group_id || 0;
+                        const canChat = data.booking_status !== 'completed';
 
-                    membersHtml = `
+                        membersHtml = `
                         <div class="mt-6 space-y-4">
                             <div class="flex items-center justify-between">
                                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">আপনার আড্ডার সাথীরা</p>
                                 ${canChat ? `
-                                    <button onclick="openChat(${groupId}, '${id}')" 
-                                            class="flex items-center gap-1.5 py-1.5 px-3 bg-orange-500 text-white rounded-full text-xs font-bold hover:bg-orange-600 transition shadow-sm">
+                                        <button onclick="openChat(${groupId}, '${id}')" 
+                                             class="flex items-center gap-1.5 py-1.5 px-3 bg-emerald-500 text-white rounded-full text-xs font-bold hover:bg-emerald-600 transition shadow-sm">
                                         <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
                                         গ্রুপ চ্যাট
                                     </button>
@@ -1527,7 +1579,7 @@
                                                 <div class="flex items-center gap-2" id="rating-container-${m.id}">
                                                     ${[1, 2, 3, 4, 5].map(star => `
                                                         <button onclick="submitRating('${id}', ${data.assigned_group_id || 0}, ${m.id}, ${star})" 
-                                                                class="text-gray-300 hover:text-orange-400 transition transform hover:scale-120">
+                                                                 class="text-gray-300 hover:text-emerald-600 transition transform hover:scale-120">
                                                             <i data-lucide="star" class="w-5 h-5"></i>
                                                         </button>
                                                     `).join('')}
@@ -1539,17 +1591,17 @@
                             </div>
                         </div>
                     `;
-                }
+                    }
 
-                const timeLabel = data.preferred_time === '17:00:00' ? '5:00 PM' : '7:00 PM';
-                const venueBn = data.venue_type === 'restaurant' ? '🍽 রেস্তোরাঁ' : '🌳 পাবলিক প্লেস';
+                    const timeLabel = data.preferred_time === '17:00:00' ? '5:00 PM' : '7:00 PM';
+                    const venueBn = data.venue_type === 'restaurant' ? '🍽 রেস্তোরাঁ' : '🌳 পাবলিক প্লেস';
 
-                resultEl.innerHTML = `
+                    resultEl.innerHTML = `
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <p class="text-xs text-gray-400 mb-0.5">বুকিং</p>
                             <p class="font-semibold text-gray-800">${data.name}</p>
-                            <p class="text-xs font-mono text-orange-500 mt-0.5">${data.tracking_id}</p>
+                            <p class="text-xs font-mono text-emerald-700 mt-0.5">${data.tracking_id}</p>
                         </div>
                         <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColor}">${statusBn}</span>
                     </div>
@@ -1572,194 +1624,148 @@
                     ${confirmedBlock}
                     ${membersHtml}
                 `;
-                lucide.createIcons();
-            } catch (err) {
-                resultEl.innerHTML = '<p class="text-red-500 text-sm text-center py-2">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>';
-            }
-        }
-
-        async function submitRating(trackingId, groupId, rateeId, score) {
-            try {
-                const res = await fetch('/api/bookings/rate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'tracking-id': trackingId },
-                    body: JSON.stringify({ ratee_id: rateeId, group_id: groupId, score: score })
-                });
-                if (res.ok) {
-                    const container = document.getElementById(`rating-container-${rateeId}`);
-                    container.innerHTML = `<p class="text-xs text-green-600 font-bold">ধন্যবাদ! রেটিং সংরক্ষিত হয়েছে।</p>`;
-                } else {
-                    alert('Rating failed.');
+                    lucide.createIcons();
+                } catch (err) {
+                    resultEl.innerHTML = '<p class="text-red-500 text-sm text-center py-2">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>';
                 }
-            } catch (err) {
-                alert('Connection error.');
             }
-        }
 
-        // Allow Enter key in tracking input
-        document.getElementById('trackingInput') && document.getElementById('trackingInput').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') checkBookingStatus();
-        });
-
-        // ── Hero Animation ────────────────────────────────────────────────────────
-        function startMotion() {
-            const canvas = document.getElementById('animation-stage');
-            const nodes = [1, 2, 3].map(i => document.getElementById(`node-${i}`));
-            const paths = [1, 2, 3].map(i => document.getElementById(`path-${i}`));
-            const venue = document.getElementById('central-venue');
-            const venueName = venue.querySelector('p.font-bold');
-
-            const venueNames = ["Sultan's Dine", "Dhanmondi Lake", "North End", "Ramna Park", "সোহরাওয়ার্দী উদ্যান"];
-            let venueIndex = 0;
-
-            const reset = () => {
-                venue.style.opacity = '0';
-                venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
-                nodes.forEach(n => { n.style.opacity = '0'; n.style.transform = 'scale(1)'; });
-                paths.forEach(p => p.style.strokeDashoffset = '1000');
-            };
-
-            const animate = () => {
-                venueName.textContent = venueNames[venueIndex];
-                venueIndex = (venueIndex + 1) % venueNames.length;
-
-                const starts = [
-                    { l: '10%', t: '20%', d: 'M 10% 20% Q 20% 50% 50% 50%' },
-                    { l: '85%', t: '15%', d: 'M 85% 15% Q 70% 30% 50% 50%' },
-                    { l: '70%', t: '85%', d: 'M 70% 85% Q 60% 70% 50% 50%' }
-                ];
-                starts.forEach((pos, i) => {
-                    nodes[i].style.left = pos.l; nodes[i].style.top = pos.t;
-                    nodes[i].style.opacity = '1';
-                    paths[i].setAttribute('d', pos.d);
-                });
-                setTimeout(() => paths.forEach(p => p.style.strokeDashoffset = '0'), 500);
-                setTimeout(() => nodes.forEach(n => { n.style.left = '48%'; n.style.top = '48%'; }), 1000);
-                setTimeout(() => {
-                    nodes.forEach(n => n.style.opacity = '0');
-                    venue.style.opacity = '1';
-                    venue.style.transform = 'translate(-50%, -50%) scale(1)';
-                }, 1800);
-                setTimeout(() => { reset(); setTimeout(animate, 1000); }, 6000);
-            };
-
-            reset();
-            animate();
-        }
-        setTimeout(startMotion, 1000);
-
-        // ── Load Locations (Public) ────────────────────────────────────────────────
-        async function loadLocations() {
-            try {
-                const res = await fetch('/api/locations');
-                const locations = await res.json();
-                const select = document.getElementById('preferredLocation');
-                if (!select) return;
-
-                select.innerHTML = '<option value="" disabled selected>নির্বাচন করুন...</option>';
-                locations.forEach(loc => {
-                    const opt = document.createElement('option');
-                    opt.value = loc.name;
-                    opt.textContent = loc.name;
-                    select.appendChild(opt);
-                });
-            } catch (err) {
-                console.error('Error loading locations:', err);
+            async function submitRating(trackingId, groupId, rateeId, score) {
+                try {
+                    const res = await fetch('/api/bookings/rate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'tracking-id': trackingId },
+                        body: JSON.stringify({ ratee_id: rateeId, group_id: groupId, score: score })
+                    });
+                    if (res.ok) {
+                        const container = document.getElementById(`rating-container-${rateeId}`);
+                        container.innerHTML = `<p class="text-xs text-green-600 font-bold">ধন্যবাদ! রেটিং সংরক্ষিত হয়েছে।</p>`;
+                    } else {
+                        alert('Rating failed.');
+                    }
+                } catch (err) {
+                    alert('Connection error.');
+                }
             }
-        }
-        loadLocations();
 
-        // ── Translation Helper ──────────────────────────────────────────────────
-        function toggleTranslation() {
-            const btn = document.getElementById('langBtn');
-            const isBangla = btn.textContent.trim() === 'En';
-            const elementsToPatch = document.querySelectorAll('[data-en]');
+            // ── Hero Animation ────────────────────────────────────────────────────────
+            function startMotion() {
+                const canvas = document.getElementById('animation-stage');
+                const nodes = [1, 2, 3].map(i => document.getElementById(`node-${i}`));
+                const paths = [1, 2, 3].map(i => document.getElementById(`path-${i}`));
+                const venue = document.getElementById('central-venue');
+                const venueName = venue.querySelector('p.font-bold');
 
-            if (isBangla) {
-                // Trigger Google Translate to English
-                const select = document.querySelector('select.goog-te-combo');
-                if (select) {
-                    select.value = 'en';
-                    select.dispatchEvent(new Event('change'));
-                    btn.textContent = 'Bn';
-                    document.documentElement.lang = 'en';
+                const venueNames = ["Sultan's Dine", "Dhanmondi Lake", "North End", "Ramna Park", "সোহরাওয়ার্দী উদ্যান"];
+                let venueIndex = 0;
 
-                    // Apply Manual Overrides
+                const reset = () => {
+                    venue.style.opacity = '0';
+                    venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                    nodes.forEach(n => { n.style.opacity = '0'; n.style.transform = 'scale(1)'; });
+                    paths.forEach(p => p.style.strokeDashoffset = '1000');
+                };
+
+                const animate = () => {
+                    if (!venueName) return;
+                    venueName.textContent = venueNames[venueIndex];
+                    venueIndex = (venueIndex + 1) % venueNames.length;
+
+                    const starts = [
+                        { l: '10%', t: '20%', d: 'M 10% 20% Q 20% 50% 50% 50%' },
+                        { l: '85%', t: '15%', d: 'M 85% 15% Q 70% 30% 50% 50%' },
+                        { l: '70%', t: '85%', d: 'M 70% 85% Q 60% 70% 50% 50%' }
+                    ];
+                    starts.forEach((pos, i) => {
+                        nodes[i].style.left = pos.l; nodes[i].style.top = pos.t;
+                        nodes[i].style.opacity = '1';
+                        paths[i].setAttribute('d', pos.d);
+                    });
+                    setTimeout(() => paths.forEach(p => p.style.strokeDashoffset = '0'), 500);
+                    setTimeout(() => nodes.forEach(n => { n.style.left = '48%'; n.style.top = '48%'; }), 1000);
                     setTimeout(() => {
-                        elementsToPatch.forEach(el => {
-                            if (!el.dataset.bn) el.dataset.bn = el.textContent.trim();
-                            el.textContent = el.dataset.en;
-                            el.classList.add('notranslate');
-                        });
-                    }, 500);
+                        nodes.forEach(n => n.style.opacity = '0');
+                        venue.style.opacity = '1';
+                        venue.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }, 1800);
+                    setTimeout(() => { reset(); setTimeout(animate, 1000); }, 6000);
+                };
+
+                reset();
+                animate();
+            }
+            setTimeout(startMotion, 1000);
+
+            // ── Translation Helper ──────────────────────────────────────────────────
+            function toggleTranslation() {
+                const btn = document.getElementById('langBtn');
+                const isBangla = btn.textContent.trim() === 'En';
+                const elementsToPatch = document.querySelectorAll('[data-en]');
+
+                if (isBangla) {
+                    const select = document.querySelector('select.goog-te-combo');
+                    if (select) {
+                        select.value = 'en';
+                        select.dispatchEvent(new Event('change'));
+                        btn.textContent = 'Bn';
+                        document.documentElement.lang = 'en';
+                        setTimeout(() => {
+                            elementsToPatch.forEach(el => {
+                                if (!el.dataset.bn) el.dataset.bn = el.textContent.trim();
+                                el.textContent = el.dataset.en;
+                                el.classList.add('notranslate');
+                            });
+                        }, 500);
+                    }
                 } else {
-                    // If script not loaded yet, try again or show error
-                    showFormError('Translation engine is loading... please try again in a second.');
-                }
-            } else {
-                // Restore to Original (Bangla)
-                const iframe = document.querySelector('iframe.goog-te-banner-frame');
-                if (iframe) {
-                    const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const restoreBtn = innerDoc.getElementById(':1.restore');
-                    if (restoreBtn) restoreBtn.click();
-                }
-
-                // Manual cleanup
-                elementsToPatch.forEach(el => {
-                    if (el.dataset.bn) el.textContent = el.dataset.bn;
-                    el.classList.remove('notranslate');
-                });
-
-                // Fallback: simple reload if restore fails or widget behaves differently
-                if (!isBangla) {
-                    btn.textContent = 'En';
-                    document.documentElement.lang = 'bn';
-                    window.location.reload();
+                    const iframe = document.querySelector('iframe.goog-te-banner-frame');
+                    if (iframe) {
+                        const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const restoreBtn = innerDoc.getElementById(':1.restore');
+                        if (restoreBtn) restoreBtn.click();
+                    }
+                    elementsToPatch.forEach(el => {
+                        if (el.dataset.bn) el.textContent = el.dataset.bn;
+                        el.classList.remove('notranslate');
+                    });
+                    if (!isBangla) {
+                        btn.textContent = 'En';
+                        document.documentElement.lang = 'bn';
+                        window.location.reload();
+                    }
                 }
             }
-        }
 
-        // ── Map Integration ────────────────────────────────────────────────────────
-        let map;
-        async function initMap() {
-            const dhaka = [23.75, 90.41]; // Centered on Dhaka
-            const mapContainer = document.getElementById('map');
-            if (!mapContainer) return;
+            // ── Map Integration ────────────────────────────────────────────────────────
+            async function initMap() {
+                const map = L.map('map', {
+                    zoomControl: false,
+                    attributionControl: false
+                }).setView([23.8103, 90.4125], 12);
 
-            // Use Standard OSM for more "normal" look as requested
-            map = L.map('map', {
-                scrollWheelZoom: false,
-                zoomControl: false
-            }).setView(dhaka, 12);
+                L.control.zoom({ position: 'topright' }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                try {
+                    const res = await fetch('/api/all-points');
+                    const points = await res.json();
 
-            L.control.zoom({ position: 'topright' }).addTo(map);
+                    // Update stats
+                    document.getElementById('stat-points').textContent = points.length;
+                    const restaurantCount = points.filter(p => p.point_type === 'restaurant').length;
+                    const areaCount = [...new Set(points.map(p => p.location_id))].length;
+                    document.getElementById('stat-areas').textContent = areaCount + '+';
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
+                    points.forEach(p => {
+                        if (p.latitude && p.longitude) {
+                            const isRestaurant = p.point_type === 'restaurant';
+                            const bgColor = isRestaurant ? '#3b82f6' : '#ea580c';
+                            const borderColor = isRestaurant ? '#93c5fd' : '#ffedd5';
+                            const labelColor = isRestaurant ? 'text-green-700' : 'text-green-700';
+                            const typeName = isRestaurant ? 'Partner Restaurant' : 'Meetup Point';
 
-            try {
-                const res = await fetch('/api/all-points');
-                const points = await res.json();
-
-                // Update stats
-                document.getElementById('stat-points').textContent = points.length;
-                const restaurantCount = points.filter(p => p.point_type === 'restaurant').length;
-                const areaCount = [...new Set(points.map(p => p.location_id))].length;
-                document.getElementById('stat-areas').textContent = areaCount + '+';
-
-                points.forEach(p => {
-                    if (p.latitude && p.longitude) {
-                        const isRestaurant = p.point_type === 'restaurant';
-                        const bgColor = isRestaurant ? '#3b82f6' : '#ea580c';
-                        const borderColor = isRestaurant ? '#93c5fd' : '#ffedd5';
-                        const labelColor = isRestaurant ? 'text-blue-500' : 'text-orange-500';
-                        const typeName = isRestaurant ? 'Partner Restaurant' : 'Meetup Point';
-
-                        // Custom Marker Pin Style (Matches Orange Pin in Screenshot)
-                        const customIcon = L.divIcon({
-                            html: `
+                            // Custom Marker Pin Style (Matches Orange Pin in Screenshot)
+                            const customIcon = L.divIcon({
+                                html: `
                                 <div class="relative group">
                                     <div class="flex items-center">
                                        <div class="relative w-8 h-8 flex items-center justify-center">
@@ -1773,164 +1779,172 @@
                                     </div>
                                 </div>
                             `,
-                            className: 'custom-map-marker',
-                            iconSize: [32, 32],
-                            iconAnchor: [16, 32]
-                        });
+                                className: 'custom-map-marker',
+                                iconSize: [32, 32],
+                                iconAnchor: [16, 32]
+                            });
 
-                        const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
+                            const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
 
-                        marker.on('click', () => {
-                            map.setView([p.latitude, p.longitude], 15, { animate: true });
-                        });
-                    }
-                });
-            } catch (err) {
-                console.error('Map points loading failed:', err);
+                            marker.on('click', () => {
+                                map.setView([p.latitude, p.longitude], 15, { animate: true });
+                            });
+                        }
+                    });
+                } catch (err) {
+                    console.error('Map points loading failed:', err);
+                }
             }
-        }
-        initMap();
+            initMap();
 
-        // ── Group Chat logic ───────────────────────────────────────────────────────
-        let chatInterval;
-        let currentChatGroupId;
-        let currentTrackingId;
+            // ── Group Chat logic ───────────────────────────────────────────────────────
+            // Polling-based chat system for confirmed meetup groups.
+            // Automatically cleans up when the chat drawer is closed.
+            let chatInterval;
+            let currentChatGroupId;
+            let currentTrackingId;
 
-        function openChat(groupId, trackingId) {
-            currentChatGroupId = groupId;
-            currentTrackingId = trackingId;
-            document.getElementById('chatOverlay').classList.remove('hidden');
-            document.getElementById('chatDrawer').classList.add('translate-y-0');
-            document.getElementById('chatDrawer').classList.remove('translate-y-full');
-            loadChatMessages();
-            chatInterval = setInterval(loadChatMessages, 3000);
-            lucide.createIcons();
-        }
+            function openChat(groupId, trackingId) {
+                currentChatGroupId = groupId;
+                currentTrackingId = trackingId;
+                document.getElementById('chatOverlay').classList.remove('hidden');
+                document.getElementById('chatDrawer').classList.add('translate-y-0');
+                document.getElementById('chatDrawer').classList.remove('translate-y-full');
+                loadChatMessages();
+                chatInterval = setInterval(loadChatMessages, 3000);
+                lucide.createIcons();
+            }
 
-        function closeChat() {
-            document.getElementById('chatOverlay').classList.add('hidden');
-            document.getElementById('chatDrawer').classList.add('translate-y-full');
-            document.getElementById('chatDrawer').classList.remove('translate-y-0');
-            clearInterval(chatInterval);
-        }
+            function closeChat() {
+                document.getElementById('chatOverlay').classList.add('hidden');
+                document.getElementById('chatDrawer').classList.add('translate-y-full');
+                document.getElementById('chatDrawer').classList.remove('translate-y-0');
+                clearInterval(chatInterval);
+            }
 
-        async function loadChatMessages() {
-            if (!currentChatGroupId) return;
-            try {
-                const res = await fetch(`/api/bookings/chat/${currentChatGroupId}`, {
-                    headers: { 'tracking-id': currentTrackingId }
-                });
-                const messages = await res.json();
-                const container = document.getElementById('chatMessages');
+            async function loadChatMessages() {
+                if (!currentChatGroupId) return;
+                try {
+                    const res = await fetch(`/api/bookings/chat/${currentChatGroupId}`, {
+                        headers: { 'tracking-id': currentTrackingId }
+                    });
+                    const messages = await res.json();
+                    const container = document.getElementById('chatMessages');
 
-                const html = messages.map(msg => `
+                    const html = messages.map(msg => `
                     <div class="flex flex-col ${msg.is_me ? 'items-end' : 'items-start'}">
                         <span class="text-[10px] text-gray-400 px-1 mb-0.5">${msg.sender}</span>
-                        <div class="${msg.is_me ? 'bg-orange-500 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-gray-100 text-gray-800 rounded-r-2xl rounded-tl-2xl'} px-4 py-2 shadow-sm max-w-[85%]">
+                        <div class="${msg.is_me ? 'bg-emerald-500 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-gray-100 text-gray-800 rounded-r-2xl rounded-tl-2xl'} px-4 py-2 shadow-sm max-w-[85%]">
                             <p class="text-sm">${msg.message}</p>
                         </div>
                     </div>
                 `).join('') || '<p class="text-center text-gray-300 text-xs py-10">কোনো বার্তা নেই। প্রথম হ্যালো বলুন!</p>';
 
-                const needsScroll = container.scrollHeight - container.scrollTop === container.clientHeight || container.scrollTop === 0;
-                container.innerHTML = html;
-                if (needsScroll) container.scrollTop = container.scrollHeight;
-            } catch (err) { }
-        }
-
-        async function sendChatMsg() {
-            const input = document.getElementById('chatInput');
-            const msg = input.value.trim();
-            if (!msg || !currentChatGroupId) return;
-
-            input.value = '';
-            try {
-                const res = await fetch('/api/bookings/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'tracking-id': currentTrackingId },
-                    body: JSON.stringify({ group_id: currentChatGroupId, message: msg })
-                });
-                if (res.ok) {
-                    loadChatMessages();
-                }
-            } catch (err) { }
-        }
-
-        document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keydown', e => {
-            if (e.key === 'Enter') sendChatMsg();
-        });
-
-        // Navigation Helper for internal links on the same page
-        function scrollToSection(e, selector) {
-            e.preventDefault();
-            const el = document.querySelector(selector);
-            if (el) {
-                const navHeight = 80;
-                const pos = el.getBoundingClientRect().top + window.scrollY - navHeight;
-                window.scrollTo({ top: pos, behavior: 'smooth' });
+                    const needsScroll = container.scrollHeight - container.scrollTop === container.clientHeight || container.scrollTop === 0;
+                    container.innerHTML = html;
+                    if (needsScroll) container.scrollTop = container.scrollHeight;
+                } catch (err) { }
             }
-        }
 
-        // ── Partnership Request Handle ──────────────────────────────────────────
-        function openPartnershipModal() {
-            const modal = document.getElementById('partnershipModal');
-            const content = document.getElementById('partnershipModalContent');
+            async function sendChatMsg() {
+                const input = document.getElementById('chatInput');
+                const msg = input.value.trim();
+                if (!msg || !currentChatGroupId) return;
 
-            // Reset to form view
-            document.getElementById('partnershipFormView').classList.remove('hidden');
-            document.getElementById('partnershipSuccessView').classList.add('hidden');
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closePartnershipModal() {
-            const modal = document.getElementById('partnershipModal');
-            const content = document.getElementById('partnershipModalContent');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        async function submitPartnership(e) {
-            e.preventDefault();
-            const btn = document.getElementById('partnerSubmitBtn');
-            const name = document.getElementById('partnerRestaurantName').value.trim();
-            const phone = document.getElementById('partnerContactNumber').value.trim();
-
-            const origText = btn.innerHTML;
-            btn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
-            btn.disabled = true;
-
-            try {
-                const res = await fetch('/api/partnerships', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ restaurant_name: name, contact_number: phone })
-                });
-
-                if (res.ok) {
-                    document.getElementById('partnershipFormView').classList.add('hidden');
-                    document.getElementById('partnershipSuccessView').classList.remove('hidden');
-                    document.getElementById('partnershipForm').reset();
-                    lucide.createIcons();
-                } else {
-                    alert('কোথাও সমস্যা হচ্ছে, আবার চেষ্টা করুন।');
-                }
-            } catch (e) {
-                alert('ইন্টারনেট সংযোগ যাচাই করুন।');
-            } finally {
-                btn.innerHTML = origText;
-                btn.disabled = false;
+                input.value = '';
+                try {
+                    const res = await fetch('/api/bookings/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'tracking-id': currentTrackingId },
+                        body: JSON.stringify({ group_id: currentChatGroupId, message: msg })
+                    });
+                    if (res.ok) {
+                        loadChatMessages();
+                    }
+                } catch (err) { }
             }
-        }
 
-        // ── Legal Modals ────────────────────────────────────────────────────────
-        const legalContents = {
-            privacy: `
+            document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keydown', e => {
+                if (e.key === 'Enter') sendChatMsg();
+            });
+
+            // Navigation Helper for internal links on the same page
+            function scrollToSection(e, selector) {
+                if (e) e.preventDefault();
+                const el = document.querySelector(selector);
+                if (el) {
+                    const navHeight = 84;
+                    const elementPosition = el.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            // ── Partnership Request Handle ──────────────────────────────────────────
+            // Logic for restaurant/cafe partners to apply for the platform.
+            function openPartnershipModal() {
+                const modal = document.getElementById('partnershipModal');
+                const content = document.getElementById('partnershipModalContent');
+
+                // Reset to form view
+                document.getElementById('partnershipFormView').classList.remove('hidden');
+                document.getElementById('partnershipSuccessView').classList.add('hidden');
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closePartnershipModal() {
+                const modal = document.getElementById('partnershipModal');
+                const content = document.getElementById('partnershipModalContent');
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            async function submitPartnership(e) {
+                e.preventDefault();
+                const btn = document.getElementById('partnerSubmitBtn');
+                const name = document.getElementById('partnerRestaurantName').value.trim();
+                const phone = document.getElementById('partnerContactNumber').value.trim();
+
+                const origText = btn.innerHTML;
+                btn.innerHTML = '<div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+                btn.disabled = true;
+
+                try {
+                    const res = await fetch('/api/partnerships', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ restaurant_name: name, contact_number: phone })
+                    });
+
+                    if (res.ok) {
+                        document.getElementById('partnershipFormView').classList.add('hidden');
+                        document.getElementById('partnershipSuccessView').classList.remove('hidden');
+                        document.getElementById('partnershipForm').reset();
+                        lucide.createIcons();
+                    } else {
+                        alert('কোথাও সমস্যা হচ্ছে, আবার চেষ্টা করুন।');
+                    }
+                } catch (e) {
+                    alert('ইন্টারনেট সংযোগ যাচাই করুন।');
+                } finally {
+                    btn.innerHTML = origText;
+                    btn.disabled = false;
+                }
+            }
+
+            // ── Legal Modals ────────────────────────────────────────────────────────
+            const legalContents = {
+                privacy: `
                 <div class="space-y-4">
                     <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
                     <p>DekhaHok আপনার ব্যক্তিগত তথ্যের সুরক্ষায় প্রতিশ্রুতিবদ্ধ। আমাদের অ্যাপটি ব্যবহারের সময় আমরা কীভাবে তথ্য সংগ্রহ ও ব্যবহার করি তা নিচে দেওয়া হলো:</p>
@@ -1942,7 +1956,7 @@
                     </ul>
                 </div>
             `,
-            terms: `
+                terms: `
                 <div class="space-y-4">
                     <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
                     <p>DekhaHok প্ল্যাটফর্মটি ব্যবহারের মাধ্যমে আপনি নিচের শর্তাবলীতে সম্মত হচ্ছেন:</p>
@@ -1956,70 +1970,33 @@
                     </ul>
                 </div>
             `
-        };
+            };
 
-        function openLegalModal(type) {
-            const modal = document.getElementById('legalModal');
-            const contentContainer = document.getElementById('legalModalContent');
-            const textContainer = document.getElementById('legalTextContent');
-            const titleEl = document.getElementById('legalModalTitle');
+            function openLegalModal(type) {
+                const modal = document.getElementById('legalModal');
+                const contentContainer = document.getElementById('legalModalContent');
+                const textContainer = document.getElementById('legalTextContent');
+                const titleEl = document.getElementById('legalModalTitle');
 
-            titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
-            textContainer.innerHTML = legalContents[type];
+                titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
+                textContainer.innerHTML = legalContents[type];
 
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                contentContainer.classList.remove('scale-95', 'opacity-0');
-                contentContainer.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    contentContainer.classList.remove('scale-95', 'opacity-0');
+                    contentContainer.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
 
-        function closeLegalModal() {
-            const modal = document.getElementById('legalModal');
-            const contentContainer = document.getElementById('legalModalContent');
-            contentContainer.classList.remove('scale-100', 'opacity-100');
-            contentContainer.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-    </script>
-
-    <!-- Real-time Group Chat Overlay -->
-    <div id="chatOverlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] hidden" onclick="closeChat()">
-        <div id="chatDrawer"
-            class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] h-[80vh] flex flex-col p-6 shadow-2xl transition-transform transform translate-y-full"
-            onclick="event.stopPropagation()">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
-                        <i data-lucide="message-circle" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">গ্রুপ আড্ডা</h3>
-                        <p class="text-xs text-green-500 flex items-center gap-1"><span
-                                class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> সরাসরি কথা বলুন</p>
-                    </div>
-                </div>
-                <button onclick="closeChat()" class="p-2 hover:bg-gray-100 rounded-full transition text-gray-400">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-
-            <div id="chatMessages" class="flex-1 overflow-y-auto pr-2 space-y-4 mb-4 scroll-smooth">
-                <!-- Messages will load here -->
-            </div>
-
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <input type="text" id="chatInput" placeholder="আপনার বার্তা লিখুন..."
-                    class="flex-1 bg-gray-50 border border-gray-100 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-orange-400">
-                <button onclick="sendChatMsg()"
-                    class="w-11 h-11 bg-orange-500 text-white rounded-2xl flex items-center justify-center hover:bg-orange-600 transition shadow-lg">
-                    <i data-lucide="send" class="w-4 h-4"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="google_translate_element" style="display:none"></div>
+            function closeLegalModal() {
+                const modal = document.getElementById('legalModal');
+                const contentContainer = document.getElementById('legalModalContent');
+                contentContainer.classList.remove('scale-100', 'opacity-100');
+                contentContainer.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        </script>
+        <div id="google_translate_element" style="display:none; height: 0; width: 0; overflow: hidden;"></div>
 </body>
 
 </html>

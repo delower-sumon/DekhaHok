@@ -1,36 +1,55 @@
+/* 
+   DekhaHok Global Stylesheet
+   Core design system for a premium, calm, and trust-evoking user experience.
+*/
 * {
     font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Design tokens for calm premium feel */
+:root {
+    --bg-main: #F9FBFA;
+    --bg-card: #FFFFFF;
+    --text-primary: #1F2937;
+    --text-secondary: #6B7280;
+    --accent: #2D5A43; /* Softer Forest Green */
+    --accent-hover: #244936;
+    --accent-soft: #F1F8F4;
+    --border: #E5E7EB;
+    --radius-lg: 32px;
+    --radius-xl: 40px;
+}
+
 body {
-    background-color: #f9f9fb; /* Cleaner background */
+    background-color: #F9F9F8;
+    /* Calm background */
     color: #1a1a1a;
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, #ea580c 0%, #c2410c 50%, #9a3412 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #1F2937;
+    /* calm typography, no gradient */
     display: inline-block;
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    box-shadow: 0 4px 30px rgba(31, 61, 43, 0.04);
+    border-radius: var(--radius-xl);
 }
 
 .floating-card {
     animation: float 6s ease-in-out infinite;
-    box-shadow: 0 20px 40px -15px rgba(234, 88, 12, 0.3);
+    box-shadow: 0 20px 40px rgba(31, 61, 43, 0.08);
 }
 
 @keyframes float {
+
     0%,
     100% {
         transform: translateY(0px) rotate(0deg);
@@ -64,6 +83,7 @@ body {
 }
 
 @keyframes tablePulse {
+
     0%,
     100% {
         transform: scale(1);
@@ -72,7 +92,7 @@ body {
 
     50% {
         transform: scale(1.05);
-        box-shadow: 0 0 20px 10px rgba(234, 88, 12, 0.1);
+        box-shadow: 0 0 20px 10px rgba(16, 185, 129, 0.1);
     }
 }
 
@@ -103,31 +123,62 @@ body {
 }
 
 .input-field:focus {
-    box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.08);
-    border-color: #ea580c;
+    box-shadow: 0 0 0 4px rgba(31, 109, 67, 0.08);
+    border-color: #1F3D2B;
     background: #fff;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-    transition: all 0.3s ease;
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    border-radius: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px -10px rgba(234, 88, 12, 0.5);
+    background: var(--accent-hover);
+    box-shadow: 0 12px 24px -6px rgba(45, 90, 67, 0.2);
+}
+
+.trust-banner {
+    background: #FDFDFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 20px;
+    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.badge-pill {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.section-bg-subtle {
+    background: radial-gradient(circle at 2px 2px, rgba(45, 90, 67, 0.03) 1px, transparent 0);
+    background-size: 40px 40px;
 }
 
 .pattern-bg {
-    background-image: radial-gradient(circle at 1px 1px, rgba(234, 88, 12, 0.15) 1px, transparent 0);
-    background-size: 40px 40px;
+    background-image: none;
 }
 
 .match-particle {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: #ea580c;
+    background: #10B981;
     border-radius: 50%;
     opacity: 0;
 }
@@ -171,23 +222,24 @@ body {
 /* Premium Card Styles */
 .premium-card {
     background: white;
-    border-radius: 20px;
-    border: 1px solid #e5e7eb;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-lg);
+    border: 1px solid #F0F0F0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
 }
 
 .premium-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.05);
-    border-color: rgba(234, 88, 12, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(31, 61, 43, 0.08);
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
 .premium-card.active {
-    border-color: #ea580c;
+    border-color: #10B981;
     border-width: 2px;
-    box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15);
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15);
 }
 
 .premium-card.featured {
@@ -197,13 +249,13 @@ body {
 }
 
 .premium-card.featured.active {
-    border-color: #ea580c;
+    border-color: #10B981;
     border-width: 2px;
-    box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15);
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15);
 }
 
 .btn-toggle:hover {
-    border-color: #fdba74;
+    border-color: #6EE7B7;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
@@ -219,14 +271,46 @@ body {
     position: absolute;
     top: 10px;
     right: -35px;
-    background: #fbbf24;
-    color: #000;
+    background: #10B981;
+    color: #fff;
     padding: 4px 40px;
     font-size: 10px;
     font-weight: 700;
     transform: rotate(45deg);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     z-index: 10;
+}
+
+/* Trust strip styling (Phase B) */
+.trust-strip {
+    background: #FFFFFF;
+    border-top: 1px solid #E5E7EB;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 10px 0;
+    text-align: center;
+    color: #6B7280;
+    font-size: 12px;
+}
+
+/* Ensure meetup names in hero SVG use emerald color */
+#connection-svg text {
+    fill: #047857;
+    /* Emerald-700-like */
+}
+
+/* Venue selection cards: default white, selected emerald */
+.venue-btn {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.venue-btn.active {
+    background: #e6f0ea;
+    /* emerald-50 */
+    border-color: #10b981;
+    /* emerald-600-ish */
+    color: #064e3b;
 }
 
 .btn-toggle {
@@ -236,13 +320,13 @@ body {
 }
 
 .btn-toggle:hover {
-    border-color: #fdba74;
+    border-color: #6EE7B7;
 }
 
 .btn-toggle.active {
-    border-color: #ea580c;
-    background: #fff7ed;
-    color: #ea580c;
+    border-color: #1F3D2B;
+    background: #E6F0EA;
+    color: #1F3D2B;
 }
 
 .check-mark {
@@ -255,4 +339,35 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 10px;
+}
+
+/* Logo sizing for navbar */
+.logo-img {
+    height: 40px !important;
+    width: auto !important;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: 32px !important;
+    }
+}
+
+/* Footer logo sizing */
+.footer-logo {
+    height: 56px !important;
+    width: auto !important;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .footer-logo {
+        height: 44px !important;
+    }
 }

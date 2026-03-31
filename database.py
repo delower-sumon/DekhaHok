@@ -8,6 +8,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 # Connection pool — Neon pooler endpoint handles PgBouncer on their side,
 # so we keep our app-side pool small (2-5 is plenty).
+# We use ThreadedConnectionPool for safe access across FastAPI threads.
 # ---------------------------------------------------------------------------
 _pool = pool.ThreadedConnectionPool(
     minconn=1,
@@ -118,7 +119,10 @@ CREATE TABLE IF NOT EXISTS partnership_requests (
 
 
 def init_db():
-    """Create tables on startup if they don't exist."""
+    """
+    Initialises the database by creating necessary tables and applying migrations.
+    This runs on application startup to ensure the schema is always up-to-date.
+    """
     conn = get_conn()
     try:
         cursor = conn.cursor()

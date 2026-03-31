@@ -55,6 +55,10 @@ ADMIN_KEY = os.getenv("ADMIN_SECRET_KEY", "")
 FEE_MAP   = {2: 499.00, 5: 249.00}
 
 
+# ---------------------------------------------------------------------------
+# Admin security check: Simple secret key based authentication
+# for all internal admin endpoints.
+# ---------------------------------------------------------------------------
 def require_admin(x_admin_key: str):
     if not ADMIN_KEY or x_admin_key != ADMIN_KEY:
         raise HTTPException(status_code=401, detail="Invalid admin key")
@@ -85,6 +89,10 @@ def format_time_12h(t) -> Optional[str]:
 
 @app.post("/api/bookings", response_model=BookingResponse, status_code=201)
 def create_booking(payload: BookingCreate):
+    """
+    Creates a new meetup interested entry. 
+    Assigns a unique Tracking ID and calculates the required reservation fee.
+    """
     fee = FEE_MAP.get(payload.group_size, 0)
 
     for _ in range(5):
@@ -140,6 +148,11 @@ def create_booking(payload: BookingCreate):
 
 @app.get("/api/bookings/track/{tracking_id}", response_model=TrackingResponse)
 def track_booking(tracking_id: str):
+    """
+    Public tracking endpoint. 
+    Returns the current status, payment verification, and group details.
+    Reveals the specific venue only at 3 PM the day before the event.
+    """
     conn = get_conn()
     try:
         cursor = conn.cursor()
@@ -431,6 +444,10 @@ def admin_delete_partnership(partnership_id: int, x_admin_key: str = Header(...)
 
 @app.get("/api/admin/dashboard")
 def admin_dashboard(x_admin_key: str = Header(...)):
+    """
+    Fetches aggregate statistics for the admin overview, 
+    including revenue, booking counts by status, and overall totals.
+    """
     require_admin(x_admin_key)
     conn = get_conn()
     try:

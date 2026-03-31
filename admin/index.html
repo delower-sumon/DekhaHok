@@ -455,6 +455,8 @@
     lucide.createIcons();
 
     // ── State ──────────────────────────────────────────────────────────────────
+    // Core application state including the admin authentication key 
+    // and caching for active data sections.
     let ADMIN_KEY = '';
     let currentAssignGroupId = null;
     let allBookings = [];
@@ -462,6 +464,10 @@
     const API = '';  // same origin — FastAPI serves both frontend and API
 
     // ── Auth ───────────────────────────────────────────────────────────────────
+    /**
+     * Authenticates the admin user by validating the provided secret key
+     * against the backend. Persists logic for the current session.
+     */
     async function login() {
       const key = document.getElementById('adminKeyInput').value.trim();
       if (!key) return;
@@ -481,6 +487,9 @@
       }
     }
 
+    /**
+     * Clears session state and reloads the page to force re-authentication.
+     */
     function logout() {
       ADMIN_KEY = '';
       location.reload();
@@ -747,7 +756,11 @@
       }
     }
 
-    // ── Groups ─────────────────────────────────────────────────────────────────
+    // ── Groups Management ──────────────────────────────────────────────────────
+    /**
+     * Fetches and displays all meetup groups, including their members 
+     * and current statuses (Open/Closed/Completed).
+     */
     async function loadGroups() {
       const res = await adminFetch('/api/admin/groups');
       const groups = await res.json();

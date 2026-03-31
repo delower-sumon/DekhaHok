@@ -20,9 +20,17 @@ Going beyond:
 (DONE)* make users see assigned peoples or their group mates when assigned by the admin(name, phone number, age, rating if any)
 (DONE)* make users chat with each other while in the precessing stage untill the meetup status is completed(chat should be deleted after the meetup status is completed) and place this feature in the booking track preview we have for the user
 (DONE)* make users rate each other after the meetup and show the rating of that user(nameifany or mobile number)
-
+(DONE)* center allign footer texts for mobile only and use separate line for the texts :  © 2024 DekhaHok. All rights reserved. Made with ❤️ in Dhaka.
 
 (DONE)* find a way to curate the English autotranslation for the international users, the translation should be more natural and logical and human-like 
+
+
+a) add another line in ম্যাচিং ও ভেন্যু 
+b) selactable cards of group & place color when clicked or selected redesign 
+
+c) logo redesign : redesign the message icon used inside the logo into a circular shape, use good color that fits best
+    reduce the size of the svg logo in navbar and footer smaller , its too big now.
+
 
 
 Even Beyon: 
