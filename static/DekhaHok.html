@@ -1784,12 +1784,6 @@
                             <div class="flex flex-col min-w-0">
                                 <h4 class="font-black text-gray-900 leading-none tracking-tight text-sm md:text-base truncate">স্ট্যাটাস ট্র্যাকার</h4>
                                 <p class="text-[10px] md:text-xs text-gray-400 font-mono mt-1 font-bold truncate">${data.tracking_id}</p>
-                                ${data.meet_date ? `
-                                    <p class="text-[8px] font-black text-emerald-600 mt-1 uppercase tracking-widest flex items-center gap-1">
-                                        <i data-lucide="calendar" class="w-3 h-3"></i>
-                                        ${data.meet_date}
-                                    </p>
-                                ` : ''}
                             </div>
                             
                             <div class="flex-1 flex justify-center items-center">
@@ -1827,9 +1821,8 @@
 
                         <div class="text-center sm:text-left mt-4 mb-4 pb-4 border-b border-gray-100">
                             <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
-                                ${data.name}, আপনার বুকিং এখন <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'ফাইনাল' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : 'প্রক্রিয়াধীন')}</span>
+                                ${data.name}, আপনার বুকিং <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'ফাইনাল!' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : 'প্রক্রিয়াধীন')}</span>
                             </h2>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">মিটআপ তারিখ: ${data.meet_date || 'শিগগিরই নির্ধারিত হবে'}</p>
                             ${countdownHtml}
                         </div>
 
