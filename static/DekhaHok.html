@@ -229,7 +229,7 @@
             gap: 10px;
             font-size: 13px;
             color: #4b5563;
-            padding: 8px 0;
+            padding: 5px 0;
             border-bottom: 1px solid #f3f4f6;
         }
 
@@ -250,8 +250,13 @@
         }
 
         @keyframes dots-typing {
-            0% { width: 0; }
-            100% { width: 1.25em; }
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 1.25em;
+            }
         }
     </style>
 </head>
@@ -381,13 +386,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <button
                         class="border-2 border-gray-100 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-emerald-500 transition">
-                        <img src="/static/assets/bkash.png"
+                        <img src="/static/assets/bkash-logo.png"
                             class="h-10 object-contain grayscale hover:grayscale-0 transition" alt="bKash">
                         <span class="text-[10px] font-bold text-gray-400">বিকাশ</span>
                     </button>
                     <button
                         class="border-2 border-gray-100 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-emerald-500 transition">
-                        <img src="/static/assets/nagad.png"
+                        <img src="/static/assets/nagad-logo.png"
                             class="h-10 object-contain grayscale hover:grayscale-0 transition" alt="Nagad">
                         <span class="text-[10px] font-bold text-gray-400">নগদ</span>
                     </button>
@@ -521,7 +526,8 @@
                     <br> <!-- লাইন ব্রেকের জন্য -->
 
                     <span class="gradient-text inline-block pb-4 leading-normal" data-en="friend tomorrow">হোক
-                        বন্ধুত্ব<span class="dots-typewriter">...</span></span>
+                        বন্ধুত্ব<span class="inline-block text-left" style="width: 1.25em;"><span
+                                class="dots-typewriter">...</span></span></span>
                 </h1>
 
                 <p class="text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-loose mt-0">
@@ -1127,7 +1133,7 @@
                                     Friend Awaits</span>
                             </div>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">হয়ে যান বন্ধু!</h3>
+                        <h3 class="text-xl font-bold mb-3">বন্ধু জিতে নিন!</h3>
                         <p class="text-sm text-emerald-50/80 leading-relaxed font-medium mb-8">নির্ধারিত সময় ও স্থানে
                             পৌঁছে নতুন মানুষের সাথে সময় কাটান এবং গড়ে তুলুন দারুণ ফ্রেন্ডশিপ।</p>
                         <div class="mt-auto flex items-center justify-between">
@@ -1208,8 +1214,16 @@
                     <div
                         class="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl transform rotate-3 opacity-20">
                     </div>
-                    <img src="http://static.photos/restaurant/640x360/42" alt="Safe meeting space"
-                        class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
+                    <img src="https://static2.tripoto.com/media/filter/nl/img/2033349/TripDocument/1622812689_cha_and_adda.jpg"
+                        alt="Safe meeting space" class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
+                    <div
+                        class="absolute right-1 bottom-4 z-10 [writing-mode:vertical-lr] rotate-180 bg-white/10 backdrop-blur-md border border-white/20 px-1 py-3 rounded-lg shadow-2xl hover:bg-white/20 transition-all cursor-pointer group">
+                        <a href="https://www.tripoto.com/trip/best-places-to-plan-to-have-coffee-and-adda-with-friends"
+                            target="_blank"
+                            class="text-[8px] font-black text-white/90 group-hover:text-white uppercase tracking-[0.15em] no-underline">
+                            Credit: Tripoto
+                        </a>
+                    </div>
                     <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl max-w-xs">
                         <div class="flex items-center space-x-3 mb-2">
                             <div class="flex -space-x-2">
@@ -1677,12 +1691,14 @@
             if (!id || id.length < 5) return;
 
             const resultEl = document.getElementById('trackingResult');
+            localStorage.setItem('last_tracking_id', id);
             resultEl.classList.remove('hidden');
             resultEl.innerHTML = `
-                <div class="flex flex-col items-center justify-center py-12">
-                    <div class="w-10 h-10 border-4 border-emerald-100 border-t-emerald-500 rounded-full animate-spin"></div>
-                    <p class="mt-4 text-emerald-800 font-bold animate-pulse">আপনার বুকিং ডাটা লোড হচ্ছে...</p>
-                </div>`;
+                    <div class="flex flex-col items-center justify-center py-12">
+                        <div class="w-10 h-10 border-4 border-emerald-100 border-t-emerald-500 rounded-full animate-spin"></div>
+                        <p class="mt-4 text-emerald-800 font-bold animate-pulse">আপনার বুকিং ডাটা লোড হচ্ছে...</p>
+                    </div>`;
+
 
             try {
                 const res = await fetch(`/api/bookings/track/${id}`);
@@ -1718,16 +1734,35 @@
                 }[data.booking_status] || { color: 'text-gray-600', bg: 'bg-gray-50', icon: 'info' };
 
                 // "What's Next" Messages
-                let nextAction = "আমাদের টিম আপনার বুকিংটি রিভিউ করছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করবো।";
+                let nextAction = "আমাদের টিম আপনার বুকিংটি রিভিউ করছেন। আমরা শীঘ্রই আপনার বুকিং স্ট্যাটাস আপডেট করবো।";
                 if (data.booking_status === 'confirmed' && !data.assigned_venue) {
-                    nextAction = "অপেক্ষা করুন! আমরা আপনার জন্য উপযুক্ত লোকেশন এবং আড্ডার সাথী খুঁজছি। মিটআপের ১ ঘণ্টা আগে সব আপডেট পাবেন।";
+                    nextAction = "আমরা আপনার জন্য উপযুক্ত লোকেশন এবং বন্ধু খুঁজছি। মিটআপের ১ দিন আগে সব আপডেট পেয়ে যাবেন।";
                 } else if (data.booking_status === 'confirmed' && data.assigned_venue) {
-                    nextAction = "আপনার লোকেশন নির্ধারিত হয়েছে। নির্দিষ্ট সময়ে নির্ধারিত স্থানে উপস্থিত থাকার অনুরোধ করা হলো। প্রয়োজনে চ্যাট অপশন ব্যবহার করুন।";
+                    nextAction = "লোকেশন নির্ধারিত হচ্ছে। নির্দিষ্ট সময়ে নির্ধারিত স্থানে উপস্থিত থাকার অনুরোধ করা হলো। প্রয়োজনে চ্যাট অপশন ব্যবহার করুন।";
                 } else if (data.booking_status === 'completed') {
-                    nextAction = "আপনার আড্ডাটি সফলভাবে সম্পন্ন হয়েছে। অভিজ্ঞতার নিরিখে সাথীদের রেটিং দিতে ভুলবেন না। শীঘ্রই দেখা হবে!";
+                    nextAction = "আপনার বন্ধুকে খুঁজে পাওয়া গিয়েছে । আপনার বন্ধুদের রেটিং দিতে ভুলবেন না। শীঘ্রই দেখা হবে!";
                 }
 
-                // Countdown Component
+                // Reveal Time Calculation (3 PM day before event)
+                let isVenueRevealed = false;
+                let revealMessage = "";
+                if (data.meet_date) {
+                    const meetDate = new Date(data.meet_date);
+                    const revealThreshold = new Date(meetDate);
+                    revealThreshold.setDate(revealThreshold.getDate() - 1);
+                    revealThreshold.setHours(15, 0, 0); // 3 PM day before
+
+                    isVenueRevealed = new Date() >= revealThreshold || data.booking_status === 'completed';
+
+                    if (!isVenueRevealed) {
+                        const diffMs = revealThreshold - new Date();
+                        const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+                        const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                        revealMessage = `৩টার পর রিভিল হবে (${diffHrs}h ${diffMins}m বাকি)`;
+                    }
+                }
+
+                // Countdown Component (to meeting time)
                 let countdownHtml = '';
                 if (data.meet_date && data.meet_time && data.booking_status === 'confirmed') {
                     const meetingDate = new Date(`${data.meet_date}T${data.meet_time}`);
@@ -1745,17 +1780,24 @@
 
                 resultEl.innerHTML = `
                     <div class="tracking-status-card py-6 md:py-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 ${statusTheme.bg} rounded-2xl flex items-center justify-center shadow-sm">
-                                    <i data-lucide="${statusTheme.icon}" class="w-7 h-7 ${statusTheme.color}"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-black text-gray-900 leading-none tracking-tight">Status Tracker</h4>
-                                    <p class="text-xs text-gray-400 font-mono mt-1.5 font-bold">${data.tracking_id}</p>
+                        <div class="flex items-center justify-between gap-2 mb-6 px-4 md:px-10">
+                            <div class="flex flex-col min-w-0">
+                                <h4 class="font-black text-gray-900 leading-none tracking-tight text-sm md:text-base truncate">স্ট্যাটাস ট্র্যাকার</h4>
+                                <p class="text-[10px] md:text-xs text-gray-400 font-mono mt-1 font-bold truncate">${data.tracking_id}</p>
+                                ${data.meet_date ? `
+                                    <p class="text-[8px] font-black text-emerald-600 mt-1 uppercase tracking-widest flex items-center gap-1">
+                                        <i data-lucide="calendar" class="w-3 h-3"></i>
+                                        ${data.meet_date}
+                                    </p>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="flex-1 flex justify-center items-center">
+                                <div class="w-8 h-8 md:w-11 md:h-11 ${statusTheme.bg} rounded-xl flex items-center justify-center shadow-sm">
+                                    <i data-lucide="${statusTheme.icon}" class="w-5 h-5 md:w-7 md:h-7 ${statusTheme.color}"></i>
                                 </div>
                             </div>
-                            <div class="status-badge-premium border border-white/10 shadow-lg shadow-emerald-900/5 transition-transform hover:scale-105 active:scale-95 cursor-default">
+                            <div class="status-badge-premium border border-white/10 shadow-lg shadow-emerald-900/5 transition-transform hover:scale-105 active:scale-95 cursor-default flex-shrink-0 whitespace-nowrap scale-90 md:scale-100 origin-right">
                                 <div class="live-dot animate-pulse"></div>
                                 SECURE VERIFIED
                             </div>
@@ -1785,8 +1827,9 @@
 
                         <div class="text-center sm:text-left mt-4 mb-4 pb-4 border-b border-gray-100">
                             <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
-                                ${data.name}, আপনার বুকিং এখন <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'নিশ্চিত' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : 'প্রক্রিয়াধীন')}</span>
+                                ${data.name}, আপনার বুকিং এখন <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'ফাইনাল' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : 'প্রক্রিয়াধীন')}</span>
                             </h2>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">মিটআপ তারিখ: ${data.meet_date || 'শিগগিরই নির্ধারিত হবে'}</p>
                             ${countdownHtml}
                         </div>
 
@@ -1795,60 +1838,64 @@
                             <p class="text-gray-700 font-bold leading-relaxed text-sm">${nextAction}</p>
                         </div>
 
-                        ${data.assigned_venue ? `
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-4">
+                            <!-- Metup Date Card (Always Shown if confirmed) -->
+                            ${data.meet_date ? `
                                 <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 group hover:border-emerald-200 transition-colors">
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">মিটআপ লোকেশন</p>
-                                    <p class="text-gray-900 font-bold flex items-center gap-2">
-                                        <i data-lucide="navigation-2" class="w-4 h-4 text-emerald-600"></i>
-                                        ${data.assigned_venue}
-                                    </p>
-                                </div>
-                                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 group hover:border-emerald-200 transition-colors">
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">নির্ধারিত সময়</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">নির্ধারিত দিন এবং সময়</p>
                                     <p class="text-gray-900 font-bold flex items-center gap-2">
                                         <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-600"></i>
                                         ${data.meet_date} @ ${data.meet_time === '17:00:00' ? '5:00 PM' : '7:00 PM'}
                                     </p>
                                 </div>
-                            </div>
-                        ` : ''}
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                            ${data.assigned_venue && data.booking_status !== 'completed' ? `
-                                <button onclick="openChat(${data.assigned_group_id}, '${id}')" 
-                                        class="action-hub-btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl shadow-emerald-200 active:scale-95">
-                                    <i data-lucide="message-square" class="w-5 h-5"></i>
-                                    গ্রুপ চ্যাটে যোগ দিন
-                                </button>
                             ` : ''}
-                            <a href="https://wa.me/8801884477720" target="_blank"
-                               class="action-hub-btn bg-white border-2 border-gray-100 text-gray-800 hover:bg-gray-50 active:scale-95">
-                                <i data-lucide="phone-call" class="w-5 h-5 text-emerald-600"></i>
-                                ইমার্জেন্সি সাপোর্ট
-                            </a>
+
+                            <!-- Venue Card (Revealed strictly 3 PM Day Before) -->
+                            ${data.meet_date ? `
+                                <div class="bg-gray-50 p-5 rounded-3xl border ${isVenueRevealed ? 'border-gray-100 group hover:border-emerald-200' : 'border-dashed border-emerald-200 bg-emerald-50/20'} transition-all relative overflow-hidden">
+                                    <p class="text-[10px] font-black ${isVenueRevealed ? 'text-gray-400' : 'text-emerald-700'} uppercase tracking-wider mb-2">মিটআপ লোকেশন</p>
+                                    <p class="text-gray-900 font-bold flex items-center gap-2">
+                                        <i data-lucide="${isVenueRevealed ? 'navigation-2' : 'lock'}" class="w-4 h-4 ${isVenueRevealed ? 'text-emerald-600' : 'text-emerald-400 animate-pulse'}"></i>
+                                        ${isVenueRevealed ? (data.assigned_venue || 'লোকেশন পাওয়া যায়নি') : revealMessage}
+                                    </p>
+                                    ${!isVenueRevealed ? `<div class="absolute right-3 top-3"><i data-lucide="eye-off" class="w-3 h-3 text-emerald-300"></i></div>` : ''}
+                                </div>
+                            ` : ''}
                         </div>
 
+
                         ${data.group_members && data.group_members.length > 0 ? `
-                            <div class="space-y-6 pt-10 border-t border-gray-100">
-                                <h5 class="text-xs font-black text-gray-400 uppercase tracking-widest text-center sm:text-left">আপনার আড্ডার সাথীরা</h5>
+                            <div class="space-y-4 mt-6">
+                                <h5 class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center sm:text-left">আপনার বন্ধু/বন্ধুগন।</h5>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    ${data.group_members.map(m => `
-                                        <div class="p-5 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-md transition">
-                                            <div class="flex items-center justify-between">
-                                                <div>
-                                                    <p class="font-bold text-gray-900">${m.name}</p>
-                                                    <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase">বয়স: ${m.age || 'N/A'} · রেটিং: ${m.rating > 0 ? '⭐ ' + m.rating : 'New Partner'}</p>
+                                    ${data.group_members.map((m, idx) => `
+                                        <div class="group py-4 px-5 bg-gradient-to-br from-white to-gray-50/50 border border-gray-100 rounded-[2rem] shadow-sm hover:shadow-emerald-900/5 transition-all duration-300 relative overflow-hidden ring-1 ring-emerald-500/5 animate-reveal" style="--stagger-delay: ${idx * 0.15}s">
+                                            <div class="absolute -right-2 -top-2 w-16 h-16 bg-emerald-100/20 rounded-full blur-2xl group-hover:bg-emerald-100/40 transition-colors"></div>
+                                            
+                                            <div class="flex items-center gap-4 relative z-10">
+                                                <div class="w-12 h-12 rounded-2xl bg-emerald-100/50 flex items-center justify-center border border-emerald-100 shadow-inner group-hover:scale-110 transition-transform">
+                                                    <i data-lucide="award" class="w-6 h-6 text-emerald-600"></i>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-center flex-wrap gap-2 mb-1">
+                                                        <span class="font-black text-gray-900 tracking-tight leading-none">${m.name}</span>
+                                                        <span class="px-2 py-0.5 bg-emerald-50 border border-emerald-100 rounded-full text-[8px] font-black text-emerald-600 uppercase tracking-tighter leading-none">${m.rating > 0 ? '⭐ ' + m.rating : 'Verified Mate'}</span>
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-auto"></span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="px-2 py-0.5 bg-white border border-gray-100 rounded-full text-[9px] font-black text-gray-400 uppercase tracking-tighter">Age: ${m.age || '—'}</span>
+                                                    </div>
                                                 </div>
                                             </div>
+
                                             ${data.booking_status === 'completed' ? `
-                                                <div class="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
-                                                    <span class="text-[10px] font-black text-gray-400 uppercase">সাথীকে রেটিং দিন</span>
-                                                    <div class="flex items-center gap-1.5">
+                                                <div class="mt-4 pt-4 border-t border-dashed border-gray-200 flex flex-col gap-2">
+                                                    <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">সাথীকে রেটিং দিন:</span>
+                                                    <div id="rating-container-${m.id}" class="flex items-center gap-3">
                                                         ${[1, 2, 3, 4, 5].map(star => `
                                                             <button onclick="submitRating('${id}', ${data.assigned_group_id || 0}, ${m.id}, ${star})" 
                                                                      class="text-gray-200 hover:text-emerald-500 transition-all hover:scale-125">
-                                                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                                                <i data-lucide="star" class="w-5 h-5 fill-current"></i>
                                                             </button>
                                                         `).join('')}
                                                     </div>
@@ -1857,18 +1904,34 @@
                                         </div>
                                     `).join('')}
                                 </div>
+                                
+                                <!-- Hub Buttons Moved Here -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                                    ${data.assigned_venue && data.booking_status !== 'completed' ? `
+                                        <button onclick="openChat(${data.assigned_group_id}, '${id}')" 
+                                                class="action-hub-btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl shadow-emerald-200 active:scale-95 text-sm">
+                                            <i data-lucide="message-square" class="w-4 h-4"></i>
+                                            গ্রুপ চ্যাটে যোগ দিন
+                                        </button>
+                                    ` : ''}
+                                    <a href="https://wa.me/8801884477720" target="_blank"
+                                       class="action-hub-btn bg-white border border-gray-100 text-gray-800 hover:bg-gray-50 active:scale-95 text-sm">
+                                        <i data-lucide="phone-call" class="w-4 h-4 text-emerald-600"></i>
+                                        ইমার্জেন্সি সাপোর্ট
+                                    </a>
+                                </div>
                             </div>
                         ` : ''}
 
-                        <div class="mt-8 p-8 bg-emerald-50/30 rounded-[2.5rem] border border-emerald-100/50">
-                            <div class="flex items-center gap-2 mb-6">
-                                <i data-lucide="shield-check" class="w-6 h-6 text-emerald-600"></i>
-                                <span class="text-sm font-black text-gray-900 tracking-tight">নিরাপত্তা চেকলিস্ট:</span>
+                        <div class="mt-4 p-6 sm:p-8 bg-emerald-50/20 rounded-[2rem] border border-emerald-100/30">
+                            <div class="flex items-center gap-2 mb-4">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600"></i>
+                                <span class="text-[11px] font-black text-gray-900 tracking-widest uppercase">নিরাপত্তা চেকলিস্ট:</span>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-8">
                                 <div class="safety-checklist-item">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                    <span class="font-medium">জনাকীর্ণ পাবলিক প্লেসে দেখা করুন।</span>
+                                    <span class="font-medium">লোকালয়ে দেখা করুন।</span>
                                 </div>
                                 <div class="safety-checklist-item">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
@@ -1876,7 +1939,7 @@
                                 </div>
                                 <div class="safety-checklist-item">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                    <span class="font-medium">মিটআপ শেষে আমাদের ফিডব্যাক দিন।</span>
+                                    <span class="font-medium">আমাদের ফিডব্যাক দিন।</span>
                                 </div>
                                 <div class="safety-checklist-item">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
@@ -1887,6 +1950,20 @@
                     </div>`;
 
                 lucide.createIcons();
+
+                // ── Match Reveal Celebration ──────────────────────────────────────────
+                if (data.group_members && data.group_members.length > 0) {
+                    const sessionKey = `reveal_fired_${data.assigned_group_id}`;
+                    if (!sessionStorage.getItem(sessionKey)) {
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 },
+                            colors: ['#10b981', '#ffffff', '#34d399']
+                        });
+                        sessionStorage.setItem(sessionKey, 'true');
+                    }
+                }
 
             } catch (err) {
                 console.error(err);
@@ -2261,6 +2338,36 @@
         }
     </script>
     <div id="google_translate_element" style="display:none; height: 0; width: 0; overflow: hidden;"></div>
+    <!-- Confetti & Persistence -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @keyframes reveal-stagger {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate-reveal {
+            animation: reveal-stagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+    </style>
+    <script>
+        // Auto-load last tracking ID
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedId = localStorage.getItem('last_tracking_id');
+            const input = document.getElementById('trackingInput');
+            if (savedId && input) {
+                input.value = savedId;
+                // If user just landing on the tracking section, we could auto-track if desired.
+            }
+        });
+    </script>
 </body>
 
 </html>
