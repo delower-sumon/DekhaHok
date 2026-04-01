@@ -368,34 +368,91 @@
 
     <!-- Payment Modal -->
     <div id="paymentModal"
-        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 opacity-0 transition-all duration-300"
+        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-[2.5rem] p-6 max-w-sm w-full transform scale-95 opacity-0 transition-all duration-300 relative overflow-hidden"
             id="paymentModalContent">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-gray-900">পেমেন্ট সম্পন্ন করুন</h3>
-                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+
+
+            <div class="flex items-center justify-between mb-4 mt-2 relative z-10">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900">পেমেন্ট সম্পন্ন করুন</h3>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <i data-lucide="lock" class="w-3 h-3 text-emerald-500"></i>
+                        <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">End-to-End
+                            Secure</span>
+                    </div>
+                </div>
+                <button onclick="closePaymentModal()"
+                    class="group flex items-center gap-1.5 px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-900 rounded-2xl transition-all duration-300 active:scale-90">
+                    <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Close</span>
+                    <i data-lucide="x" class="w-4 h-4 font-bold"></i>
                 </button>
             </div>
-            <div class="space-y-6">
-                <div class="bg-gray-50 rounded-2xl p-4 flex items-center justify-between">
-                    <span class="text-gray-600">মোট টাকা:</span>
-                    <span id="paymentAmount" class="text-2xl font-black text-gray-900"></span>
+
+            <div class="space-y-4">
+                <!-- Payment Summary -->
+                <div class="bg-gray-50 rounded-2xl p-4 flex items-center justify-between border border-gray-100">
+                    <span class="text-gray-500 text-sm font-medium">প্রদেয় টাকা</span>
+                    <span id="paymentModalFee" class="text-2xl font-black text-gray-900"></span>
                 </div>
-                <p class="text-sm text-gray-500">বুকিং কনফার্ম করতে পেমেন্ট সম্পন্ন করুন।</p>
-                <div class="grid grid-cols-2 gap-4">
-                    <button
-                        class="border-2 border-gray-100 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-emerald-500 transition">
-                        <img src="/static/assets/bkash-logo.png"
-                            class="h-10 object-contain grayscale hover:grayscale-0 transition" alt="bKash">
-                        <span class="text-[10px] font-bold text-gray-400">বিকাশ</span>
-                    </button>
-                    <button
-                        class="border-2 border-gray-100 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-emerald-500 transition">
-                        <img src="/static/assets/nagad-logo.png"
-                            class="h-10 object-contain grayscale hover:grayscale-0 transition" alt="Nagad">
-                        <span class="text-[10px] font-bold text-gray-400">নগদ</span>
-                    </button>
+
+                <!-- Method Selection -->
+                <div class="space-y-2.5">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1 text-center font-mono">
+                        Select Payment Method</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" id="btn-bkash" onclick="selectPaymentMethod('bkash')"
+                            class="payment-method-btn border-2 border-emerald-500 bg-emerald-50 ring-2 ring-emerald-100 rounded-2xl py-4 flex flex-col items-center justify-center transition shadow-sm">
+                            <span class="text-xs font-black uppercase text-emerald-900">bKash</span>
+                        </button>
+                        <button type="button" id="btn-nagad" onclick="selectPaymentMethod('nagad')"
+                            class="payment-method-btn border-2 border-gray-100 rounded-2xl py-4 flex flex-col items-center justify-center transition group">
+                            <span
+                                class="text-xs font-black uppercase text-gray-400 group-hover:text-emerald-700">Nagad</span>
+                        </button>
+                        <button type="button" id="btn-upay" onclick="selectPaymentMethod('upay')"
+                            class="payment-method-btn border-2 border-gray-100 rounded-2xl py-4 flex flex-col items-center justify-center transition group">
+                            <span
+                                class="text-xs font-black uppercase text-gray-400 group-hover:text-emerald-700">Upay</span>
+                        </button>
+                    </div>
+                </div>
+
+                <input type="hidden" id="paymentMethod" value="bkash">
+
+                <!-- Instructions -->
+                <div class="bg-emerald-50/50 rounded-2xl p-3.5 border border-emerald-100/50">
+                    <p class="text-[11px] text-emerald-800 font-medium leading-relaxed mb-3">
+                        শেষ ২ ডিজিট দিন এবং নিচের নাম্বারে ৳৪৯৯ <br>
+                        <span class="font-bold underline">Send Money</span> করুন।
+                    </p>
+                    <div
+                        class="bg-white/90 p-2.5 rounded-xl border border-emerald-100 flex items-center justify-between">
+                        <span class="font-mono font-bold text-emerald-900 tracking-wider">01884477720</span>
+                        <button onclick="copyNumber()"
+                            class="text-emerald-600 hover:text-emerald-700 p-1.5 hover:bg-emerald-50 rounded-lg transition">
+                            <i data-lucide="copy" class="w-4 h-4" id="copyIcon"></i>
+                            <i data-lucide="check" class="w-4 h-4 hidden" id="checkIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Last Digits Input -->
+                <div class="space-y-2">
+                    <input type="text" id="paymentDigits" maxlength="2" placeholder="শেষ ২ ডিজিট টাইপ করুন"
+                        class="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 focus:border-emerald-500 focus:outline-none text-center text-lg font-bold placeholder:text-gray-300 placeholder:font-normal">
+                </div>
+
+                <!-- Actions -->
+                <button onclick="submitBooking()" id="finalSubmitBtn"
+                    class="btn-primary w-full text-white py-4.5 rounded-2xl font-bold text-lg shadow-xl shadow-emerald-100 active:scale-95 transition-all">
+                    বুকিং সম্পন্ন করুন
+                </button>
+
+                <!-- Trust Footer -->
+                <div class="flex items-center justify-center gap-2 pt-2 border-t border-gray-50/50">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                    <span class="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Secure & Verified</span>
                 </div>
             </div>
         </div>
@@ -494,7 +551,7 @@
     <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-1 flex justify-center">
         <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs font-bold text-gray-700">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন — শুভকামনা!</span>
+            <span class="text-xs font-bold text-gray-700">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন। — শুভকামনা!</span>
             <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
         </div>
     </div>
@@ -567,7 +624,8 @@
                         style="background-image: radial-gradient(#10B981 1px, transparent 1px); background-size: 40px 40px;">
                     </div>
 
-                    <svg class="absolute inset-0 w-full h-full" id="connection-svg">
+                    <svg class="absolute inset-0 w-full h-full" id="connection-svg" viewBox="0 0 100 100"
+                        preserveAspectRatio="none">
                         <defs>
                             <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" style="stop-color:#105745;stop-opacity:1" />
@@ -575,12 +633,12 @@
                                 <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
                             </linearGradient>
                         </defs>
-                        <path id="path-1" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
-                            stroke-dasharray="1000" stroke-dashoffset="1000" class="path-line" />
-                        <path id="path-2" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
-                            stroke-dasharray="1000" stroke-dashoffset="1000" class="path-line" />
-                        <path id="path-3" d="" fill="none" stroke="url(#pathGradient)" stroke-width="3"
-                            stroke-dasharray="1000" stroke-dashoffset="1000" class="path-line" />
+                        <path id="path-1" d="" fill="none" stroke="url(#pathGradient)" stroke-width="0.5"
+                            stroke-dasharray="200" stroke-dashoffset="200" class="path-line" />
+                        <path id="path-2" d="" fill="none" stroke="url(#pathGradient)" stroke-width="0.5"
+                            stroke-dasharray="200" stroke-dashoffset="200" class="path-line" />
+                        <path id="path-3" d="" fill="none" stroke="url(#pathGradient)" stroke-width="0.5"
+                            stroke-dasharray="200" stroke-dashoffset="200" class="path-line" />
                     </svg>
 
                     <div id="node-1"
@@ -1569,18 +1627,22 @@
         function selectPaymentMethod(method) {
             document.getElementById('paymentMethod').value = method;
             document.querySelectorAll('.payment-method-btn').forEach(btn => {
-                btn.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-100');
+                btn.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-100', 'bg-emerald-50');
                 btn.classList.add('border-gray-100');
+                btn.querySelector('span').classList.remove('text-emerald-900');
+                btn.querySelector('span').classList.add('text-gray-400');
             });
             const activeBtn = document.getElementById(`btn-${method}`);
             activeBtn.classList.remove('border-gray-100');
-            activeBtn.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-100');
+            activeBtn.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-100', 'bg-emerald-50');
+            activeBtn.querySelector('span').classList.remove('text-gray-400');
+            activeBtn.querySelector('span').classList.add('text-emerald-900');
         }
 
         async function submitBooking() {
             const lastDigits = document.getElementById('paymentDigits').value.trim();
             if (lastDigits.length !== 2) {
-                alert('অনুগ্রহ করে আপনার নম্বরের শেষ ২ ডিজিট প্রদান করুন।');
+                alert('শেষ ২ ডিজিট দিয়ে পরে পেমেন্ট করুন।');
                 return;
             }
 
@@ -1738,7 +1800,7 @@
                 if (data.booking_status === 'confirmed' && !data.assigned_venue) {
                     nextAction = "আমরা আপনার জন্য উপযুক্ত লোকেশন এবং বন্ধু খুঁজছি। মিটআপের ১ দিন আগে সব আপডেট পেয়ে যাবেন।";
                 } else if (data.booking_status === 'confirmed' && data.assigned_venue) {
-                    nextAction = "লোকেশন নির্ধারিত হচ্ছে। নির্দিষ্ট সময়ে নির্ধারিত স্থানে উপস্থিত থাকার অনুরোধ করা হলো। প্রয়োজনে চ্যাট অপশন ব্যবহার করুন।";
+                    nextAction = "লোকেশন নির্ধারিত হচ্ছে। নির্দিষ্ট সময়ে নির্ধারিত স্থানে উপস্থিত থাকার অনুরোধ করা হলো।";
                 } else if (data.booking_status === 'completed') {
                     nextAction = "আপনার বন্ধুকে খুঁজে পাওয়া গিয়েছে । আপনার বন্ধুদের রেটিং দিতে ভুলবেন না। শীঘ্রই দেখা হবে!";
                 }
@@ -1997,7 +2059,7 @@
                 venue.style.opacity = '0';
                 venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
                 nodes.forEach(n => { n.style.opacity = '0'; n.style.transform = 'scale(1)'; });
-                paths.forEach(p => p.style.strokeDashoffset = '1000');
+                paths.forEach(p => p.style.strokeDashoffset = '200');
             };
 
             const animate = () => {
@@ -2006,9 +2068,9 @@
                 venueIndex = (venueIndex + 1) % venueNames.length;
 
                 const starts = [
-                    { l: '10%', t: '20%', d: 'M 10% 20% Q 20% 50% 50% 50%' },
-                    { l: '85%', t: '15%', d: 'M 85% 15% Q 70% 30% 50% 50%' },
-                    { l: '70%', t: '85%', d: 'M 70% 85% Q 60% 70% 50% 50%' }
+                    { l: '10%', t: '20%', d: 'M 10 20 Q 20 50 50 50' },
+                    { l: '85%', t: '15%', d: 'M 85 15 Q 70 30 50 50' },
+                    { l: '70%', t: '85%', d: 'M 70 85 Q 60 70 50 50' }
                 ];
                 starts.forEach((pos, i) => {
                     nodes[i].style.left = pos.l; nodes[i].style.top = pos.t;
