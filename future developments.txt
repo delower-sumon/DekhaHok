@@ -25,13 +25,14 @@ Going beyond:
 (DONE)* find a way to curate the English autotranslation for the international users, the translation should be more natural and logical and human-like 
 
 
-a) add another line in ম্যাচিং ও ভেন্যু 
-b) selactable cards of group & place color when clicked or selected redesign 
-
-c) logo redesign : redesign the message icon used inside the logo into a circular shape, use good color that fits best
-    reduce the size of the svg logo in navbar and footer smaller , its too big now.
+(DONE)* a) add another line in ম্যাচিং ও ভেন্যু 
+(DONE)* b) selactable cards of group & place color when clicked or selected redesign 
 
 
+(DONE)* reduce the empty white space between "৩২০৮ জন ঢাকার মানুষ আমাদের ..." ও Now in Dhaka City a little
+(DONE)* improve booking status modal texts and elements orientation for mobile only
+(DONE)* REPLACE VERIFIED TEXT'S logo icon used  IN STEP 3 
+(DONE)* reduce the unused empty space between © 2024 DekhaHok. All rights reserved. Made with  in Dhaka. Privacy Policy Terms of Service line elements and ধন্যবাদ আমাদের সাথে থাকার জন্য!
 
 Even Beyon: 
 * Expand into Chittagong and other major cities in Bangladesh

@@ -6,17 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DekhaHok — Admin</title>
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23ea580c'/><stop offset='1' stop-color='%23c2410c'/></linearGradient></defs><rect width='24' height='24' rx='5' fill='url(%23g)'/><path d='M19.5 11.5c0 1.3-.3 2.5-.9 3.5l1.4 4-4-1.4c-1 .6-2.2.9-3.5.9-4.1 0-7.5-3.4-7.5-7.5S8.4 4 12.5 4s7.5 3.4 7.5 7.5z' fill='%23fff'/></svg>">
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23059669'/><stop offset='1' stop-color='%23064e3b'/></linearGradient></defs><rect width='24' height='24' rx='5' fill='url(%23g)'/><path d='M19.5 11.5c0 1.3-.3 2.5-.9 3.5l1.4 4-4-1.4c-1 .6-2.2.9-3.5.9-4.1 0-7.5-3.4-7.5-7.5S8.4 4 12.5 4s7.5 3.4 7.5 7.5z' fill='%23fff'/></svg>">
   <script src="https://cdn.tailwindcss.com/3.4.1"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #fafafa;
+      background: #F9FBFA;
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, #ea580c 0%, #c2410c 50%, #9a3412 100%);
+      background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #059669 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -24,40 +24,48 @@
     }
 
     .status-processing {
-      background: #fef3c7;
-      color: #92400e;
+      background: #fefce8;
+      color: #854d0e;
+      border: 1px solid #fef08a;
     }
 
     .status-confirmed {
-      background: #d1fae5;
+      background: #ecfdf5;
       color: #065f46;
+      border: 1px solid #d1fae5;
     }
 
     .status-unsuccessful {
-      background: #fee2e2;
+      background: #fef2f2;
       color: #991b1b;
+      border: 1px solid #fee2e2;
     }
 
     .status-completed {
-      background: #dbeafe;
+      background: #f0fdfa;
       color: #1e40af;
+      border: 1px solid #ccfbf1;
     }
 
     .status-paid {
-      background: #d1fae5;
+      background: #ecfdf5;
       color: #065f46;
+      border: 1px solid #d1fae5;
     }
 
     .status-unpaid {
-      background: #fee2e2;
-      color: #991b1b;
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #ffedd5;
     }
 
     .badge {
-      padding: 2px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
     }
 
     #toast {
@@ -82,19 +90,19 @@
 <body class="text-gray-800">
 
   <!-- ── Login Overlay ─────────────────────────────────────────────────── -->
-  <div id="loginOverlay" class="fixed inset-0 bg-orange-50 flex items-center justify-center z-50">
+  <div id="loginOverlay" class="fixed inset-0 bg-emerald-50 flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl p-10 w-full max-w-sm text-center space-y-5">
-      <a href="/admin" class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl mx-auto flex items-center justify-center hover:opacity-90 transition">
-        <i data-lucide="message-circle" class="w-7 h-7 text-white"></i>
+      <a href="/admin" class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl mx-auto flex items-center justify-center hover:opacity-90 transition">
+        <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
       </a>
       <a href="/admin" class="block">
-        <h1 class="text-2xl font-bold text-gray-800">DekhaHok</h1>
+        <h1 class="text-2xl font-bold text-gray-800">DekhaHok <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">Admin</span></h1>
       </a>
       <input id="adminKeyInput" type="password" placeholder="Enter admin key"
-        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-400"
+        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400"
         onkeydown="if(event.key==='Enter') login()">
       <button onclick="login()"
-        class="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition">
+        class="w-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-100">
         Login
       </button>
       <p id="loginError" class="text-red-500 text-sm hidden">Invalid key. Try again.</p>
@@ -132,8 +140,8 @@
     <!-- Mobile Header -->
     <div class="md:hidden sticky top-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between z-40">
       <div class="flex items-center space-x-2">
-        <div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-          <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+        <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
         </div>
         <span class="font-bold text-lg gradient-text">DekhaHok</span>
       </div>
@@ -149,29 +157,29 @@
     <div id="sidebar"
       class="sidebar fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 z-30 md:translate-x-0">
       <a href="/admin" class="hidden md:flex items-center space-x-2 px-2 mb-6 hover:opacity-80 transition">
-        <div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-          <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+        <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
         </div>
         <span class="font-bold text-lg gradient-text">DekhaHok</span>
       </a>
       <button onclick="showSection('dashboard')" data-section="dashboard"
-        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>📊</span><span>Dashboard</span>
       </button>
       <button onclick="showSection('bookings')" data-section="bookings"
-        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>📋</span><span>Bookings</span>
       </button>
       <button onclick="showSection('groups')" data-section="groups"
-        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>👥</span><span>Groups</span>
       </button>
       <button onclick="showSection('locations')" data-section="locations"
-        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>📍</span><span>Areas/Locations</span>
       </button>
       <button onclick="showSection('partners')" data-section="partners"
-        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>🤝</span><span>Partnerships</span>
       </button>
       <div class="flex-1"></div>
@@ -199,13 +207,13 @@
       <section id="section-bookings" class="section hidden space-y-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h1 class="text-2xl font-bold text-gray-800">All Bookings</h1>
-          <button onclick="loadBookings()" class="text-sm text-orange-600 hover:underline self-start">↻ Refresh</button>
+          <button onclick="loadBookings()" class="text-sm text-emerald-700 hover:underline self-start">↻ Refresh</button>
         </div>
 
         <!-- Filters -->
         <div class="flex flex-wrap gap-3 bg-white p-4 rounded-2xl border border-gray-100">
           <select id="filterStatus" onchange="loadBookings()"
-            class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400">
+            class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
             <option value="">All Statuses</option>
             <option value="processing">Processing</option>
             <option value="confirmed">Confirmed</option>
@@ -213,13 +221,13 @@
             <option value="unsuccessful">Unsuccessful</option>
           </select>
           <select id="filterPayment" onchange="loadBookings()"
-            class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400">
+            class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
             <option value="">All Payments</option>
             <option value="unpaid">Unpaid</option>
             <option value="paid">Paid</option>
           </select>
           <select id="filterGroupSize" onchange="loadBookings()"
-            class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400">
+            class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
             <option value="">All Sizes</option>
             <option value="2">2-person</option>
             <option value="5">5-person</option>
@@ -236,7 +244,7 @@
         <div class="flex items-center justify-between">
           <h1 class="text-2xl font-bold text-gray-800">Meetup Groups</h1>
           <button onclick="openCreateGroup()"
-            class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
+            class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
             + Create Group
           </button>
         </div>
@@ -249,9 +257,9 @@
           <h1 class="text-2xl font-bold text-gray-800">Manage areas</h1>
           <div class="flex gap-2">
             <input id="newLocName" type="text" placeholder="New area name..."
-              class="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+              class="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
             <button onclick="addLocation()"
-              class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
+              class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
               + Add
             </button>
           </div>
@@ -305,7 +313,7 @@
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-medium text-gray-500 mb-1">Venue (from Meeting Points)</label>
-          <select id="g_venue" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          <select id="g_venue" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
             <option value="">Select a venue...</option>
           </select>
         </div>
@@ -313,18 +321,18 @@
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Date</label>
             <input id="g_date" type="date"
-              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           </div>
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
             <input id="g_time" type="time"
-              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           </div>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-500 mb-1">Group Size</label>
           <select id="g_size"
-            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
             <option value="2">2-person</option>
             <option value="5">5-person</option>
           </select>
@@ -336,7 +344,7 @@
           Cancel
         </button>
         <button onclick="createGroup()"
-          class="flex-1 bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
           Create
         </button>
       </div>
@@ -350,22 +358,22 @@
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-medium text-gray-500 mb-1">Venue (from Meeting Points)</label>
-          <select id="eg_venue" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          <select id="eg_venue" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Date</label>
-            <input id="eg_date" type="date" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+            <input id="eg_date" type="date" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           </div>
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
-            <input id="eg_time" type="time" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+            <input id="eg_time" type="time" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           </div>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-          <select id="eg_status" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          <select id="eg_status" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
             <option value="open">Open</option>
             <option value="closed">Closed</option>
             <option value="completed">Completed</option>
@@ -374,7 +382,7 @@
       </div>
       <div class="flex gap-3 pt-2">
         <button onclick="closeEditGroupModal()" class="flex-1 border border-gray-200 text-gray-600 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition">Cancel</button>
-        <button onclick="saveGroupEdit()" class="flex-1 bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">Save Changes</button>
+        <button onclick="saveGroupEdit()" class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">Save Changes</button>
       </div>
     </div>
   </div>
@@ -383,7 +391,7 @@
   <div id="assignModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-40">
     <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl space-y-4 max-h-[80vh] flex flex-col">
       <h2 class="text-xl font-bold text-gray-800">Assign Members to <span id="assignGroupCode"
-          class="text-orange-600"></span></h2>
+          class="text-emerald-700"></span></h2>
       <p class="text-sm text-gray-500">Select unassigned bookings with matching group size.</p>
       <div id="assignableList" class="overflow-y-auto flex-1 space-y-2 border border-gray-100 rounded-xl p-3"></div>
       <div class="flex gap-3 pt-2">
@@ -392,7 +400,7 @@
           Cancel
         </button>
         <button onclick="submitAssignment()"
-          class="flex-1 bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
           Assign Selected
         </button>
       </div>
@@ -412,7 +420,7 @@
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">Payment Status</label>
         <select id="edit_payment"
-          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           <option value="unpaid">Unpaid</option>
           <option value="paid">Paid</option>
         </select>
@@ -420,7 +428,7 @@
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">Booking Status</label>
         <select id="edit_status"
-          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400">
+          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
           <option value="processing">Processing</option>
           <option value="confirmed">Confirmed</option>
           <option value="completed">Completed</option>
@@ -430,12 +438,12 @@
       <div id="rejection_container" class="hidden">
         <label class="block text-xs font-medium text-gray-500 mb-1">Rejection Reason (if Unsuccessful)</label>
         <textarea id="edit_rejection" rows="2" placeholder="e.g. Payment mismatch, Underage..."
-          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400 resize-none"></textarea>
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 resize-none bg-gray-50"></textarea>
       </div>
       <div>
         <label class="block text-xs font-medium text-gray-500 mb-1">Admin Notes</label>
         <textarea id="edit_notes" rows="3" placeholder="Internal notes..."
-          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-orange-400 resize-none"></textarea>
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 resize-none bg-gray-50"></textarea>
       </div>
       <div class="flex gap-3 pt-2">
         <button onclick="closeEditModal()"
@@ -443,7 +451,7 @@
           Cancel
         </button>
         <button onclick="saveEdit()"
-          class="flex-1 bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-100">
           Save
         </button>
       </div>
@@ -501,8 +509,8 @@
       document.getElementById(`section-${name}`).classList.remove('hidden');
       document.querySelectorAll('.nav-btn').forEach(b => {
         const active = b.dataset.section === name;
-        b.classList.toggle('bg-orange-50', active);
-        b.classList.toggle('text-orange-600', active);
+        b.classList.toggle('bg-emerald-50', active);
+        b.classList.toggle('text-emerald-700', active);
         b.classList.toggle('text-gray-600', !active);
       });
       if (name === 'dashboard') loadDashboard();
@@ -602,10 +610,10 @@
       const bookings = await bookingsRes.json();
 
       document.getElementById('statsGrid').innerHTML = `
-    ${statCard('Total Bookings', stats.total, 'bg-orange-50 text-orange-700')}
-    ${statCard('Processing', stats.processing, 'bg-yellow-50 text-yellow-700')}
-    ${statCard('Confirmed', stats.confirmed, 'bg-green-50 text-green-700')}
-    ${statCard('Revenue Collected', '৳' + Number(stats.revenue).toLocaleString(), 'bg-blue-50 text-blue-700')}
+    ${statCard('Total Bookings', stats.total, 'bg-emerald-50 text-emerald-800 border-emerald-100')}
+    ${statCard('Processing', stats.processing, 'bg-yellow-50 text-yellow-800 border-yellow-100')}
+    ${statCard('Confirmed', stats.confirmed, 'bg-emerald-100 text-emerald-900 border-emerald-200')}
+    ${statCard('Revenue Collected', '৳' + Number(stats.revenue).toLocaleString(), 'bg-blue-50 text-blue-800 border-blue-100')}
   `;
 
       const recent = bookings.slice(0, 10);
@@ -614,8 +622,8 @@
 
     function statCard(label, value, color) {
       return `
-    <div class="bg-white rounded-2xl border border-gray-100 p-5 ${color}">
-      <p class="text-xs font-medium opacity-70">${label}</p>
+    <div class="bg-white rounded-2xl border p-5 ${color} transition shadow-sm hover:shadow-md">
+      <p class="text-xs font-bold opacity-60 uppercase tracking-wider">${label}</p>
       <p class="text-3xl font-bold mt-1">${value}</p>
     </div>`;
     }
@@ -658,14 +666,14 @@
       <tbody class="divide-y divide-gray-50">
         ${bookings.map(b => `
           <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3 font-mono text-xs font-semibold text-orange-600">${b.tracking_id}</td>
+            <td class="px-4 py-3 font-mono text-xs font-black text-emerald-700">${b.tracking_id}</td>
             <td class="px-4 py-3 font-medium">${b.name}</td>
             <td class="px-4 py-3 text-gray-500">${b.phone}</td>
             <td class="px-4 py-3">${b.group_size}-person</td>
             <td class="px-4 py-3 text-gray-500">${b.preferred_date}</td>
             <td class="px-4 py-3 text-xs">
-              <div class="text-blue-600">🏠 ${b.current_location || '-'}</div>
-              <div class="text-orange-600 mt-0.5">📍 ${b.preferred_location || '-'}</div>
+              <div class="text-emerald-700 font-medium">🏠 ${b.current_location || '-'}</div>
+              <div class="text-emerald-500 mt-0.5 font-bold">📍 ${b.preferred_location || '-'}</div>
             </td>
             <td class="px-4 py-3 text-gray-500">${b.venue_type === 'restaurant' ? '🍽 Restaurant' : '🌳 Public Place'}</td>
             <td class="px-4 py-3">৳${b.fee_amount}</td>
@@ -681,7 +689,7 @@
             </td>
             <td class="px-4 py-3 space-x-2">
               <button onclick="openEditModal(${JSON.stringify(b).replace(/"/g, '&quot;')})"
-                class="text-xs text-orange-600 hover:underline font-medium">Edit</button>
+                class="text-xs text-emerald-700 hover:underline font-bold">Edit</button>
               <button onclick="deleteBooking(${b.id})"
                 class="text-xs text-red-500 hover:underline font-medium">Delete</button>
             </td>
@@ -775,28 +783,28 @@
     <div class="bg-white rounded-2xl border border-gray-100 p-5 md:p-6">
       <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div class="flex-1">
-          <p class="font-mono text-xs text-orange-600 font-semibold">${g.group_code}</p>
-          <h3 class="font-semibold text-gray-800 mt-1 text-lg">${g.venue_name}</h3>
+          <p class="font-mono text-xs text-emerald-700 font-bold uppercase tracking-wider">${g.group_code}</p>
+          <h3 class="font-black text-gray-800 mt-1 text-xl">${g.venue_name}</h3>
           <p class="text-sm text-gray-500 mt-1">📅 ${g.meet_date} &nbsp;⏰ ${g.meet_time} &nbsp;👥 ${g.group_size}-person</p>
           
-          <div class="mt-4 p-4 bg-gray-50 border border-gray-100 rounded-2xl">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1">
-                <i data-lucide="users" class="w-3 h-3"></i> Assigned Members
+          <div class="mt-4 p-5 bg-emerald-50/50 border border-emerald-100/50 rounded-2xl">
+            <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <i data-lucide="users" class="w-3.5 h-3.5"></i> Assigned Members
             </p>
-            <div class="space-y-2">
+            <div class="space-y-3">
                 ${(g.members || []).map(m => `
-                    <div class="flex items-center justify-between text-sm py-1 border-b border-gray-200/50 last:border-0 group">
+                    <div class="flex items-center justify-between text-sm py-2 border-b border-gray-200/40 last:border-0 group">
                         <div>
-                            <span class="font-medium text-gray-800">${m.name}</span>
-                            <span class="text-xs text-gray-400 ml-2">${m.phone}</span>
-                            <span class="text-xs font-mono text-orange-500 ml-2">(${m.tracking_id})</span>
+                            <span class="font-bold text-gray-800">${m.name}</span>
+                            <span class="text-xs text-gray-400 ml-2 font-medium">${m.phone}</span>
+                            <span class="text-xs font-mono text-emerald-600 ml-2">(${m.tracking_id})</span>
                         </div>
                         <button onclick="removeMemberAction(${g.id}, ${m.id})" 
-                                class="hidden group-hover:block text-red-500 text-xs hover:underline font-medium">
+                                class="hidden group-hover:block text-red-500 text-xs hover:underline font-bold">
                             Remove
                         </button>
                     </div>
-                `).join('') || '<p class="text-xs text-gray-300 italic">No members assigned yet.</p>'}
+                `).join('') || '<p class="text-xs text-gray-400 italic">No members assigned yet.</p>'}
             </div>
           </div>
         </div>
@@ -804,9 +812,9 @@
           <span class="text-sm text-gray-400 w-full md:w-auto mb-1 md:mb-0">${g.member_count}/${g.group_size} members</span>
           ${statusBadge(g.status)}
           <button onclick="openEditGroupModal(${JSON.stringify(g).replace(/"/g, '&quot;')})"
-            class="text-sm text-orange-600 hover:orange-700 font-medium px-2">Edit</button>
+            class="text-sm text-emerald-700 hover:text-emerald-800 font-bold px-2">Edit</button>
           <button onclick="openAssignModal(${g.id}, '${g.group_code}', ${g.group_size})"
-            class="bg-orange-50 text-orange-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-100 transition whitespace-nowrap">
+            class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-100 transition whitespace-nowrap">
             Assign Members
           </button>
         </div>
@@ -856,7 +864,7 @@
           <td class="px-6 py-4 font-medium text-gray-900">${p.restaurant_name}</td>
           <td class="px-6 py-4 text-gray-500">${p.contact_number}</td>
           <td class="px-6 py-4">
-            <select onchange="updatePartnerStatus(${p.id}, this.value)" class="text-xs border border-gray-200 rounded px-2 py-1 outline-none bg-white font-medium ${p.status === 'pending' ? 'text-yellow-600' : p.status === 'done' ? 'text-green-600' : 'text-blue-600'}">
+            <select onchange="updatePartnerStatus(${p.id}, this.value)" class="text-xs border border-gray-200 rounded px-2 py-1 outline-none bg-white font-bold ${p.status === 'pending' ? 'text-amber-600' : p.status === 'done' ? 'text-emerald-700' : 'text-emerald-500'}">
               <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
               <option value="contacted" ${p.status === 'contacted' ? 'selected' : ''}>Contacted</option>
               <option value="done" ${p.status === 'done' ? 'selected' : ''}>Done</option>
@@ -985,10 +993,10 @@
 
       list.innerHTML = bookings.map(b => `
     <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer border-b border-gray-50 last:border-0">
-      <input type="checkbox" value="${b.id}" class="assign-check w-4 h-4 accent-orange-500">
+      <input type="checkbox" value="${b.id}" class="assign-check w-4 h-4 accent-emerald-600">
       <div class="flex-1">
         <div class="flex items-center justify-between">
-          <p class="font-medium text-sm">${b.name} <span class="text-xs text-orange-600 font-mono">${b.tracking_id}</span></p>
+          <p class="font-bold text-sm text-gray-800">${b.name} <span class="text-xs text-emerald-700 font-mono font-bold">${b.tracking_id}</span></p>
           <div class="flex gap-1">
             ${paymentBadge(b.payment_status)}
             ${statusBadge(b.booking_status)}
@@ -1050,7 +1058,7 @@
               </div>
               <div class="mt-3 pt-3 border-t border-gray-200/50 space-y-2">
                 <input type="text" id="newPoint-${loc.id}" placeholder="Point/Branch name..." 
-                  class="text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-400 w-full">
+                  class="text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-400 w-full font-medium">
                 <div class="flex gap-2">
                     <input type="text" id="lat-${loc.id}" placeholder="Lat: 23.7xx" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-1/2">
                     <input type="text" id="lng-${loc.id}" placeholder="Lng: 90.3xx" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-1/2">
@@ -1093,9 +1101,9 @@
             <div class="flex flex-col group py-1.5 border-b border-gray-50 last:border-0" id="point-display-${p.id}">
                 <div class="flex items-center justify-between">
                     <div class="flex flex-col">
-                        <span class="font-medium text-gray-800 flex items-center gap-2">
+                        <span class="font-bold text-gray-800 flex items-center gap-2">
                             • ${p.name}
-                            <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${p.point_type === 'restaurant' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-orange-50 text-orange-600 border-orange-100'}">
+                            <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${p.point_type === 'restaurant' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'}">
                                 ${p.point_type === 'restaurant' ? 'Partner Restaurant' : 'Public Place'}
                             </span>
                         </span>

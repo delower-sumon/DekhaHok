@@ -77,6 +77,182 @@
             margin-bottom: 0 !important;
             position: relative;
         }
+
+        /* Improved Booking Tracking UI Styles */
+        .tracking-status-card {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .stepper-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .stepper-line {
+            position: absolute;
+            top: 36px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #f3f4f6;
+            z-index: 0;
+            border-radius: 10px;
+        }
+
+        .stepper-line-active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #10b981;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 25%;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: #9ca3af;
+            transition: all 0.5s ease;
+        }
+
+        .step-item.active .step-icon {
+            border-color: #10b981;
+            background: #ecfdf5;
+            color: #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            transform: scale(1.1);
+        }
+
+        .step-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: #10b981;
+        }
+
+        .status-badge-premium {
+            background: #1F3D2B;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .countdown-pill {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #b45309;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .next-action-card {
+            background: #F9FBFA;
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #10b981;
+        }
+
+        .action-hub-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .safety-checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #4b5563;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .safety-checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Hero Section Typewriter Dots */
+        .dots-typewriter {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+            animation: dots-typing 1.8s steps(4, end) infinite;
+            white-space: nowrap;
+            width: 0;
+            margin-left: 4px;
+            letter-spacing: -2px;
+        }
+
+        @keyframes dots-typing {
+            0% { width: 0; }
+            100% { width: 1.25em; }
+        }
     </style>
 </head>
 
@@ -310,16 +486,16 @@
     </div>
 
     <!-- Premium Trust Banner (Inspired by Fitra Image 5 Top) -->
-    <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-2 flex justify-center">
+    <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-1 flex justify-center">
         <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs font-bold text-gray-700">৩২০৪ জন ঢাকার মানুষ আমাদের উপর ভরসা করছেন — শুভকামনা!</span>
+            <span class="text-xs font-bold text-gray-700">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন — শুভকামনা!</span>
             <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
         </div>
     </div>
 
     <!-- Hero Section with Animation -->
-    <section class="relative flex items-center justify-center pt-4 pb-16 overflow-hidden pattern-bg">
+    <section class="relative flex items-center justify-center pt-0 pb-16 overflow-hidden pattern-bg">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div
@@ -329,9 +505,9 @@
                 style="animation-delay: 1s;"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-6 items-center relative z-10">
             <!-- Left Content -->
-            <div class="text-center lg:text-left space-y-1 mt-1">
+            <div class="text-center lg:text-left space-y-1 mt-0">
                 <div
                     class="inline-flex items-center space-x-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-emerald-200">
                     <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -344,8 +520,8 @@
 
                     <br> <!-- লাইন ব্রেকের জন্য -->
 
-                    <span class="gradient-text inline-block pb-4 leading-normal" data-en="friend tomorrow..">হোক
-                        বন্ধুত্ব..</span>
+                    <span class="gradient-text inline-block pb-4 leading-normal" data-en="friend tomorrow">হোক
+                        বন্ধুত্ব<span class="dots-typewriter">...</span></span>
                 </h1>
 
                 <p class="text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-loose mt-0">
@@ -775,8 +951,7 @@
                     </div>
 
                     <!-- Simplified Container for Results -->
-                    <div id="trackingResult"
-                        class="hidden bg-gray-50 rounded-[2rem] shadow-inner border border-gray-100 p-8 text-left space-y-4">
+                    <div id="trackingResult" class="hidden text-left space-y-4">
                     </div>
                 </div>
             </div>
@@ -785,7 +960,7 @@
 
     <!-- Map Section (Moved & Styled) -->
     <section class="py-12 bg-white overflow-hidden relative">
-        <div class="max-w-7xl mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-2 md:px-4">
             <div class="text-center max-w-2xl mx-auto mb-12 space-y-8 scroll-reveal">
                 <div class="space-y-4">
                     <h2 class="text-4xl font-black text-gray-900 leading-tight">পছন্দের জায়গাসমূহ <span
@@ -811,9 +986,8 @@
                 </div>
             </div>
 
-            <div
-                class="glass-card rounded-[3rem] shadow-2xl p-2 md:p-3 scroll-reveal overflow-hidden border-8 border-gray-50 bg-gray-100 relative">
-                <div id="map" class="w-full h-[500px] md:h-[700px] rounded-[2.5rem] z-10"></div>
+            <div class="glass-card rounded-[3rem] shadow-2xl scroll-reveal overflow-hidden relative">
+                <div id="map" class="w-full h-[500px] md:h-[700px] z-10 rounded-[3rem]"></div>
 
                 <!-- Map Legend -->
                 <div
@@ -848,8 +1022,8 @@
                 <!-- Step 1 -->
                 <div class="scroll-reveal">
                     <div class="premium-card p-8 h-full bg-white border border-gray-100 flex flex-col">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০১</span>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="badge-pill !mb-0 bg-emerald-50 text-emerald-700 font-bold">ধাপ ০১</span>
                             <div class="flex -space-x-2">
                                 <div
                                     class="w-6 h-6 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-[8px] font-bold text-emerald-700">
@@ -880,8 +1054,8 @@
                 <!-- Step 2 -->
                 <div class="scroll-reveal" style="transition-delay: 0.1s;">
                     <div class="premium-card p-8 h-full bg-white border border-gray-100 flex flex-col">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০২</span>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="badge-pill !mb-0 bg-emerald-50 text-emerald-700 font-bold">ধাপ ০২</span>
                             <div class="flex items-center gap-1">
                                 <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
                                 <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Matching
@@ -911,8 +1085,8 @@
                 <!-- Step 3 -->
                 <div class="scroll-reveal" style="transition-delay: 0.2s;">
                     <div class="premium-card p-8 h-full bg-white border border-gray-100 flex flex-col">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="badge-pill bg-emerald-50 text-emerald-700 font-bold">ধাপ ০৩</span>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="badge-pill !mb-0 bg-emerald-50 text-emerald-700 font-bold">ধাপ ০৩</span>
                             <div class="flex items-center gap-1">
                                 <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-500"></i>
                                 <span
@@ -945,8 +1119,8 @@
                     <div
                         class="premium-card p-8 h-full bg-gradient-to-br from-[#2D5A43] to-[#164230] text-white border-none shadow-xl shadow-emerald-900/20 relative overflow-hidden">
                         <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
-                        <div class="flex justify-between items-start mb-6">
-                            <span class="badge-pill bg-white/10 text-white font-bold border border-white/20">ধাপ
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="badge-pill !mb-0 bg-white/10 text-white font-bold border border-white/20">ধাপ
                                 ০৪</span>
                             <div class="px-2 py-1 bg-white/10 rounded-lg backdrop-blur">
                                 <span class="text-[10px] font-black uppercase tracking-widest text-emerald-300">New
@@ -1147,7 +1321,7 @@
                 </div>
             </div>
 
-            <!-- Final Gracious Conclusion Banner (Premium Wide Style) -->
+            <!-- Final Gracious Conclusion Banner (Premium Wide Style) 
             <div class="mt-10 flex justify-center w-full px-4 sm:px-6">
                 <div
                     class="w-full max-w-4xl bg-white/5 backdrop-blur-xl px-1 sm:px-8 py-5 rounded-[40px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left transition-all hover:bg-white/[0.08] hover:border-emerald-500/20 group">
@@ -1161,13 +1335,7 @@
                         </div>
                         <div class="h-10 w-[1px] bg-white/10 hidden sm:block"></div>
                     </div>
-                    <div class="space-y-1">
-                        <h4 class="text-white font-bold tracking-tight">ধন্যবাদ আমাদের সাথে থাকার জন্য!</h4>
-                        <p class="text-sm text-gray-500 font-medium">আপনার প্রতিটি সুন্দর মুহূর্ত হোক নিরাপদ ও
-                            আনন্দময়। <span
-                                class="text-emerald-500 ml-1 opacity-70 group-hover:opacity-100 transition-opacity">♥</span>
-                        </p>
-                    </div>
+                    
                     <div
                         class="hidden lg:flex items-center gap-2 ml-4 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                         <span class="relative flex h-2 w-2">
@@ -1179,7 +1347,7 @@
                             Dhaka</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </footer>
 
@@ -1501,8 +1669,8 @@
 
         /**
          * Tracking System: Fetches real-time status of a booking using Tracking ID.
-         * Displays status, assigned group members, and enables group chat
-         * once the meetup is confirmed.
+         * Implements a "Live Tracking Card" with progressive stepper, safety badges,
+         * and actionable next steps optimized for all viewports.
          */
         async function checkBookingStatus() {
             const id = document.getElementById('trackingInput').value.trim();
@@ -1510,125 +1678,219 @@
 
             const resultEl = document.getElementById('trackingResult');
             resultEl.classList.remove('hidden');
-            resultEl.innerHTML = '<div class="flex justify-center py-6"><div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div></div>';
+            resultEl.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-12">
+                    <div class="w-10 h-10 border-4 border-emerald-100 border-t-emerald-500 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-emerald-800 font-bold animate-pulse">আপনার বুকিং ডাটা লোড হচ্ছে...</p>
+                </div>`;
 
             try {
                 const res = await fetch(`/api/bookings/track/${id}`);
                 const data = await res.json();
 
                 if (!res.ok) {
-                    resultEl.innerHTML = `<p class="text-red-500 text-sm text-center py-2">${data.detail || 'ট্র্যাকিং আইডি পাওয়া যায়নি।'}</p>`;
+                    resultEl.innerHTML = `
+                        <div class="py-10 text-center">
+                            <i data-lucide="alert-circle" class="w-12 h-12 text-red-400 mx-auto mb-4"></i>
+                            <h4 class="font-bold text-gray-900 mb-1">বুকিং পাওয়া যায়নি</h4>
+                            <p class="text-gray-500 text-sm px-6">${data.detail || 'দুঃখিত, আপনার ট্র্যাকিং আইডি অথবা মোবাইল নম্বরটি সঠিক নয়।'}</p>
+                        </div>`;
+                    lucide.createIcons();
                     return;
                 }
 
-                const statusColor = {
-                    processing: 'bg-emerald-50 text-emerald-700',
-                    confirmed: 'bg-green-100 text-green-800',
-                    completed: 'bg-green-100 text-green-800',
-                }[data.booking_status] || 'bg-gray-100 text-gray-700';
+                // Determine Stepper Progress
+                const steps = ['requested', 'confirmed', 'ready', 'completed'];
+                let currentStepIndex = 0;
+                if (data.booking_status === 'processing') currentStepIndex = 0;
+                else if (data.booking_status === 'confirmed') currentStepIndex = 1;
+                else if (data.booking_status === 'ready' || (data.booking_status === 'confirmed' && data.assigned_venue)) currentStepIndex = 2;
+                else if (data.booking_status === 'completed') currentStepIndex = 3;
 
-                const statusBn = {
-                    processing: 'প্রক্রিয়াধীন',
-                    confirmed: 'নিশ্চিত ✅',
-                    completed: 'সম্পন্ন',
-                }[data.booking_status] || data.booking_status;
+                const progressWidth = (currentStepIndex / (steps.length - 1)) * 80 + 10;
 
-                const confirmedBlock = (data.booking_status === 'confirmed' || data.booking_status === 'completed') && data.assigned_venue
-                    ? `<div class="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
-                         <p class="text-xs font-semibold text-green-700 mb-2">✅ আপনার মিটআপ নিশ্চিত হয়েছে!</p>
-                         <p class="text-sm text-gray-700 mb-1">📍 <strong>${data.assigned_venue}</strong></p>
-                         <p class="text-sm text-gray-700">📅 ${data.meet_date} &nbsp;⏰ ${data.meet_time}</p>
-                       </div>`
-                    : data.booking_status === 'unsuccessful'
-                        ? `<div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center"> 
-                             <p class="text-xs font-bold text-emerald-800 mb-1">❌ বুকিং সফল হয়নি</p>
-                             <p class="text-xs text-emerald-700 italic">${data.rejection_reason || 'দুঃখিত, আপনার বুকিং এই মুহূর্তে গ্রহণ করা সম্ভব হয়নি।'}</p>
-                           </div>`
-                        : `<p class="text-sm text-gray-400 mt-3 text-center">আমরা আপনার জন্য গ্রুপ তৈরি করছি। শীঘ্রই জানানো হবে।</p>`;
+                // Visual Themes
+                const statusTheme = {
+                    processing: { color: 'text-amber-600', bg: 'bg-amber-50', icon: 'clock' },
+                    confirmed: { color: 'text-emerald-700', bg: 'bg-emerald-50', icon: 'check-circle' },
+                    completed: { color: 'text-blue-700', bg: 'bg-blue-50', icon: 'award' },
+                    unsuccessful: { color: 'text-red-700', bg: 'bg-red-50', icon: 'x-circle' }
+                }[data.booking_status] || { color: 'text-gray-600', bg: 'bg-gray-50', icon: 'info' };
 
-                let membersHtml = '';
-                if (data.group_members && data.group_members.length > 0) {
-                    const groupId = data.assigned_group_id || 0;
-                    const canChat = data.booking_status !== 'completed';
-
-                    membersHtml = `
-                        <div class="mt-6 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">আপনার আড্ডার সাথীরা</p>
-                                ${canChat ? `
-                                        <button onclick="openChat(${groupId}, '${id}')" 
-                                             class="flex items-center gap-1.5 py-1.5 px-3 bg-emerald-500 text-white rounded-full text-xs font-bold hover:bg-emerald-600 transition shadow-sm">
-                                        <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
-                                        গ্রুপ চ্যাট
-                                    </button>
-                                ` : ''}
-                            </div>
-                            <div class="grid gap-3">
-                                ${data.group_members.map(m => `
-                                    <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <div>
-                                                <p class="font-bold text-gray-800">${m.name}</p>
-                                                <p class="text-[10px] text-gray-400">বয়স: ${m.age || '-'} · রেটিং: ${m.rating > 0 ? '⭐ ' + m.rating : 'নতুন'}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        ${data.booking_status === 'completed' ? `
-                                            <div class="mt-3 pt-3 border-t border-gray-50">
-                                                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">রেটিং দিন</p>
-                                                <div class="flex items-center gap-2" id="rating-container-${m.id}">
-                                                    ${[1, 2, 3, 4, 5].map(star => `
-                                                        <button onclick="submitRating('${id}', ${data.assigned_group_id || 0}, ${m.id}, ${star})" 
-                                                                 class="text-gray-300 hover:text-emerald-600 transition transform hover:scale-120">
-                                                            <i data-lucide="star" class="w-5 h-5"></i>
-                                                        </button>
-                                                    `).join('')}
-                                                </div>
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
+                // "What's Next" Messages
+                let nextAction = "আমাদের টিম আপনার বুকিংটি রিভিউ করছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করবো।";
+                if (data.booking_status === 'confirmed' && !data.assigned_venue) {
+                    nextAction = "অপেক্ষা করুন! আমরা আপনার জন্য উপযুক্ত লোকেশন এবং আড্ডার সাথী খুঁজছি। মিটআপের ১ ঘণ্টা আগে সব আপডেট পাবেন।";
+                } else if (data.booking_status === 'confirmed' && data.assigned_venue) {
+                    nextAction = "আপনার লোকেশন নির্ধারিত হয়েছে। নির্দিষ্ট সময়ে নির্ধারিত স্থানে উপস্থিত থাকার অনুরোধ করা হলো। প্রয়োজনে চ্যাট অপশন ব্যবহার করুন।";
+                } else if (data.booking_status === 'completed') {
+                    nextAction = "আপনার আড্ডাটি সফলভাবে সম্পন্ন হয়েছে। অভিজ্ঞতার নিরিখে সাথীদের রেটিং দিতে ভুলবেন না। শীঘ্রই দেখা হবে!";
                 }
 
-                const timeLabel = data.preferred_time === '17:00:00' ? '5:00 PM' : '7:00 PM';
-                const venueBn = data.venue_type === 'restaurant' ? '🍽 রেস্তোরাঁ' : '🌳 পাবলিক প্লেস';
+                // Countdown Component
+                let countdownHtml = '';
+                if (data.meet_date && data.meet_time && data.booking_status === 'confirmed') {
+                    const meetingDate = new Date(`${data.meet_date}T${data.meet_time}`);
+                    const diffMs = meetingDate - new Date();
+                    const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+
+                    if (diffHrs > 0 && diffHrs < 48) {
+                        countdownHtml = `
+                            <div class="countdown-pill mt-4 animate-in zoom-in duration-500">
+                                <i data-lucide="timer" class="w-4 h-4"></i>
+                                <span>শুরু হতে বাকি: ${diffHrs} ঘণ্টা</span>
+                            </div>`;
+                    }
+                }
 
                 resultEl.innerHTML = `
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                        <div class="w-full sm:w-auto">
-                            <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-1">বুকিং আইডি ও নাম</p>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">${data.tracking_id}</span>
-                                <h4 class="font-bold text-gray-900">${data.name}</h4>
+                    <div class="tracking-status-card py-6 md:py-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 ${statusTheme.bg} rounded-2xl flex items-center justify-center shadow-sm">
+                                    <i data-lucide="${statusTheme.icon}" class="w-7 h-7 ${statusTheme.color}"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-black text-gray-900 leading-none tracking-tight">Status Tracker</h4>
+                                    <p class="text-xs text-gray-400 font-mono mt-1.5 font-bold">${data.tracking_id}</p>
+                                </div>
+                            </div>
+                            <div class="status-badge-premium border border-white/10 shadow-lg shadow-emerald-900/5 transition-transform hover:scale-105 active:scale-95 cursor-default">
+                                <div class="live-dot animate-pulse"></div>
+                                SECURE VERIFIED
                             </div>
                         </div>
-                        <span class="w-full sm:w-auto text-center px-4 py-2 rounded-xl text-xs font-bold shadow-sm ${statusColor}">${statusBn}</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-                        <div class="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col justify-center">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">গ্রুপ সাইজ</p>
-                            <p class="font-black text-gray-800 text-lg">${data.group_size} জন</p>
+
+                        <div class="stepper-container">
+                            <div class="stepper-line">
+                                <div class="stepper-line-active" style="width: ${progressWidth}%"></div>
+                            </div>
+                            <div class="step-item ${currentStepIndex >= 0 ? 'active' : ''}">
+                                <div class="step-icon"><i data-lucide="clipboard-list" class="w-5 h-5"></i></div>
+                                <span class="step-label">Requested</span>
+                            </div>
+                            <div class="step-item ${currentStepIndex >= 1 ? 'active' : ''}">
+                                <div class="step-icon"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+                                <span class="step-label">Confirmed</span>
+                            </div>
+                            <div class="step-item ${currentStepIndex >= 2 ? 'active' : ''}">
+                                <div class="step-icon"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+                                <span class="step-label">Place</span>
+                            </div>
+                            <div class="step-item ${currentStepIndex >= 3 ? 'active' : ''}">
+                                <div class="step-icon"><i data-lucide="users" class="w-5 h-5"></i></div>
+                                <span class="step-label">Met Up</span>
+                            </div>
                         </div>
-                        <div class="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col justify-center">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">তারিখ ও সময়</p>
-                            <p class="font-black text-gray-800 text-sm">${data.preferred_date}</p>
-                            <p class="text-xs font-bold text-emerald-600 mt-0.5">${timeLabel}</p>
+
+                        <div class="text-center sm:text-left mt-4 mb-4 pb-4 border-b border-gray-100">
+                            <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
+                                ${data.name}, আপনার বুকিং এখন <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'নিশ্চিত' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : 'প্রক্রিয়াধীন')}</span>
+                            </h2>
+                            ${countdownHtml}
                         </div>
-                        <div class="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col justify-center">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">পেমেন্ট অবস্থা</p>
-                            <p class="font-black ${data.payment_status === 'paid' ? 'text-green-600' : 'text-rose-500'} text-sm">${data.payment_status === 'paid' ? 'পরিশোধিত' : 'বাকি'}</p>
+
+                        <div class="next-action-card border-l-4 border-emerald-500">
+                            <span class="block text-[10px] font-black text-emerald-800 uppercase tracking-widest mb-3">আমরা এখন যা করছি:</span>
+                            <p class="text-gray-700 font-bold leading-relaxed text-sm">${nextAction}</p>
                         </div>
-                    </div>
-                    <div class="mt-2 text-xs text-gray-400 text-center">${venueBn}</div>
-                    ${confirmedBlock}
-                    ${membersHtml}
-                `;
+
+                        ${data.assigned_venue ? `
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-4">
+                                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 group hover:border-emerald-200 transition-colors">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">মিটআপ লোকেশন</p>
+                                    <p class="text-gray-900 font-bold flex items-center gap-2">
+                                        <i data-lucide="navigation-2" class="w-4 h-4 text-emerald-600"></i>
+                                        ${data.assigned_venue}
+                                    </p>
+                                </div>
+                                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 group hover:border-emerald-200 transition-colors">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">নির্ধারিত সময়</p>
+                                    <p class="text-gray-900 font-bold flex items-center gap-2">
+                                        <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-600"></i>
+                                        ${data.meet_date} @ ${data.meet_time === '17:00:00' ? '5:00 PM' : '7:00 PM'}
+                                    </p>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                            ${data.assigned_venue && data.booking_status !== 'completed' ? `
+                                <button onclick="openChat(${data.assigned_group_id}, '${id}')" 
+                                        class="action-hub-btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl shadow-emerald-200 active:scale-95">
+                                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                                    গ্রুপ চ্যাটে যোগ দিন
+                                </button>
+                            ` : ''}
+                            <a href="https://wa.me/8801884477720" target="_blank"
+                               class="action-hub-btn bg-white border-2 border-gray-100 text-gray-800 hover:bg-gray-50 active:scale-95">
+                                <i data-lucide="phone-call" class="w-5 h-5 text-emerald-600"></i>
+                                ইমার্জেন্সি সাপোর্ট
+                            </a>
+                        </div>
+
+                        ${data.group_members && data.group_members.length > 0 ? `
+                            <div class="space-y-6 pt-10 border-t border-gray-100">
+                                <h5 class="text-xs font-black text-gray-400 uppercase tracking-widest text-center sm:text-left">আপনার আড্ডার সাথীরা</h5>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    ${data.group_members.map(m => `
+                                        <div class="p-5 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-md transition">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <p class="font-bold text-gray-900">${m.name}</p>
+                                                    <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase">বয়স: ${m.age || 'N/A'} · রেটিং: ${m.rating > 0 ? '⭐ ' + m.rating : 'New Partner'}</p>
+                                                </div>
+                                            </div>
+                                            ${data.booking_status === 'completed' ? `
+                                                <div class="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
+                                                    <span class="text-[10px] font-black text-gray-400 uppercase">সাথীকে রেটিং দিন</span>
+                                                    <div class="flex items-center gap-1.5">
+                                                        ${[1, 2, 3, 4, 5].map(star => `
+                                                            <button onclick="submitRating('${id}', ${data.assigned_group_id || 0}, ${m.id}, ${star})" 
+                                                                     class="text-gray-200 hover:text-emerald-500 transition-all hover:scale-125">
+                                                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                                            </button>
+                                                        `).join('')}
+                                                    </div>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div class="mt-8 p-8 bg-emerald-50/30 rounded-[2.5rem] border border-emerald-100/50">
+                            <div class="flex items-center gap-2 mb-6">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-emerald-600"></i>
+                                <span class="text-sm font-black text-gray-900 tracking-tight">নিরাপত্তা চেকলিস্ট:</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
+                                <div class="safety-checklist-item">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                    <span class="font-medium">জনাকীর্ণ পাবলিক প্লেসে দেখা করুন।</span>
+                                </div>
+                                <div class="safety-checklist-item">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                    <span class="font-medium">বন্ধুর সাথে লোকেশন শেয়ার করুন।</span>
+                                </div>
+                                <div class="safety-checklist-item">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                    <span class="font-medium">মিটআপ শেষে আমাদের ফিডব্যাক দিন।</span>
+                                </div>
+                                <div class="safety-checklist-item">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                    <span class="font-medium">জরুরি প্রয়োজনে সাপোর্ট নাম্বারে ফোন দিন।</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
                 lucide.createIcons();
+
             } catch (err) {
-                resultEl.innerHTML = '<p class="text-red-500 text-sm text-center py-2">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>';
+                console.error(err);
+                resultEl.innerHTML = `<div class="p-10 text-center text-red-500 font-bold">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</div>`;
             }
         }
 
