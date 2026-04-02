@@ -168,19 +168,23 @@
       </button>
       <button onclick="showSection('bookings')" data-section="bookings"
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-        <span>📋</span><span>Bookings</span>
+        <span>📋</span><span id="navBookingsText" class="flex-1 flex justify-between items-center">Bookings</span>
       </button>
       <button onclick="showSection('groups')" data-section="groups"
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-        <span>👥</span><span>Groups</span>
+        <span>👥</span><span id="navGroupsText" class="flex-1 flex justify-between items-center">Groups</span>
       </button>
       <button onclick="showSection('locations')" data-section="locations"
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-        <span>📍</span><span>Areas/Locations</span>
+        <span>📍</span><span id="navLocationsText" class="flex-1 flex justify-between items-center">Areas/Locations</span>
       </button>
       <button onclick="showSection('partners')" data-section="partners"
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>🤝</span><span>Partnerships</span>
+      </button>
+      <button onclick="showSection('analytics')" data-section="analytics"
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+        <span>📈</span><span>Analytics</span>
       </button>
       <div class="flex-1"></div>
       <button onclick="logout()" class="px-3 py-2 text-sm text-gray-400 hover:text-red-500 text-left transition">
@@ -200,6 +204,17 @@
         <div class="bg-white rounded-2xl border border-gray-100 p-4 md:p-6 overflow-hidden">
           <h2 class="font-semibold text-gray-700 mb-4">Recent Bookings (last 10)</h2>
           <div id="recentBookingsTable" class="overflow-x-auto -mx-4 md:mx-0"></div>
+        </div>
+      </section>
+
+      <!-- ── Analytics Section ────────────────────────────────────────── -->
+      <section id="section-analytics" class="section hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <h1 class="text-2xl font-bold text-gray-800">Website Analytics</h1>
+          <button onclick="loadAnalytics()" class="text-sm text-emerald-700 hover:underline self-start">↻ Refresh</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="analyticsGrid">
+          <!-- Populated internally -->
         </div>
       </section>
 
@@ -518,6 +533,7 @@
       if (name === 'groups') loadGroups();
       if (name === 'locations') loadAdminLocations();
       if (name === 'partners') loadPartners();
+      if (name === 'analytics') loadAnalytics();
       
       // Close sidebar on mobile after selection
       if (window.innerWidth < 768) {
@@ -533,20 +549,21 @@
       overlay.classList.toggle('hidden');
     }
 
-    // ── Toast ──────────────────────────────────────────────────────────────────
+    let toastTimeout;
     function toast(msg, isError = false) {
       const el = document.getElementById('toast');
       el.textContent = msg;
       el.className = `fixed top-12 right-5 z-50 ${isError ? 'bg-red-600' : 'bg-gray-900'} text-white px-6 py-4 rounded-2xl text-sm font-semibold shadow-2xl transition-all duration-300`;
       
-      // Reveal
       el.classList.remove('translate-y-[-120%]', 'opacity-0', 'pointer-events-none');
       el.classList.add('translate-y-0', 'opacity-100');
       
-      setTimeout(() => {
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        el.classList.remove('translate-y-0', 'opacity-100');
         el.classList.add('translate-y-[-120%]', 'opacity-0');
         setTimeout(() => el.classList.add('pointer-events-none'), 300);
-      }, 4000);
+      }, 500);
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
@@ -616,6 +633,15 @@
     ${statCard('Revenue Collected', '৳' + Number(stats.revenue).toLocaleString(), 'bg-blue-50 text-blue-800 border-blue-100')}
   `;
 
+      const badgeText = stats.processing > 0 ? `Bookings <span class="bg-amber-100 text-amber-800 py-0.5 px-2 rounded-full text-[10px] font-bold">${stats.processing}</span>` : 'Bookings';
+      document.getElementById('navBookingsText').innerHTML = badgeText;
+
+      const groupText = stats.open_groups > 0 ? `Groups <span class="bg-amber-100 text-amber-800 py-0.5 px-2 rounded-full text-[10px] font-bold">${stats.open_groups}</span>` : 'Groups';
+      document.getElementById('navGroupsText').innerHTML = groupText;
+
+      const locText = stats.active_locations > 0 ? `Areas/Locations <span class="bg-gray-100 text-gray-800 py-0.5 px-2 rounded-full text-[10px] font-bold">${stats.active_locations}</span>` : 'Areas/Locations';
+      document.getElementById('navLocationsText').innerHTML = locText;
+
       const recent = bookings.slice(0, 10);
       document.getElementById('recentBookingsTable').innerHTML = bookingsTableHTML(recent);
     }
@@ -626,6 +652,23 @@
       <p class="text-xs font-bold opacity-60 uppercase tracking-wider">${label}</p>
       <p class="text-3xl font-bold mt-1">${value}</p>
     </div>`;
+    }
+
+    // ── Analytics ──────────────────────────────────────────────────────────────
+    async function loadAnalytics() {
+      try {
+        const res = await adminFetch('/api/admin/analytics');
+        const data = await res.json();
+        
+        document.getElementById('analyticsGrid').innerHTML = `
+          ${statCard('Today Views', data.today, 'bg-emerald-50 text-emerald-800 border-emerald-100')}
+          ${statCard('This Week', data.week, 'bg-blue-50 text-blue-800 border-blue-100')}
+          ${statCard('This Month', data.month, 'bg-purple-50 text-purple-800 border-purple-100')}
+          ${statCard('All Time', data.all_time, 'bg-gray-50 text-gray-800 border-gray-100')}
+        `;
+      } catch (err) {
+        toast("Failed loading Analytics", true);
+      }
     }
 
     // ── Bookings ───────────────────────────────────────────────────────────────
@@ -644,6 +687,16 @@
       document.getElementById('bookingsTable').innerHTML = bookingsTableHTML(allBookings);
     }
 
+    let statusSortDir = 'asc';
+    function toggleStatusSort() {
+        statusSortDir = statusSortDir === 'asc' ? 'desc' : 'asc';
+        allBookings.sort((a, b) => {
+            if(statusSortDir === 'asc') return a.booking_status.localeCompare(b.booking_status);
+            return b.booking_status.localeCompare(a.booking_status);
+        });
+        document.getElementById('bookingsTable').innerHTML = bookingsTableHTML(allBookings);
+    }
+
     function bookingsTableHTML(bookings) {
       if (!bookings.length) return `<p class="p-6 text-gray-400 text-sm">No bookings found.</p>`;
       return `
@@ -659,7 +712,7 @@
           <th class="px-4 py-3 text-left">Venue</th>
           <th class="px-4 py-3 text-left">Fee</th>
           <th class="px-4 py-3 text-left">Payment</th>
-          <th class="px-4 py-3 text-left">Status</th>
+          <th class="px-4 py-3 text-left cursor-pointer hover:bg-gray-200 transition-colors rounded-lg" onclick="toggleStatusSort()" title="Sort by Status">Status ⇅</th>
           <th class="px-4 py-3 text-left">Actions</th>
         </tr>
       </thead>
@@ -670,7 +723,10 @@
             <td class="px-4 py-3 font-medium">${b.name}</td>
             <td class="px-4 py-3 text-gray-500">${b.phone}</td>
             <td class="px-4 py-3">${b.group_size}-person</td>
-            <td class="px-4 py-3 text-gray-500">${b.preferred_date}</td>
+            <td class="px-4 py-3 text-gray-500">
+              ${b.preferred_date}<br/>
+              <span class="text-[10px] bg-gray-100 rounded px-1.5 py-0.5 mt-1 inline-block font-mono font-medium text-emerald-700">${b.preferred_time === '17:00:00' ? '5:00 PM' : b.preferred_time === '19:00:00' ? '7:00 PM' : b.preferred_time || '-'}</span>
+            </td>
             <td class="px-4 py-3 text-xs">
               <div class="text-emerald-700 font-medium">🏠 ${b.current_location || '-'}</div>
               <div class="text-emerald-500 mt-0.5 font-bold">📍 ${b.preferred_location || '-'}</div>

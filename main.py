@@ -1,10 +1,11 @@
 import os
 import secrets
 import string
+import hashlib
 from typing import Optional
 
 from datetime import datetime, timedelta, time
-from fastapi import FastAPI, HTTPException, Header, Query
+from fastapi import FastAPI, HTTPException, Header, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -34,7 +35,22 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/", include_in_schema=False)
-def serve_frontend():
+def serve_frontend(request: Request):
+    ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "")
+    ip_hash = hashlib.sha256(ip.encode()).hexdigest()
+    
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO page_views (ip_hash, user_agent) VALUES (%s, %s)", (ip_hash, user_agent))
+        conn.commit()
+        cursor.close()
+    except Exception:
+        conn.rollback()
+    finally:
+        release_conn(conn)
+        
     return FileResponse("static/DekhaHok.html")
 
 
@@ -454,14 +470,15 @@ def admin_dashboard(x_admin_key: str = Header(...)):
         cursor.execute(
             """
             SELECT
-                COUNT(*)                                                                     AS total,
-                SUM(CASE WHEN booking_status = 'processing' THEN 1 ELSE 0 END)              AS processing,
-                SUM(CASE WHEN booking_status = 'confirmed'  THEN 1 ELSE 0 END)              AS confirmed,
-                SUM(CASE WHEN booking_status = 'completed'  THEN 1 ELSE 0 END)              AS completed,
-                SUM(CASE WHEN payment_status = 'paid'       THEN 1 ELSE 0 END)              AS paid,
-                SUM(CASE WHEN payment_status = 'unpaid'     THEN 1 ELSE 0 END)              AS unpaid,
-                SUM(CASE WHEN payment_status = 'paid' THEN fee_amount ELSE 0 END)           AS revenue
-            FROM bookings
+                (SELECT COUNT(*) FROM bookings) AS total,
+                (SELECT COUNT(*) FROM bookings WHERE booking_status = 'processing') AS processing,
+                (SELECT COUNT(*) FROM bookings WHERE booking_status = 'confirmed') AS confirmed,
+                (SELECT COUNT(*) FROM bookings WHERE booking_status = 'completed') AS completed,
+                (SELECT COUNT(*) FROM bookings WHERE payment_status = 'paid') AS paid,
+                (SELECT COUNT(*) FROM bookings WHERE payment_status = 'unpaid') AS unpaid,
+                (SELECT COALESCE(SUM(fee_amount), 0) FROM bookings WHERE payment_status = 'paid') AS revenue,
+                (SELECT COUNT(*) FROM meetup_groups WHERE status = 'open') AS open_groups,
+                (SELECT COUNT(*) FROM locations WHERE is_active = true) AS active_locations
             """
         )
         row = cursor.fetchone()
@@ -477,6 +494,37 @@ def admin_dashboard(x_admin_key: str = Header(...)):
         "paid":       row[4] or 0,
         "unpaid":     row[5] or 0,
         "revenue":    float(row[6] or 0),
+        "open_groups": row[7] or 0,
+        "active_locations": row[8] or 0,
+    }
+
+
+@app.get("/api/admin/analytics")
+def admin_analytics(x_admin_key: str = Header(...)):
+    """
+    Returns aggregated metrics for website page views tracking.
+    """
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                (SELECT COUNT(*) FROM page_views WHERE viewed_at >= NOW() - INTERVAL '1 day') AS today,
+                (SELECT COUNT(*) FROM page_views WHERE viewed_at >= NOW() - INTERVAL '7 days') AS week,
+                (SELECT COUNT(*) FROM page_views WHERE viewed_at >= NOW() - INTERVAL '30 days') AS month,
+                (SELECT COUNT(*) FROM page_views) AS all_time
+        """)
+        row = cursor.fetchone()
+        cursor.close()
+    finally:
+        release_conn(conn)
+        
+    return {
+        "today": row[0] or 0,
+        "week": row[1] or 0,
+        "month": row[2] or 0,
+        "all_time": row[3] or 0,
     }
 
 
@@ -735,9 +783,30 @@ def admin_assign_members(
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id FROM meetup_groups WHERE id = %s", (group_id,))
-        if not cursor.fetchone():
+        cursor.execute("SELECT id, group_size FROM meetup_groups WHERE id = %s", (group_id,))
+        group_row = cursor.fetchone()
+        if not group_row:
             raise HTTPException(status_code=404, detail="Group not found.")
+        g_size = group_row[1]
+
+        if payload.booking_ids:
+            # Check capacity
+            cursor.execute("SELECT COUNT(*) FROM group_members WHERE group_id = %s", (group_id,))
+            current_count = cursor.fetchone()[0]
+            if current_count + len(payload.booking_ids) > g_size:
+                raise HTTPException(status_code=400, detail=f"Cannot assign {len(payload.booking_ids)} members. Group capacity exceeded (Current: {current_count}/{g_size}).")
+
+            # Check compatibility
+            format_strings = ','.join(['%s'] * len(payload.booking_ids))
+            cursor.execute(f"SELECT id, group_size FROM bookings WHERE id IN ({format_strings})", tuple(payload.booking_ids))
+            bookings_info = cursor.fetchall()
+            
+            if len(bookings_info) != len(payload.booking_ids):
+                raise HTTPException(status_code=404, detail="One or more bookings not found.")
+                
+            for b_info in bookings_info:
+                if b_info[1] != g_size:
+                    raise HTTPException(status_code=400, detail=f"Booking {b_info[0]} has incompatible group size ({b_info[1]} vs {g_size}).")
 
         for booking_id in payload.booking_ids:
             cursor.execute(
