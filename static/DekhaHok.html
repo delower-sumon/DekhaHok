@@ -12,6 +12,101 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        /* Premium Tracker Card Redesign */
+        .info-grid-card {
+            background: white;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-grid-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #10b981;
+            opacity: 0.8;
+        }
+
+        .info-grid-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .info-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #f0fdf4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .info-icon-wrapper i {
+            width: 20px;
+            height: 20px;
+            color: #059669;
+        }
+
+        .button-33 {
+            background-color: #c2fbd7;
+            border-radius: 100px;
+            box-shadow: rgba(44, 187, 99, .35) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px;
+            color: green;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+            padding: 7px 20px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 250ms;
+            border: 0;
+            font-size: 14px;
+            font-weight: 700;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: 100%;
+            transform: scale(1.02) rotate(-1deg);
+        }
+
+        .button-33:hover {
+            transform: scale(1.05) rotate(0deg);
+            box-shadow: rgba(44, 187, 99, .45) 0 -25px 18px -14px inset, rgba(44, 187, 99, .25) 0 1px 2px, rgba(44, 187, 99, .25) 0 2px 4px, rgba(44, 187, 99, .25) 0 4px 8px, rgba(44, 187, 99, .25) 0 8px 16px, rgba(44, 187, 99, .25) 0 16px 32px;
+        }
+
         @property --glow-angle {
             syntax: '<angle>';
             initial-value: 0deg;
@@ -23,15 +118,16 @@
             z-index: 1;
         }
 
-        .glowing-border::before, .glowing-border::after {
+        .glowing-border::before,
+        .glowing-border::after {
             content: '';
             position: absolute;
             inset: -3px;
             border-radius: inherit;
-            background: conic-gradient(from var(--glow-angle), 
-                #f94144, #f3722c, #f8961e, #f9844a, #f9c74f, #90be6d, #43aa8b, #4d908e, #277da1, #577590, #f94144);
+            background: conic-gradient(from var(--glow-angle),
+                    #f94144, #f3722c, #f8961e, #f9844a, #f9c74f, #90be6d, #43aa8b, #4d908e, #277da1, #577590, #f94144);
             z-index: -1;
-            padding: 3px; 
+            padding: 3px;
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -589,7 +685,8 @@
     <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-1 flex justify-center">
         <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs font-bold text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br class="block sm:hidden"> — শুভকামনা!</span>
+            <span class="text-xs font-bold text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br
+                    class="block sm:hidden"> — শুভকামনা!</span>
             <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
         </div>
     </div>
@@ -1834,7 +1931,7 @@
                 }[data.booking_status] || { color: 'text-gray-600', bg: 'bg-gray-50', icon: 'info' };
 
                 // "What's Next" Messages
-                let nextAction = "পেমেন্ট যাচাই হয়েছে। আমরা আপনার গ্রুপ ও ভেন্যু ঠিক করছি। মিটআপের আগের দিন বিকেল ৩টায় আপনার গ্রুপ ও ভেন্যু দেখতে পাবেন।";
+                let nextAction = "আমরা আপনার গ্রুপ ও ভেন্যু ঠিক করছি। মিটআপের আগের দিন বিকেল ৩টায় আপনার গ্রুপ ও ভেন্যু দেখতে পাবেন।";
                 if (data.booking_status === 'confirmed' && !data.assigned_venue) {
                     nextAction = "আমরা আপনার জন্য উপযুক্ত লোকেশন এবং বন্ধু খুঁজছি। মিটআপের ১ দিন আগে সব আপডেট পেয়ে যাবেন।";
                 } else if (data.booking_status === 'confirmed' && data.assigned_venue) {
@@ -1846,14 +1943,14 @@
                 // Reveal Time Calculation (3 PM Dhaka Time day before event UTC+6)
                 let isVenueRevealed = false;
                 let revealMessage = "";
-                
+
                 // Human readable date converter
                 if (data.meet_date) {
                     const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     const dateParts = data.meet_date.split("-");
                     const dObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
                     data.h_meet_date = `${dObj.getDate()} ${fullMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
-                    
+
                     const utcMeetDate = new Date(`${data.meet_date}T09:00:00Z`); // 3 PM Dhaka is 9 AM UTC
                     const revealThreshold = new Date(utcMeetDate.getTime() - 24 * 60 * 60 * 1000); // 1 day before
 
@@ -1939,29 +2036,46 @@
                             <p class="text-gray-700 font-bold leading-relaxed text-sm">${nextAction}</p>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-4">
-                            <!-- Metup Date Card (Always Shown if confirmed) -->
-                            ${data.meet_date ? `
-                                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 group hover:border-emerald-200 transition-colors">
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">নির্ধারিত দিন এবং সময়</p>
-                                    <p class="text-gray-900 font-bold flex items-center gap-2">
-                                        <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-600"></i>
-                                        ${data.h_meet_date} @ ${data.meet_time === '17:00:00' ? '5:00 PM' : '7:00 PM'}
-                                    </p>
-                                </div>
-                            ` : ''}
+                        <div class="grid grid-cols-1 gap-4 mt-6">
+                            <!-- Unified Professional Info Section -->
+                            <div class="space-y-4">
+                                <!-- Date & Time Card -->
+                                ${data.meet_date ? `
+                                    <div class="info-grid-card">
+                                        <span class="info-label">নির্ধারিত দিন এবং সময়</span>
+                                        <div class="info-value">
+                                            <div class="info-icon-wrapper">
+                                                <i data-lucide="calendar-days"></i>
+                                            </div>
+                                            <div>
+                                                <p class="leading-tight">${data.h_meet_date}</p>
+                                                <p class="text-sm text-gray-500 font-medium">${data.meet_time === '17:00:00' ? 'রাত ৫:০০ টায়' : 'রাত ৭:০০ টায়'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : ''}
 
-                            <!-- Venue Card (Revealed strictly 3 PM Day Before) -->
-                            ${data.meet_date ? `
-                                <div class="bg-gray-50 p-5 rounded-3xl border ${isVenueRevealed ? 'border-transparent group hover:border-emerald-200 glowing-border' : 'border-dashed border-emerald-200 bg-emerald-50/20'} transition-all relative">
-                                    <p class="text-[10px] font-black ${isVenueRevealed ? 'text-gray-400' : 'text-emerald-700'} uppercase tracking-wider mb-2">মিটআপ লোকেশন</p>
-                                    <p class="text-gray-900 font-bold flex items-center gap-2">
-                                        <i data-lucide="${isVenueRevealed ? 'navigation-2' : 'lock'}" class="w-4 h-4 ${isVenueRevealed ? 'text-emerald-600' : 'text-emerald-400 animate-pulse'}"></i>
-                                        ${isVenueRevealed ? (data.assigned_venue || 'লোকেশন পাওয়া যায়নি') : revealMessage}
-                                    </p>
-                                    ${!isVenueRevealed ? `<div class="absolute right-3 top-3"><i data-lucide="eye-off" class="w-3 h-3 text-emerald-300"></i></div>` : ''}
-                                </div>
-                            ` : ''}
+                                <!-- Venue/Place Card -->
+                                ${data.meet_date ? `
+                                    <div class="info-grid-card ${!isVenueRevealed ? 'opacity-90' : ''}">
+                                        <span class="info-label">${isVenueRevealed ? 'মিটআপ লোকেশন' : 'লোকেশন স্ট্যাটাস'}</span>
+                                        <div class="info-value">
+                                            <div class="info-icon-wrapper ${!isVenueRevealed ? '!bg-amber-50' : ''}">
+                                                <i data-lucide="${isVenueRevealed ? 'map-pin' : 'lock'}" class="${!isVenueRevealed ? '!text-amber-600 animate-pulse' : ''}"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="leading-tight ${!isVenueRevealed ? 'text-amber-700 italic' : ''}">
+                                                    ${isVenueRevealed ? (data.assigned_venue || 'লোকেশন পাওয়া যায়নি') : revealMessage}
+                                                </p>
+                                                ${isVenueRevealed ? '<p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mt-1">✓ ভেরিফাইড ভেন্যু</p>' : ''}
+                                            </div>
+                                            ${!isVenueRevealed ? `
+                                                <div class="px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-[10px] font-black uppercase tracking-tighter">সেকিউরড</div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
 
 
@@ -1970,11 +2084,11 @@
                                 <h5 class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center sm:text-left">আপনার বন্ধু/বন্ধুগন।</h5>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     ${data.group_members.map((m, idx) => `
-                                        <div class="group py-4 px-5 bg-gradient-to-br from-white to-gray-50/50 border border-transparent glowing-border rounded-[2rem] shadow-sm hover:shadow-emerald-900/5 transition-all duration-300 relative ring-1 ring-emerald-500/5 animate-reveal" style="--stagger-delay: ${idx * 0.15}s">
-                                            <div class="absolute -right-2 -top-2 w-16 h-16 bg-emerald-100/20 rounded-full blur-2xl group-hover:bg-emerald-100/40 transition-colors pointer-events-none"></div>
+                                        <div class="button-33 !bg-white group py-4 px-5 border border-gray-100 rounded-[2rem] shadow-sm transition-all duration-300 relative overflow-hidden ring-1 ring-emerald-500/5 animate-reveal !flex-col !items-stretch !text-left !h-auto" style="--stagger-delay: ${idx * 0.15}s; display: flex !important; flex-direction: column !important; align-items: flex-start !important;">
+                                            <div class="absolute -right-2 -top-2 w-16 h-16 bg-emerald-100/20 rounded-full blur-2xl transition-colors pointer-events-none"></div>
                                             
                                             <div class="flex items-center gap-4 relative z-10">
-                                                <div class="w-12 h-12 rounded-2xl bg-emerald-100/50 flex items-center justify-center border border-emerald-100 shadow-inner group-hover:scale-110 transition-transform">
+                                                <div class="w-12 h-12 rounded-2xl bg-emerald-100/50 flex items-center justify-center border border-emerald-100 shadow-inner transition-transform">
                                                     <i data-lucide="award" class="w-6 h-6 text-emerald-600"></i>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
@@ -1990,13 +2104,13 @@
                                             </div>
 
                                             ${data.booking_status === 'completed' ? `
-                                                <div class="mt-4 pt-4 border-t border-dashed border-gray-200 flex flex-col gap-2">
-                                                    <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">সাথীকে রেটিং দিন:</span>
-                                                    <div id="rating-container-${m.id}" class="flex items-center gap-3">
+                                                <div class="mt-4 pt-4 border-t border-dashed border-gray-200 flex flex-col gap-2 w-full">
+                                                    <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">আপনার বন্ধুকে রেটিং দিন:</span>
+                                                    <div id="rating-container-${m.id}" style="display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 12px !important; width: 100% !important; flex-wrap: nowrap !important; overflow-x: auto !important; padding: 4px 0 !important;">
                                                         ${[1, 2, 3, 4, 5].map(star => `
                                                             <button onclick="submitRating('${id}', ${data.assigned_group_id || 0}, ${m.id}, ${star})" 
-                                                                     class="text-gray-200 hover:text-emerald-500 transition-all hover:scale-125">
-                                                                <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                                                                     class="text-gray-200 hover:text-emerald-500 transition-all hover:scale-125 flex-shrink-0" style="display: block !important; width: auto !important; background: none !important; border: none !important; padding: 0 !important;">
+                                                                <i data-lucide="star" class="w-6 h-6 fill-current"></i>
                                                             </button>
                                                         `).join('')}
                                                     </div>
@@ -2015,41 +2129,42 @@
                                 <span class="text-[11px] font-black text-gray-900 tracking-widest uppercase">নিরাপত্তা চেকলিস্ট:</span>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-8">
-                                <div class="safety-checklist-item">
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                    <span class="font-medium">লোকালয়ে দেখা করুন।</span>
                                 </div>
-                                <div class="safety-checklist-item">
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                    <span class="font-medium">বন্ধুর সাথে লোকেশন শেয়ার করুন।</span>
-                                </div>
-                                <div class="safety-checklist-item">
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                    <span class="font-medium">আমাদের ফিডব্যাক দিন।</span>
-                                </div>
-                                <div class="safety-checklist-item">
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                    <span class="font-medium">জরুরি প্রয়োজনে সাপোর্ট নাম্বারে ফোন দিন।</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-8">
+                                    <div class="safety-checklist-item">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                        <span class="font-medium">লোকালয়ে দেখা করুন।</span>
+                                    </div>
+                                    <div class="safety-checklist-item">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                        <span class="font-medium">বন্ধুর সাথে লোকেশন শেয়ার করুন।</span>
+                                    </div>
+                                    <div class="safety-checklist-item">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                        <span class="font-medium">আমাদের ফিডব্যাক দিন।</span>
+                                    </div>
+                                    <div class="safety-checklist-item">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                        <span class="font-medium">জরুরি প্রয়োজনে সাপোর্ট নাম্বারে ফোন দিন।</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Hub Buttons Moved Here -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                            ${(data.group_members && data.group_members.length > 0 && data.assigned_venue && data.booking_status !== 'completed') ? `
-                                <button onclick="openChat(${data.assigned_group_id}, '${id}')" 
-                                        class="action-hub-btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl shadow-emerald-200 active:scale-95 text-sm">
-                                    <i data-lucide="message-square" class="w-4 h-4"></i>
-                                    গ্রুপ চ্যাটে যোগ দিন
-                                </button>
-                            ` : ''}
-                            <a href="https://wa.me/8801884477720" target="_blank"
-                               class="action-hub-btn bg-white border border-gray-100 text-gray-800 hover:bg-gray-50 active:scale-95 text-sm ${!(data.group_members && data.group_members.length > 0 && data.assigned_venue && data.booking_status !== 'completed') ? 'sm:col-span-2' : ''}">
-                                <i data-lucide="phone-call" class="w-4 h-4 text-emerald-600"></i>
-                                ইমার্জেন্সি সাপোর্ট
-                            </a>
-                        </div>
-                    </div>`;
+                            <!-- Hub Buttons Moved Here -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                                ${(data.group_members && data.group_members.length > 0 && data.assigned_venue && data.booking_status !== 'completed') ? `
+                                    <button onclick="openChat(${data.assigned_group_id}, '${id}')" 
+                                            class="action-hub-btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl shadow-emerald-200 active:scale-95 text-sm">
+                                        <i data-lucide="message-square" class="w-4 h-4"></i>
+                                        গ্রুপ চ্যাটে যোগ দিন
+                                    </button>
+                                ` : ''}
+                                <a href="https://wa.me/8801884477720" target="_blank"
+                                   class="action-hub-btn bg-white border border-gray-100 text-gray-800 hover:bg-gray-50 active:scale-95 text-sm ${!(data.group_members && data.group_members.length > 0 && data.assigned_venue && data.booking_status !== 'completed') ? 'sm:col-span-2' : ''}">
+                                    <i data-lucide="phone-call" class="w-4 h-4 text-emerald-600"></i>
+                                    ইমার্জেন্সি সাপোর্ট
+                                </a>
+                            </div>
+                        </div>`;
 
                 lucide.createIcons();
 

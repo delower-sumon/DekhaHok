@@ -21,3 +21,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ### Fixed
 - **Notification Persistence**: Fixed a bug where toast notifications would stay on screen indefinitely if multiple updates were triggered quickly.
 - **Hero Text Clipping**: Resolved overlapping text issues on mobile views for the hero status strip.
+
+## [2026-04-03] - UI/UX Refinements (Session 2)
+
+### Changed
+- **Card Redesign**: Applied requested "Button 33" glassmorphic effect to Member Cards and Venue/Place Cards in the status tracker for a more tactile, premium feel.
+- **Hub Buttons**: Reverted Group Chat and Emergency Support buttons to their original `action-hub-btn` branding.
+- **Rating Stars**: Fixed a critical mobile layout bug where rating stars appeared vertically. Implemented strict inline flex styles to force horizontal alignment and tap-friendliness on mobile.
+
+### Added
+- **Admin Persistence**: Implemented `sessionStorage` for admin authentication, allowing dashboard refreshes without forced logouts while maintaining tab-level security.

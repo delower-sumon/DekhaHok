@@ -874,6 +874,22 @@ def admin_update_group(
     return {"message": "Group updated."}
 
 
+@app.delete("/api/admin/groups/{group_id}")
+def admin_delete_group(group_id: int, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # First remove all member associations
+        cursor.execute("DELETE FROM group_members WHERE group_id = %s", (group_id,))
+        # Then remove the group itself
+        cursor.execute("DELETE FROM meetup_groups WHERE id = %s", (group_id,))
+        conn.commit()
+    finally:
+        release_conn(conn)
+    return {"message": "Group deleted."}
+
+
 # --- LOCATIONS (ADMIN) ---
 
 @app.get("/api/admin/locations", response_model=list[LocationResponse])

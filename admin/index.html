@@ -869,6 +869,8 @@
           ${statusBadge(g.status)}
           <button onclick="openEditGroupModal(${JSON.stringify(g).replace(/"/g, '&quot;')})"
             class="text-sm text-emerald-700 hover:text-emerald-800 font-bold px-2">Edit</button>
+          <button onclick="deleteGroup(${g.id})"
+            class="text-sm text-red-500 hover:text-red-700 font-bold px-2">Delete</button>
           <button onclick="openAssignModal(${g.id}, '${g.group_code}', ${g.group_size})"
             class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-100 transition whitespace-nowrap">
             Assign Members
@@ -972,7 +974,7 @@
         group_size: parseInt(document.getElementById('g_size').value),
       };
       if (!payload.venue_name || !payload.meet_date || !payload.meet_time) {
-        toast('Please fill all fields', true); return;
+        toast('Venue, Date and Time are required for initial creation', true); return;
       }
       const res = await adminFetch('/api/admin/groups', {
         method: 'POST',
@@ -1008,12 +1010,17 @@
 
     async function saveGroupEdit() {
       const id = document.getElementById('eg_id').value;
-      const payload = {
-        venue_name: document.getElementById('eg_venue').value,
-        meet_date: document.getElementById('eg_date').value,
-        meet_time: document.getElementById('eg_time').value,
-        status: document.getElementById('eg_status').value,
-      };
+      const payload = {};
+      const venue = document.getElementById('eg_venue').value;
+      const date = document.getElementById('eg_date').value;
+      const time = document.getElementById('eg_time').value;
+      const status = document.getElementById('eg_status').value;
+
+      if (venue) payload.venue_name = venue;
+      if (date) payload.meet_date = date;
+      if (time) payload.meet_time = time;
+      if (status) payload.status = status;
+
       const res = await adminFetch(`/api/admin/groups/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(payload),
@@ -1024,6 +1031,18 @@
         loadGroups();
       } else {
         toast('Update failed', true);
+      }
+    }
+
+    async function deleteGroup(id) {
+      const confirmed = await customConfirm('Are you sure you want to delete this group? Members will be unassigned.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/groups/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast('Group deleted ✓');
+        loadGroups();
+      } else {
+        toast('Failed to delete', true);
       }
     }
 
