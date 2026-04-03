@@ -192,16 +192,18 @@ def track_booking(tracking_id: str):
         row = cursor.fetchone()
         
         group_members = []
+        rated_member_ids = []
         if row and row[18]: # group_id exists
             booking_id = row[17]
             group_id = row[18]
+            # Get members
             cursor.execute(
                 """
-                SELECT b.name, b.phone, b.age, b.id,
+                SELECT b.name, b.phone, b.age, b.id,        
                        (SELECT AVG(score) FROM user_ratings WHERE ratee_id = b.id) as avg_rating
                 FROM group_members gm
-                JOIN bookings b ON b.id = gm.booking_id
-                WHERE gm.group_id = %s AND b.id != %s
+                JOIN bookings b ON b.id = gm.booking_id     
+                WHERE gm.group_id = %s AND b.id != %s       
                 """,
                 (group_id, booking_id)
             )
@@ -214,6 +216,14 @@ def track_booking(tracking_id: str):
                     "id": m[3],
                     "rating": round(float(m[4]), 1) if m[4] is not None else 0
                 })
+            
+            # Get already rated members by this user in this group
+            cursor.execute(
+                "SELECT ratee_id FROM user_ratings WHERE rater_id = %s AND group_id = %s",
+                (booking_id, group_id)
+            )
+            rated_member_ids = [r[0] for r in cursor.fetchall()]
+            
         cursor.close()
     finally:
         release_conn(conn)
@@ -251,6 +261,7 @@ def track_booking(tracking_id: str):
         payment_sender_digits=row[15],
         preferred_meeting_point=row[16],
         group_members=group_members,
+        rated_member_ids=rated_member_ids,
         rejection_reason=row[19],
         assigned_group_id=row[18]
     )

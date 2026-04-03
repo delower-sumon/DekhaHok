@@ -101,6 +101,7 @@ class TrackingResponse(BaseModel):
     payment_method:     Optional[str] = None
     payment_sender_digits: Optional[str] = None
     group_members: Optional[list] = [] # list of {name, phone, age, rating}
+    rated_member_ids: Optional[list[int]] = [] # list of member ids already rated by this user
     rejection_reason: Optional[str] = None
     assigned_group_id: Optional[int] = None
 

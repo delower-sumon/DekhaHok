@@ -685,7 +685,7 @@
     <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-1 flex justify-center">
         <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs font-bold text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br
+            <span class="text-xs text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br
                     class="block sm:hidden"> — শুভকামনা!</span>
             <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
         </div>
@@ -2107,7 +2107,9 @@
                                                 <div class="mt-4 pt-4 border-t border-dashed border-gray-200 flex flex-col gap-2 w-full">
                                                     <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">আপনার বন্ধুকে রেটিং দিন:</span>
                                                     <div id="rating-container-${m.id}" style="display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 12px !important; width: 100% !important; flex-wrap: nowrap !important; overflow-x: auto !important; padding: 4px 0 !important;">
-                                                        ${[1, 2, 3, 4, 5].map(star => `
+                                                        ${data.rated_member_ids && data.rated_member_ids.includes(m.id) ? `
+                                                            <p class="text-xs text-green-600 font-bold">রেটিং সংরক্ষিত হয়েছে ✓</p>
+                                                        ` : [1, 2, 3, 4, 5].map(star => `
                                                             <button onclick="submitRating('${id}', ${data.assigned_group_id || 0}, ${m.id}, ${star})" 
                                                                      class="text-gray-200 hover:text-emerald-500 transition-all hover:scale-125 flex-shrink-0" style="display: block !important; width: auto !important; background: none !important; border: none !important; padding: 0 !important;">
                                                                 <i data-lucide="star" class="w-6 h-6 fill-current"></i>
