@@ -1,6 +1,11 @@
 # DekhaHok — Local Development & Testing Guide
 # Windows / Linux / macOS  |  Python 3.10+  |  MySQL 8.x
 
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+
+
+
 # ════════════════════════════════════════════════════════════
 # STEP 1 — Install MySQL (skip if already installed)
 # ════════════════════════════════════════════════════════════

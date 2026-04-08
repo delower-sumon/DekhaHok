@@ -301,7 +301,23 @@
           </table>
         </div>
       </section>
-
+      <!-- ── Partnerships Section ────────────────────────────────────── -->
+      <section id="section-partners" class="section hidden space-y-6">
+        <h1 class="text-2xl font-bold text-gray-800">Partnership Requests</h1>
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+              <tr>
+                <th class="px-6 py-3 text-left">Restaurant</th>
+                <th class="px-6 py-3 text-left">Contact</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Applied At</th>
+                <th class="px-6 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="partnersTableBody" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
       </section>
 
       <!-- ── Blogs Section ────────────────────────────────────────────── -->
@@ -487,7 +503,12 @@
 
       <div>
         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Admin Notes (Internal Only)</label>
-        <textarea id="edit_notes" rows="4" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium" placeholder="E.g. Verified over call, special requirements..."></textarea>
+        <textarea id="edit_notes" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium" placeholder="E.g. Verified over call, special requirements..."></textarea>
+      </div>
+
+      <div class="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+        <input type="checkbox" id="edit_is_verified" class="w-4 h-4 accent-emerald-600">
+        <label for="edit_is_verified" class="text-xs font-bold text-emerald-800 uppercase tracking-widest cursor-pointer">Verified Citizen Badge</label>
       </div>
       
       <div class="flex gap-4 pt-2">
@@ -582,32 +603,41 @@
      * Authenticates the admin user by validating the provided secret key
      * against the backend. Persists logic for the current session.
      */
-    async function login() {
-      const key = document.getElementById('adminKeyInput').value.trim();
+    async function login(keyFromStorage = null) {
+      const key = keyFromStorage || document.getElementById('adminKeyInput').value.trim();
       if (!key) return;
 
-      // Quick sanity check: try to hit dashboard endpoint
       const res = await fetch(`${API}/api/admin/dashboard`, {
         headers: { 'X-Admin-Key': key }
       });
 
       if (res.ok) {
         ADMIN_KEY = key;
+        localStorage.setItem('adminKey', key);
         document.getElementById('loginOverlay').classList.add('hidden');
         document.getElementById('app').classList.remove('hidden');
         showSection('dashboard');
       } else {
-        document.getElementById('loginError').classList.remove('hidden');
+        if (!keyFromStorage) {
+          document.getElementById('loginError').classList.remove('hidden');
+        } else {
+          localStorage.removeItem('adminKey');
+        }
       }
     }
 
-    /**
-     * Clears session state and reloads the page to force re-authentication.
-     */
     function logout() {
       ADMIN_KEY = '';
+      localStorage.removeItem('adminKey');
       location.reload();
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedKey = localStorage.getItem('adminKey');
+      if (savedKey) {
+        login(savedKey);
+      }
+    });
 
     // ── Navigation ─────────────────────────────────────────────────────────────
     function showSection(name) {
@@ -834,6 +864,7 @@
             <td class="px-4 py-3">
               ${statusBadge(b.booking_status)}
               ${b.booking_status === 'unsuccessful' ? `<div class="text-[10px] text-red-500 mt-1 italic">${b.rejection_reason || 'No reason specified'}</div>` : ''}
+              ${b.is_verified ? `<div class="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[9px] font-black uppercase tracking-widest"><i data-lucide="check-circle" class="w-3 h-3"></i> Verified</div>` : ''}
             </td>
             <td class="px-4 py-3 space-x-2">
               <button onclick="openEditModalById(${b.id})"
@@ -857,6 +888,7 @@
       document.getElementById('edit_status').value = b.booking_status;
       document.getElementById('edit_notes').value = b.admin_notes || '';
       document.getElementById('edit_rejection').value = b.rejection_reason || '';
+      document.getElementById('edit_is_verified').checked = !!b.is_verified;
       
       // Show/hide rejection field
       const toggleRejection = (s) => {
@@ -888,6 +920,7 @@
         booking_status: document.getElementById('edit_status').value,
         admin_notes: document.getElementById('edit_notes').value,
         rejection_reason: document.getElementById('edit_rejection').value,
+        is_verified: document.getElementById('edit_is_verified').checked,
       };
       const res = await adminFetch(`/api/admin/bookings/${id}`, {
         method: 'PATCH',
@@ -1241,6 +1274,8 @@
                 <select id="type-${loc.id}" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-full bg-white">
                   <option value="public_place">Public Place</option>
                   <option value="restaurant">Partner Restaurant</option>
+                  <option value="gen_restaurant">Restaurant</option>
+                  <option value="cinema">Cinema Hall</option>
                 </select>
                 <div class="flex items-center justify-between">
                     <a href="https://www.latlong.net/" target="_blank" class="text-[9px] text-blue-500 hover:underline">Find Coords ↗</a>
@@ -1304,6 +1339,8 @@
                  <select id="edit-type-${p.id}" class="text-[10px] w-full px-2 py-1.5 border border-gray-200 rounded-lg">
                      <option value="public_place" ${p.point_type === 'public_place' ? 'selected' : ''}>Public Place</option>
                      <option value="restaurant" ${p.point_type === 'restaurant' ? 'selected' : ''}>Partner Restaurant</option>
+                     <option value="gen_restaurant" ${p.point_type === 'gen_restaurant' ? 'selected' : ''}>Restaurant</option>
+                     <option value="cinema" ${p.point_type === 'cinema' ? 'selected' : ''}>Cinema Hall</option>
                  </select>
                  <div class="flex justify-end gap-3 items-center">
                      <button onclick="togglePointEdit(${p.id}, false)" class="text-[10px] text-gray-400 font-bold hover:text-gray-600 transition">Cancel</button>

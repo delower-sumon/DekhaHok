@@ -728,7 +728,7 @@ def admin_list_bookings(
                    preferred_date, preferred_time, venue_type, conversation_style, preferred_people,
                    current_location, preferred_location, preferred_meeting_point,
                    fee_amount, payment_status, payment_method, payment_sender_digits, booking_status,
-                   assigned_group_id, admin_notes, created_at
+                   assigned_group_id, admin_notes, is_verified, created_at
             FROM bookings
             {where}
             ORDER BY created_at DESC
@@ -764,7 +764,8 @@ def admin_list_bookings(
             "booking_status":    r[19],
             "assigned_group_id": r[20],
             "admin_notes":       r[21],
-            "created_at":        str(r[22]),
+            "is_verified":       r[22],
+            "created_at":        str(r[23]),
         }
         for r in rows
     ]
@@ -783,6 +784,7 @@ def admin_update_booking(
     if payload.booking_status is not None: updates["booking_status"] = payload.booking_status
     if payload.admin_notes    is not None: updates["admin_notes"]    = payload.admin_notes
     if payload.rejection_reason is not None: updates["rejection_reason"] = payload.rejection_reason
+    if payload.is_verified is not None: updates["is_verified"] = payload.is_verified
 
     if not updates:
         raise HTTPException(status_code=400, detail="Nothing to update.")
@@ -823,6 +825,18 @@ def admin_update_booking(
 
         if cursor.rowcount == 0:
             raise HTTPException(status_code=404, detail="Booking not found.")
+            
+        # Identity-based verification persistence
+        if payload.is_verified is True:
+            # Fetch phone for this booking
+            cursor.execute("SELECT phone FROM bookings WHERE id = %s", (booking_id,))
+            prow = cursor.fetchone()
+            if prow:
+                phone_to_verify = prow[0]
+                # Mark ALL bookings with this phone as verified
+                cursor.execute("UPDATE bookings SET is_verified = TRUE WHERE phone = %s", (phone_to_verify,))
+        
+        conn.commit()
         cursor.close()
     finally:
         release_conn(conn)
@@ -1089,6 +1103,7 @@ def admin_list_locations(x_admin_key: str = Header(...)):
         # Fetch all locations
         cursor.execute("SELECT id, name, is_active FROM locations ORDER BY created_at DESC")
         loc_rows = cursor.fetchall()
+        loc_dict = {loc[0]: loc[1] for loc in loc_rows}
         
         # Fetch all meeting points and group them by location_id
         cursor.execute("SELECT id, location_id, name, is_active, latitude, longitude, point_type FROM meeting_points")
@@ -1103,7 +1118,8 @@ def admin_list_locations(x_admin_key: str = Header(...)):
                 "id": pr[0], "location_id": lid, "name": pr[2], "is_active": pr[3],
                 "latitude": float(pr[4]) if pr[4] is not None else None,
                 "longitude": float(pr[5]) if pr[5] is not None else None,
-                "point_type": pr[6]
+                "point_type": pr[6],
+                "area_name": loc_dict.get(lid, "Unknown")
             })
 
         results = []
@@ -1157,9 +1173,19 @@ def list_all_meeting_points():
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, location_id, name, is_active, latitude, longitude, point_type FROM meeting_points WHERE is_active = TRUE")
+        cursor.execute("""
+            SELECT p.id, p.location_id, p.name, p.is_active, p.latitude, p.longitude, p.point_type, l.name
+            FROM meeting_points p
+            JOIN locations l ON l.id = p.location_id
+            WHERE p.is_active = TRUE
+        """)
         rows = cursor.fetchall()
-        return [MeetingPointResponse(id=r[0], location_id=r[1], name=r[2], is_active=r[3], latitude=float(r[4]) if r[4] is not None else None, longitude=float(r[5]) if r[5] is not None else None, point_type=r[6]) for r in rows]
+        return [MeetingPointResponse(
+            id=r[0], location_id=r[1], name=r[2], is_active=r[3], 
+            latitude=float(r[4]) if r[4] is not None else None, 
+            longitude=float(r[5]) if r[5] is not None else None, 
+            point_type=r[6], area_name=r[7]
+        ) for r in rows]
     finally:
         release_conn(conn)
 

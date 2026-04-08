@@ -122,6 +122,7 @@ class AdminBookingUpdate(BaseModel):
     booking_status: Optional[str] = None
     admin_notes:    Optional[str] = None
     rejection_reason: Optional[str] = None
+    is_verified:    Optional[bool] = None
 
     @field_validator("payment_status")
     @classmethod
@@ -196,6 +197,7 @@ class MeetingPointResponse(BaseModel):
     longitude: Optional[float] = None
     point_type: str = "public_place"
     is_active: bool
+    area_name: Optional[str] = None
 
 class LocationResponse(BaseModel):
     id: int

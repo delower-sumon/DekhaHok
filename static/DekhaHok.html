@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DekhaHok</title>
+    <title>দেখা হোক</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon/dekhahok.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -404,7 +404,7 @@
             <div class="flex justify-between items-center h-16">
                 <a href="/" class="flex items-center space-x-2 hover:opacity-90 transition" aria-label="DekhaHok home">
                     <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok" class="logo-img" />
-                    <span class="text-2xl font-bold text-[#1F2937]">DekhaHok</span>
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" />
                     <span
                         class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full ml-2 border border-emerald-100 flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
@@ -413,8 +413,8 @@
                 </a>
                 <div class="hidden md:flex space-x-8">
                     <a href="#book" class="text-gray-600 hover:text-emerald-700 transition">বুক করুন</a>
-                    <a href="#how-it-works" class="text-gray-600 hover:text-emerald-700 transition">কিভাবে কাজ করে</a>
                     <a href="#track" class="text-gray-600 hover:text-emerald-700 transition">বুকিং ট্র্যাক করুন</a>
+                    <a href="#how-it-works" class="text-gray-600 hover:text-emerald-700 transition">কিভাবে কাজ করে</a>
                     <a href="#safety" class="text-gray-600 hover:text-emerald-700 transition">নিরাপত্তা</a>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -442,15 +442,15 @@
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 <span>বুক করুন</span>
             </a>
-            <a href="#how-it-works" onclick="toggleMobileMenu()"
-                class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
-                <i data-lucide="help-circle" class="w-5 h-5"></i>
-                <span>কিভাবে কাজ করে</span>
-            </a>
             <a href="#track" onclick="toggleMobileMenu()"
                 class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
                 <i data-lucide="map-pin" class="w-5 h-5"></i>
                 <span>বুকিং ট্র্যাক করুন</span>
+            </a>
+            <a href="#how-it-works" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                <span>কিভাবে কাজ করে</span>
             </a>
             <a href="#safety" onclick="toggleMobileMenu()"
                 class="text-lg font-medium text-gray-700 hover:text-[#1F3D2B] transition flex items-center space-x-3 py-1">
@@ -596,6 +596,83 @@
                 <div class="flex items-center justify-center gap-2 pt-2 border-t border-gray-50/50">
                     <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
                     <span class="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Secure & Verified</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Access Security Modal -->
+    <div id="chatAccessModal" onclick="if(event.target === this) closeChatAccessModal()"
+        class="hidden fixed inset-0 z-[3000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] p-6 max-w-[340px] w-full transform scale-90 opacity-0 transition-all duration-300 relative overflow-hidden shadow-2xl"
+            id="chatAccessModalContent">
+
+            <!-- Close Button -->
+            <button onclick="closeChatAccessModal()"
+                class="absolute right-4 top-4 text-gray-300 hover:text-gray-500 transition-colors z-[20]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="absolute -right-8 -top-8 w-24 h-24 bg-emerald-50 rounded-full blur-2xl"></div>
+
+            <div class="text-center relative z-10">
+                <div
+                    class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner">
+                    <i data-lucide="lock" class="w-7 h-7 text-emerald-600"></i>
+                </div>
+                <h3 class="text-xl font-black text-gray-900 mb-1">গ্রুপ চ্যাট সিকিউরিটি</h3>
+                <p class="text-[11px] text-gray-500 mb-5 px-2">আপনার <span class="text-emerald-600 font-bold">Booking
+                        Tracking ID</span> টি দিয়ে প্রবেশ করুন।</p>
+
+                <div class="space-y-3">
+                    <div class="relative">
+                        <input type="text" id="chatAccessInput" onkeyup="if(event.key==='Enter') submitChatAccess()"
+                            class="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 focus:border-emerald-500 focus:outline-none text-center text-lg font-mono tracking-widest placeholder:text-gray-300 placeholder:font-sans placeholder:tracking-normal shadow-sm transition-all"
+                            placeholder="উদা: DH-X7Y2Z">
+                    </div>
+
+                    <p id="chatAccessError" class="text-[10px] text-red-500 font-bold hidden animate-pulse">
+                        ভুল আইডি। সঠিক ট্র্যাকিং আইডিটি দিন।
+                    </p>
+
+                    <button onclick="submitChatAccess()"
+                        class="btn-primary w-full text-white py-4 rounded-xl font-bold text-base shadow-lg shadow-emerald-50 active:scale-95 transition-all">
+                        গ্রুপ চ্যাট
+                    </button>
+
+                    <div class="flex flex-col items-center gap-2 pt-1">
+                        <button onclick="toggleForgotIdHelp()"
+                            class="text-[9px] font-bold text-emerald-600/70 hover:text-emerald-600 transition-colors">
+                            ট্র্যাকিং আইডি ভুলে গেছেন? (Forgot ID?)
+                        </button>
+
+                        <div id="forgotIdHelp"
+                            class="hidden w-full p-3.5 bg-gray-50 rounded-2xl border border-dashed border-gray-200 animate-in fade-in slide-in-from-top-1">
+                            <p class="text-[9px] text-gray-500 mb-2.5 font-medium text-center">আইডি জানতে যোগাযোগ করুন:
+                            </p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <a href="https://wa.me/8801884477720" target="_blank"
+                                    class="flex items-center justify-center gap-1.5 py-2 bg-[#25D366] text-white rounded-lg text-[9px] font-black hover:opacity-90 transition shadow-sm">
+                                    <i data-lucide="message-circle" class="w-2.5 h-2.5"></i> WhatsApp
+                                </a>
+                                <a href="tel:+8801884477720"
+                                    class="flex items-center justify-center gap-1.5 py-2 bg-gray-900 text-white rounded-lg text-[9px] font-black hover:bg-gray-800 transition shadow-sm">
+                                    <i data-lucide="phone" class="w-2.5 h-2.5"></i> কল করুন
+                                </a>
+                            </div>
+                        </div>
+
+                        <button onclick="closeChatAccessModal()"
+                            class="text-[9px] font-bold text-gray-300 hover:text-gray-400 transition-colors">
+                            আপাতত থাক (Cancel)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-center gap-1.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+                    <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">End-to-End
+                        Encrypted</span>
                 </div>
             </div>
         </div>
@@ -820,9 +897,9 @@
     </div>
 
     <!-- Discovery Section (Guest Browsing) -->
-    <section id="discovery" class="pt-4 pb-12 bg-white relative overflow-hidden">
+    <section id="discovery" class="pt-4 pb-10 bg-white relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 relative z-10">
-            <div class="mb-8 text-center scroll-reveal">
+            <div class="mb-6 text-center scroll-reveal">
                 <h2 class="text-4xl font-black text-gray-900 mb-2">সাম্প্রতিক ইভেন্টসমূহ</h2>
                 <p class="text-lg text-gray-500">ঢাকার কোথায় কি হচ্ছে দেখে নিন।</p>
             </div>
@@ -1086,7 +1163,7 @@
                                 class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                                 <div>
                                     <h3 class="text-2xl font-bold text-gray-900 mb-2">পেমেন্ট</h3>
-                                    <p class="text-gray-500">Premium experience with curated matching</p>
+                                    <p class="text-gray-500">কিউরেটেড ম্যাচিং ও প্রিমিয়াম মিটআপ।</p>
                                 </div>
                                 <div class="text-left md:text-right">
                                     <div class="text-4xl font-black text-gray-900" id="reservationFee">৳৪৯৯</div>
@@ -1141,7 +1218,7 @@
     </section>
 
     <!-- Track Your Booking Section (Compact Desktop Redesign) -->
-    <section id="track" class="py-12 bg-gray-50 relative overflow-hidden">
+    <section id="track" class="py-8 bg-gray-50 relative overflow-hidden">
         <!-- Decoration side gradients -->
         <div
             class="absolute top-1/2 left-0 w-80 h-80 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2">
@@ -1152,36 +1229,36 @@
 
         <div class="max-w-2xl mx-auto px-4 relative z-10">
             <div
-                class="glass-card rounded-[3rem] shadow-2xl border-4 border-white p-8 md:p-14 text-center bg-white/90 backdrop-blur-xl space-y-10 scroll-reveal">
+                class="glass-card rounded-[2.5rem] shadow-2xl border-4 border-white p-6 md:p-10 text-center bg-white/90 backdrop-blur-xl space-y-6 scroll-reveal">
                 <!-- Header Icon & Title -->
-                <div class="space-y-4">
+                <div class="space-y-3">
                     <div
-                        class="w-20 h-20 bg-white rounded-3xl shadow-xl flex items-center justify-center mx-auto border border-gray-50 relative">
+                        class="w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center mx-auto border border-gray-50 relative">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl opacity-10 blur-sm">
+                            class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl opacity-10 blur-sm">
                         </div>
-                        <i data-lucide="map-pin" class="w-10 h-10 text-emerald-700 relative z-10"></i>
+                        <i data-lucide="map-pin" class="w-8 h-8 text-emerald-700 relative z-10"></i>
                     </div>
                     <div>
-                        <h2 class="text-4xl font-black text-gray-900 mb-3 tracking-tight">বুকিং ট্র্যাক করুন</h2>
-                        <p class="text-gray-500 leading-relaxed">আপনার ট্র্যাকিং আইডি অথবা মোবাইল নম্বর দিয়ে সরাসরি
-                            বুকিং স্ট্যাটাস চেক করুন।</p>
+                        <h2 class="text-3xl font-black text-gray-900 mb-2 tracking-tight">বুকিং ট্র্যাক করুন</h2>
+                        <p class="text-xs text-gray-500 leading-relaxed">আইডি অথবা মোবাইল নম্বর দিয়ে স্ট্যাটাস চেক করুন।
+                        </p>
                     </div>
                 </div>
 
                 <!-- Input Group -->
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="relative group">
                         <!-- Shadow Glow -->
                         <div
                             class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-[2rem] blur opacity-10 group-hover:opacity-20 transition duration-500">
                         </div>
 
-                        <div class="relative flex flex-col md:flex-row gap-4">
+                        <div class="relative flex flex-col md:flex-row gap-2">
                             <input id="trackingInput" type="text" placeholder="DH-XXXXXXXX or 017..."
-                                class="flex-1 border-2 border-gray-100 bg-white rounded-2xl px-6 py-5 text-lg font-mono focus:outline-none focus:border-emerald-400 shadow-inner placeholder:text-gray-300">
+                                class="flex-1 border-2 border-gray-100 bg-white rounded-2xl px-6 py-4 text-base font-mono focus:outline-none focus:border-emerald-400 shadow-inner placeholder:text-gray-300">
                             <button onclick="checkBookingStatus()"
-                                class="btn-primary text-white px-10 py-5 rounded-2xl font-black text-lg whitespace-nowrap shadow-xl shadow-emerald-200 hover:shadow-emerald-300 transform active:scale-95 transition-all">
+                                class="btn-primary text-white px-8 py-4 rounded-2xl font-black text-base whitespace-nowrap shadow-xl shadow-emerald-100 hover:shadow-emerald-200 transform active:scale-95 transition-all">
                                 ট্র্যাক করুন
                             </button>
                         </div>
@@ -1254,10 +1331,10 @@
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-16 section-bg-subtle border-t border-gray-100">
+    <section id="how-it-works" class="py-10 section-bg-subtle border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">কিভাবে কাজ করে?</h2>
+            <div class="text-center mb-10 scroll-reveal">
+                <h2 class="text-4xl font-bold text-gray-900 mb-2">কিভাবে কাজ করে?</h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">দেখা করে বন্ধু জিতে নিতে অনুসরণ করুন ৪টি সহজ ধাপ</p>
             </div>
 
@@ -1402,11 +1479,11 @@
 
 
     <!-- Safety & Trust Section -->
-    <section id="safety" class="pt-16 pb-12 bg-white">
+    <section id="safety" class="pt-10 pb-10 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="scroll-reveal">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-6">নিরাপত্তা আমাদের কাছে সবার আগে</h2>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">নিরাপত্তা আমাদের কাছে সবার আগে</h2>
                     <div class="space-y-6">
                         <div class="flex items-start space-x-4">
                             <div
@@ -1483,10 +1560,10 @@
     </section>
 
     <!-- Blog Section (SEO Content Engine) -->
-    <section id="blog" class="py-16 bg-[#FDFDFB] border-t border-gray-100 relative overflow-hidden">
+    <section id="blog" class="py-10 bg-[#FDFDFB] border-t border-gray-100 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl font-black text-gray-900 mb-4">ব্লগ (Stories & Safety)</h2>
+            <div class="text-center mb-10 scroll-reveal">
+                <h2 class="text-4xl font-black text-gray-900 mb-2">ব্লগ (Stories & Safety)</h2>
                 <p class="text-lg text-gray-500">ঢাকার সোশ্যাল লাইফ ও আমাদের আয়োজন নিয়ে জানুন।</p>
             </div>
 
@@ -1497,7 +1574,7 @@
                 <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
             </div>
 
-            <div id="blogLoaderContainer" class="mt-16 text-center hidden">
+            <div id="blogLoaderContainer" class="mt-10 text-center hidden">
                 <button onclick="showMoreBlogs()"
                     class="px-8 py-4 bg-gray-900 text-white rounded-[2rem] font-bold hover:bg-emerald-600 transition-all shadow-xl shadow-gray-200">
                     আরও ব্লগ দেখুন (See More Blogs)
@@ -1621,7 +1698,7 @@
     </div>
 
     <!-- Premium Trust Banner (Repositioned for trust-building before FAQ) -->
-    <div id="top-stats" class="max-w-7xl mx-auto px-4 py-4 flex justify-center">
+    <div id="top-stats" class="max-w-7xl mx-auto px-4 py-2 flex justify-center">
         <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
             <span class="text-xs text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br
@@ -1631,10 +1708,10 @@
     </div>
 
     <!-- FAQ Section (Jiggasa) -->
-    <section id="faq" class="py-10 bg-emerald-50/20 relative overflow-hidden">
+    <section id="faq" class="py-8 bg-emerald-50/20 relative overflow-hidden">
         <div class="max-w-3xl mx-auto px-4 relative z-10">
-            <div class="text-center mb-6 scroll-reveal">
-                <h2 class="text-3xl font-black text-gray-900 mb-2">জিজ্ঞাসা (FAQ)</h2>
+            <div class="text-center mb-4 scroll-reveal">
+                <h2 class="text-3xl font-black text-gray-900 mb-1">জিজ্ঞাসা (FAQ)</h2>
                 <p class="text-gray-500">আপনার মনে থাকা সাধারণ কিছু প্রশ্নের উত্তর।</p>
             </div>
 
@@ -1647,9 +1724,9 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
-                                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                                <i data-lucide="shield" class="w-5 h-5"></i>
                             </div>
-                            <span class="text-lg font-bold text-gray-900">ফি সম্পর্কিত জিজ্ঞাসা(৳৪৯৯/৳২৪৯)</span>
+                            <span class="text-lg font-bold text-gray-900">"দেখা হোক" আসলে কী এবং এটি কতটা নিরাপদ?</span>
                         </div>
                         <i data-lucide="chevron-up"
                             class="faq-icon w-5 h-5 text-gray-400 transform transition-transform duration-300"></i>
@@ -1657,23 +1734,19 @@
                     <div class="faq-content transition-all duration-500" style="max-height: 1000px; opacity: 1;">
                         <div class="px-6 pb-6 space-y-4">
                             <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
-                                <p class="text-sm text-emerald-800 leading-relaxed">এই ফি-এর মাধ্যমে আমরা আপনার জন্য
-                                    একটি ওয়ান-টু-ওয়ান বা গ্রুপ মিটআপের সম্পূর্ণ আয়োজন করি। এর মধ্যে অন্তর্ভুক্ত:</p>
+                                <p class="text-sm text-emerald-800 leading-relaxed">"দেখা হোক" হলো ঢাকার প্রথম
+                                    প্রিমিয়াম মিটআপ প্ল্যাটফর্ম যা নতুন মানুষের সাথে নিরাপদ ও মানসম্মত পরিবেশে পরিচয়ের
+                                    সুযোগ করে দেয়।</p>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div class="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
-                                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-                                    <span class="text-xs font-bold text-gray-700">নিরাপদ ও যাচাইকৃত ব্যক্তি</span>
+                                    <i data-lucide="user-plus" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-gray-700">যাচাইকৃত ইউজার ও ভেন্যু</span>
                                 </div>
                                 <div class="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
-                                    <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
-                                    <span class="text-xs font-bold text-gray-700">প্রিমিয়াম লোকেশন সিলেকশন</span>
+                                    <i data-lucide="network" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-gray-700">নিরাপদ সামাজিক নেটওয়ার্ক</span>
                                 </div>
-                            </div>
-                            <div
-                                class="p-4 border-l-4 border-emerald-500 bg-emerald-50/30 rounded-r-xl italic text-sm text-gray-600 leading-relaxed">
-                                "আমরা চাই ঢাকার প্রতিটি মানুষের জন্য নতুন বন্ধুত্ব তৈরি হোক আরও নিরাপদ এবং সহজ।"
-                                <br><span class="text-xs font-bold text-emerald-600 not-italic">— DekhaHok Team</span>
                             </div>
                         </div>
                     </div>
@@ -1689,15 +1762,27 @@
                                 class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
                                 <i data-lucide="user-check" class="w-5 h-5"></i>
                             </div>
-                            <span class="text-base font-bold text-gray-700">সাক্ষাৎকার কি নিরাপদ?</span>
+                            <span class="text-base font-bold text-gray-700">আমি কার সাথে দেখা করছি তা কীভাবে নিশ্চিত
+                                হবো?</span>
                         </div>
                         <i data-lucide="chevron-down"
                             class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
-                        <div class="px-6 pb-6">
-                            <p class="text-sm text-gray-500 leading-relaxed">হ্যাঁ, DekhaHok টিম প্রতিটি আবেদন গুরুত্বের
-                                সাথে যাচাই করে। আমরা শুধুমাত্র পাবলিক প্লেসে মিটআপ আয়োজন করি।</p>
+                        <div class="px-6 pb-6 space-y-4">
+                            <p class="text-sm text-gray-500 leading-relaxed">নিরাপত্তার নিশ্চিত করতে আমরা প্রতিটি
+                                ইউজারের
+                                প্রোফাইল পর্যবেক্ষণ করি। আমাদের যাচাইকরণ প্রক্রিয়ার মধ্যে রয়েছে:</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-gray-700">ভেরিফাইড ব্যাজ সিস্টেম</span>
+                                </div>
+                                <div class="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+                                    <i data-lucide="star" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-gray-700">ইউজার রেটিং ও ফিডব্যাক</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1710,17 +1795,119 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
-                                <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
                             </div>
-                            <span class="text-base font-bold text-gray-700"> টাকা ফেরত পাব কি? (Refund)</span>
+                            <span class="text-base font-bold text-gray-700">দেখা করার জায়গা বা ভেন্যুগুলো কি
+                                নিরাপদ?</span>
                         </div>
                         <i data-lucide="chevron-down"
                             class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
                         <div class="px-6 pb-6">
-                            <p class="text-sm text-gray-500 leading-relaxed">যদি ম্যাচ খুঁজে না পাই, তবে আপনি রিফান্ড
-                                আবেদন করতে পারবেন অথবা ক্রেডিট রাখতে পারবেন।</p>
+                            <p class="text-sm text-gray-500 leading-relaxed">অবশ্যই! আমরা কেবল ঢাকার সেইসব স্বনামধন্য
+                                এবং প্রকাশ্য (Public) ক্যাফে বা রেস্টুরেন্টগুলোকে ভেন্যু হিসেবে তালিকায় রাখি যেগুলোতে
+                                সিসিটিভি (CCTV) ক্যামেরা এবং ভালো নিরাপত্তা ব্যবস্থা আছে।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i data-lucide="lock" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-bold text-gray-700">আমার ব্যক্তিগত তথ্য কি গোপন থাকবে?</span>
+                        </div>
+                        <i data-lucide="chevron-down"
+                            class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-gray-500 leading-relaxed">আপনার গোপনীয়তা আমাদের কাছে পবিত্র। বুকিং
+                                নিশ্চিত হওয়ার আগে আপনার ফোন নম্বর বা ব্যক্তিগত যোগাযোগের মাধ্যম অন্য কারো কাছে প্রকাশ
+                                করা হয় না। আমাদের প্ল্যাটফর্মটি ব্যাংকিং লেভেল সিকিউরিটি প্রটোকল মেনে চলে।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-bold text-gray-700">দেখা করার সময় কোনো সমস্যা হলে আমি কী
+                                করবো?</span>
+                        </div>
+                        <i data-lucide="chevron-down"
+                            class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-gray-500 leading-relaxed">আমাদের অ্যাপে একটি Live Tracking UI এবং
+                                ইমার্জেন্সি সাপোর্ট বাটন রয়েছে। মিটআপ চলাকালীন কোনো অস্বস্তি বোধ করলে আপনি সাথে সাথে
+                                আমাদের সাপোর্ট
+                                টিমকে জানাতে পারেন।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i data-lucide="activity" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-bold text-gray-700">বুকিং করার পর স্ট্যাটাস কীভাবে চেক
+                                করবো?</span>
+                        </div>
+                        <i data-lucide="chevron-down"
+                            class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-gray-500 leading-relaxed">বুকিং করার পর আপনি একটি ইউনিক Tracking ID
+                                পাবেন। সেটি দিয়ে আপনি রিয়েল-টাইমে দেখতে পারবেন আপনার বুকিংটি কোন পর্যায়ে আছে
+                                (Requested → Confirmed → Place → Met Up)।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 (Refund) -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-bold text-gray-700">টাকা ফেরত নিতে পারবো কি? (Refund
+                                Policy)</span>
+                        </div>
+                        <i data-lucide="chevron-down"
+                            class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-gray-500 leading-relaxed">হ্যাঁ, যদি কোনো আবেদন বুকিং করার পরবর্তী ১০
+                                দিনের মধ্যে আমরা কোনো কারণবশত ব্যর্থ হই, তবে আপনি সম্পূর্ণ রিফান্ড পাবেন। রিফান্ডের
+                                আবেদন করার ৩ কার্যদিবসের মধ্যেই আপনার টাকা পৌঁছে যাবে।</p>
                         </div>
                     </div>
                 </div>
@@ -1729,18 +1916,17 @@
     </section>
 
     <!-- Visual Spacer for clear separation -->
-    <div class="h-6 bg-white section-bg-subtle border-t border-gray-50"></div>
+    <div class="h-2 bg-white section-bg-subtle border-t border-gray-50"></div>
 
     <footer class="relative z-[999] bg-gray-900 text-white pt-16 pb-8"
         style="pointer-events: auto !important; margin-bottom: 0;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div class="col-span-2">
-                    <div class="flex items-center space-x-2 mb-4 cursor-pointer group"
+                    <div class="flex items-center mb-4 cursor-pointer group"
                         onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                        <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok"
-                            class="footer-logo group-hover:scale-110 transition-transform">
-                        <span class="text-2xl font-bold group-hover:text-emerald-400 transition-colors">DekhaHok</span>
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
+                            class="h-[34px] md:h-[42px] w-auto brightness-0 invert" />
                     </div>
                     <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
                         তুলুন প্রাণবন্ত
@@ -2082,18 +2268,26 @@
                 name: document.getElementById('name').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 age: parseInt(document.getElementById('age').value) || null,
-                group_size: parseInt(document.getElementById('groupSize').value),
-                preferred_date: activeSlot.dataset.date,
-                preferred_time: activeSlot.dataset.time,
-                venue_type: document.getElementById('venueType').value,
+                group_size: parseInt(document.getElementById('groupSize').value) || 2,
+                preferred_date: activeSlot ? activeSlot.dataset.date : null,
+                preferred_time: activeSlot ? activeSlot.dataset.time : null,
+                venue_type: document.getElementById('venueType').value || 'public_place',
                 conversation_style: document.getElementById('interests').value.trim() || null,
                 preferred_people: "(Merged)", // Keep for backend model compatibility
                 interests: document.getElementById('interests').value.trim() || null,
                 expectations: "(Merged)",     // Keep for backend model compatibility
-                payment_method: document.getElementById('paymentMethod').value,
+                payment_method: document.getElementById('paymentMethod').value || 'bkash',
                 payment_sender_digits: lastDigits,
                 referred_by: document.getElementById('referredBy').value.trim() || null,
             };
+
+            // Double check for critical missing fields before sending
+            if (!payload.preferred_date || !payload.preferred_time) {
+                alert('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+                return;
+            }
 
             try {
                 const res = await fetch('/api/bookings', {
@@ -2104,7 +2298,26 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                    if (data.detail && Array.isArray(data.detail)) {
+                        const errorMsg = data.detail.map(err => {
+                            const field = err.loc[err.loc.length - 1];
+                            const fieldMap = {
+                                'name': 'নাম',
+                                'phone': 'ফোন নম্বর',
+                                'age': 'বয়স',
+                                'preferred_date': 'তারিখ',
+                                'preferred_time': 'সময়',
+                                'venue_type': 'ভেন্যু ধরন',
+                                'payment_sender_digits': 'পেমেন্ট ডিজিট (শেষ ২ সংখ্যা)',
+                                'interests': 'আগ্রহ/পছন্দসমূহ'
+                            };
+                            const fieldName = fieldMap[field] || field;
+                            return `• ${fieldName}: ${err.msg}`;
+                        }).join('\n');
+                        alert(`অনুগ্রহ করে নিচের তথ্যগুলো সঠিক করুন:\n${errorMsg}`);
+                    } else {
+                        alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                    }
                     return;
                 }
 
@@ -2310,39 +2523,39 @@
                 const referralCode = data.referral_code;
 
                 resultEl.innerHTML = `
-                    <div class="tracking-status-card py-6 md:py-10 animate-in fade-in slide-in-from-bottom-5 duration-700 relative overflow-hidden">
+                    <div class="tracking-status-card py-4 md:py-6 animate-in fade-in slide-in-from-bottom-5 duration-700 relative overflow-hidden">
                         <!-- Growth viral features -->
-                        <div class="px-4 md:px-10 mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="px-2 md:px-10 mb-4 grid grid-cols-2 gap-2 md:gap-4">
                             <!-- Referral Card -->
-                            <div class="bg-emerald-50/80 backdrop-blur rounded-[2rem] p-6 border border-emerald-100 flex flex-col justify-center relative overflow-hidden group">
-                                <div class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-200/20 rounded-full blur-2xl group-hover:bg-emerald-200/40 transition-colors"></div>
-                                <span class="relative z-10 text-[9px] font-black text-emerald-700 uppercase tracking-widest mb-1">আপনার রেফারেল কোড:</span>
-                                <div class="relative z-10 bg-white/90 p-2.5 rounded-xl border border-emerald-100 flex items-center justify-between mt-2">
-                                    <span class="text-xl font-mono font-black text-gray-900 tracking-wider">${referralCode || 'DH-SAVOY'}</span>
-                                    <button id="refCopyBtn" onclick="copyReferralCode('${referralCode || 'DH-SAVOY'}')" class="text-emerald-600 hover:text-emerald-700 p-1.5 hover:bg-emerald-50 rounded-lg transition" title="কপি করুন">
-                                        <i data-lucide="copy" class="w-4 h-4" id="refCopyIcon"></i>
-                                        <i data-lucide="check" class="w-4 h-4 hidden" id="refCheckIcon"></i>
+                            <div class="bg-emerald-50/80 backdrop-blur rounded-[1.25rem] p-2.5 md:p-3.5 border border-emerald-100 flex flex-col justify-center relative overflow-hidden group">
+                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-emerald-200/20 rounded-full blur-2xl group-hover:bg-emerald-200/40 transition-colors"></div>
+                                <span class="relative z-10 text-[7px] md:text-[8px] font-black text-emerald-700 uppercase tracking-widest leading-none opacity-70">রেফারেল কোড:</span>
+                                <div class="relative z-10 bg-white/90 p-1 md:p-1.5 rounded-lg md:rounded-xl border border-emerald-100 flex items-center justify-between mt-1">
+                                    <span class="text-xs md:text-base font-mono font-black text-gray-900 tracking-wider leading-none">${referralCode || 'DH-SAVOY'}</span>
+                                    <button id="refCopyBtn" onclick="copyReferralCode('${referralCode || 'DH-SAVOY'}')" class="text-emerald-600 hover:text-emerald-700 p-1 hover:bg-emerald-50 rounded-lg transition" title="কপি করুন">
+                                        <i data-lucide="copy" class="w-2.5 md:w-3.5 h-2.5 md:h-3.5" id="refCopyIcon"></i>
+                                        <i data-lucide="check" class="w-2.5 md:w-3.5 h-2.5 md:h-3.5 hidden" id="refCheckIcon"></i>
                                     </button>
                                 </div>
-                                <p class="relative z-10 text-[9px] font-bold text-gray-400 mt-2">বন্ধুকে আমন্ত্রন জানিয়ে 'ভেরিফাইড সিটিজেন' হন!</p>
+                                <p class="relative z-10 text-[7px] md:text-[8px] font-bold text-gray-400 mt-1 opacity-80 leading-tight">বন্ধুকে আমন্ত্রন দিন!</p>
                             </div>
                             <!-- Verified Badge Card -->
-                            <div class="bg-white rounded-[2rem] p-6 border border-gray-100 flex items-center gap-4 transition-all ${isVerified ? 'border-emerald-200 bg-emerald-50/20 shadow-sm shadow-emerald-500/10' : 'opacity-40 grayscale'}">
-                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center shadow-inner">
-                                    <i data-lucide="shield-check" class="w-6 h-6 text-emerald-600"></i>
+                            <div class="bg-white rounded-[1.25rem] p-2.5 md:p-3.5 border border-gray-100 flex flex-col sm:flex-row items-center gap-2 md:gap-3 transition-all ${isVerified ? 'border-emerald-200 bg-emerald-50/20 shadow-sm shadow-emerald-500/10' : 'opacity-60 grayscale'}">
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-emerald-100 flex items-center justify-center shadow-inner flex-shrink-0">
+                                    <i data-lucide="shield-check" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                                 </div>
-                                <div>
-                                    <h4 class="text-sm font-black text-gray-900 uppercase tracking-tight">ভেরিফাইড সিটিজেন (Badge)</h4>
-                                    <p class="text-[10px] font-bold text-gray-500 leading-tight">${isVerified ? 'অভিনন্দন! আপনি একজন ভেরিফাইড মেম্বার' : '১টি মিটআপ ও ১টি রিফারাল প্রয়োজন'}</p>
+                                <div class="text-center sm:text-left min-w-0">
+                                    <h4 class="text-[9px] md:text-[11px] font-black text-gray-900 uppercase tracking-tight truncate leading-none">ভেরিফাইড</h4>
+                                    <p class="text-[7px] md:text-[9px] font-bold text-gray-500 leading-tight truncate mt-1">${isVerified ? 'অভিনন্দন!' : '১টি মিটআপ প্রয়োজন'}</p>
                                 </div>
-                                ${isVerified ? '<i data-lucide="award" class="w-5 h-5 text-emerald-500 ml-auto animate-bounce-slow"></i>' : ''}
+                                ${isVerified ? '<i data-lucide="award" class="w-3 h-3 md:w-4 md:h-4 text-emerald-500 ml-auto animate-bounce-slow hidden sm:block"></i>' : ''}
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between gap-2 mb-6 px-4 md:px-10">
+                        <div class="flex items-center justify-between gap-2 mb-4 px-4 md:px-10">
                             <div class="flex flex-col min-w-0">
                                 <h4 class="font-black text-gray-900 leading-none tracking-tight text-sm md:text-base truncate">স্ট্যাটাস ট্র্যাকার</h4>
-                                <p class="text-[10px] md:text-xs text-gray-400 font-mono mt-1 font-bold truncate">${data.tracking_id}</p>
+                                <p class="text-[10px] md:text-xs text-emerald-600 font-bold mt-1 truncate uppercase tracking-widest">${data.name}</p>
                             </div>
                             
                             <div class="flex-1 flex justify-center items-center">
@@ -2451,7 +2664,7 @@
                                                 <div class="flex-1 min-w-0">
                                                     <div class="flex items-center flex-wrap gap-2 mb-1">
                                                         <span class="font-black text-gray-900 tracking-tight leading-none">${m.name}</span>
-                                                        <span class="px-2 py-0.5 bg-emerald-50 border border-emerald-100 rounded-full text-[8px] font-black text-emerald-600 uppercase tracking-tighter leading-none">${m.rating > 0 ? '⭐ ' + m.rating : 'Verified Mate'}</span>
+                                                        <span class="px-2 py-0.5 bg-emerald-50 border border-emerald-100 rounded-full text-[8px] font-black text-emerald-600 uppercase tracking-tighter leading-none">${m.rating > 0 ? '⭐ ' + m.rating : 'Verified'}</span>
                                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-auto"></span>
                                                     </div>
                                                     <div class="flex items-center gap-2">
@@ -2511,7 +2724,7 @@
                             <!-- Hub Buttons Moved Here -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                 ${(data.group_members && data.group_members.length > 0 && data.assigned_venue && data.booking_status !== 'completed') ? `
-                                    <button onclick="openChat(${data.assigned_group_id}, '${id}')" 
+                                    <button onclick="openChat(${data.assigned_group_id}, '${data.tracking_id}')" 
                                             class="action-hub-btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl shadow-emerald-200 active:scale-95 text-sm">
                                         <i data-lucide="message-square" class="w-4 h-4"></i>
                                         গ্রুপ চ্যাটে যোগ দিন
@@ -2709,7 +2922,7 @@
 
                         marker.on('click', () => {
                             if (window.lastClickedMarker === marker) {
-                                window.open(`https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`, '_blank');
+                                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + (p.area_name || '') + ', Dhaka')}`, '_blank');
                             } else {
                                 map.setView([p.latitude, p.longitude], 15, { animate: true });
                                 window.lastClickedMarker = marker;
@@ -2734,7 +2947,31 @@
         let currentChatGroupId;
         let currentTrackingId;
 
+        let pendingChatGroupId = null;
+        let pendingChatTrackingId = null;
+
         function openChat(groupId, trackingId) {
+            // Security layer: Prompt for Booking ID if not already verified for this session
+            const sessionKey = `chat_auth_${groupId}`;
+            if (!sessionStorage.getItem(sessionKey)) {
+                pendingChatGroupId = groupId;
+                pendingChatTrackingId = trackingId;
+
+                // Reset custom modal input
+                document.getElementById('chatAccessInput').value = '';
+                document.getElementById('chatAccessError').classList.add('hidden');
+
+                const modal = document.getElementById('chatAccessModal');
+                const content = document.getElementById('chatAccessModalContent');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-90', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                    document.getElementById('chatAccessInput').focus();
+                }, 10);
+                return;
+            }
+
             currentChatGroupId = groupId;
             currentTrackingId = trackingId;
             document.getElementById('chatOverlay').classList.remove('hidden');
@@ -2743,6 +2980,47 @@
             loadChatMessages();
             chatInterval = setInterval(loadChatMessages, 3000);
             lucide.createIcons();
+        }
+
+        function submitChatAccess() {
+            const userInput = document.getElementById('chatAccessInput').value.trim();
+            const errorEl = document.getElementById('chatAccessError');
+
+            if (!userInput) {
+                errorEl.innerText = "অনুগ্রহ করে ভুল আইডি দিবেন না।";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            if (userInput !== pendingChatTrackingId) {
+                errorEl.innerText = "ভুল আইডি। সঠিক ট্র্যাকিং আইডিটি দিন।";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            // Success
+            const sessionKey = `chat_auth_${pendingChatGroupId}`;
+            sessionStorage.setItem(sessionKey, 'true');
+
+            closeChatAccessModal();
+            openChat(pendingChatGroupId, pendingChatTrackingId);
+        }
+
+        function closeChatAccessModal() {
+            const modal = document.getElementById('chatAccessModal');
+            const content = document.getElementById('chatAccessModalContent');
+            const help = document.getElementById('forgotIdHelp');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                help.classList.add('hidden'); // Reset help view
+            }, 300);
+        }
+
+        function toggleForgotIdHelp() {
+            const help = document.getElementById('forgotIdHelp');
+            help.classList.toggle('hidden');
         }
 
         function closeChat() {
@@ -3084,13 +3362,13 @@
                             <button onclick="openBlogModal(${idx})" class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl text-white font-bold text-sm">পড়ুন (Read Story)</button>
                         </div>
                     </div>
-                    <div class="p-8">
-                        <div class="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2">
                             <i data-lucide="zap" class="w-3 h-3 fill-current"></i>
                             <span>${b.badge_text || 'Insight'}</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-4 line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors">${b.title}</h3>
-                        <p class="text-gray-500 text-xs mb-6 line-clamp-2 leading-relaxed">${b.seo_description || 'DekhaHok stories and safety guides for DHK social scene.'}</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors">${b.title}</h3>
+                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">${b.seo_description || 'DekhaHok stories and safety guides for DHK social scene.'}</p>
                         <div class="flex items-center justify-between">
                              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">${new Date(b.created_at).toLocaleDateString('bn-BD')}</span>
                              <button onclick="openBlogModal(${idx})" class="p-2 bg-gray-50 rounded-xl text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all">
