@@ -3,9 +3,9 @@
   <defs>
     <!-- Emerald ring gradient -->
     <linearGradient id="ringGradient" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2F7A5C"/>
-      <stop offset="50%" stop-color="#1F5A43"/>
-      <stop offset="100%" stop-color="#163F2F"/>
+      <stop offset="0%" stop-color="#008A77"/>
+      <stop offset="50%" stop-color="#006054"/>
+      <stop offset="100%" stop-color="#00453C"/>
     </linearGradient>
 
     <!-- Inner soft green background -->
@@ -48,7 +48,7 @@
        V88 
        Q62 78 72 78 
        Z" 
-    stroke="#1F4D3A" 
+    stroke="#00453C" 
     stroke-width="7" 
     fill="none" 
     stroke-linecap="round"
