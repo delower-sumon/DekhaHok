@@ -9,6 +9,9 @@
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23059669'/><stop offset='1' stop-color='%23064e3b'/></linearGradient></defs><rect width='24' height='24' rx='5' fill='url(%23g)'/><path d='M19.5 11.5c0 1.3-.3 2.5-.9 3.5l1.4 4-4-1.4c-1 .6-2.2.9-3.5.9-4.1 0-7.5-3.4-7.5-7.5S8.4 4 12.5 4s7.5 3.4 7.5 7.5z' fill='%23fff'/></svg>">
   <script src="https://cdn.tailwindcss.com/3.4.1"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -186,6 +189,10 @@
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>📈</span><span>Analytics</span>
       </button>
+      <button onclick="showSection('blogs')" data-section="blogs"
+        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+        <span>✍️</span><span>Blogs & SEO</span>
+      </button>
       <div class="flex-1"></div>
       <button onclick="logout()" class="px-3 py-2 text-sm text-gray-400 hover:text-red-500 text-left transition">
         ← Logout
@@ -295,23 +302,27 @@
         </div>
       </section>
 
-      <!-- ── Partnerships Section ───────────────────────────────────────── -->
-      <section id="section-partners" class="section hidden space-y-6">
+      </section>
+
+      <!-- ── Blogs Section ────────────────────────────────────────────── -->
+      <section id="section-blogs" class="section hidden space-y-6">
         <div class="flex items-center justify-between">
-          <h1 class="text-2xl font-bold text-gray-800">Partnership Requests</h1>
+          <h1 class="text-2xl font-bold text-gray-800">Article Management (SEO)</h1>
+          <button onclick="openBlogModal()"
+            class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
+            + New Post
+          </button>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <table class="w-full text-sm">
+          <table class="w-full text-sm text-left">
             <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
               <tr>
-                <th class="px-6 py-3 text-left">Restaurant/Place</th>
-                <th class="px-6 py-3 text-left">Contact</th>
-                <th class="px-6 py-3 text-left">Status</th>
-                <th class="px-6 py-3 text-left">Date</th>
+                <th class="px-6 py-3">Title</th>
+                <th class="px-6 py-3">Status</th>
                 <th class="px-6 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="partnersTableBody" class="divide-y divide-gray-50">
+            <tbody id="blogsTableBody" class="divide-y divide-gray-50">
               <!-- filled by JS -->
             </tbody>
           </table>
@@ -422,53 +433,133 @@
     </div>
   </div>
 
-  <!-- ── Edit Booking Modal ─────────────────────────────────────────────── -->
-  <div id="editModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-40">
-    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm space-y-4">
-      <h2 class="text-xl font-bold text-gray-800">Update Booking</h2>
+  <!-- ── Edit Booking Modal ────────────────────────────────────────────────── -->
+  <div id="editModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[60] backdrop-blur-sm p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-gray-800">Edit Booking</h2>
+        <span id="edit_tracking_id" class="text-xs font-mono font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full"></span>
+      </div>
       <input id="edit_id" type="hidden">
-      <div id="edit_payment_info" class="p-3 bg-gray-50 rounded-xl mb-2">
-        <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Manual Payment Info</p>
-        <p class="text-xs font-semibold text-gray-700">Method: <span id="info_method">-</span></p>
-        <p class="text-xs font-semibold text-gray-700">Last 2 digits: <span id="info_digits">-</span></p>
+      
+      <!-- Preferences display -->
+      <div id="pref_display" class="bg-amber-50 p-4 rounded-xl border border-amber-100 mt-2">
+        <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-1.5 flex items-center gap-1">
+          <i data-lucide="message-square" class="w-3 h-3"></i> User Note / Preferences
+        </p>
+        <p id="edit_interests_val" class="text-sm text-amber-900 leading-relaxed italic"></p>
       </div>
-      <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Payment Status</label>
-        <select id="edit_payment"
-          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
-          <option value="unpaid">Unpaid</option>
-          <option value="paid">Paid</option>
-        </select>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Payment Status</label>
+          <select id="edit_payment" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Booking Status</label>
+          <select id="edit_status" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="processing">Processing</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="unsuccessful">Unsuccessful</option>
+          </select>
+        </div>
       </div>
-      <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Booking Status</label>
-        <select id="edit_status"
-          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
-          <option value="processing">Processing</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="completed">Completed</option>
-          <option value="unsuccessful">Unsuccessful</option>
-        </select>
-      </div>
+      
       <div id="rejection_container" class="hidden">
-        <label class="block text-xs font-medium text-gray-500 mb-1">Rejection Reason (if Unsuccessful)</label>
-        <textarea id="edit_rejection" rows="2" placeholder="e.g. Payment mismatch, Underage..."
-          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 resize-none bg-gray-50"></textarea>
+        <label class="block text-xs font-bold text-red-400 uppercase tracking-widest mb-1.5">Rejection Reason</label>
+        <textarea id="edit_rejection" rows="2" class="w-full border border-red-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-400" placeholder="Why is this booking unsuccessful?"></textarea>
       </div>
+
+      <div class="grid grid-cols-2 gap-4 text-xs bg-gray-50 p-3 rounded-xl border border-gray-100">
+        <div>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Payment Method</p>
+            <p id="info_method" class="font-bold text-gray-800">-</p>
+        </div>
+        <div>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Sender Digits</p>
+            <p id="info_digits" class="font-bold text-gray-800">-</p>
+        </div>
+      </div>
+
       <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Admin Notes</label>
-        <textarea id="edit_notes" rows="3" placeholder="Internal notes..."
-          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 resize-none bg-gray-50"></textarea>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Admin Notes (Internal Only)</label>
+        <textarea id="edit_notes" rows="4" class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium" placeholder="E.g. Verified over call, special requirements..."></textarea>
       </div>
-      <div class="flex gap-3 pt-2">
-        <button onclick="closeEditModal()"
-          class="flex-1 border border-gray-200 text-gray-600 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
-          Cancel
-        </button>
-        <button onclick="saveEdit()"
-          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-100">
-          Save
-        </button>
+      
+      <div class="flex gap-4 pt-2">
+        <button onclick="closeEditModal()" class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition">Cancel</button>
+        <button onclick="saveEdit()" class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-emerald-50">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── Blog Modal (Admin) ────────────────────────────────────────────────── -->
+  <div id="blogAdminModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[70] backdrop-blur-sm p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-4xl h-[90vh] flex flex-col transform scale-95 opacity-0 transition-all duration-300" id="blogAdminContent">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-800" id="blogModalHeader">Create New Post</h2>
+        <button onclick="closeBlogAdminModal()" class="p-2 hover:bg-gray-100 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto space-y-6 pr-2">
+        <input id="blogId" type="hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Article Title</label>
+              <input id="blogTitle" type="text" placeholder="Winning Headline..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 font-bold">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Image URL (Optional)</label>
+              <input id="blogImage" type="text" placeholder="https://unsplash.com/..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+               <div>
+                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Badge/Category</label>
+                 <input id="blogBadge" type="text" placeholder="e.g. Dhaka meetup"
+                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+               </div>
+               <div>
+                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Keywords (CSV)</label>
+                 <input id="blogKeywords" type="text" placeholder="Dhaka, Meetup..."
+                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+               </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4">
+               <div>
+                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Status</label>
+                 <select id="blogStatus" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+                   <option value="published">Published</option>
+                   <option value="draft">Draft</option>
+                 </select>
+               </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">SEO Description</label>
+            <textarea id="blogSeo" rows="5" placeholder="Summary for Google search..."
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 resize-none bg-gray-50 h-full"></textarea>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Content (Rich Text Editing)</label>
+          <div id="editor-container" class="h-64 bg-white border border-gray-200 rounded-xl overflow-hidden">
+             <!-- Quill editor goes here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-4 pt-6 border-t border-gray-100 mt-6">
+        <button onclick="closeBlogAdminModal()" class="flex-1 px-6 py-3 border border-gray-200 text-gray-600 rounded-xl font-bold hover:bg-gray-50 transition">Cancel</button>
+        <button onclick="saveBlog()" class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-6 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-xl shadow-emerald-100">Save Article</button>
       </div>
     </div>
   </div>
@@ -643,6 +734,7 @@
       document.getElementById('navLocationsText').innerHTML = locText;
 
       const recent = bookings.slice(0, 10);
+      allBookings = bookings; // Populate global state for lookups
       document.getElementById('recentBookingsTable').innerHTML = bookingsTableHTML(recent);
     }
 
@@ -744,7 +836,7 @@
               ${b.booking_status === 'unsuccessful' ? `<div class="text-[10px] text-red-500 mt-1 italic">${b.rejection_reason || 'No reason specified'}</div>` : ''}
             </td>
             <td class="px-4 py-3 space-x-2">
-              <button onclick="openEditModal(${JSON.stringify(b).replace(/"/g, '&quot;')})"
+              <button onclick="openEditModalById(${b.id})"
                 class="text-xs text-emerald-700 hover:underline font-bold">Edit</button>
               <button onclick="deleteBooking(${b.id})"
                 class="text-xs text-red-500 hover:underline font-medium">Delete</button>
@@ -756,7 +848,10 @@
     }
 
     // ── Edit Booking ───────────────────────────────────────────────────────────
-    function openEditModal(b) {
+    function openEditModalById(id) {
+      const b = allBookings.find(x => x.id === id);
+      if (!b) return toast('Booking not found', true);
+      
       document.getElementById('edit_id').value = b.id;
       document.getElementById('edit_payment').value = b.payment_status;
       document.getElementById('edit_status').value = b.booking_status;
@@ -771,10 +866,15 @@
       document.getElementById('edit_status').onchange = (e) => toggleRejection(e.target.value);
       toggleRejection(b.booking_status);
       
+      document.getElementById('edit_tracking_id').textContent = b.tracking_id;
+      const prefNote = b.interests || 'No preferences provided.';
+      document.getElementById('edit_interests_val').textContent = prefNote;
+      
       document.getElementById('info_method').textContent = b.payment_method || '-';
       document.getElementById('info_digits').textContent = b.payment_sender_digits || '--';
       
       document.getElementById('editModal').classList.remove('hidden');
+      lucide.createIcons();
     }
 
     function closeEditModal() {
@@ -1380,6 +1480,151 @@
         toast('Delete failed', true);
       }
     }
+    // ── Blog Management (SEO) ──────────────────────────────────────────────────
+    let quill = null;
+    function initQuill() {
+      if (quill) return;
+      quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'blockquote', 'code-block'],
+            [{ 'color': [] }, { 'background': [] }],
+            ['clean']
+          ]
+        }
+      });
+    }
+
+    async function loadBlogs() {
+      try {
+        const res = await adminFetch('/api/blogs');
+        const blogs = await res.json();
+        const tbody = document.getElementById('blogsTableBody');
+        
+        if (blogs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-10 text-center text-gray-400">No articles found. Create your first one!</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = blogs.map(b => `
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4 font-bold text-gray-900">${b.title}</td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${b.status === 'published' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'}">
+                ${b.status}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right space-x-3">
+              <button onclick="openBlogModal(${JSON.stringify(b).replace(/"/g, '&quot;')})" class="text-xs font-bold text-emerald-600 hover:underline">Edit</button>
+              <button onclick="deleteBlog(${b.id})" class="text-xs font-bold text-red-500 hover:underline">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        toast("Failed to load blogs", true);
+      }
+    }
+
+    function openBlogModal(b = null) {
+      initQuill();
+      const modal = document.getElementById('blogAdminModal');
+      const content = document.getElementById('blogAdminContent');
+      const header = document.getElementById('blogModalHeader');
+      
+      if (b) {
+        header.innerText = 'Edit Article';
+        document.getElementById('blogId').value = b.id;
+        document.getElementById('blogTitle').value = b.title;
+        document.getElementById('blogBadge').value = b.badge_text || '';
+        document.getElementById('blogKeywords').value = b.keywords || '';
+        document.getElementById('blogSeo').value = b.seo_description || '';
+        document.getElementById('blogImage').value = b.image_url || '';
+        document.getElementById('blogStatus').value = b.status || 'published';
+        quill.root.innerHTML = b.content;
+      } else {
+        header.innerText = 'Create New Post';
+        document.getElementById('blogId').value = '';
+        document.getElementById('blogTitle').value = '';
+        document.getElementById('blogBadge').value = '';
+        document.getElementById('blogKeywords').value = '';
+        document.getElementById('blogSeo').value = '';
+        document.getElementById('blogImage').value = '';
+        document.getElementById('blogStatus').value = 'published';
+        quill.root.innerHTML = '';
+      }
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      }, 10);
+      lucide.createIcons();
+    }
+
+    function closeBlogAdminModal() {
+      const modal = document.getElementById('blogAdminModal');
+      const content = document.getElementById('blogAdminContent');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    async function saveBlog() {
+      const id = document.getElementById('blogId').value;
+      const title = document.getElementById('blogTitle').value.trim();
+      const content = quill.root.innerHTML;
+      if (!title || quill.getText().trim().length === 0) return toast("Title and content are required", true);
+
+      const payload = {
+        title,
+        content,
+        badge_text: document.getElementById('blogBadge').value.trim(),
+        keywords: document.getElementById('blogKeywords').value.trim(),
+        seo_description: document.getElementById('blogSeo').value.trim(),
+        image_url: document.getElementById('blogImage').value.trim(),
+        status: document.getElementById('blogStatus').value,
+        author: 'Team DekhaHok'
+      };
+
+      const method = id ? 'PATCH' : 'POST';
+      const url = id ? `/api/admin/blogs/${id}` : '/api/admin/blogs';
+
+      const res = await adminFetch(url, {
+        method,
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        toast(`Article ${id ? 'updated' : 'created'} ✓`);
+        closeBlogAdminModal();
+        loadBlogs();
+      } else {
+        toast("Operation failed", true);
+      }
+    }
+
+    async function deleteBlog(id) {
+       if (!confirm("Are you sure you want to delete this article?")) return;
+       const res = await adminFetch(`/api/admin/blogs/${id}`, { method: 'DELETE' });
+       if (res.ok) {
+         toast("Article deleted ✓");
+         loadBlogs();
+       } else {
+         toast("Delete failed", true);
+       }
+    }
+
+    // Update showSection to handle blogs
+    const originalShowSection = showSection;
+    showSection = function(name) {
+      originalShowSection(name);
+      if (name === 'blogs') loadBlogs();
+    };
+
   </script>
 </body>
 

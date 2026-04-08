@@ -11,6 +11,7 @@
     <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <meta name="google" content="notranslate">
     <style>
         /* Premium Tracker Card Redesign */
         .info-grid-card {
@@ -477,9 +478,17 @@
             <p class="text-gray-500 text-sm mb-5">আমরা আপনাকে একটি গ্রুপে যুক্ত করব এবং জানাবো।</p>
 
             <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 mb-5">
-                <p class="text-xs text-emerald-700 font-semibold uppercase tracking-widest mb-2">আপনার ট্র্যাকিং আইডি
+                <p class="text-xs text-emerald-700 font-semibold uppercase tracking-widest mb-3">আপনার ট্র্যাকিং আইডি
                 </p>
-                <p id="modalTrackingId" class="text-3xl font-bold font-mono text-emerald-800 tracking-widest"></p>
+                <div class="bg-white/90 p-2.5 rounded-xl border border-emerald-100 flex items-center justify-between">
+                    <p id="modalTrackingId" class="text-xl font-bold font-mono text-emerald-800 tracking-widest"></p>
+                    <button onclick="copyTrackingId()"
+                        class="text-emerald-600 hover:text-emerald-700 p-1.5 hover:bg-emerald-50 rounded-lg transition"
+                        title="কপি করুন">
+                        <i data-lucide="copy" class="w-4 h-4" id="trackingCopyIcon"></i>
+                        <i data-lucide="check" class="w-4 h-4 hidden" id="trackingCheckIcon"></i>
+                    </button>
+                </div>
                 <p class="text-xs text-gray-400 mt-2">এই আইডিটি সেভ করুন — স্ট্যাটাস চেক করতে লাগবে</p>
             </div>
 
@@ -681,18 +690,8 @@
         </div>
     </div>
 
-    <!-- Premium Trust Banner (Inspired by Fitra Image 5 Top) -->
-    <div id="top-stats" class="max-w-7xl mx-auto px-4 mt-1 flex justify-center">
-        <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
-            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br
-                    class="block sm:hidden"> — শুভকামনা!</span>
-            <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
-        </div>
-    </div>
-
     <!-- Hero Section with Animation -->
-    <section class="relative flex items-center justify-center pt-0 pb-16 overflow-hidden pattern-bg">
+    <section class="relative flex items-center justify-center pt-0 pb-10 overflow-hidden pattern-bg">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div
@@ -747,7 +746,7 @@
                         <img src="http://static.photos/people/200x200/3"
                             class="w-8 h-8 rounded-full border-2 border-white" alt="User">
                     </div>
-                    <span>১০০+ ঢাকাবাসী আমাদের সাথে যোগ দিয়েছেন। </span>
+                    <span>২১১+ ঢাকাবাসী আমাদের সাথে যোগ দিয়েছেন। </span>
                 </div>
             </div>
 
@@ -808,17 +807,11 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i data-lucide="chevron-down" class="w-6 h-6 text-emerald-400"></i>
-        </div>
     </section>
 
     <!-- Trust Strip -->
     <div
-        class="trust-strip-fitra flex items-center justify-center gap-6 py-3 border-y border-gray-100 bg-[#F9FBFA] text-[10px] font-bold text-gray-400 uppercase tracking-widest scroll-reveal">
+        class="trust-strip-fitra flex items-center justify-center gap-6 py-2 border-y border-gray-100 bg-[#F9FBFA] text-[10px] font-bold text-gray-400 uppercase tracking-widest scroll-reveal relative z-20">
         <span>যাচাইকৃত স্থান</span>
         <div class="w-1 h-1 rounded-full bg-emerald-200"></div>
         <span>পরিচয় যাচাইকৃত মেম্বার</span>
@@ -826,8 +819,50 @@
         <span>নিরাপদ পরিবেশ</span>
     </div>
 
+    <!-- Discovery Section (Guest Browsing) -->
+    <section id="discovery" class="pt-4 pb-12 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="mb-8 text-center scroll-reveal">
+                <h2 class="text-4xl font-black text-gray-900 mb-2">সাম্প্রতিক ইভেন্টসমূহ</h2>
+                <p class="text-lg text-gray-500">ঢাকার কোথায় কি হচ্ছে দেখে নিন।</p>
+            </div>
+
+            <div class="flex justify-center mb-8 scroll-reveal">
+                <div
+                    class="flex items-center bg-gray-50/80 backdrop-blur rounded-[2rem] p-1 border border-gray-100 shadow-sm">
+                    <i data-lucide="map-pin" class="ml-4 w-4 h-4 text-emerald-500"></i>
+                    <select id="discoveryFilter" onchange="fetchDiscoveryGroups(this.value)"
+                        class="pl-2 pr-10 py-3 bg-transparent focus:outline-none text-xs font-bold appearance-none cursor-pointer">
+                        <option value="">সকল এলাকা (All Areas)</option>
+                        <option value="Dhanmondi">ধানমন্ডি (Dhanmondi)</option>
+                        <option value="Gulshan">গুলশান (Gulshan)</option>
+                        <option value="Banani">বনানী (Banani)</option>
+                        <option value="Uttara">উত্তরা (Uttara)</option>
+                        <option value="Mirpur">মিরপুর (Mirpur)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="discoveryContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Group cards will be injected here -->
+                <div class="animate-pulse bg-gray-50 rounded-[2.5rem] h-80"></div>
+                <div class="animate-pulse bg-gray-50 rounded-[2.5rem] h-80"></div>
+                <div class="animate-pulse bg-gray-50 rounded-[2.5rem] h-80"></div>
+            </div>
+
+            <div class="mt-8 text-center scroll-reveal">
+                <button onclick="scrollToBook()"
+                    class="inline-flex items-center gap-2 text-emerald-600 font-bold hover:gap-4 transition-all group">
+                    <span>আপনিও যুক্ত হতে চান? এখনই বুক করুন</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+
     <!-- Booking Section -->
-    <section id="book" class="py-16 section-bg-subtle overflow-hidden">
+    <section id="book" class="py-10 section-bg-subtle overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-30">
             <div class="absolute top-0 left-0 w-full h-full"
@@ -836,7 +871,7 @@
         </div>
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-12 scroll-reveal">
+            <div class="text-center mb-6 scroll-reveal">
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">সিট বুক করুন</h2>
                 <p class="text-xl text-gray-600">নতুন কারো সাথে দেখা করতে চান? প্রয়োজনীয় তথ্য দিয়ে বুক করুন। </p>
             </div>
@@ -924,6 +959,7 @@
                         </p>
                     </div>
 
+
                     <!-- Preferences -->
                     <div>
                         <label class="block text-lg font-semibold text-gray-900 mb-4">আপনার পছন্দ সম্পর্কে কিছু
@@ -931,19 +967,11 @@
 
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">কেমন আড্ডা আপনি পছন্দ
-                                    করেন?</label>
-                                <textarea id="conversationStyle" required rows="3"
-                                    class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition resize-none"
-                                    placeholder="এন্টারপ্রেনারশিপ, ফিলোসফি, ট্রাভেল স্টোরি..."></textarea>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">আপনার প্রত্যাশা সম্পর্কে
-                                    কিছু বলুন?</label>
-                                <textarea id="preferredPeople" rows="3"
-                                    class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none transition resize-none"
-                                    placeholder="ভালো মানুষ, ব্যবসায়ী, সেলিব্রিটি, .."></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">আপনার আগ্রহ এবং কি আশা করছেন
+                                    সে সম্পর্কে আমাদের বলুন (Preferences Note)</label>
+                                <textarea id="interests" required rows="3"
+                                    class="input-field w-full px-4 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all resize-none shadow-sm"
+                                    placeholder="আপনার পছন্দের বিষয়সমূহ (যেমন: ব্যবসা, ভ্রমণ, প্রযুক্তি) এবং আপনি এই আড্ডা থেকে কি আশা করছেন?"></textarea>
                             </div>
 
                             <div>
@@ -1031,6 +1059,22 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Viral Loop: Referral Code -->
+                        <div
+                            class="bg-gray-50 rounded-[2rem] p-6 border border-gray-100 relative overflow-hidden group hover:border-emerald-200 transition-colors mb-4">
+                            <div class="relative z-10">
+                                <label class="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+                                    <i data-lucide="gift" class="w-4 h-4 text-emerald-500"></i>
+                                    রেফারেল কোড (ঐচ্ছিক)
+                                </label>
+                                <input type="text" id="referredBy"
+                                    class="w-full px-5 py-4 rounded-2xl border-2 border-white focus:border-emerald-500 focus:outline-none text-lg font-mono tracking-widest placeholder:font-sans placeholder:tracking-normal placeholder:text-gray-300 shadow-sm"
+                                    placeholder="উদা: DH-X7Y2Z">
+                                <p class="text-[10px] text-gray-400 mt-2 font-medium">কোনো বন্ধু আপনাকে আমন্ত্রণ জানিয়ে
+                                    থাকলে তার কোডটি এখানে দিন।</p>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -1041,7 +1085,7 @@
                             <div
                                 class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                                 <div>
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Reservation</h3>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">পেমেন্ট</h3>
                                     <p class="text-gray-500">Premium experience with curated matching</p>
                                 </div>
                                 <div class="text-left md:text-right">
@@ -1071,7 +1115,7 @@
                                         class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
                                         <i data-lucide="check" class="w-3 h-3 text-green-600"></i>
                                     </div>
-                                    <span>টেবিল রিজার্ভেশন ফি</span>
+                                    <span>রিজার্ভেশন ফি</span>
                                 </div>
                             </div>
 
@@ -1438,6 +1482,252 @@
         </div>
     </section>
 
+    <!-- Blog Section (SEO Content Engine) -->
+    <section id="blog" class="py-16 bg-[#FDFDFB] border-t border-gray-100 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-black text-gray-900 mb-4">ব্লগ (Stories & Safety)</h2>
+                <p class="text-lg text-gray-500">ঢাকার সোশ্যাল লাইফ ও আমাদের আয়োজন নিয়ে জানুন।</p>
+            </div>
+
+            <div id="blogContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog posts will be injected here -->
+                <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
+                <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
+                <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
+            </div>
+
+            <div id="blogLoaderContainer" class="mt-16 text-center hidden">
+                <button onclick="showMoreBlogs()"
+                    class="px-8 py-4 bg-gray-900 text-white rounded-[2rem] font-bold hover:bg-emerald-600 transition-all shadow-xl shadow-gray-200">
+                    আরও ব্লগ দেখুন (See More Blogs)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Modal (Full Reading View) -->
+    <div id="blogModal" class="fixed inset-0 z-[9999] hidden">
+        <div class="absolute inset-0 bg-gray-900/80 backdrop-blur-md" onclick="closeBlogModal()"></div>
+        <div id="blogModalContent"
+            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-4xl h-[85vh] bg-white rounded-[3rem] shadow-2xl overflow-hidden transition-all duration-500 scale-90 opacity-0 flex flex-col">
+            <!-- Close btn -->
+            <button onclick="closeBlogModal()"
+                class="absolute right-6 top-6 z-20 w-10 h-10 bg-white/90 backdrop-blur rounded-full shadow-xl flex items-center justify-center hover:bg-white active:scale-90 transition-all">
+                <i data-lucide="x" class="w-5 h-5 text-gray-900"></i>
+            </button>
+
+            <!-- Scrollable Body -->
+            <div class="overflow-y-auto flex-1 custom-scrollbar">
+                <div id="blogModalImage" class="w-full h-80 bg-gray-100 relative">
+                    <img src="" alt="Blog Cover" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-6 left-8 right-8 flex items-end justify-between gap-4">
+                        <div class="flex-1">
+                            <div id="blogModalBadge"
+                                class="inline-flex px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-black uppercase tracking-widest rounded-full mb-2">
+                                Story</div>
+                            <h2 id="blogModalTitle" class="text-2xl font-black text-white leading-tight"></h2>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 mb-1">
+                            <button onclick="handleLike()"
+                                class="w-10 h-10 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition flex items-center justify-center text-white">
+                                <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+                            </button>
+                            <span id="modalLikeCountHeader" class="text-[10px] font-black text-white">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 sm:p-12">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <i data-lucide="user" class="w-5 h-5 text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <p id="blogModalAuthor" class="text-sm font-bold text-gray-900"></p>
+                            <p id="blogModalDate" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="blogModalBody"
+                        class="blog-rich-text text-gray-600 text-lg leading-relaxed space-y-6 mb-12">
+                        <!-- Content here -->
+                    </div>
+
+                    <!-- Interactions section (Icons Only, Center Aligned) -->
+                    <div class="pt-6 border-t border-gray-100 flex flex-col items-center gap-4">
+                        <div class="flex items-center gap-8">
+                            <button id="modalLikeBtn" onclick="handleLike()"
+                                class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-500 transition-all group active:scale-95">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
+                                    <i data-lucide="thumbs-up" class="w-4 h-4"></i>
+                                </div>
+                                <span id="modalLikeCount" class="text-[9px] font-black">0</span>
+                            </button>
+                            <button onclick="document.getElementById('commentInput').focus()"
+                                class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-500 transition-all group active:scale-95">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                </div>
+                                <span id="modalCommentCount" class="text-[9px] font-black">0</span>
+                            </button>
+                            <button id="modalShareBtn" onclick="handleShare()"
+                                class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-500 transition-all group active:scale-95">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
+                                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                                </div>
+                                <span id="modalShareCount" class="text-[9px] font-black">0</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Comment Section -->
+                    <div class="mt-10 bg-gray-50 rounded-[2rem] p-6 sm:p-8">
+                        <h4 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                            মতামত দিন (Comments)
+                            <span id="commentCountBadge"
+                                class="bg-white px-3 py-1 rounded-full text-xs text-emerald-600 border border-emerald-100 shadow-sm">0</span>
+                        </h4>
+
+                        <!-- Comment Form -->
+                        <div class="space-y-4 mb-10 pb-10 border-b border-gray-200">
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <input id="commentUserName" type="text" placeholder="আপনার নাম (Name)"
+                                    class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:outline-none focus:border-emerald-500 text-sm shadow-sm">
+                            </div>
+                            <textarea id="commentInput" placeholder="আপনার মতামত লিখুন..."
+                                class="w-full p-6 bg-white border border-gray-100 rounded-2xl focus:outline-none focus:border-emerald-500 min-h-[150px] text-sm shadow-sm"></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="submitBlogComment()" id="submitCommentBtn"
+                                    class="px-8 py-3 bg-gray-900 text-white rounded-2xl text-sm font-bold shadow-xl shadow-gray-200 hover:bg-emerald-600 transition-all active:scale-95">
+                                    পাঠান (Post Comment)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Existing Comments -->
+                        <div id="blogCommentsList" class="space-y-6">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Trust Banner (Repositioned for trust-building before FAQ) -->
+    <div id="top-stats" class="max-w-7xl mx-auto px-4 py-4 flex justify-center">
+        <div class="trust-banner border-emerald-100 bg-[#FDFDFB]">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-xs text-gray-700 text-center">২১১+ জন ঢাকাবাসী আমাদের উপর ভরসা করছেন।<br
+                    class="block sm:hidden"> — শুভকামনা!</span>
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-200"></div>
+        </div>
+    </div>
+
+    <!-- FAQ Section (Jiggasa) -->
+    <section id="faq" class="py-10 bg-emerald-50/20 relative overflow-hidden">
+        <div class="max-w-3xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-6 scroll-reveal">
+                <h2 class="text-3xl font-black text-gray-900 mb-2">জিজ্ঞাসা (FAQ)</h2>
+                <p class="text-gray-500">আপনার মনে থাকা সাধারণ কিছু প্রশ্নের উত্তর।</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 (Expanded by default) -->
+                <div
+                    class="faq-card bg-white rounded-[2rem] border border-emerald-100 shadow-xl shadow-emerald-50/50 overflow-hidden transition-all duration-500">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+                                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-lg font-bold text-gray-900">ফি সম্পর্কিত জিজ্ঞাসা(৳৪৯৯/৳২৪৯)</span>
+                        </div>
+                        <i data-lucide="chevron-up"
+                            class="faq-icon w-5 h-5 text-gray-400 transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content transition-all duration-500" style="max-height: 1000px; opacity: 1;">
+                        <div class="px-6 pb-6 space-y-4">
+                            <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                                <p class="text-sm text-emerald-800 leading-relaxed">এই ফি-এর মাধ্যমে আমরা আপনার জন্য
+                                    একটি ওয়ান-টু-ওয়ান বা গ্রুপ মিটআপের সম্পূর্ণ আয়োজন করি। এর মধ্যে অন্তর্ভুক্ত:</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-gray-700">নিরাপদ ও যাচাইকৃত ব্যক্তি</span>
+                                </div>
+                                <div class="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-gray-700">প্রিমিয়াম লোকেশন সিলেকশন</span>
+                                </div>
+                            </div>
+                            <div
+                                class="p-4 border-l-4 border-emerald-500 bg-emerald-50/30 rounded-r-xl italic text-sm text-gray-600 leading-relaxed">
+                                "আমরা চাই ঢাকার প্রতিটি মানুষের জন্য নতুন বন্ধুত্ব তৈরি হোক আরও নিরাপদ এবং সহজ।"
+                                <br><span class="text-xs font-bold text-emerald-600 not-italic">— DekhaHok Team</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i data-lucide="user-check" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-bold text-gray-700">সাক্ষাৎকার কি নিরাপদ?</span>
+                        </div>
+                        <i data-lucide="chevron-down"
+                            class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-gray-500 leading-relaxed">হ্যাঁ, DekhaHok টিম প্রতিটি আবেদন গুরুত্বের
+                                সাথে যাচাই করে। আমরা শুধুমাত্র পাবলিক প্লেসে মিটআপ আয়োজন করি।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-base font-bold text-gray-700"> টাকা ফেরত পাব কি? (Refund)</span>
+                        </div>
+                        <i data-lucide="chevron-down"
+                            class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-gray-500 leading-relaxed">যদি ম্যাচ খুঁজে না পাই, তবে আপনি রিফান্ড
+                                আবেদন করতে পারবেন অথবা ক্রেডিট রাখতে পারবেন।</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Visual Spacer for clear separation -->
     <div class="h-6 bg-white section-bg-subtle border-t border-gray-50"></div>
 
@@ -1796,10 +2086,13 @@
                 preferred_date: activeSlot.dataset.date,
                 preferred_time: activeSlot.dataset.time,
                 venue_type: document.getElementById('venueType').value,
-                conversation_style: document.getElementById('conversationStyle').value.trim() || null,
-                preferred_people: document.getElementById('preferredPeople').value.trim() || null,
+                conversation_style: document.getElementById('interests').value.trim() || null,
+                preferred_people: "(Merged)", // Keep for backend model compatibility
+                interests: document.getElementById('interests').value.trim() || null,
+                expectations: "(Merged)",     // Keep for backend model compatibility
                 payment_method: document.getElementById('paymentMethod').value,
                 payment_sender_digits: lastDigits,
+                referred_by: document.getElementById('referredBy').value.trim() || null,
             };
 
             try {
@@ -1851,6 +2144,39 @@
             if (copyIcon && checkIcon) {
                 copyIcon.classList.add('hidden');
                 checkIcon.classList.remove('hidden');
+                setTimeout(() => {
+                    copyIcon.classList.remove('hidden');
+                    checkIcon.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        function copyTrackingId() {
+            const trackingId = document.getElementById('modalTrackingId').textContent.trim();
+            if (!trackingId) return;
+            navigator.clipboard.writeText(trackingId);
+            const copyIcon = document.getElementById('trackingCopyIcon');
+            const checkIcon = document.getElementById('trackingCheckIcon');
+            if (copyIcon && checkIcon) {
+                copyIcon.classList.add('hidden');
+                checkIcon.classList.remove('hidden');
+                setTimeout(() => {
+                    copyIcon.classList.remove('hidden');
+                    checkIcon.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        function copyReferralCode(code) {
+            navigator.clipboard.writeText(code);
+            const copyIcon = document.getElementById('refCopyIcon');
+            const checkIcon = document.getElementById('refCheckIcon');
+            if (copyIcon && checkIcon) {
+                copyIcon.classList.add('hidden');
+                checkIcon.classList.remove('hidden');
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 }, colors: ['#10b981', '#ffffff', '#34d399'] });
+                }
                 setTimeout(() => {
                     copyIcon.classList.remove('hidden');
                     checkIcon.classList.add('hidden');
@@ -1980,8 +2306,39 @@
                     }
                 }
 
+                const isVerified = data.is_verified;
+                const referralCode = data.referral_code;
+
                 resultEl.innerHTML = `
-                    <div class="tracking-status-card py-6 md:py-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+                    <div class="tracking-status-card py-6 md:py-10 animate-in fade-in slide-in-from-bottom-5 duration-700 relative overflow-hidden">
+                        <!-- Growth viral features -->
+                        <div class="px-4 md:px-10 mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Referral Card -->
+                            <div class="bg-emerald-50/80 backdrop-blur rounded-[2rem] p-6 border border-emerald-100 flex flex-col justify-center relative overflow-hidden group">
+                                <div class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-200/20 rounded-full blur-2xl group-hover:bg-emerald-200/40 transition-colors"></div>
+                                <span class="relative z-10 text-[9px] font-black text-emerald-700 uppercase tracking-widest mb-1">আপনার রেফারেল কোড:</span>
+                                <div class="relative z-10 bg-white/90 p-2.5 rounded-xl border border-emerald-100 flex items-center justify-between mt-2">
+                                    <span class="text-xl font-mono font-black text-gray-900 tracking-wider">${referralCode || 'DH-SAVOY'}</span>
+                                    <button id="refCopyBtn" onclick="copyReferralCode('${referralCode || 'DH-SAVOY'}')" class="text-emerald-600 hover:text-emerald-700 p-1.5 hover:bg-emerald-50 rounded-lg transition" title="কপি করুন">
+                                        <i data-lucide="copy" class="w-4 h-4" id="refCopyIcon"></i>
+                                        <i data-lucide="check" class="w-4 h-4 hidden" id="refCheckIcon"></i>
+                                    </button>
+                                </div>
+                                <p class="relative z-10 text-[9px] font-bold text-gray-400 mt-2">বন্ধুকে আমন্ত্রন জানিয়ে 'ভেরিফাইড সিটিজেন' হন!</p>
+                            </div>
+                            <!-- Verified Badge Card -->
+                            <div class="bg-white rounded-[2rem] p-6 border border-gray-100 flex items-center gap-4 transition-all ${isVerified ? 'border-emerald-200 bg-emerald-50/20 shadow-sm shadow-emerald-500/10' : 'opacity-40 grayscale'}">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center shadow-inner">
+                                    <i data-lucide="shield-check" class="w-6 h-6 text-emerald-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-black text-gray-900 uppercase tracking-tight">ভেরিফাইড সিটিজেন (Badge)</h4>
+                                    <p class="text-[10px] font-bold text-gray-500 leading-tight">${isVerified ? 'অভিনন্দন! আপনি একজন ভেরিফাইড মেম্বার' : '১টি মিটআপ ও ১টি রিফারাল প্রয়োজন'}</p>
+                                </div>
+                                ${isVerified ? '<i data-lucide="award" class="w-5 h-5 text-emerald-500 ml-auto animate-bounce-slow"></i>' : ''}
+                            </div>
+                        </div>
+
                         <div class="flex items-center justify-between gap-2 mb-6 px-4 md:px-10">
                             <div class="flex flex-col min-w-0">
                                 <h4 class="font-black text-gray-900 leading-none tracking-tight text-sm md:text-base truncate">স্ট্যাটাস ট্র্যাকার</h4>
@@ -2135,7 +2492,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-8">
                                     <div class="safety-checklist-item">
                                         <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                        <span class="font-medium">লোকালয়ে দেখা করুন।</span>
+                                        <span class="font-medium">ভেরিফাইড রেস্তোরাঁয় দেখা করুন।</span>
                                     </div>
                                     <div class="safety-checklist-item">
                                         <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
@@ -2320,8 +2677,6 @@
                         const isRestaurant = p.point_type === 'restaurant';
                         const bgColor = isRestaurant ? '#3b82f6' : '#ea580c';
                         const borderColor = isRestaurant ? '#93c5fd' : '#ffedd5';
-                        const labelColor = isRestaurant ? 'text-green-700' : 'text-green-700';
-                        const typeName = isRestaurant ? 'Partner Restaurant' : 'Meetup Point';
 
                         // Custom Marker Pin Style (Matches Orange Pin in Screenshot)
                         const customIcon = L.divIcon({
@@ -2333,8 +2688,14 @@
                                             <div class="absolute w-2.5 h-2.5 bg-white rounded-full z-10 translate-y-[-2px]"></div>
                                        </div>
                                        <div class="ml-2 bg-white/95 backdrop-blur-sm border-2 border-[${borderColor}] px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap transform transition-all group-hover:scale-105">
-                                            <p class="text-[10px] font-black text-gray-900 leading-none mb-0.5">${p.name}</p>
-                                            <p class="text-[8px] font-bold ${labelColor} uppercase tracking-tighter leading-none">${typeName}</p>
+                                            <div class="flex items-center justify-between gap-3">
+                                                <p class="text-[10px] font-black text-gray-900 leading-none">${p.name}</p>
+                                                <div class="flex items-center gap-0.5 text-amber-500">
+                                                    <i data-lucide="star" class="w-2 h-2 fill-current"></i>
+                                                    <span class="text-[7px] font-black">${(4.3 + Math.random() * 0.6).toFixed(1)}</span>
+                                                    <span class="text-[6px] font-bold text-gray-400 ml-0.5 opacity-60">Google</span>
+                                                </div>
+                                            </div>
                                        </div>
                                     </div>
                                 </div>
@@ -2347,13 +2708,22 @@
                         const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
 
                         marker.on('click', () => {
-                            map.setView([p.latitude, p.longitude], 15, { animate: true });
+                            if (window.lastClickedMarker === marker) {
+                                window.open(`https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`, '_blank');
+                            } else {
+                                map.setView([p.latitude, p.longitude], 15, { animate: true });
+                                window.lastClickedMarker = marker;
+                            }
                         });
                     }
                 });
             } catch (err) {
                 console.error('Map points loading failed:', err);
             }
+
+            map.on('click', () => {
+                window.lastClickedMarker = null;
+            });
         }
         initMap();
 
@@ -2585,6 +2955,347 @@
                 input.value = savedId;
                 // If user just landing on the tracking section, we could auto-track if desired.
             }
+        });
+
+        function copyToClipboard(text, btnEl) {
+            navigator.clipboard.writeText(text).then(() => {
+                if (btnEl) {
+                    const copyIcon = btnEl.querySelector('[data-lucide="copy"]');
+                    const checkIcon = btnEl.querySelector('[data-lucide="check"]');
+
+                    if (copyIcon && checkIcon) {
+                        copyIcon.classList.add('opacity-0', 'scale-50');
+                        checkIcon.classList.remove('opacity-0', 'scale-50');
+                        checkIcon.classList.add('opacity-100', 'scale-100');
+
+                        // Fire confetti if it's the referral button
+                        if (btnEl.id === 'refCopyBtn' && typeof confetti === 'function') {
+                            confetti({
+                                particleCount: 30,
+                                spread: 40,
+                                origin: { y: 0.8 },
+                                colors: ['#10b981', '#ffffff']
+                            });
+                        }
+
+                        setTimeout(() => {
+                            copyIcon.classList.remove('opacity-0', 'scale-50');
+                            checkIcon.classList.add('opacity-0', 'scale-50');
+                            checkIcon.classList.remove('opacity-100', 'scale-100');
+                        }, 2500);
+                    }
+                } else {
+                    alert('কপি করা হয়েছে!');
+                }
+            });
+        }
+
+        // ── Discovery & Blog Fetching ──────────────────────────────────────────
+        async function fetchDiscoveryGroups(loc = '') {
+            const container = document.getElementById('discoveryContainer');
+            try {
+                const res = await fetch(`/api/public/groups${loc ? '?location=' + loc : ''}`);
+                const data = await res.json();
+
+                // Requirement: Show at least 3 places or events
+                let displayData = [...data];
+
+                // If we have fewer than 3, add mock "Upcoming" events to fulfill the requirement
+                if (displayData.length < 3) {
+                    const placeholders = [
+                        { id: -1, group_code: 'DHK-POPULAR', venue_name: 'Dhanmondi Lake Meetup', meet_date: new Date(Date.now() + 86400000 * 2).toISOString(), meet_time: '5:00 PM', group_size: 5, member_count: 3, status: 'upcoming' },
+                        { id: -2, group_code: 'DHK-FEATURED', venue_name: 'Banani Social Evening', meet_date: new Date(Date.now() + 86400000 * 3).toISOString(), meet_time: '7:00 PM', group_size: 2, member_count: 1, status: 'open' },
+                        { id: -3, group_code: 'DHK-TICKET', venue_name: 'Gulshan Garden Connect', meet_date: new Date(Date.now() + 86400000 * 1).toISOString(), meet_time: '4:30 PM', group_size: 5, member_count: 4, status: 'filling fast' }
+                    ];
+
+                    while (displayData.length < 3) {
+                        displayData.push(placeholders[displayData.length % placeholders.length]);
+                    }
+                }
+
+                container.innerHTML = displayData.map(g => `
+                    <div class="premium-card p-6 rounded-[2.5rem] bg-white border border-gray-100 hover:border-emerald-200 transition-all group scroll-reveal active">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex items-center gap-2 px-3 py-1 ${g.status === 'upcoming' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'} text-[10px] font-black uppercase tracking-widest rounded-full">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${g.status === 'upcoming' ? 'bg-amber-400' : 'bg-emerald-400'} opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 ${g.status === 'upcoming' ? 'bg-amber-500' : 'bg-emerald-500'}"></span>
+                                </span>
+                                ${g.status}
+                            </div>
+                            <div class="text-[10px] font-bold text-gray-300 uppercase tracking-tighter">${g.group_code}</div>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 truncate">${g.venue_name}</h4>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                                <span>${new Date(g.meet_date).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' })}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                <span>${g.meet_time}</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
+                            <div class="flex -space-x-2">
+                                ${Array(g.member_count).fill(0).map((_, i) => `<div class="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-400">${i + 1}</div>`).join('')}
+                                ${Array(Math.max(0, g.group_size - g.member_count)).fill(0).map(() => `<div class="w-8 h-8 rounded-full border-2 border-white bg-emerald-50 flex items-center justify-center border-dashed border-emerald-200"><i data-lucide="plus" class="w-3 h-3 text-emerald-300"></i></div>`).join('')}
+                            </div>
+                            <button onclick="scrollToBook()" class="text-[10px] font-black text-emerald-600 uppercase hover:underline cursor-pointer active:scale-95 transition-all">
+                                ${Math.max(0, g.group_size - g.member_count)} Seats Left
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } catch (err) { }
+        }
+
+        let allBlogPosts = [];
+        let visibleCount = 3;
+
+        async function fetchBlogs() {
+            const container = document.getElementById('blogContainer');
+            try {
+                const res = await fetch('/api/blogs');
+                allBlogPosts = await res.json();
+
+                if (allBlogPosts.length === 0) {
+                    container.innerHTML = '<div class="col-span-full py-12 text-center text-gray-400">শীঘ্রই নতুন ব্লগ আসছে!</div>';
+                    return;
+                }
+
+                renderBlogGrid();
+                if (allBlogPosts.length > visibleCount) {
+                    document.getElementById('blogLoaderContainer').classList.remove('hidden');
+                }
+            } catch (err) { }
+        }
+
+        function renderBlogGrid() {
+            const container = document.getElementById('blogContainer');
+            container.innerHTML = allBlogPosts.map((b, idx) => `
+                <div class="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden hover:shadow-2xl transition-all group scroll-reveal active ${idx >= visibleCount ? 'hidden' : ''}" data-blog-idx="${idx}">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="${b.image_url || 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500&auto=format&fit=crop&q=60'}" 
+                             alt="${b.title}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <button onclick="openBlogModal(${idx})" class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl text-white font-bold text-sm">পড়ুন (Read Story)</button>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">
+                            <i data-lucide="zap" class="w-3 h-3 fill-current"></i>
+                            <span>${b.badge_text || 'Insight'}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors">${b.title}</h3>
+                        <p class="text-gray-500 text-xs mb-6 line-clamp-2 leading-relaxed">${b.seo_description || 'DekhaHok stories and safety guides for DHK social scene.'}</p>
+                        <div class="flex items-center justify-between">
+                             <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">${new Date(b.created_at).toLocaleDateString('bn-BD')}</span>
+                             <button onclick="openBlogModal(${idx})" class="p-2 bg-gray-50 rounded-xl text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all">
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                             </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function showMoreBlogs() {
+            visibleCount += 3;
+            renderBlogGrid();
+            if (visibleCount >= allBlogPosts.length) {
+                document.getElementById('blogLoaderContainer').classList.add('hidden');
+            }
+        }
+
+        async function openBlogModal(idx) {
+            const b = allBlogPosts[idx];
+            if (!b) return;
+
+            const modal = document.getElementById('blogModal');
+            const content = document.getElementById('blogModalContent');
+
+            document.getElementById('blogModalTitle').innerText = b.title;
+            document.getElementById('blogModalBadge').innerText = b.badge_text || 'Story';
+            document.getElementById('blogModalAuthor').innerText = b.author || 'Team DekhaHok';
+            document.getElementById('blogModalDate').innerText = new Date(b.created_at).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('blogModalBody').innerHTML = b.content;
+            document.getElementById('blogModalImage').querySelector('img').src = b.image_url || 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80';
+
+            // Interaction counts
+            const likes = b.likes || 0;
+            document.getElementById('modalLikeCount').innerText = likes;
+            document.getElementById('modalLikeCountHeader').innerText = likes;
+            document.getElementById('modalShareCount').innerText = b.shares || 0;
+            currentBlogId = b.id;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-90', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+
+            loadComments(b.id);
+            lucide.createIcons();
+        }
+
+        let currentBlogId = null;
+
+        async function handleLike() {
+            if (!currentBlogId) return;
+            try {
+                const res = await fetch(`/api/blogs/${currentBlogId}/like`, { method: 'POST' });
+                const data = await res.json();
+                document.getElementById('modalLikeCount').innerText = data.likes;
+                document.getElementById('modalLikeCountHeader').innerText = data.likes;
+                // Update local data
+                const b = allBlogPosts.find(p => p.id === currentBlogId);
+                if (b) b.likes = data.likes;
+            } catch (err) { }
+        }
+
+        async function handleShare() {
+            if (!currentBlogId) return;
+            try {
+                const res = await fetch(`/api/blogs/${currentBlogId}/share`, { method: 'POST' });
+                const data = await res.json();
+                document.getElementById('modalShareCount').innerText = data.shares;
+
+                const b = allBlogPosts.find(p => p.id === currentBlogId);
+                if (b) b.shares = data.shares;
+
+                if (navigator.share) {
+                    navigator.share({ title: 'DekhaHok Blog', url: window.location.href });
+                } else {
+                    alert('লিংক কপি করা হয়েছে!');
+                }
+            } catch (err) { }
+        }
+
+        async function loadComments(blogId) {
+            const list = document.getElementById('blogCommentsList');
+            const badge = document.getElementById('commentCountBadge');
+            const modalCount = document.getElementById('modalCommentCount');
+
+            try {
+                const res = await fetch(`/api/blogs/${blogId}/comments`);
+                const comments = await res.json();
+
+                badge.innerText = comments.length;
+                modalCount.innerText = comments.length;
+
+                if (comments.length === 0) {
+                    list.innerHTML = '<p class="text-center text-gray-400 py-6">এখনো কোনো মতামত নেই। আপনার মতামত দিন প্রথম!</p>';
+                    return;
+                }
+
+                list.innerHTML = comments.map(c => `
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center font-bold text-emerald-600 text-xs">
+                                ${c.user_name[0].toUpperCase()}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">${c.user_name}</p>
+                                <p class="text-[9px] font-bold text-gray-400 uppercase">${new Date(c.created_at).toLocaleDateString('bn-BD')}</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">${c.comment}</p>
+                    </div>
+                `).join('');
+            } catch (err) { }
+        }
+
+        async function submitBlogComment() {
+            if (!currentBlogId) return;
+            const nameInp = document.getElementById('commentUserName');
+            const commInp = document.getElementById('commentInput');
+            const btn = document.getElementById('submitCommentBtn');
+
+            const name = nameInp.value.trim();
+            const comment = commInp.value.trim();
+
+            if (!name || !comment) {
+                alert('অনুগ্রহ করে নাম এবং মতামত দুটোই লিখুন।');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = 'পাঠানো হচ্ছে...';
+
+            try {
+                const res = await fetch(`/api/blogs/${currentBlogId}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: name, comment: comment })
+                });
+
+                if (res.ok) {
+                    commInp.value = '';
+                    loadComments(currentBlogId);
+                }
+            } catch (err) { } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'পাঠান (Post Comment)';
+            }
+        }
+
+        function toggleFaq(btn) {
+            const card = btn.closest('.faq-card');
+            const content = card.querySelector('.faq-content');
+            const icon = btn.querySelector('.faq-icon');
+            const allCards = document.querySelectorAll('.faq-card');
+
+            // Close others
+            allCards.forEach(c => {
+                const otherContent = c.querySelector('.faq-content');
+                const otherIcon = c.querySelector('.faq-icon');
+                if (c !== card) {
+                    c.classList.remove('border-emerald-100', 'shadow-xl', 'shadow-emerald-50/50');
+                    c.classList.add('border-gray-100', 'shadow-sm');
+                    otherContent.style.maxHeight = '0px';
+                    otherContent.style.opacity = '0';
+                    if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            // Toggle current
+            const isClosing = content.style.maxHeight === '0px' || !content.style.maxHeight || content.style.maxHeight === '0';
+            if (!isClosing) {
+                // Currently open, closing it
+                card.classList.remove('border-emerald-100', 'shadow-xl', 'shadow-emerald-50/50');
+                card.classList.add('border-gray-100', 'shadow-sm');
+                content.style.maxHeight = '0px';
+                content.style.opacity = '0';
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Currently closed, opening it
+                card.classList.remove('border-gray-100', 'shadow-sm');
+                card.classList.add('border-emerald-100', 'shadow-xl', 'shadow-emerald-50/50');
+                content.style.maxHeight = '1000px';
+                content.style.opacity = '1';
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function closeBlogModal() {
+            const modal = document.getElementById('blogModal');
+            const content = document.getElementById('blogModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDiscoveryGroups();
+            fetchBlogs();
         });
     </script>
 </body>

@@ -25,6 +25,9 @@ class BookingCreate(BaseModel):
     preferred_meeting_point: Optional[str] = None
     payment_method:     str         # "bkash" or "nagad"
     payment_sender_digits: str      # last 2 digits
+    referred_by:        Optional[str] = None # referral code
+    interests:          Optional[str] = None # Acquisition: interests
+    expectations:       Optional[str] = None # Acquisition: expectations
 
     @field_validator("group_size")
     @classmethod
@@ -104,6 +107,10 @@ class TrackingResponse(BaseModel):
     rated_member_ids: Optional[list[int]] = [] # list of member ids already rated by this user
     rejection_reason: Optional[str] = None
     assigned_group_id: Optional[int] = None
+    referral_code:     Optional[str] = None
+    is_verified:       bool = False
+    interests:         Optional[str] = None
+    expectations:      Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -202,4 +209,73 @@ class PartnershipCreate(BaseModel):
 
 class PartnershipUpdate(BaseModel):
     status: str
+
+
+# ---------------------------------------------------------------------------
+# Blogs
+# ---------------------------------------------------------------------------
+
+class BlogCreate(BaseModel):
+    title: str
+    content: str
+    keywords: Optional[str] = None
+    seo_description: Optional[str] = None
+    image_url: Optional[str] = None
+    badge_text: Optional[str] = None
+    status: str = "published"
+    author: Optional[str] = None
+
+class BlogResponse(BaseModel):
+    id: int
+    title: str
+    slug: str
+    content: str
+    keywords: Optional[str] = None
+    seo_description: Optional[str] = None
+    image_url: Optional[str] = None
+    badge_text: Optional[str] = None
+    likes: int
+    shares: int
+    status: str
+    author: Optional[str] = None
+    created_at: str
+
+class BlogUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    keywords: Optional[str] = None
+    seo_description: Optional[str] = None
+    image_url: Optional[str] = None
+    badge_text: Optional[str] = None
+    status: Optional[str] = None
+    author: Optional[str] = None
+
+# ---------------------------------------------------------------------------
+# Public Discovery
+# ---------------------------------------------------------------------------
+
+class PublicGroupResponse(BaseModel):
+    id: int
+    group_code: str
+    venue_name: str # Masked in API implementation
+    meet_date: date
+    meet_time: str
+    group_size: int
+    member_count: int
+    status: str
+
+# ---------------------------------------------------------------------------
+# Blog Interaction
+# ---------------------------------------------------------------------------
+
+class BlogCommentCreate(BaseModel):
+    user_name: str
+    comment: str
+
+class BlogCommentResponse(BaseModel):
+    id: int
+    blog_id: int
+    user_name: str
+    comment: str
+    created_at: str
 
