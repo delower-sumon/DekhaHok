@@ -114,6 +114,80 @@
             inherits: false;
         }
 
+        /* Premium Animating Border Glow - Fully Synchronized */
+        @property --glow-deg {
+            syntax: "<angle>";
+            inherits: true;
+            initial-value: 0deg;
+        }
+
+        @property --clr-1 {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: #ff4545;
+        }
+
+        @property --clr-2 {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: #fbbf24;
+        }
+
+        @property --clr-3 {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: #10b981;
+        }
+
+        @property --clr-4 {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: #3b82f6;
+        }
+
+        @property --clr-5 {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: #a855f7;
+        }
+
+        .premium-glow-card {
+            --gradient-glow: var(--clr-1), var(--clr-2), var(--clr-3), var(--clr-4), var(--clr-5), var(--clr-1);
+            position: relative;
+            background: white !important;
+            border: 2px solid transparent !important;
+            box-shadow: none !important;
+            transform: none !important;
+            isolation: isolate;
+            /* Create new stacking context */
+        }
+
+        .premium-glow-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            padding: 2px;
+            border-radius: inherit;
+            background: conic-gradient(from var(--glow-deg), var(--gradient-glow));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: -1;
+            animation: slow-glow-rotation 12s infinite linear;
+        }
+
+        @keyframes slow-glow-rotation {
+            from {
+                --glow-deg: 0deg;
+            }
+
+            to {
+                --glow-deg: 360deg;
+            }
+        }
+
         .glowing-border {
             position: relative;
             z-index: 1;
@@ -1094,7 +1168,8 @@
                         <div class="grid grid-cols-2 gap-6">
                             <!-- Friday -->
                             <div class="space-y-4">
-                                <div class="text-center py-2 bg-gray-50 rounded-lg">
+                                <div id="day-header-fri" onclick="selectDate(document.getElementById('slot-fri-5pm'))"
+                                    class="text-center py-2 bg-gray-50 rounded-lg cursor-pointer border-2 border-transparent transition-all duration-300">
                                     <div class="text-lg font-semibold text-gray-500 uppercase tracking-wider">শুক্রবার
                                         <span id="fridayDateLabel"
                                             class="text-sm block text-gray-400 normal-case mt-1"></span>
@@ -1116,7 +1191,8 @@
 
                             <!-- Saturday -->
                             <div class="space-y-4">
-                                <div class="text-center py-2 bg-gray-50 rounded-lg">
+                                <div id="day-header-sat" onclick="selectDate(document.getElementById('slot-sat-5pm'))"
+                                    class="text-center py-2 bg-gray-50 rounded-lg cursor-pointer border-2 border-transparent transition-all duration-300">
                                     <div class="text-lg font-semibold text-gray-500 uppercase tracking-wider">শনিবার
                                         <span id="saturdayDateLabel"
                                             class="text-sm block text-gray-400 normal-case mt-1"></span>
@@ -2101,6 +2177,28 @@
             btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-600');
             btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700',
                 'shadow-md', 'shadow-emerald-100', 'ring-2', 'ring-emerald-100', 'ring-offset-2');
+
+            // Visual feedback for day headers
+            const isFriday = btn.id.includes('fri');
+            const friHeader = document.getElementById('day-header-fri');
+            const satHeader = document.getElementById('day-header-sat');
+
+            if (friHeader && satHeader) {
+                // Reset both
+                [friHeader, satHeader].forEach(h => {
+                    h.classList.remove('border-emerald-500', 'bg-emerald-50', 'shadow-md', 'shadow-emerald-50');
+                    h.classList.add('bg-gray-50', 'border-transparent');
+                    h.querySelector('div').classList.remove('text-emerald-700');
+                    h.querySelector('div').classList.add('text-gray-500');
+                });
+
+                // Set active
+                const activeHeader = isFriday ? friHeader : satHeader;
+                activeHeader.classList.remove('bg-gray-50', 'border-transparent');
+                activeHeader.classList.add('border-emerald-500', 'bg-emerald-50', 'shadow-md', 'shadow-emerald-50');
+                activeHeader.querySelector('div').classList.remove('text-gray-500');
+                activeHeader.querySelector('div').classList.add('text-emerald-700');
+            }
         }
 
         // ── Group Size ────────────────────────────────────────────────────────────
@@ -2525,34 +2623,6 @@
 
                 resultEl.innerHTML = `
                     <div class="tracking-status-card py-4 md:py-6 animate-in fade-in slide-in-from-bottom-5 duration-700 relative overflow-hidden">
-                        <!-- Growth viral features -->
-                        <div class="px-2 md:px-10 mb-4 grid grid-cols-2 gap-2 md:gap-4">
-                            <!-- Referral Card -->
-                            <div class="bg-emerald-50/80 backdrop-blur rounded-[1.25rem] p-2.5 md:p-3.5 border border-emerald-100 flex flex-col justify-center relative overflow-hidden group">
-                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-emerald-200/20 rounded-full blur-2xl group-hover:bg-emerald-200/40 transition-colors"></div>
-                                <span class="relative z-10 text-[7px] md:text-[8px] font-black text-emerald-700 uppercase tracking-widest leading-none opacity-70">রেফারেল কোড:</span>
-                                <div class="relative z-10 bg-white/90 p-1 md:p-1.5 rounded-lg md:rounded-xl border border-emerald-100 flex items-center justify-between mt-1">
-                                    <span class="text-xs md:text-base font-mono font-black text-gray-900 tracking-wider leading-none">${referralCode || 'DH-SAVOY'}</span>
-                                    <button id="refCopyBtn" onclick="copyReferralCode('${referralCode || 'DH-SAVOY'}')" class="text-emerald-600 hover:text-emerald-700 p-1 hover:bg-emerald-50 rounded-lg transition" title="কপি করুন">
-                                        <i data-lucide="copy" class="w-2.5 md:w-3.5 h-2.5 md:h-3.5" id="refCopyIcon"></i>
-                                        <i data-lucide="check" class="w-2.5 md:w-3.5 h-2.5 md:h-3.5 hidden" id="refCheckIcon"></i>
-                                    </button>
-                                </div>
-                                <p class="relative z-10 text-[7px] md:text-[8px] font-bold text-gray-400 mt-1 opacity-80 leading-tight">বন্ধুকে আমন্ত্রন দিন!</p>
-                            </div>
-                            <!-- Verified Badge Card -->
-                            <div class="bg-white rounded-[1.25rem] p-2.5 md:p-3.5 border border-gray-100 flex flex-col sm:flex-row items-center gap-2 md:gap-3 transition-all ${isVerified ? 'border-emerald-200 bg-emerald-50/20 shadow-sm shadow-emerald-500/10' : 'opacity-60 grayscale'}">
-                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-emerald-100 flex items-center justify-center shadow-inner flex-shrink-0">
-                                    <i data-lucide="shield-check" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
-                                </div>
-                                <div class="text-center sm:text-left min-w-0">
-                                    <h4 class="text-[9px] md:text-[11px] font-black text-gray-900 uppercase tracking-tight truncate leading-none">ভেরিফাইড</h4>
-                                    <p class="text-[7px] md:text-[9px] font-bold text-gray-500 leading-tight truncate mt-1">${isVerified ? 'অভিনন্দন!' : '১টি মিটআপ প্রয়োজন'}</p>
-                                </div>
-                                ${isVerified ? '<i data-lucide="award" class="w-3 h-3 md:w-4 md:h-4 text-emerald-500 ml-auto animate-bounce-slow hidden sm:block"></i>' : ''}
-                            </div>
-                        </div>
-
                         <div class="flex items-center justify-between gap-2 mb-4 px-4 md:px-10">
                             <div class="flex flex-col min-w-0">
                                 <h4 class="font-black text-gray-900 leading-none tracking-tight text-sm md:text-base truncate">স্ট্যাটাস ট্র্যাকার</h4>
@@ -2655,7 +2725,7 @@
                                 <h5 class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center sm:text-left">আপনার বন্ধু/বন্ধুগন।</h5>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     ${data.group_members.map((m, idx) => `
-                                        <div class="button-33 !bg-white group py-4 px-5 border border-gray-100 rounded-[2rem] shadow-sm transition-all duration-300 relative overflow-hidden ring-1 ring-emerald-500/5 animate-reveal !flex-col !items-stretch !text-left !h-auto" style="--stagger-delay: ${idx * 0.15}s; display: flex !important; flex-direction: column !important; align-items: flex-start !important;">
+                                        <div class="button-33 premium-glow-card !bg-white group py-4 px-5 border border-gray-100 rounded-[2rem] shadow-sm transition-all duration-300 relative ring-1 ring-emerald-500/5 animate-reveal !flex-col !items-stretch !text-left !h-auto" style="--stagger-delay: ${idx * 0.15}s; display: flex !important; flex-direction: column !important; align-items: flex-start !important;">
                                             <div class="absolute -right-2 -top-2 w-16 h-16 bg-emerald-100/20 rounded-full blur-2xl transition-colors pointer-events-none"></div>
                                             
                                             <div class="flex items-center gap-4 relative z-10">
@@ -2695,6 +2765,34 @@
                                 
                             </div>
                         ` : ''}
+
+                        <!-- Growth viral features (Repositioned) -->
+                        <div class="px-2 md:px-0 mt-6 mb-2 grid grid-cols-2 gap-2 md:gap-4">
+                            <!-- Referral Card -->
+                            <div class="bg-emerald-50/80 backdrop-blur rounded-[1.25rem] p-2.5 md:p-3.5 border border-emerald-100 flex flex-col justify-center relative overflow-hidden group">
+                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-emerald-200/20 rounded-full blur-2xl group-hover:bg-emerald-200/40 transition-colors"></div>
+                                <span class="relative z-10 text-[7px] md:text-[8px] font-black text-emerald-700 uppercase tracking-widest leading-none opacity-70">রেফারেল কোড:</span>
+                                <div class="relative z-10 bg-white/90 p-1 md:p-1.5 rounded-lg md:rounded-xl border border-emerald-100 flex items-center justify-between mt-1">
+                                    <span class="text-xs md:text-base font-mono font-black text-gray-900 tracking-wider leading-none">${referralCode || 'DH-SAVOY'}</span>
+                                    <button id="refCopyBtn" onclick="copyReferralCode('${referralCode || 'DH-SAVOY'}')" class="text-emerald-600 hover:text-emerald-700 p-1 hover:bg-emerald-50 rounded-lg transition" title="কপি করুন">
+                                        <i data-lucide="copy" class="w-2.5 md:w-3.5 h-2.5 md:h-3.5" id="refCopyIcon"></i>
+                                        <i data-lucide="check" class="w-2.5 md:w-3.5 h-2.5 md:h-3.5 hidden" id="refCheckIcon"></i>
+                                    </button>
+                                </div>
+                                <p class="relative z-10 text-[7px] md:text-[8px] font-bold text-gray-400 mt-1 opacity-80 leading-tight">বন্ধুকে আমন্ত্রন দিন!</p>
+                            </div>
+                            <!-- Verified Badge Card -->
+                            <div class="bg-white rounded-[1.25rem] p-2.5 md:p-3.5 border border-gray-100 flex flex-col sm:flex-row items-center gap-2 md:gap-3 transition-all ${isVerified ? 'border-emerald-200 bg-emerald-50/20 shadow-sm shadow-emerald-500/10' : 'opacity-60 grayscale'}">
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-emerald-100 flex items-center justify-center shadow-inner flex-shrink-0">
+                                    <i data-lucide="shield-check" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
+                                </div>
+                                <div class="text-center sm:text-left min-w-0">
+                                    <h4 class="text-[9px] md:text-[11px] font-black text-gray-900 uppercase tracking-tight truncate leading-none">ভেরিফাইড</h4>
+                                    <p class="text-[7px] md:text-[9px] font-bold text-gray-500 leading-tight truncate mt-1">${isVerified ? 'অভিনন্দন!' : '১টি মিটআপ প্রয়োজন'}</p>
+                                </div>
+                                ${isVerified ? '<i data-lucide="award" class="w-3 h-3 md:w-4 md:h-4 text-emerald-500 ml-auto animate-bounce-slow hidden sm:block"></i>' : ''}
+                            </div>
+                        </div>
 
                         <div class="mt-4 p-6 sm:p-8 bg-emerald-50/20 rounded-[2rem] border border-emerald-100/30">
                             <div class="flex items-center gap-2 mb-4">
