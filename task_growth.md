@@ -31,7 +31,7 @@
 - [x] Security: Implemented session caching for chat verification (sessionStorage).
 - [x] Admin: Persistent session logic (localStorage) - no login required on Home/Refresh.
 - [x] Admin: Manual "Verified Citizen" badge management in Booking Edit.
-- [x] Admin: Extended location categories (Restaurant, Cinema Hall).
+
 - [x] UI/UX: Enhanced Google Maps marker clicks to use descriptive search (Place + Area).
 - [x] Bugfix: Restored missing Partnership Admin HTML sections.
 
@@ -41,4 +41,4 @@
 - [x] Policy: Implemented 10-day Refund Policy FAQ (3-day payout guarantee).
 - [x] Cleanup: Tightened blog card internal spacing and title-to-content rhythms.
 
-add bangla text logo in header and footer and commit to the feature branch
+- [x] Admin: Extended location categories (Resort, Cinema Hall).[not done yet]
