@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     booking_status    VARCHAR(15)  NOT NULL DEFAULT 'processing',
     assigned_group_id INT,
     admin_notes       TEXT,
+    wants_pickup      BOOLEAN DEFAULT FALSE,
+    wants_dropoff     BOOLEAN DEFAULT FALSE,
     created_at        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
@@ -174,6 +176,8 @@ def init_db():
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS referral_code VARCHAR(12) UNIQUE")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS referred_by VARCHAR(12)")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS wants_pickup BOOLEAN DEFAULT FALSE")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS wants_dropoff BOOLEAN DEFAULT FALSE")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS image_url TEXT")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS badge_text VARCHAR(50)")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0")
@@ -181,6 +185,7 @@ def init_db():
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS admin_notes TEXT")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS interests TEXT")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS expectations TEXT")
+        cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS is_pivoted BOOLEAN DEFAULT FALSE")
         
         # User Ratings table creation moved here for robustness
         cursor.execute("""

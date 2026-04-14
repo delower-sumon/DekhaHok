@@ -125,8 +125,8 @@ def create_booking(payload: BookingCreate):
                      preferred_date, preferred_time, venue_type,
                      conversation_style, preferred_people, current_location, preferred_location, 
                      preferred_meeting_point, payment_method, payment_sender_digits, fee_amount,
-                     interests, expectations)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     interests, expectations, wants_pickup, wants_dropoff)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     tracking_id,
@@ -148,6 +148,8 @@ def create_booking(payload: BookingCreate):
                     fee,
                     payload.interests,
                     payload.expectations,
+                    payload.wants_pickup,
+                    payload.wants_dropoff,
                 ),
             )
             conn.commit()
@@ -196,7 +198,7 @@ def track_booking(tracking_id: str):
                 g.venue_name, g.meet_date, g.meet_time, b.current_location, b.preferred_location,
                 b.payment_method, b.payment_sender_digits, b.preferred_meeting_point,
                 b.id, g.id, b.rejection_reason, b.referral_code, b.is_verified,
-                b.interests, b.expectations
+                b.interests, b.expectations, b.wants_pickup, b.wants_dropoff
             FROM bookings b
             LEFT JOIN group_members gm ON gm.booking_id = b.id
             LEFT JOIN meetup_groups g  ON g.id = gm.group_id
@@ -284,7 +286,9 @@ def track_booking(tracking_id: str):
         referral_code=row[20],
         is_verified=row[21],
         interests=row[22],
-        expectations=row[23]
+        expectations=row[23],
+        wants_pickup=row[24],
+        wants_dropoff=row[25]
     )
 
 
@@ -450,14 +454,15 @@ def list_blogs():
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, badge_text, likes, shares, status, author, created_at FROM blogs WHERE status = 'published' ORDER BY created_at DESC")
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC")
         rows = cursor.fetchall()
         return [
             BlogResponse(
                 id=r[0], title=r[1], slug=r[2], content=r[3], 
                 keywords=r[4], seo_description=r[5], image_url=r[6], 
                 badge_text=r[7], likes=r[8], shares=r[9],
-                status=r[10], author=r[11], created_at=str(r[12])
+                status=r[10], author=r[11], created_at=str(r[12]),
+                is_pivoted=r[13]
             ) for r in rows
         ]
     finally:
@@ -469,7 +474,7 @@ def get_blog(slug: str):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, badge_text, likes, shares, status, author, created_at FROM blogs WHERE slug = %s", (slug,))
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE slug = %s", (slug,))
         row = cursor.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="Blog not found")
@@ -477,7 +482,8 @@ def get_blog(slug: str):
             id=row[0], title=row[1], slug=row[2], content=row[3], 
             keywords=row[4], seo_description=row[5], image_url=row[6], 
             badge_text=row[7], likes=row[8], shares=row[9],
-            status=row[10], author=row[11], created_at=str(row[12])
+            status=row[10], author=row[11], created_at=str(row[12]),
+            is_pivoted=row[13]
         )
     finally:
         release_conn(conn)
@@ -728,7 +734,8 @@ def admin_list_bookings(
                    preferred_date, preferred_time, venue_type, conversation_style, preferred_people,
                    current_location, preferred_location, preferred_meeting_point,
                    fee_amount, payment_status, payment_method, payment_sender_digits, booking_status,
-                   assigned_group_id, admin_notes, is_verified, created_at
+                   assigned_group_id, admin_notes, is_verified, wants_pickup, wants_dropoff, created_at,
+                   interests, expectations
             FROM bookings
             {where}
             ORDER BY created_at DESC
@@ -765,7 +772,11 @@ def admin_list_bookings(
             "assigned_group_id": r[20],
             "admin_notes":       r[21],
             "is_verified":       r[22],
-            "created_at":        str(r[23]),
+            "wants_pickup":      r[23],
+            "wants_dropoff":     r[24],
+            "created_at":        str(r[25]),
+            "interests":         r[26],
+            "expectations":      r[27],
         }
         for r in rows
     ]
@@ -778,13 +789,14 @@ def admin_update_booking(
     x_admin_key: str = Header(...),
 ):
     require_admin(x_admin_key)
-
     updates = {}
     if payload.payment_status is not None: updates["payment_status"] = payload.payment_status
     if payload.booking_status is not None: updates["booking_status"] = payload.booking_status
     if payload.admin_notes    is not None: updates["admin_notes"]    = payload.admin_notes
     if payload.rejection_reason is not None: updates["rejection_reason"] = payload.rejection_reason
     if payload.is_verified is not None: updates["is_verified"] = payload.is_verified
+    if payload.wants_pickup is not None: updates["wants_pickup"] = payload.wants_pickup
+    if payload.wants_dropoff is not None: updates["wants_dropoff"] = payload.wants_dropoff
 
     if not updates:
         raise HTTPException(status_code=400, detail="Nothing to update.")
@@ -1275,20 +1287,23 @@ def admin_delete_location(location_id: int, x_admin_key: str = Header(...)):
 @app.post("/api/admin/blogs", response_model=BlogResponse)
 def admin_create_blog(payload: BlogCreate, x_admin_key: str = Header(...)):
     require_admin(x_admin_key)
-    slug = payload.title.lower().replace(" ", "-")
-    slug = "".join(c for c in slug if c.isalnum() or c == '-')
+    if payload.slug:
+        slug = payload.slug.strip()
+    else:
+        slug = payload.title.lower().replace(" ", "-")
+        slug = "".join(c for c in slug if c.isalnum() or c == '-')
     
     conn = get_conn()
     try:
         cursor = conn.cursor()
         cursor.execute(
             """
-            INSERT INTO blogs (title, slug, content, keywords, seo_description, image_url, badge_text, status, author)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO blogs (title, slug, content, keywords, seo_description, image_url, badge_text, status, author, is_pivoted)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (slug) DO NOTHING
             RETURNING id, created_at
             """,
-            (payload.title, slug, payload.content, payload.keywords, payload.seo_description, payload.image_url, payload.badge_text, payload.status, payload.author)
+            (payload.title, slug, payload.content, payload.keywords, payload.seo_description, payload.image_url, payload.badge_text, payload.status, payload.author, payload.is_pivoted)
         )
         row = cursor.fetchone()
         conn.commit()
@@ -1299,7 +1314,7 @@ def admin_create_blog(payload: BlogCreate, x_admin_key: str = Header(...)):
             keywords=payload.keywords, seo_description=payload.seo_description,
             image_url=payload.image_url, badge_text=payload.badge_text,
             likes=0, shares=0,
-            status=payload.status, author=payload.author, created_at=str(row[1])
+            status=payload.status, author=payload.author, is_pivoted=payload.is_pivoted, created_at=str(row[1])
         )
     finally:
         release_conn(conn)
