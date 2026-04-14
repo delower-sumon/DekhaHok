@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>দেখা হোক</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon/dekhahok.svg">
+    <link rel="canonical" href="https://dekhahok.com" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Leaflet Map -->
@@ -3629,8 +3630,16 @@
                 if (b) b.shares = data.shares;
 
                 if (navigator.share) {
-                    navigator.share({ title: 'DekhaHok Blog', url: window.location.href });
+                    const blogPost = allBlogPosts.find(p => p.id === currentBlogId);
+                    const shareUrl = blogPost ? `${window.location.origin}${window.location.pathname}?blog=${blogPost.slug}` : window.location.href;
+                    navigator.share({ 
+                        title: blogPost ? blogPost.title : 'DekhaHok Blog', 
+                        url: shareUrl 
+                    });
                 } else {
+                    const blogPost = allBlogPosts.find(p => p.id === currentBlogId);
+                    const shareUrl = blogPost ? `${window.location.origin}${window.location.pathname}?blog=${blogPost.slug}` : window.location.href;
+                    navigator.clipboard.writeText(shareUrl);
                     alert('লিংক কপি করা হয়েছে!');
                 }
             } catch (err) { }
@@ -3753,9 +3762,19 @@
             }, 300);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             fetchDiscoveryGroups();
-            fetchBlogs();
+            await fetchBlogs();
+            
+            // Check for blog deep link
+            const urlParams = new URLSearchParams(window.location.search);
+            const blogSlug = urlParams.get('blog');
+            if (blogSlug && allBlogPosts.length > 0) {
+                const blogIdx = allBlogPosts.findIndex(b => b.slug === blogSlug);
+                if (blogIdx !== -1) {
+                    openBlogModal(blogIdx);
+                }
+            }
         });
     </script>
 </body>

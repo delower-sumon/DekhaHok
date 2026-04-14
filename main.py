@@ -5,7 +5,7 @@ import hashlib
 from typing import Optional
 
 from datetime import datetime, timedelta, time
-from fastapi import FastAPI, HTTPException, Header, Query, Request
+from fastapi import FastAPI, HTTPException, Header, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -59,6 +59,56 @@ def serve_frontend(request: Request):
 @app.get("/admin", include_in_schema=False)
 def serve_admin():
     return FileResponse("admin/index.html")
+
+
+@app.get("/robots.txt", include_in_schema=False)
+def robots():
+    content = "User-agent: *\nDisallow: /admin/\nDisallow: /api/\nSitemap: https://dekhahok.com/sitemap.xml"
+    return Response(content=content, media_type="text/plain")
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+def sitemap():
+    """
+    Dynamically generates sitemap.xml including the homepage and all published blogs.
+    """
+    base_url = "https://dekhahok.com"
+    
+    # Static pages
+    pages = [
+        {"loc": f"{base_url}/", "lastmod": datetime.now().date().isoformat(), "changefreq": "daily", "priority": "1.0"}
+    ]
+    
+    # Dynamic blogs
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT slug, created_at FROM blogs WHERE status = 'published' ORDER BY created_at DESC")
+        rows = cursor.fetchall()
+        for r in rows:
+            # Blog URL format: base_url/?blog=slug
+            pages.append({
+                "loc": f"{base_url}/?blog={r[0]}",
+                "lastmod": r[1].date().isoformat() if isinstance(r[1], datetime) else str(r[1]),
+                "changefreq": "weekly",
+                "priority": "0.8"
+            })
+        cursor.close()
+    finally:
+        release_conn(conn)
+
+    xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for p in pages:
+        xml_content += f'  <url>\n'
+        xml_content += f'    <loc>{p["loc"]}</loc>\n'
+        xml_content += f'    <lastmod>{p["lastmod"]}</lastmod>\n'
+        xml_content += f'    <changefreq>{p["changefreq"]}</changefreq>\n'
+        xml_content += f'    <priority>{p["priority"]}</priority>\n'
+        xml_content += f'  </url>\n'
+    xml_content += '</urlset>'
+    
+    return Response(content=xml_content, media_type="application/xml")
 
 
 @app.on_event("startup")
