@@ -2404,7 +2404,7 @@
         async function submitBooking() {
             const lastDigits = document.getElementById('paymentDigits').value.trim();
             if (lastDigits.length !== 2) {
-                alert('শেষ ২ ডিজিট দিয়ে পরে পেমেন্ট করুন।');
+                showPaymentError('পেমেন্টের শেষ ২ ডিজিট সঠিকভাবে দিন।');
                 return;
             }
 
@@ -2436,7 +2436,7 @@
 
             // Double check for critical missing fields before sending
             if (!payload.preferred_date || !payload.preferred_time) {
-                alert('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
+                showPaymentError('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
                 return;
@@ -2455,22 +2455,19 @@
                         const errorMsg = data.detail.map(err => {
                             const field = err.loc[err.loc.length - 1];
                             const fieldMap = {
-                                'name': 'নাম',
-                                'phone': 'ফোন নম্বর',
-                                'age': 'বয়স',
-                                'preferred_date': 'তারিখ',
-                                'preferred_time': 'সময়',
-                                'venue_type': 'ভেন্যু ধরন',
-                                'payment_sender_digits': 'পেমেন্ট ডিজিট (শেষ ২ সংখ্যা)',
+                                'name': 'নাম', 'phone': 'ফোন নম্বর', 'age': 'বয়স',
+                                'preferred_date': 'তারিখ', 'preferred_time': 'সময়',
+                                'venue_type': 'ভেন্যু ধরন', 'payment_sender_digits': 'পেমেন্ট ডিজিট (শেষ ২ সংখ্যা)',
                                 'interests': 'আগ্রহ/পছন্দসমূহ'
                             };
-                            const fieldName = fieldMap[field] || field;
-                            return `• ${fieldName}: ${err.msg}`;
-                        }).join('\n');
-                        alert(`অনুগ্রহ করে নিচের তথ্যগুলো সঠিক করুন:\n${errorMsg}`);
+                            return `• ${fieldMap[field] || field}`;
+                        }).join(', ');
+                        showPaymentError(`সঠিক তথ্য দিন: ${errorMsg}`);
                     } else {
-                        alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        showPaymentError(data.detail || 'কিছু একটা সমস্যা হয়েছে।');
                     }
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.disabled = false;
                     return;
                 }
 
@@ -2495,11 +2492,24 @@
                 if (firstSlot) selectDate(firstSlot);
 
             } catch (err) {
-                alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
+                showPaymentError('নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।');
             } finally {
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
             }
+        }
+
+        function showPaymentError(msg) {
+            let el = document.getElementById('paymentError');
+            if (!el) {
+                el = document.createElement('p');
+                el.id = 'paymentError';
+                el.className = 'text-red-500 text-[10px] mb-3 text-center font-black uppercase tracking-tight animate-pulse bg-red-50 py-2 rounded-xl border border-red-100';
+                document.getElementById('finalSubmitBtn').insertAdjacentElement('beforebegin', el);
+            }
+            el.textContent = msg;
+            el.classList.remove('hidden');
+            setTimeout(() => { if (el) el.classList.add('hidden'); }, 6000);
         }
 
         function copyNumber() {
