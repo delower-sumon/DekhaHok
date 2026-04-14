@@ -28,6 +28,8 @@ class BookingCreate(BaseModel):
     referred_by:        Optional[str] = None # referral code
     interests:          Optional[str] = None # Acquisition: interests
     expectations:       Optional[str] = None # Acquisition: expectations
+    wants_pickup:       bool = False
+    wants_dropoff:      bool = False
 
     @field_validator("group_size")
     @classmethod
@@ -111,6 +113,8 @@ class TrackingResponse(BaseModel):
     is_verified:       bool = False
     interests:         Optional[str] = None
     expectations:      Optional[str] = None
+    wants_pickup:      bool = False
+    wants_dropoff:     bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -123,6 +127,8 @@ class AdminBookingUpdate(BaseModel):
     admin_notes:    Optional[str] = None
     rejection_reason: Optional[str] = None
     is_verified:    Optional[bool] = None
+    wants_pickup:   Optional[bool] = None
+    wants_dropoff:  Optional[bool] = None
 
     @field_validator("payment_status")
     @classmethod
@@ -219,6 +225,7 @@ class PartnershipUpdate(BaseModel):
 
 class BlogCreate(BaseModel):
     title: str
+    slug: Optional[str] = None
     content: str
     keywords: Optional[str] = None
     seo_description: Optional[str] = None
@@ -226,6 +233,7 @@ class BlogCreate(BaseModel):
     badge_text: Optional[str] = None
     status: str = "published"
     author: Optional[str] = None
+    is_pivoted: bool = False
 
 class BlogResponse(BaseModel):
     id: int
@@ -240,16 +248,19 @@ class BlogResponse(BaseModel):
     shares: int
     status: str
     author: Optional[str] = None
+    is_pivoted: bool = False
     created_at: str
 
 class BlogUpdate(BaseModel):
     title: Optional[str] = None
+    slug: Optional[str] = None
     content: Optional[str] = None
     keywords: Optional[str] = None
     seo_description: Optional[str] = None
     image_url: Optional[str] = None
     badge_text: Optional[str] = None
     status: Optional[str] = None
+    is_pivoted: Optional[bool] = None
     author: Optional[str] = None
 
 # ---------------------------------------------------------------------------
