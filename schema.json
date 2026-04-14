@@ -1,0 +1,65 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://dekhahok.com/#organization",
+      "name": "দেখা হোক",
+      "alternateName": "DekhaHok",
+      "url": "https://dekhahok.com",
+      "logo": "https://dekhahok.com/static/assets/dekhahok_logo.svg",
+      "description": "The premier secure social networking platform in Dhaka for verified group meetups and professional networking.",
+      "telephone": "+8801884477720",
+      "areaServed": {
+        "@type": "City",
+        "name": "Dhaka"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Dhaka",
+        "addressCountry": "BD"
+      },
+      "sameAs": [
+        "https://wa.me/8801884477720",
+        "https://facebook.com/dekhahok",
+        "https://instagram.com/dekhahok"
+      ]
+    },
+    {
+      "@type": "Service",
+      "serviceType": "Social Meetup Coordination",
+      "provider": {
+        "@id": "https://dekhahok.com/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "BDT",
+        "price": "499.00/249.00",
+        "description": "Dwaito (1-on-1) or Ponchayet (Group of 5) Managed Meetup"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://dekhahok.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "FAQ",
+          "item": "https://dekhahok.com/#safety"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Blog",
+          "item": "https://dekhahok.com/#blog"
+        }
+      ]
+    }
+  ]
+}
