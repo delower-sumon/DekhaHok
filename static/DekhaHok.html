@@ -729,6 +729,8 @@
                 </div>
 
                 <!-- Actions -->
+                <!-- Error Container -->
+                <div id="paymentModalErrorContainer" class="hidden text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-100 whitespace-pre-line font-medium text-left mt-2 mb-2 shadow-sm"></div>
                 <button onclick="submitBooking()" id="finalSubmitBtn"
                     class="btn-primary w-full text-white py-4.5 rounded-2xl font-bold text-lg shadow-xl shadow-emerald-100 active:scale-95 transition-all">
                     বুকিং সম্পন্ন করুন
@@ -2387,6 +2389,11 @@
         function openPaymentModal() {
             const modal = document.getElementById('paymentModal');
             const modalContent = document.getElementById('paymentModalContent');
+            const errorContainer = document.getElementById('paymentModalErrorContainer');
+            if (errorContainer) {
+                errorContainer.classList.add('hidden');
+                errorContainer.textContent = '';
+            }
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
@@ -2418,9 +2425,14 @@
         }
 
         async function submitBooking() {
+            const errorContainer = document.getElementById('paymentModalErrorContainer');
+            errorContainer.classList.add('hidden');
+            errorContainer.textContent = '';
+
             const lastDigits = document.getElementById('paymentDigits').value.trim();
             if (lastDigits.length !== 2) {
-                alert('শেষ ২ ডিজিট দিয়ে পরে পেমেন্ট করুন।');
+                errorContainer.textContent = 'শেষ ২ ডিজিট দিয়ে পরে পেমেন্ট করুন।';
+                errorContainer.classList.remove('hidden');
                 return;
             }
 
@@ -2450,7 +2462,8 @@
 
             // Double check for critical missing fields before sending
             if (!payload.preferred_date || !payload.preferred_time) {
-                alert('অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।');
+                errorContainer.textContent = 'অনুগ্রহ করে একটি তারিখ ও সময় নির্বাচন করুন।';
+                errorContainer.classList.remove('hidden');
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
                 return;
@@ -2481,10 +2494,11 @@
                             const fieldName = fieldMap[field] || field;
                             return `• ${fieldName}: ${err.msg}`;
                         }).join('\n');
-                        alert(`অনুগ্রহ করে নিচের তথ্যগুলো সঠিক করুন:\n${errorMsg}`);
+                        errorContainer.textContent = `অনুগ্রহ করে নিচের তথ্যগুলো সঠিক করুন:\n${errorMsg}`;
                     } else {
-                        alert(data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        errorContainer.textContent = data.detail || 'কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।';
                     }
+                    errorContainer.classList.remove('hidden');
                     return;
                 }
 
@@ -2509,7 +2523,8 @@
                 if (firstSlot) selectDate(firstSlot);
 
             } catch (err) {
-                alert('নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।');
+                errorContainer.textContent = 'নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।';
+                errorContainer.classList.remove('hidden');
             } finally {
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
