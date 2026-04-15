@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, time
 from fastapi import FastAPI, HTTPException, Header, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse, Response
 from dotenv import load_dotenv
 
 from database import get_conn, release_conn, init_db
@@ -34,6 +34,68 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@app.middleware("http")
+async def seo_redirect_middleware(request: Request, call_next):
+    host = request.headers.get("host", "").lower()
+    # 1. WWW redirection fallback (Primary is Cloudflare)
+    if host.startswith("www."):
+        new_host = host.replace("www.", "", 1)
+        url = request.url.replace(netloc=new_host)
+        return RedirectResponse(url=str(url), status_code=301)
+    
+    # 2. IP Canonicalization fallback
+    if host == "188.114.97.3":
+        url = request.url.replace(netloc="dekhahok.com")
+        return RedirectResponse(url=str(url), status_code=301)
+        
+    response = await call_next(request)
+    return response
+
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, __):
+    return FileResponse("static/404.html", status_code=404)
+
+
+@app.get("/robots.txt", include_in_schema=False)
+def serve_robots():
+    content = "User-agent: *\nDisallow: /admin/\nDisallow: /api/\nSitemap: https://dekhahok.com/sitemap.xml"
+    return Response(content=content, media_type="text/plain")
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+def serve_sitemap():
+    base_url = "https://dekhahok.com"
+    xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    # Homepage
+    xml_content += f'  <url>\n    <loc>{base_url}/</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n'
+    
+    # Blogs
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT slug, created_at FROM blogs WHERE status = 'published' ORDER BY created_at DESC")
+        blogs = cursor.fetchall()
+        for row in blogs:
+            slug = row[0]
+            created_at = row[1]
+            # Format date for lastmod
+            if isinstance(created_at, datetime):
+                lastmod = created_at.date().isoformat()
+            else:
+                lastmod = str(created_at)[:10]
+            
+            xml_content += f'  <url>\n    <loc>{base_url}/?blog={slug}</loc>\n    <lastmod>{lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+        cursor.close()
+    finally:
+        release_conn(conn)
+        
+    xml_content += '</urlset>'
+    return Response(content=xml_content, media_type="application/xml")
 
 
 @app.get("/", include_in_schema=False)

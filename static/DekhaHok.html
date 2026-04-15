@@ -4,7 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>দেখা হোক</title>
+    <title>দেখা হোক | Social Meetups in Dhaka</title>
+    <meta name="description" content="Join the best social events and meetups in Dhaka with দেখা হোক (Dekha Hok). Book your seat for group chats, verified venues, and smart matching today!">
+    <link rel="canonical" href="https://dekhahok.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dekhahok.com/">
+    <meta property="og:title" content="দেখা হোক | Social Meetups in Dhaka">
+    <meta property="og:description" content="Join the best social events and meetups in Dhaka with দেখা হোক (Dekha Hok). Book your seat for group chats and smart matching today!">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_logo.svg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://dekhahok.com/">
+    <meta property="twitter:title" content="দেখা হোক | Social Meetups in Dhaka">
+    <meta property="twitter:description" content="Join the best social events and meetups in Dhaka with দেখা হোক (Dekha Hok). Book your seat for group chats and smart matching today!">
+    <meta property="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_logo.svg">
+
     <link rel="icon" type="image/svg+xml" href="/static/favicon/dekhahok.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -854,7 +871,7 @@
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-6 items-center relative z-10">
             <!-- Left Content -->
-            <div class="text-center lg:text-left space-y-1 mt-0">
+            <div class="text-center lg:text-left space-y-1 mt-8 lg:mt-0">
                 <div
                     class="inline-flex items-center space-x-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-emerald-200">
                     <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -3523,6 +3540,16 @@
                 renderBlogGrid();
                 if (allBlogPosts.length > visibleCount) {
                     document.getElementById('blogLoaderContainer').classList.remove('hidden');
+                }
+
+                // Deep-linking support for sharing sitemap URLs
+                const urlParams = new URLSearchParams(window.location.search);
+                const blogSlug = urlParams.get('blog');
+                if (blogSlug) {
+                    const blogIdx = allBlogPosts.findIndex(b => b.slug === blogSlug);
+                    if (blogIdx !== -1) {
+                        openBlogModal(blogIdx);
+                    }
                 }
             } catch (err) { }
         }
