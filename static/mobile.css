@@ -154,10 +154,17 @@ input, textarea, select {
 
 /* Improve tap targets */
 button, a {
-    min-height: 44px;
+    min-height: 48px; /* Increased from 44px for better SEO score */
+    padding: 12px 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Footer & Nav specific tap targets */
+footer a, nav a {
+    padding: 14px 10px;
+    margin: 4px 0;
 }
 @media (max-width: 640px) {
   /* Ensure venue cards are chunky and tappable with emerald emphasis on selection */

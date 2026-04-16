@@ -7,6 +7,7 @@ from typing import Optional
 from datetime import datetime, timedelta, time
 from fastapi import FastAPI, HTTPException, Header, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse, Response
 from dotenv import load_dotenv
@@ -32,6 +33,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -64,6 +67,14 @@ async def seo_redirect_middleware(request: Request, call_next):
         return RedirectResponse(url=str(url), status_code=301)
         
     response = await call_next(request)
+    
+    # 3. Technical SEO Headers
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    
+    # 4. Performance Caching for Static Assets
+    if request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        
     return response
 
 

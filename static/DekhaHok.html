@@ -4,26 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>দেখা হোক | Social Meetups in Dhaka</title>
-    <meta name="description" content="Join the best social events and meetups in Dhaka with দেখা হোক (Dekha Hok). Book your seat for group chats, verified venues, and smart matching today!">
-    <link rel="canonical" href="https://dekhahok.com/" />
-    
+    <title>দেখা হোক | বন্ধুদের সাথে আড্ডা ও ইভেন্ট বুকিং প্ল্যাটফর্ম</title>
+    <meta name="description"
+        content="ঢাকার সেরা সোশ্যাল ইভেন্টে যুক্ত হোন দেখা হোক-এ। নিরাপদ পরিবেশে নতুন কারও সাথে দেখা করুন, আড্ডা দিন।">
+    <link rel="canonical" href="https://dekhahok.com/">
+    <link rel="alternate" hreflang="bn" href="https://dekhahok.com/">
+    <link rel="alternate" hreflang="en" href="https://dekhahok.com/?lang=en">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dekhahok.com/">
-    <meta property="og:title" content="দেখা হোক | Social Meetups in Dhaka">
-    <meta property="og:description" content="Join the best social events and meetups in Dhaka with দেখা হোক (Dekha Hok). Book your seat for group chats and smart matching today!">
-    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_logo.svg">
+    <meta property="og:title" content="দেখা হোক | Social Meetups & Event Booking Platform in Dhaka City">
+    <meta property="og:description"
+        content="Join the best social events and meetups in Dhaka. Book events and meet new people safely today!">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://dekhahok.com/">
-    <meta property="twitter:title" content="দেখা হোক | Social Meetups in Dhaka">
-    <meta property="twitter:description" content="Join the best social events and meetups in Dhaka with দেখা হোক (Dekha Hok). Book your seat for group chats and smart matching today!">
-    <meta property="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_logo.svg">
+    <meta property="twitter:title" content="দেখা হোক | Social Meetups & Group Chats in Dhaka City">
+    <meta property="twitter:description"
+        content="Join the best social events and meetups in Dhaka. Book group chats and meet new people safely today!">
+    <meta property="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "দেখা হোক (DekhaHok)",
+      "image": "https://dekhahok.com/static/assets/dekhahok_ui.webp",
+      "@id": "https://dekhahok.com",
+      "url": "https://dekhahok.com",
+      "telephone": "+8801884477720",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Dhaka City",
+        "addressLocality": "Dhaka",
+        "addressRegion": "Dhaka",
+        "postalCode": "1200",
+        "addressCountry": "BD"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 23.8103,
+        "longitude": 90.4125
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Friday",
+          "Saturday"
+        ],
+        "opens": "17:00",
+        "closes": "21:00"
+      },
+      "sameAs": [
+        "https://facebook.com/dekhahok",
+        "https://instagram.com/dekhahok",
+        "https://linkedin.com/company/dekhahok",
+        "https://share.google/velwcnB4LRngS10bI"
+      ]
+    }
+    </script>
 
     <link rel="icon" type="image/svg+xml" href="/static/favicon/dekhahok.svg">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Leaflet Map -->
@@ -472,7 +517,6 @@
             animation: dots-typing 1.8s steps(4, end) infinite;
             white-space: nowrap;
             width: 0;
-            margin-left: 4px;
             letter-spacing: -2px;
         }
 
@@ -486,74 +530,6 @@
             }
         }
     </style>
-    <!-- JSON-LD SEO Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "LocalBusiness",
-          "@id": "https://dekhahok.com/#organization",
-          "name": "দেখা হোক",
-          "alternateName": "DekhaHok",
-          "url": "https://dekhahok.com",
-          "logo": "https://dekhahok.com/static/assets/dekhahok_logo.svg",
-          "description": "The premier secure social networking platform in Dhaka for verified group meetups and professional networking.",
-          "telephone": "+8801884477720",
-          "areaServed": {
-            "@type": "City",
-            "name": "Dhaka"
-          },
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Dhaka",
-            "addressCountry": "BD"
-          },
-          "sameAs": [
-            "https://wa.me/8801884477720",
-            "https://facebook.com/dekhahok",
-            "https://instagram.com/dekhahok"
-          ]
-        },
-        {
-          "@type": "Service",
-          "serviceType": "Social Meetup Coordination",
-          "provider": {
-            "@id": "https://dekhahok.com/#organization"
-          },
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "BDT",
-            "price": "499.00/249.00",
-            "description": "Dwaito (1-on-1) or Ponchayet (Group of 5) Managed Meetup"
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://dekhahok.com/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "FAQ",
-              "item": "https://dekhahok.com/#safety"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "Blog",
-              "item": "https://dekhahok.com/#blog"
-            }
-          ]
-        }
-      ]
-    }
-    </script>
 </head>
 
 <body class="text-gray-800 overflow-x-hidden flex flex-col min-h-screen">
@@ -563,8 +539,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="/" class="flex items-center space-x-2 hover:opacity-90 transition" aria-label="DekhaHok home">
-                    <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok Social Meetups Logo" class="logo-img" />
-                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক লোগো" class="h-[28px] md:h-[34px] w-auto" />
+                    <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok" class="logo-img" />
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" />
                     <span
                         class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full ml-2 border border-emerald-100 flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
@@ -695,7 +671,7 @@
             <div class="space-y-4">
                 <!-- Payment Summary -->
                 <div class="bg-gray-50 rounded-2xl p-4 flex items-center justify-between border border-gray-100">
-                    <span class="text-gray-500 text-sm font-medium">প্রদেয় টাকা</span>
+                    <span class="text-gray-500 text-sm font-medium">পেমেন্ট</span>
                     <span id="paymentModalFee" class="text-2xl font-black text-gray-900"></span>
                 </div>
 
@@ -947,19 +923,15 @@
                     <span class="text-sm font-medium text-emerald-700">Now in Dhaka City</span>
                 </div>
 
-                <h1 class="text-5xl lg:text-7xl font-bold leading-[1.3] overflow-visible">
-                    <!-- এখানেও gradient-text এবং inline-block যোগ করা হয়েছে -->
-                    <span class="gradient-text inline-block pb-2" data-en="Strangers today,">দেখা হোক,</span>
-
-                    <br> <!-- লাইন ব্রেকের জন্য -->
-
-                    <span class="gradient-text inline-block pb-4 leading-normal" data-en="friend tomorrow">হোক
-                        বন্ধুত্ব<span class="inline-block text-left" style="width: 1.25em;"><span
-                                class="dots-typewriter">...</span></span></span>
+                <h1 class="text-5xl lg:text-7xl font-black leading-tight text-gray-900">
+                    <span class="gradient-text pb-2" data-en="Strangers today,">দেখা হোক,</span><br>
+                    <span class="gradient-text" data-en="friend tomorrow">হোক বন্ধুত্ব</span><span
+                        class="inline-block text-left ml-1" style="width: 1.25em;"><span
+                            class="dots-typewriter">...</span></span>
                 </h1>
 
                 <p class="text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-loose mt-0">
-                    "ঢাকা জুড়েই আমাদের আয়োজন; আপনার পছন্দের স্থানটি বেছে নিয়ে আজই যুক্ত হোন!"
+                    "দেখা হোক, হোক পরিচয়;<br> চেনা হোক শহরের নতুন মানুষগুলো। "
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
@@ -1208,7 +1180,7 @@
                                     সে সম্পর্কে আমাদের বলুন (Preferences Note)</label>
                                 <textarea id="interests" required rows="3"
                                     class="input-field w-full px-4 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all resize-none shadow-sm"
-                                    placeholder="ব্যবসা, ভ্রমণ, প্রযুক্তি ইত্যাদি এবং আপনি এখান থেকে কি প্রত্যাশা করেন।"></textarea>
+                                    placeholder="আপনার পছন্দের বিষয়সমূহ (যেমন: ব্যবসা, ভ্রমণ, প্রযুক্তি) এবং আপনি এখান থেকে কি আশা করছেন?"></textarea>
                             </div>
 
                             <div>
@@ -1505,15 +1477,15 @@
 
                 <div id="map-stats"
                     class="inline-flex gap-8 bg-gray-50 p-6 rounded-[2rem] border border-gray-100 shadow-sm">
-                    <div class="text-center">
+                    <!-- <div class="text-center">
                         <p class="text-2xl font-black text-emerald-700" id="stat-cities">1</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">ঢাকা</p>
-                    </div>
+                    </div> -->
                     <div class="text-center px-8 border-x border-gray-200">
                         <p class="text-2xl font-black text-emerald-700" id="stat-areas">8+</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">এলাকা</p>
                     </div>
-                    <div class="text-center">
+                    <div class="text-center px-8 border-x border-gray-200">
                         <p class="text-2xl font-black text-emerald-700" id="stat-points">3</p>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">পয়েন্ট</p>
                     </div>
@@ -1668,13 +1640,13 @@
                             <div class="flex -space-x-3">
                                 <img src="http://static.photos/people/200x200/1"
                                     class="w-10 h-10 rounded-full border-4 border-[#1F3D2B] object-cover ring-2 ring-emerald-500/30"
-                                    alt="DekhaHok Community Member 1">
+                                    alt="Member">
                                 <img src="http://static.photos/people/200x200/2"
                                     class="w-10 h-10 rounded-full border-4 border-[#1F3D2B] object-cover ring-2 ring-emerald-500/30"
-                                    alt="DekhaHok Community Member 2">
+                                    alt="Member">
                                 <div
                                     class="w-10 h-10 rounded-full border-4 border-[#1F3D2B] bg-[#1F3D2B] flex items-center justify-center ring-2 ring-emerald-500/30">
-                                    <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok Icon"
+                                    <img src="/static/assets/dekhahok_logo.svg" alt="logo"
                                         class="w-6 h-6 brightness-0 invert">
                                 </div>
                             </div>
@@ -1743,7 +1715,7 @@
                         class="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl transform rotate-3 opacity-20">
                     </div>
                     <img src="https://static2.tripoto.com/media/filter/nl/img/2033349/TripDocument/1622812689_cha_and_adda.jpg"
-                        alt="Safe and verified meeting space for Social Adda in Dhaka" class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
+                        alt="Safe meeting space" class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
                     <div
                         class="absolute right-1 bottom-4 z-10 [writing-mode:vertical-lr] rotate-180 bg-white/10 backdrop-blur-md border border-white/20 px-1 py-3 rounded-lg shadow-2xl hover:bg-white/20 transition-all cursor-pointer group">
                         <a href="https://www.tripoto.com/trip/best-places-to-plan-to-have-coffee-and-adda-with-friends"
@@ -1756,9 +1728,9 @@
                         <div class="flex items-center space-x-3 mb-2">
                             <div class="flex -space-x-2">
                                 <img src="http://static.photos/people/200x200/1"
-                                    class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Verified DekhaHok User Profile 1">
+                                    class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
                                 <img src="http://static.photos/people/200x200/2"
-                                    class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Verified DekhaHok User Profile 2">
+                                    class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
                             </div>
                             <span class="text-sm font-semibold text-gray-700">Matched!</span>
                         </div>
@@ -1811,7 +1783,7 @@
             <!-- Scrollable Body -->
             <div class="overflow-y-auto flex-1 custom-scrollbar">
                 <div id="blogModalImage" class="w-full h-80 bg-gray-100 relative">
-                    <img src="" alt="DekhaHok Blog Featured Cover" class="w-full h-full object-cover">
+                    <img src="" alt="Blog Cover" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     <div class="absolute bottom-6 left-8 right-8 flex items-end justify-between gap-4">
                         <div class="flex-1">
@@ -2140,7 +2112,7 @@
                 <div class="col-span-2">
                     <div class="flex items-center mb-4 cursor-pointer group"
                         onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক সাদা লোগো"
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
                             class="h-[34px] md:h-[42px] w-auto brightness-0 invert" />
                     </div>
                     <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
@@ -2171,7 +2143,7 @@
                             class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="text-white">
+                                stroke-linejoin="round">
                                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                             </svg>
                         </a>
@@ -2179,15 +2151,31 @@
                             class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:scale-110 transition-all duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="text-white">
+                                stroke-linejoin="round">
                                 <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
                                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                 <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
                             </svg>
                         </a>
+                        <a href="https://linkedin.com/company/dekhahok" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#0077b5] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect width="4" height="12" x="2" y="9"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
                         <a href="https://wa.me/8801884477720" target="_blank"
                             class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all duration-300">
-                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M17.472 14.382c-.301-.15-1.767-.872-2.031-.969-.264-.096-.456-.145-.648.145-.192.291-.743.929-.91 1.12-.167.191-.334.215-.634.065-.3-.15-1.268-.468-2.415-1.492-.892-.795-1.494-1.777-1.67-2.078-.176-.3-.02-.462.13-.611.134-.134.3-.349.45-.524.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525-.075-.15-.648-1.562-.888-2.14-.233-.563-.47-.487-.648-.496l-.552-.01c-.192 0-.503.072-.766.356-.264.284-1.006.984-1.006 2.4 0 1.416 1.03 2.784 1.173 2.977.143.193 2.028 3.098 4.912 4.346.685.297 1.22.474 1.637.607.69.219 1.317.189 1.812.115.552-.083 1.767-.722 2.025-1.417.258-.695.258-1.292.181-1.417-.077-.125-.284-.2-.584-.351zM12.004 20.155c-1.47 0-2.91-.397-4.17-1.148l-.299-.178-3.1.813.827-3.022-.195-.311c-.825-1.315-1.26-2.843-1.26-4.417 0-4.49 3.655-8.146 8.148-8.146 2.176 0 4.223.847 5.761 2.386 1.538 1.539 2.385 3.586 2.385 5.76 0 4.492-3.655 8.148-8.148 8.148zm10.662-16.273C20.59 1.796 17.755.5 14.735.5 8.528.5 3.475 5.553 3.475 11.76c0 1.983.517 3.918 1.501 5.63l-1.595 5.8 5.932-1.556c1.654.91 3.515 1.391 5.419 1.391 6.205 0 11.258-5.053 11.258-11.26 0-3.02-.1.176-5.836-2.39-2.39z" />
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -2457,11 +2445,6 @@
         function openPaymentModal() {
             const modal = document.getElementById('paymentModal');
             const modalContent = document.getElementById('paymentModalContent');
-            const errorContainer = document.getElementById('paymentModalErrorContainer');
-            if (errorContainer) {
-                errorContainer.classList.add('hidden');
-                errorContainer.textContent = '';
-            }
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
@@ -3733,16 +3716,8 @@
                 if (b) b.shares = data.shares;
 
                 if (navigator.share) {
-                    const blogPost = allBlogPosts.find(p => p.id === currentBlogId);
-                    const shareUrl = blogPost ? `${window.location.origin}${window.location.pathname}?blog=${blogPost.slug}` : window.location.href;
-                    navigator.share({ 
-                        title: blogPost ? blogPost.title : 'DekhaHok Blog', 
-                        url: shareUrl 
-                    });
+                    navigator.share({ title: 'DekhaHok Blog', url: window.location.href });
                 } else {
-                    const blogPost = allBlogPosts.find(p => p.id === currentBlogId);
-                    const shareUrl = blogPost ? `${window.location.origin}${window.location.pathname}?blog=${blogPost.slug}` : window.location.href;
-                    navigator.clipboard.writeText(shareUrl);
                     alert('লিংক কপি করা হয়েছে!');
                 }
             } catch (err) { }
@@ -3865,19 +3840,10 @@
             }, 300);
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
             fetchDiscoveryGroups();
-            await fetchBlogs();
-            
-            // Check for blog deep link
-            const urlParams = new URLSearchParams(window.location.search);
-            const blogSlug = urlParams.get('blog');
-            if (blogSlug && allBlogPosts.length > 0) {
-                const blogIdx = allBlogPosts.findIndex(b => b.slug === blogSlug);
-                if (blogIdx !== -1) {
-                    openBlogModal(blogIdx);
-                }
-            }
+            fetchBlogs();
         });
     </script>
 </body>
