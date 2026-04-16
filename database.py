@@ -209,43 +209,14 @@ def init_db():
         for loc in initial_locations:
             cursor.execute("INSERT INTO locations (name) VALUES (%s) ON CONFLICT (name) DO NOTHING", (loc,))
         
-        # Seed initial blogs
-        initial_blogs = [
-            (
-                "Best places to meet in Dhaka", 
-                "best-places-to-meet-in-dhaka", 
-                "Dhaka is a city of life and culture. For those looking to meet new people, locations like Dhanmondi Lake, Gulshan 2, and various rooftop cafes offer the perfect setting...",
-                "Dhaka meetup, premium restaurants Dhaka, safe meeting spots",
-                "Looking for the best places to meet new people in Dhaka? Check out our top 5 recommendations.",
-                "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500&auto=format&fit=crop&q=60",
-                "Dhaka meetup"
-            ),
-            (
-                "Safe meeting spots Dhanmondi", 
-                "safe-meeting-spots-dhanmondi", 
-                "Dhanmondi is known for its academic and cultural vibe. When meeting someone new, safety is priority. Dhanmondi Lake and Rabindra Sarobar are busy, safe places...",
-                "Dhanmondi hangout, safe spots Dhaka, Rabindra Sarobar",
-                "Explore the safest spots for networking and dating in Dhanmondi, Dhaka.",
-                "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=500&auto=format&fit=crop&q=60",
-                "Dhanmondi hangout"
-            ),
-            (
-                "Networking events Dhaka", 
-                "networking-events-dhaka", 
-                "Networking in Dhaka has shifted from formal offices to social gatherings. Coffee shops in Gulshan and Banani now host informal meetups for professionals...",
-                "Dhaka networking, professional meetups, Gulshan events",
-                "How to find the best networking events in Dhaka for professional growth.",
-                "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&auto=format&fit=crop&q=60",
-                "Dhaka networking"
-            )
+        # Nuke legacy seeded blogs for good
+        legacy_slugs = [
+            "best-places-to-meet-in-dhaka",
+            "safe-meeting-spots-dhanmondi", 
+            "networking-events-dhaka"
         ]
-        for title, slug, content, keywords, seo_desc, img, badge in initial_blogs:
-            cursor.execute("""
-                INSERT INTO blogs (title, slug, content, keywords, seo_description, image_url, badge_text) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s) 
-                ON CONFLICT (slug) DO NOTHING
-            """, (title, slug, content, keywords, seo_desc, img, badge))
-            
+        cursor.execute("DELETE FROM blogs WHERE slug IN %s", (tuple(legacy_slugs),))
+        
         conn.commit()
         cursor.close()
         print("[dekhahok] Database tables ready.")
