@@ -79,7 +79,20 @@ CREATE TABLE IF NOT EXISTS bookings (
     admin_notes       TEXT,
     wants_pickup      BOOLEAN DEFAULT FALSE,
     wants_dropoff     BOOLEAN DEFAULT FALSE,
+    vibe              VARCHAR(50),
+    discount_amount   NUMERIC(8,2) DEFAULT 0.00,
+    coupon_code       VARCHAR(20),
     created_at        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS coupons (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(20) NOT NULL UNIQUE,
+    discount_type VARCHAR(10) NOT NULL, -- 'percent' or 'fixed'
+    value NUMERIC(8,2) NOT NULL,
+    usage_limit INT,
+    expires_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS meetup_groups (
@@ -127,17 +140,20 @@ CREATE TABLE IF NOT EXISTS page_views (
 
 CREATE TABLE IF NOT EXISTS blogs (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
     content TEXT NOT NULL,
     keywords TEXT,
     seo_description TEXT,
     image_url TEXT,
-    badge_text VARCHAR(50),
+    status TEXT DEFAULT 'published',
+    is_pivoted BOOLEAN DEFAULT FALSE,
     likes INTEGER DEFAULT 0,
     shares INTEGER DEFAULT 0,
-    status VARCHAR(20) DEFAULT 'published',
-    author VARCHAR(100),
+    author TEXT DEFAULT 'Team DekhaHok',
+    author_title TEXT,
+    author_image_url TEXT,
+    badge_text TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -186,7 +202,49 @@ def init_db():
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS interests TEXT")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS expectations TEXT")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS is_pivoted BOOLEAN DEFAULT FALSE")
+        cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author_title TEXT")
+        cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author_image_url TEXT")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS vibe VARCHAR(50)")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS discount_amount NUMERIC(8,2) DEFAULT 0.00")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS coupon_code VARCHAR(20)")
+        cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS image_alt TEXT")
         
+        # Coupons table migration
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS coupons (
+                id SERIAL PRIMARY KEY,
+                code VARCHAR(20) NOT NULL UNIQUE,
+                discount_type VARCHAR(10) NOT NULL,
+                value NUMERIC(8,2) NOT NULL,
+                usage_limit INT,
+                expires_at TIMESTAMPTZ,
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            )
+        """)
+
+        # Indexes for grouping optimization
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_bookings_preferred_date ON bookings(preferred_date)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_bookings_vibe ON bookings(vibe)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_bookings_location ON bookings(preferred_location)")
+        
+        # Site Settings table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS site_settings (
+                key VARCHAR(50) PRIMARY KEY,
+                value TEXT NOT NULL
+            )
+        """)
+        cursor.execute("INSERT INTO site_settings (key, value) VALUES ('global_discount_percent', '0') ON CONFLICT DO NOTHING")
+        
+        # Site Settings table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS site_settings (
+                key VARCHAR(50) PRIMARY KEY,
+                value TEXT NOT NULL
+            )
+        """)
+        cursor.execute("INSERT INTO site_settings (key, value) VALUES ('global_discount_percent', '0') ON CONFLICT DO NOTHING")
+
         # User Ratings table creation moved here for robustness
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS user_ratings (

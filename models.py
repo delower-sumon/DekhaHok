@@ -30,6 +30,8 @@ class BookingCreate(BaseModel):
     expectations:       Optional[str] = None # Acquisition: expectations
     wants_pickup:       bool = False
     wants_dropoff:      bool = False
+    vibe:               Optional[str] = None # Career, Travel, Philosophy
+    coupon_code:        Optional[str] = None
 
     @field_validator("group_size")
     @classmethod
@@ -115,6 +117,8 @@ class TrackingResponse(BaseModel):
     expectations:      Optional[str] = None
     wants_pickup:      bool = False
     wants_dropoff:     bool = False
+    vibe:              Optional[str] = None
+    discount_amount:   float = 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -230,9 +234,12 @@ class BlogCreate(BaseModel):
     keywords: Optional[str] = None
     seo_description: Optional[str] = None
     image_url: Optional[str] = None
+    image_alt: Optional[str] = None
     badge_text: Optional[str] = None
     status: str = "published"
-    author: Optional[str] = None
+    author: Optional[str] = "Team DekhaHok"
+    author_title: Optional[str] = None
+    author_image_url: Optional[str] = None
     is_pivoted: bool = False
 
 class BlogResponse(BaseModel):
@@ -243,11 +250,14 @@ class BlogResponse(BaseModel):
     keywords: Optional[str] = None
     seo_description: Optional[str] = None
     image_url: Optional[str] = None
+    image_alt: Optional[str] = None
     badge_text: Optional[str] = None
     likes: int
     shares: int
     status: str
-    author: Optional[str] = None
+    author: Optional[str] = "Team DekhaHok"
+    author_title: Optional[str] = None
+    author_image_url: Optional[str] = None
     is_pivoted: bool = False
     created_at: str
 
@@ -258,10 +268,13 @@ class BlogUpdate(BaseModel):
     keywords: Optional[str] = None
     seo_description: Optional[str] = None
     image_url: Optional[str] = None
+    image_alt: Optional[str] = None
     badge_text: Optional[str] = None
     status: Optional[str] = None
     is_pivoted: Optional[bool] = None
     author: Optional[str] = None
+    author_title: Optional[str] = None
+    author_image_url: Optional[str] = None
 
 # ---------------------------------------------------------------------------
 # Public Discovery

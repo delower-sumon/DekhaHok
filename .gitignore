@@ -8,3 +8,9 @@ __pycache__/
 *.rar
 *.log
 .agents/
+brain/
+scratch/
+=
+task_growth.md
+future developments.txt
+mysql_local_setup.sql

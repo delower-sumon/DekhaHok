@@ -5,11 +5,12 @@ import hashlib
 from typing import Optional
 
 from datetime import datetime, timedelta, time
-from fastapi import FastAPI, HTTPException, Header, Query, Request, Response
+from fastapi import FastAPI, HTTPException, Header, Query, Request, Response, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse, Response
+from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 
 from database import get_conn, release_conn, init_db
@@ -37,6 +38,8 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
 
 
 @app.middleware("http")
@@ -103,7 +106,7 @@ def serve_frontend(request: Request):
     finally:
         release_conn(conn)
         
-    return FileResponse("static/DekhaHok.html")
+    return templates.TemplateResponse("DekhaHok.html", {"request": request})
 
 
 @app.get("/admin", include_in_schema=False)
@@ -136,9 +139,9 @@ def sitemap():
         cursor.execute("SELECT slug, created_at FROM blogs WHERE status = 'published' ORDER BY created_at DESC")
         rows = cursor.fetchall()
         for r in rows:
-            # Blog URL format: base_url/?blog=slug
+            # SEO-Friendly Blog URL
             pages.append({
-                "loc": f"{base_url}/?blog={r[0]}",
+                "loc": f"{base_url}/blog/{r[0]}",
                 "lastmod": r[1].date().isoformat() if isinstance(r[1], datetime) else str(r[1]),
                 "changefreq": "weekly",
                 "priority": "0.8"
@@ -210,8 +213,41 @@ def create_booking(payload: BookingCreate):
     """
     Creates a new meetup interested entry. 
     Assigns a unique Tracking ID and calculates the required reservation fee.
+    Supports coupons and vibe-based matching.
     """
     fee = FEE_MAP.get(payload.group_size, 0)
+    discount = 0.0
+    
+    if payload.coupon_code:
+        conn = get_conn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT discount_type, value, usage_limit, expires_at FROM coupons WHERE code = %s",
+                (payload.coupon_code.upper(),)
+            )
+            coupon = cursor.fetchone()
+            if coupon:
+                d_type, d_val, d_limit, d_expiry = coupon
+                if d_expiry and datetime.now() > d_expiry:
+                    raise HTTPException(status_code=400, detail="Coupon expired")
+                
+                cursor.execute("SELECT COUNT(*) FROM bookings WHERE coupon_code = %s", (payload.coupon_code.upper(),))
+                usage_count = cursor.fetchone()[0]
+                if d_limit and usage_count >= d_limit:
+                    raise HTTPException(status_code=400, detail="Coupon limit reached")
+                
+                if d_type == 'percent':
+                    discount = fee * (float(d_val) / 100.0)
+                else:
+                    discount = float(d_val)
+            else:
+                raise HTTPException(status_code=400, detail="Invalid coupon code")
+            cursor.close()
+        finally:
+            release_conn(conn)
+
+    fee = max(0.0, fee - discount)
 
     for _ in range(5):
         tracking_id = generate_tracking_id()
@@ -225,8 +261,9 @@ def create_booking(payload: BookingCreate):
                      preferred_date, preferred_time, venue_type,
                      conversation_style, preferred_people, current_location, preferred_location, 
                      preferred_meeting_point, payment_method, payment_sender_digits, fee_amount,
-                     interests, expectations, wants_pickup, wants_dropoff)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     interests, expectations, wants_pickup, wants_dropoff, vibe, discount_amount, coupon_code)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING id
                 """,
                 (
                     tracking_id,
@@ -250,17 +287,19 @@ def create_booking(payload: BookingCreate):
                     payload.expectations,
                     payload.wants_pickup,
                     payload.wants_dropoff,
+                    payload.vibe,
+                    discount,
+                    payload.coupon_code.upper() if payload.coupon_code else None,
                 ),
             )
+            booking_id = cursor.fetchone()[0]
             conn.commit()
             
             # Generate referral code for this booking
-            booking_id_seq = cursor.lastrowid # Not reliable for psycopg2 sometimes but let's see
-            # Actually we can just update it by tracking_id
             ref_code = "".join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
             cursor.execute(
-                "UPDATE bookings SET referral_code = %s, referred_by = %s WHERE tracking_id = %s",
-                (ref_code, payload.referred_by, tracking_id)
+                "UPDATE bookings SET referral_code = %s, referred_by = %s WHERE id = %s",
+                (ref_code, payload.referred_by, booking_id)
             )
             conn.commit()
             
@@ -298,7 +337,7 @@ def track_booking(tracking_id: str):
                 g.venue_name, g.meet_date, g.meet_time, b.current_location, b.preferred_location,
                 b.payment_method, b.payment_sender_digits, b.preferred_meeting_point,
                 b.id, g.id, b.rejection_reason, b.referral_code, b.is_verified,
-                b.interests, b.expectations, b.wants_pickup, b.wants_dropoff
+                b.interests, b.expectations, b.wants_pickup, b.wants_dropoff, b.vibe, b.discount_amount
             FROM bookings b
             LEFT JOIN group_members gm ON gm.booking_id = b.id
             LEFT JOIN meetup_groups g  ON g.id = gm.group_id
@@ -388,7 +427,9 @@ def track_booking(tracking_id: str):
         interests=row[22],
         expectations=row[23],
         wants_pickup=row[24],
-        wants_dropoff=row[25]
+        wants_dropoff=row[25],
+        vibe=row[26],
+        discount_amount=float(row[27] or 0.0)
     )
 
 
@@ -554,15 +595,15 @@ def list_blogs():
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC")
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC")
         rows = cursor.fetchall()
         return [
             BlogResponse(
                 id=r[0], title=r[1], slug=r[2], content=r[3], 
                 keywords=r[4], seo_description=r[5], image_url=r[6], 
-                badge_text=r[7], likes=r[8], shares=r[9],
-                status=r[10], author=r[11], created_at=str(r[12]),
-                is_pivoted=r[13]
+                image_alt=r[7], badge_text=r[8], likes=r[9], shares=r[10],
+                status=r[11], author=r[12], created_at=str(r[13]),
+                is_pivoted=r[14]
             ) for r in rows
         ]
     finally:
@@ -574,19 +615,52 @@ def get_blog(slug: str):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE slug = %s", (slug,))
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE slug = %s", (slug,))
         row = cursor.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="Blog not found")
         return BlogResponse(
             id=row[0], title=row[1], slug=row[2], content=row[3], 
             keywords=row[4], seo_description=row[5], image_url=row[6], 
-            badge_text=row[7], likes=row[8], shares=row[9],
-            status=row[10], author=row[11], created_at=str(row[12]),
-            is_pivoted=row[13]
+            image_alt=row[7], badge_text=row[8], likes=row[9], shares=row[10],
+            status=row[11], author=row[12], created_at=str(row[13]),
+            is_pivoted=row[14]
         )
     finally:
         release_conn(conn)
+
+
+@app.get("/blog/{slug}", include_in_schema=False)
+def serve_blog_detail(request: Request, slug: str):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, title, content, keywords, seo_description, image_url, image_alt, likes, shares, author, author_title, author_image_url, created_at, badge_text, slug FROM blogs WHERE slug = %s AND status = 'published'", (slug,))
+        row = cursor.fetchone()
+        if not row:
+            return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+        
+        blog_data = {
+            "id": row[0],
+            "title": row[1],
+            "content": row[2],
+            "keywords": row[3],
+            "description": row[4],
+            "image": row[5],
+            "image_alt": row[6],
+            "likes": row[7],
+            "shares": row[8],
+            "author": row[9],
+            "author_title": row[10],
+            "author_image_url": row[11],
+            "date": str(row[12]),
+            "badge": row[13],
+            "slug": row[14]
+        }
+        return templates.TemplateResponse("blog_detail.html", {"request": request, "blog": blog_data})
+    finally:
+        release_conn(conn)
+
 
 # ── Blog Interactions ──────────────────────────────────────────────────────
 
@@ -685,6 +759,153 @@ def list_public_groups(location: Optional[str] = Query(None)):
                 group_size=r[5], member_count=r[6], status=r[7]
             ))
         return results
+    finally:
+        release_conn(conn)
+
+
+@app.get("/api/public/reviews")
+def list_public_reviews():
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # Fetch high ratings with comments for social proof
+        # Fetch high ratings with unique names for variety and social proof
+        cursor.execute("""
+            SELECT DISTINCT ON (b.name) r.comment, b.name, b.age, g.venue_name, r.score, r.created_at
+            FROM user_ratings r
+            JOIN bookings b ON b.id = r.ratee_id
+            JOIN meetup_groups g ON g.id = r.group_id
+            WHERE r.score >= 4 AND r.comment IS NOT NULL AND r.comment != ''
+            ORDER BY b.name, r.created_at DESC
+            LIMIT 6
+        """)
+        rows = cursor.fetchall()
+        # Sort back to chronological order after DISTINCT ON
+        rows.sort(key=lambda x: x[5], reverse=True)
+        
+        return [
+            {"comment": r[0], "name": r[1], "age": r[2], "venue": r[3], "score": r[4]}
+            for r in rows
+        ]
+    finally:
+        release_conn(conn)
+
+
+@app.post("/api/coupons/validate")
+def validate_coupon(payload: dict = Body(...)):
+    code = payload.get("code", "").upper()
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT discount_type, value, usage_limit, expires_at FROM coupons WHERE code = %s", (code,))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Invalid coupon code.")
+        
+        d_type, d_val, limit, expires = row
+        
+        # Check expiry
+        if expires and expires < datetime.now(expires.tzinfo):
+            raise HTTPException(status_code=400, detail="Coupon expired.")
+            
+        # Check usage limit
+        cursor.execute("SELECT COUNT(*) FROM bookings WHERE coupon_code = %s", (code,))
+        used_count = cursor.fetchone()[0]
+        if limit and used_count >= limit:
+            raise HTTPException(status_code=400, detail="Usage limit reached.")
+            
+        return {"discount_type": d_type, "value": float(d_val)}
+    finally:
+        release_conn(conn)
+
+
+@app.get("/api/admin/coupons")
+def admin_list_coupons(x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, code, discount_type, value, usage_limit, expires_at, created_at FROM coupons ORDER BY created_at DESC")
+        rows = cursor.fetchall()
+        return [
+            {
+                "id": r[0], "code": r[1], "discount_type": r[2], "value": float(r[3]),
+                "usage_limit": r[4], "expires_at": str(r[5]) if r[5] else None,
+                "created_at": str(r[6])
+            } for r in rows
+        ]
+    finally:
+        release_conn(conn)
+
+
+@app.post("/api/admin/coupons")
+def admin_create_coupon(payload: dict = Body(...), x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO coupons (code, discount_type, value, usage_limit, expires_at) VALUES (%s, %s, %s, %s, %s) RETURNING id",
+            (payload['code'].upper(), payload['discount_type'], payload['value'], payload.get('usage_limit'), payload.get('expires_at'))
+        )
+        conn.commit()
+        return {"id": cursor.fetchone()[0]}
+    finally:
+        release_conn(conn)
+
+
+@app.delete("/api/admin/coupons/{coupon_id}")
+def admin_delete_coupon(coupon_id: int, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM coupons WHERE id = %s", (coupon_id,))
+        conn.commit()
+        return {"status": "deleted"}
+    finally:
+        release_conn(conn)
+
+
+@app.get("/api/admin/match-suggestions")
+def admin_match_suggestions(x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # Group pending bookings by vibe and date to suggest clusters
+        cursor.execute("""
+            SELECT vibe, preferred_date, group_size, COUNT(*) as count
+            FROM bookings
+            WHERE booking_status = 'processing' AND payment_status = 'paid'
+            GROUP BY vibe, preferred_date, group_size
+            HAVING COUNT(*) >= 1
+            ORDER BY preferred_date ASC, count DESC
+        """)
+        rows = cursor.fetchall()
+        
+        suggestions = []
+        for r in rows:
+            vibe, p_date, size, count = r
+            # Get the member details for this potential group
+            cursor.execute("""
+                SELECT tracking_id, name, preferred_location, interests
+                FROM bookings
+                WHERE vibe = %s AND preferred_date = %s AND group_size = %s AND booking_status = 'processing' AND payment_status = 'paid'
+            """, (vibe, p_date, size))
+            members = [
+                {"tracking_id": m[0], "name": m[1], "location": m[2], "interests": m[3]} 
+                for m in cursor.fetchall()
+            ]
+            
+            suggestions.append({
+                "vibe": vibe,
+                "date": str(p_date),
+                "size": size,
+                "potential_count": count,
+                "members": members
+            })
+        return suggestions
     finally:
         release_conn(conn)
 
@@ -795,15 +1016,65 @@ def admin_analytics(x_admin_key: str = Header(...)):
         """)
         row = cursor.fetchone()
         cursor.close()
+        return {
+            "today": row[0] or 0,
+            "week": row[1] or 0,
+            "month": row[2] or 0,
+            "all_time": row[3] or 0,
+        }
     finally:
         release_conn(conn)
+
+
+@app.get("/api/admin/match-suggestions")
+def admin_match_suggestions(x_admin_key: str = Header(...)):
+    """
+    Returns groups of users who share the same Vibe, Preferred Date, and Group Size.
+    Helps admins quickly identify 'High-Vibe' matching opportunities.
+    """
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        # Find potential matches: users not in a group, grouped by Vibe, Date, and Size
+        cursor.execute("""
+            SELECT vibe, preferred_date, group_size, COUNT(*) as count
+            FROM bookings
+            WHERE assigned_group_id IS NULL AND booking_status = 'processing'
+            GROUP BY vibe, preferred_date, group_size
+            HAVING COUNT(*) >= 2
+            ORDER BY preferred_date ASC, count DESC
+        """)
+        suggestions = cursor.fetchall()
         
-    return {
-        "today": row[0] or 0,
-        "week": row[1] or 0,
-        "month": row[2] or 0,
-        "all_time": row[3] or 0,
-    }
+        results = []
+        for s in suggestions:
+            vibe, p_date, g_size, count = s
+            # Fetch user details for this suggestion block
+            cursor.execute("""
+                SELECT id, name, phone, tracking_id, preferred_location
+                FROM bookings
+                WHERE assigned_group_id IS NULL 
+                  AND booking_status = 'processing'
+                  AND vibe = %s 
+                  AND preferred_date = %s
+                  AND group_size = %s
+            """, (vibe, p_date, g_size))
+            bookings = cursor.fetchall()
+            results.append({
+                "vibe": vibe or "General",
+                "preferred_date": str(p_date),
+                "group_size": g_size,
+                "count": count,
+                "bookings": [
+                    {"id": b[0], "name": b[1], "phone": b[2], "tracking_id": b[3], "location": b[4]} 
+                    for b in bookings
+                ]
+            })
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return results
 
 
 @app.get("/api/admin/bookings")
@@ -1398,12 +1669,12 @@ def admin_create_blog(payload: BlogCreate, x_admin_key: str = Header(...)):
         cursor = conn.cursor()
         cursor.execute(
             """
-            INSERT INTO blogs (title, slug, content, keywords, seo_description, image_url, badge_text, status, author, is_pivoted)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO blogs (title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, status, author, author_title, author_image_url, is_pivoted)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (slug) DO NOTHING
             RETURNING id, created_at
             """,
-            (payload.title, slug, payload.content, payload.keywords, payload.seo_description, payload.image_url, payload.badge_text, payload.status, payload.author, payload.is_pivoted)
+            (payload.title, slug, payload.content, payload.keywords, payload.seo_description, payload.image_url, payload.image_alt, payload.badge_text, payload.status, payload.author, payload.author_title, payload.author_image_url, payload.is_pivoted)
         )
         row = cursor.fetchone()
         conn.commit()
@@ -1412,9 +1683,11 @@ def admin_create_blog(payload: BlogCreate, x_admin_key: str = Header(...)):
         return BlogResponse(
             id=row[0], title=payload.title, slug=slug, content=payload.content,
             keywords=payload.keywords, seo_description=payload.seo_description,
-            image_url=payload.image_url, badge_text=payload.badge_text,
+            image_url=payload.image_url, image_alt=payload.image_alt, badge_text=payload.badge_text,
             likes=0, shares=0,
-            status=payload.status, author=payload.author, is_pivoted=payload.is_pivoted, created_at=str(row[1])
+            status=payload.status, author=payload.author,
+            author_title=payload.author_title, author_image_url=payload.author_image_url,
+            is_pivoted=payload.is_pivoted, created_at=str(row[1])
         )
     finally:
         release_conn(conn)
@@ -1452,5 +1725,46 @@ def admin_delete_blog(blog_id: int, x_admin_key: str = Header(...)):
         cursor.execute("DELETE FROM blogs WHERE id = %s", (blog_id,))
         conn.commit()
         return {"message": "Blog deleted"}
+    finally:
+        release_conn(conn)
+
+# --- SITE SETTINGS ---
+
+@app.get("/api/public/settings")
+def get_public_settings():
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT key, value FROM site_settings WHERE key = 'global_discount_percent'")
+        row = cursor.fetchone()
+        return {row[0]: row[1]} if row else {"global_discount_percent": "0"}
+    finally:
+        release_conn(conn)
+
+@app.get("/api/admin/settings")
+def get_admin_settings(x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT key, value FROM site_settings")
+        rows = cursor.fetchall()
+        return {r[0]: r[1] for r in rows}
+    finally:
+        release_conn(conn)
+
+@app.patch("/api/admin/settings")
+def update_admin_settings(payload: dict = Body(...), x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        for k, v in payload.items():
+            cursor.execute(
+                "INSERT INTO site_settings (key, value) VALUES (%s, %s) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+                (k, str(v))
+            )
+        conn.commit()
+        return {"message": "Settings updated"}
     finally:
         release_conn(conn)

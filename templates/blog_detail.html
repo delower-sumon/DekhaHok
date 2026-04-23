@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>{{ blog.title }} | দেখা হোক - ঢাকার সোশ্যাল মিটআপ</title>
+    <meta name="description" content="{{ blog.description or 'দেখা হোকের ব্লগ - ঢাকার সামাজিক জীবন, নিরাপদ মিটআপ ও কমিউনিটি গল্প।' }}">
+    <meta name="keywords" content="{{ blog.keywords or 'dekhahok, ঢাকা মিটআপ, সোশ্যাল নেটওয়ার্কিং' }}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dekhahok.com/blog/{{ blog.slug }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ blog.title }} | দেখা হোক">
+    <meta property="og:description" content="{{ blog.description or 'দেখা হোকের ব্লগ থেকে পড়ুন।' }}">
+    <meta property="og:image" content="{{ blog.image or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://dekhahok.com/blog/{{ blog.slug }}">
+    <meta property="og:site_name" content="দেখা হোক">
+    <meta property="article:author" content="{{ blog.author or 'দেখা হোক টিম' }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ blog.title }} | দেখা হোক">
+    <meta name="twitter:description" content="{{ blog.description or 'দেখা হোকের ব্লগ থেকে পড়ুন।' }}">
+    <meta name="twitter:image" content="{{ blog.image or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
+
+    <!-- Article Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{{ blog.title }}",
+      "description": "{{ blog.description or '' }}",
+      "image": "{{ blog.image or '' }}",
+      "author": {
+        "@type": "Organization",
+        "name": "{{ blog.author or 'দেখা হোক' }}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "দেখা হোক",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dekhahok.com/static/assets/dekhahok_logo.svg"
+        }
+      },
+      "url": "https://dekhahok.com/blog/{{ blog.slug }}",
+      "datePublished": "{{ blog.date }}"
+    }
+    </script>
+
+    <!-- BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dekhahok.com/"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dekhahok.com/#blog"},
+        {"@type": "ListItem", "position": 3, "name": "{{ blog.title }}", "item": "https://dekhahok.com/blog/{{ blog.slug }}"}
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/assets/favicon.ico">
+
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(135deg, #064E3B 0%, #10B981 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .blog-content h1, .blog-content h2, .blog-content h3 {
+            font-weight: 800; color: #111827;
+            margin-top: 2rem; margin-bottom: 1rem;
+        }
+        .blog-content p { margin-bottom: 1.5rem; line-height: 1.8; color: #4B5563; }
+        .blog-content ul, .blog-content ol { margin-bottom: 1.5rem; padding-left: 1.5rem; color: #4B5563; }
+        .blog-content li { margin-bottom: 0.5rem; }
+        .blog-content img { max-width: 100%; height: auto; border-radius: 1.5rem; margin-top: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .like-btn.liked i { fill: #10B981; color: #10B981; }
+        .comment-card { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Mobile Menu Animation */
+        .mobile-menu {
+            transition: all 0.3s ease-in-out;
+            transform: translateY(-10px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-[#FDFDFB]">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-[1000] bg-white/80 backdrop-blur-md border-b border-[#E5E7EB]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="flex items-center space-x-2 hover:opacity-90 transition" aria-label="DekhaHok home">
+                    <img src="/static/assets/dekhahok_logo.svg" alt="DekhaHok" class="h-8 w-auto" />
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" />
+                    <span
+                        class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full ml-2 border border-emerald-100 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                        Beta
+                    </span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/#book" class="text-gray-600 hover:text-emerald-700 transition font-bold text-sm">বুক করুন</a>
+                    <a href="/#track" class="text-gray-600 hover:text-emerald-700 transition font-bold text-sm">বুকিং ট্র্যাক করুন</a>
+                    <a href="/#how-it-works" class="text-gray-600 hover:text-emerald-700 transition font-bold text-sm">কিভাবে কাজ করে</a>
+                    <a href="/#safety" class="text-gray-600 hover:text-emerald-700 transition font-bold text-sm">নিরাপত্তা</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="scrollToBook()"
+                        class="hidden sm:flex bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-full font-bold text-sm transition shadow-sm active:scale-95">
+                        দেখা করুন
+                    </button>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()"
+                        class="md:hidden p-2 text-gray-600 hover:text-emerald-600 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu"
+            class="mobile-menu hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-[#E5E7EB] p-4 flex-col space-y-3 shadow-xl z-40">
+            <a href="/#book" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-emerald-700 transition flex items-center space-x-3 py-1">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span>বুক করুন</span>
+            </a>
+            <a href="/#track" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-emerald-700 transition flex items-center space-x-3 py-1">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                <span>বুকিং ট্র্যাক করুন</span>
+            </a>
+            <a href="/#how-it-works" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-emerald-700 transition flex items-center space-x-3 py-1">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                <span>কিভাবে কাজ করে</span>
+            </a>
+            <a href="/#safety" onclick="toggleMobileMenu()"
+                class="text-lg font-medium text-gray-700 hover:text-emerald-700 transition flex items-center space-x-3 py-1">
+                <i data-lucide="shield" class="w-5 h-5"></i>
+                <span>নিরাপত্তা</span>
+            </a>
+            <button onclick="scrollToBook(); toggleMobileMenu();"
+                class="bg-emerald-600 text-white w-full py-4 rounded-xl font-bold flex items-center justify-center space-x-2 transition active:scale-95 shadow-lg shadow-emerald-50">
+                <span>দেখা করুন</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </nav>
+    <div class="h-16"></div> <!-- Spacer for fixed nav -->
+
+    <!-- Breadcrumb -->
+    <div class="max-w-4xl mx-auto px-4 pt-6 pb-2">
+        <nav class="flex items-center gap-2 text-xs text-gray-400 font-semibold">
+            <a href="/" class="hover:text-emerald-600 transition">Home</a>
+            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+            <a href="/#blog" class="hover:text-emerald-600 transition">Blog</a>
+            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+            <span class="text-gray-600 truncate max-w-[200px]">{{ blog.title }}</span>
+        </nav>
+    </div>
+
+    <main class="max-w-4xl mx-auto px-4 py-2">
+
+        <!-- Hero -->
+        <div class="mb-4">
+            <div class="inline-flex px-3 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
+                {{ blog.badge or 'Story' }}
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-4">{{ blog.title }}</h1>
+            <div class="flex items-center gap-4 text-gray-500 text-sm">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 overflow-hidden flex items-center justify-center text-emerald-600 border-2 border-white shadow-md">
+                    {% if blog.author_image_url %}
+                    <img src="{{ blog.author_image_url }}" alt="{{ blog.author or 'Author' }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="font-bold text-gray-900 leading-tight text-sm">{{ blog.author or 'দেখা হোক টিম' }}</p>
+                    <div class="flex items-center gap-2">
+                        <p class="text-[9px] uppercase tracking-[0.1em] font-black text-emerald-600">{{ blog.author_title or 'দেখা হোক কন্ট্রিবিউটর' }}</p>
+                        <span class="text-gray-300">•</span>
+                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{{ blog.date }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cover Image -->
+        {% if blog.image %}
+        <div class="relative rounded-[2rem] overflow-hidden shadow-xl mb-8 h-[350px]">
+            <img src="{{ blog.image }}" alt="{{ blog.image_alt or blog.title }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        </div>
+        {% endif %}
+
+        <!-- Content -->
+        <article class="blog-content text-lg">{{ blog.content | safe }}</article>
+
+        <!-- Like & Share -->
+        <div class="mt-4 pt-4 border-t border-gray-100 flex items-center gap-6">
+            <button id="likeBtn" onclick="handleLike()" class="like-btn flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:border-emerald-300 hover:bg-emerald-50 transition-all group font-bold text-gray-600 hover:text-emerald-700 text-sm">
+                <i data-lucide="heart" class="w-4 h-4 text-gray-400 group-hover:text-emerald-500 transition-colors"></i>
+                <span id="likeCount">{{ blog.likes }}</span> Likes
+            </button>
+            <button onclick="handleShare()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:border-emerald-300 hover:bg-emerald-50 transition-all group font-bold text-gray-600 hover:text-emerald-700 text-sm">
+                <i data-lucide="share-2" class="w-4 h-4 text-gray-400 group-hover:text-emerald-500 transition-colors"></i>
+                শেয়ার করুন
+            </button>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="mt-6">
+            <h2 class="text-xl font-black text-gray-900 mb-4 flex items-center gap-2">
+                <i data-lucide="message-circle" class="w-5 h-5 text-emerald-600"></i>
+                মন্তব্য (<span id="commentCount">0</span>)
+            </h2>
+
+            <!-- Comment Form -->
+            <div class="bg-gray-50 rounded-2xl p-5 mb-6 border border-gray-100">
+                <input type="text" id="commenterName" placeholder="আপনার নাম"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:bg-white outline-none transition mb-2 text-sm font-medium">
+                <textarea id="commentText" rows="2" placeholder="আপনার মন্তব্য লিখুন..."
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:bg-white outline-none transition resize-none text-sm font-medium mb-2"></textarea>
+                <button onclick="submitComment()" id="submitCommentBtn"
+                    class="px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all active:scale-95">
+                    মন্তব্য করুন
+                </button>
+            </div>
+
+            <!-- Comments List -->
+            <div id="commentsList" class="space-y-3">
+                <div class="text-center py-6 text-gray-400 text-sm" id="commentsLoader">
+                    <div class="animate-spin w-5 h-5 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-2"></div>
+                    লোড হচ্ছে...
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-8 w-full bg-gradient-to-br from-emerald-900 to-[#164230] p-6 rounded-[2rem] text-center text-white relative overflow-hidden shadow-xl">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+            <h3 class="text-xl font-bold mb-3">আপনিও কি নতুন বন্ধু খুঁজছেন?</h3>
+            <p class="text-emerald-50/70 mb-6 max-w-lg mx-auto text-sm">ঢাকার সবচেয়ে নিরাপদ ও প্রিমিয়াম মিটআপ প্ল্যাটফর্মে জয়েন করুন আজই।</p>
+            <a href="/#book" class="inline-block px-8 py-3 bg-white text-emerald-900 rounded-full font-black text-base hover:bg-emerald-50 transition-all shadow-lg">
+                জয়েন করুন (বুকিং)
+            </a>
+        </div>
+    </main>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-10 bg-white relative overflow-hidden">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-emerald-50 rounded-full blur-[120px] opacity-60"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-50 rounded-full blur-[120px] opacity-60"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="px-4 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-100 mb-6 inline-block">Real Experiences</span>
+                <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-6 tracking-tight">আপনার মতো আরো অনেকের <span class="gradient-text">গল্প</span></h2>
+                <p class="text-gray-500 max-w-2xl mx-auto font-medium text-base">দেখা হোক-এর মাধ্যমে নতুন বন্ধু খুঁজে পাওয়া এবং মজার সব আড্ডার অভিজ্ঞতা।</p>
+            </div>
+
+            <div id="reviewsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="mt-16 text-center">
+                <div class="inline-flex flex-col sm:flex-row items-center gap-6 p-4 bg-[#F0FDF4] rounded-full border border-emerald-100 shadow-sm">
+                    <div class="flex -space-x-3 px-4">
+                        <img src="/static/assets/rita.png" alt="Rita" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                        <img src="/static/assets/rubel.png" alt="Rubel" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                        <img src="/static/assets/lisa.png" alt="Lisa" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black shadow-sm">+99</div>
+                    </div>
+                    <p class="text-sm font-bold text-gray-700 leading-tight">
+                        আমাদের ৫০০+ মেম্বারসরা কি বলছেন দেখুন...
+                    </p>
+                    <a href="https://facebook.com/dekhahok/reviews" target="_blank" class="px-8 py-3 bg-white text-emerald-600 border border-emerald-200 rounded-full font-black text-sm hover:bg-emerald-50 transition-all shadow-sm">
+                        সব রিভিউ দেখুন
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Homepage Standard Footer -->
+    <footer class="relative z-[999] bg-gray-900 text-white pt-16 pb-8"
+        style="pointer-events: auto !important; margin-bottom: 0;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center mb-4 cursor-pointer group"
+                        onclick="window.location.href='/'">
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
+                            class="h-[34px] md:h-[42px] w-auto brightness-0 invert" />
+                    </div>
+                    <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
+                        তুলুন প্রাণবন্ত
+                        বন্ধুত্ব।</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">লিংকস</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/#how-it-works" class="hover:text-emerald-400 transition block">কিভাবে কাজ করে</a></li>
+                        <li><a href="/#safety" class="hover:text-emerald-400 transition block">নিরাপত্তা</a></li>
+                        <li><a href="/blog" class="hover:text-emerald-400 transition block">ব্লগ</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('privacy')" class="hover:text-emerald-400 transition block">গোপনীয়তা নীতি</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('terms')" class="hover:text-emerald-400 transition block">ব্যবহারের শর্তাবলী</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">যোগাযোগ</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://facebook.com/dekhahok" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/dekhahok" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/8801884477720" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M17.472 14.382c-.301-.15-1.767-.872-2.031-.969-.264-.096-.456-.145-.648.145-.192.291-.743.929-.91 1.12-.167.191-.334.215-.634.065-.3-.15-1.268-.468-2.415-1.492-.892-.795-1.494-1.777-1.67-2.078-.176-.3-.02-.462.13-.611.134-.134.3-.349.45-.524.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525-.075-.15-.648-1.562-.888-2.14-.233-.563-.47-.487-.648-.496l-.552-.01c-.192 0-.503.072-.766.356-.264.284-1.006.984-1.006 2.4 0 1.416 1.03 2.784 1.173 2.977.143.193 2.028 3.098 4.912 4.346.685.297 1.22.474 1.637.607.69.219 1.317.189 1.812.115.552-.083 1.767-.722 2.025-1.417.258-.695.258-1.292.181-1.417-.077-.125-.284-.2-.584-.351zM12.004 20.155c-1.47 0-2.91-.397-4.17-1.148l-.299-.178-3.1.813.827-3.022-.195-.311c-.825-1.315-1.26-2.843-1.26-4.417 0-4.49 3.655-8.146 8.148-8.146 2.176 0 4.223.847 5.761 2.386 1.538 1.539 2.385 3.586 2.385 5.76 0 4.492-3.655 8.148-8.148 8.148zm10.662-16.273C20.59 1.796 17.755.5 14.735.5 8.528.5 3.475 5.553 3.475 11.76c0 1.983.517 3.918 1.501 5.63l-1.595 5.8 5.932-1.556c1.654.91 3.515 1.391 5.419 1.391 6.205 0 11.258-5.053 11.258-11.26 0-3.02-.1.176-5.836-2.39-2.39z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center mb-6">
+                <p class="text-gray-500 text-sm text-center md:text-left">
+                    © 2026 DekhaHok.<br class="md:hidden">
+                    All rights reserved.<br class="md:hidden">
+                    Made with <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                        fill="url(#heartGradBlog)" style="filter: drop-shadow(0 0 6px rgba(16,185,129,0.5));"
+                        class="inline-block align-middle">
+                        <defs>
+                            <linearGradient id="heartGradBlog" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981" />
+                                <stop offset="50%" stop-color="#34D399" />
+                                <stop offset="100%" stop-color="#10B981" />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg> in Dhaka.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
+                    <a href="javascript:void(0)" onclick="openLegalModal('privacy')" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('terms')" class="hover:text-white transition">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Legal Modal (Full Parity) -->
+    <div id="legalModal"
+        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col transform scale-95 opacity-0 transition-all duration-300 relative"
+            id="legalModalContent">
+            <div class="flex items-center justify-between mb-6 flex-shrink-0">
+                <h3 class="text-2xl font-bold text-gray-900" id="legalModalTitle">Policy</h3>
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="legalTextContent"
+                class="overflow-y-auto pr-4 text-sm text-gray-600 leading-relaxed custom-scrollbar py-2"></div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const BLOG_ID = parseInt('{{ blog.id }}', 10);
+        let liked = localStorage.getItem('liked_blog_' + BLOG_ID) === '1';
+
+        // Apply liked state on load
+        if (liked) {
+            document.getElementById('likeBtn').classList.add('liked', 'border-emerald-400', 'bg-emerald-50');
+        }
+
+        async function handleLike() {
+            if (liked) return; // prevent double-liking
+            try {
+                const res = await fetch('/api/blogs/' + BLOG_ID + '/like', { method: 'POST' });
+                const data = await res.json();
+                document.getElementById('likeCount').textContent = data.likes;
+                liked = true;
+                localStorage.setItem('liked_blog_' + BLOG_ID, '1');
+                const btn = document.getElementById('likeBtn');
+                btn.classList.add('liked', 'border-emerald-400', 'bg-emerald-50');
+                btn.querySelector('i').style.color = '#10b981';
+                btn.querySelector('i').style.fill = '#10b981';
+            } catch(e) { console.error(e); }
+        }
+
+        async function handleShare() {
+            const url = window.location.href;
+            if (navigator.share) {
+                await navigator.share({ title: document.title, url });
+            } else {
+                await navigator.clipboard.writeText(url);
+                alert('লিংক কপি হয়েছে!');
+            }
+            fetch('/api/blogs/' + BLOG_ID + '/share', { method: 'POST' });
+        }
+
+        async function loadComments() {
+            try {
+                const res = await fetch('/api/blogs/' + BLOG_ID + '/comments');
+                const comments = await res.json();
+                const list = document.getElementById('commentsList');
+                document.getElementById('commentCount').textContent = comments.length;
+
+                if (comments.length === 0) {
+                    list.innerHTML = '<p class="text-center text-gray-400 py-6 text-sm">এখনো কোনো মন্তব্য নেই। প্রথম মন্তব্য করুন!</p>';
+                    return;
+                }
+                list.innerHTML = comments.map(c => `
+                    <div class="comment-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-black text-sm">
+                                ${c.user_name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-900 text-sm">${c.user_name}</p>
+                                <p class="text-[10px] text-gray-400">${new Date(c.created_at).toLocaleDateString('bn-BD')}</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 text-sm leading-relaxed">${c.comment}</p>
+                    </div>
+                `).join('');
+            } catch(e) {
+                document.getElementById('commentsLoader').textContent = 'মন্তব্য লোড হয়নি।';
+            }
+        }
+
+        async function submitComment() {
+            const name = document.getElementById('commenterName').value.trim();
+            const comment = document.getElementById('commentText').value.trim();
+            if (!name || !comment) {
+                alert('নাম ও মন্তব্য উভয়ই লিখুন।');
+                return;
+            }
+            const btn = document.getElementById('submitCommentBtn');
+            btn.textContent = 'পাঠানো হচ্ছে...';
+            btn.disabled = true;
+            try {
+                await fetch('/api/blogs/' + BLOG_ID + '/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: name, comment })
+                });
+                document.getElementById('commenterName').value = '';
+                document.getElementById('commentText').value = '';
+                await loadComments();
+            } catch(e) { alert('মন্তব্য পাঠাতে সমস্যা হয়েছে।'); }
+            btn.textContent = 'মন্তব্য করুন';
+            btn.disabled = false;
+        }
+
+        async function fetchPublicReviews() {
+            const grid = document.getElementById('reviewsGrid');
+            if (!grid) return;
+            try {
+                const res = await fetch('/api/public/reviews');
+                const reviews = await res.json();
+                if (!reviews || reviews.length === 0) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-400 font-bold uppercase tracking-widest">শীঘ্রই নতুন রিভিউ আসছে!</p></div>';
+                    return;
+                }
+                const stars = n => '<i data-lucide="star" class="w-3.5 h-3.5 text-amber-400 fill-current"></i>'.repeat(n) + '<i data-lucide="star" class="w-3.5 h-3.5 text-gray-200 fill-current"></i>'.repeat(5 - n);
+                grid.innerHTML = reviews.map((r, idx) => `
+                    <div class="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-emerald-100 transition-all duration-300 relative group scroll-reveal active" style="--stagger-delay: ${idx * 0.1}s">
+                        <div class="absolute -top-3 -left-3 w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-50 transform -rotate-6 group-hover:rotate-0 transition-transform">
+                            <i data-lucide="quote" class="w-6 h-6 text-emerald-500 opacity-20"></i>
+                        </div>
+                        <div class="flex items-center gap-0.5 mb-4 text-xl">${stars(r.score)}</div>
+                        <p class="text-gray-700 text-base leading-relaxed mb-6 font-medium italic">&ldquo;${r.comment}&rdquo;</p>
+                        <div class="flex items-center gap-3 pt-4 border-t border-dashed border-gray-100">
+                            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100">
+                                <span class="text-xs font-black text-emerald-700">${r.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-900 text-sm">${r.name.split(' ')[0]}*** ${r.age ? '(' + r.age + ')' : ''}</p>
+                                <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">${r.venue || 'DekhaHok Event'}</p>
+                            </div>
+                            <div class="ml-auto">
+                                <span class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 rounded-full text-[9px] font-black text-emerald-700 uppercase tracking-widest shadow-sm border border-emerald-100">
+                                    <i data-lucide="check-circle-2" class="w-2.5 h-2.5"></i>
+                                    Verified
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } catch (e) {
+                console.error('Review fetch error:', e);
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-10">রিভিউ লোড করা সম্ভব হয়নি।</p>';
+            }
+        }
+
+        const legalContents = {
+            privacy: `
+                <div class="space-y-4">
+                    <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
+                    <p>DekhaHok আপনার ব্যক্তিগত তথ্যের সুরক্ষায় প্রতিশ্রুতিবদ্ধ। আমাদের অ্যাপটি ব্যবহারের সময় আমরা কীভাবে তথ্য সংগ্রহ ও ব্যবহার করি তা নিচে দেওয়া হলো:</p>
+                    <ul class="space-y-3 mt-4">
+                        <li><strong class="text-gray-900">তথ্য সংগ্রহ:</strong> রেজিস্ট্রেশনের সময় আমরা আপনার নাম, ফোন নম্বর এবং সোশ্যাল মিডিয়া প্রোফাইল লিংক সংগ্রহ করি। এটি মূলত আপনার পরিচয় নিশ্চিত করার জন্য করা হয়।</li>
+                        <li><strong class="text-gray-900">তথ্যের ব্যবহার:</strong> সংগৃহীত তথ্য শুধুমাত্র আপনার জন্য উপযুক্ত ম্যাচ (Duo বা Panchayat) খুঁজে বের করতে এবং পার্টনার রেস্টুরেন্টে বুকিং নিশ্চিত করতে ব্যবহার করা হয়।</li>
+                        <li><strong class="text-gray-900">তৃতীয় পক্ষের সাথে তথ্য শেয়ার:</strong> আমরা আপনার তথ্য কোনো তৃতীয় পক্ষের কাছে বিক্রি করি না। শুধুমাত্র আপনার গ্রুপ মেম্বারদের সাথে আপনার নাম (প্রাথমিক পরিচয় হিসেবে) এবং রেস্টুরেন্টের সাথে বুকিংয়ের জন্য প্রয়োজনীয় তথ্য শেয়ার করা হয়।</li>
+                        <li><strong class="text-gray-900">ডেটা সিকিউরিটি:</strong> আপনার সকল তথ্য নিরাপদ সার্ভারে সংরক্ষিত থাকে। আপনি চাইলে যেকোনো সময় আমাদের সাথে যোগাযোগ করে আপনার অ্যাকাউন্ট বা তথ্য মুছে ফেলতে পারেন।</li>
+                    </ul>
+                </div>
+            `,
+            terms: `
+                <div class="space-y-4">
+                    <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
+                    <p>DekhaHok প্ল্যাটফর্মটি ব্যবহারের মাধ্যমে আপনি নিচের শর্তাবলীতে সম্মত হচ্ছেন:</p>
+                    <ul class="space-y-3 mt-4">
+                        <li><strong class="text-gray-900">যোগ্যতা:</strong> এই অ্যাপটি ব্যবহারের জন্য আপনার বয়স কমপক্ষে ১৮ বছর হতে হবে এবং আপনাকে বাংলাদেশের নাগরিক হতে হবে।</li>
+                        <li><strong class="text-gray-900">সঠিক তথ্য প্রদান:</strong> রেজিস্ট্রেশনের সময় সঠিক তথ্য প্রদান করা বাধ্যতামূলক। ভুল বা ভুয়া তথ্য প্রদান করলে আপনার অ্যাকাউন্টটি স্থায়ীভাবে স্থগিত করা হতে পারে।</li>
+                        <li><strong class="text-gray-900">আচরণবিধি:</strong> এটি একটি সামাজিক মেলবন্ধনের প্ল্যাটফর্ম। মিটিং চলাকালীন কোনো প্রকার হয়রানি, অশোভন আচরণ বা অবৈধ কার্যক্রম কঠোরভাবে নিষিদ্ধ। কারো ব্যক্তিগত আচরণের জন্য DekhaHok দায়বদ্ধ নয়, তবে অভিযোগের ভিত্তিতে আমরা যথাযথ ব্যবস্থা গ্রহণ করব।</li>
+                        <li><strong class="text-gray-900">রিফান্ড পলিসি:</strong> একবার বুকিং সম্পন্ন হলে তা সাধারণত পরিবর্তনযোগ্য নয়। যদি DekhaHok বা রেস্টুরেন্ট কোনো কারণে মিটিং বাতিল করে, তবেই পূর্ণ রিফান্ড প্রদান করা হবে। রিফান্ড প্রসেস হতে ৭-১০ কার্যদিবস সময় লাগতে পারে।</li>
+                        <li><strong class="text-gray-900">নিরাপত্তা সতর্কতা:</strong> অফলাইন মিটিং চলাকালীন আপনার ব্যক্তিগত নিরাপত্তা এবং মালামালের দায়িত্ব আপনার নিজের। জনাকীর্ণ এবং পাবলিক প্লেসে (যেমন আমাদের পার্টনার ক্যাফে) দেখা করার জন্য আমরা উৎসাহিত করি।</li>
+                        <li><strong class="text-gray-900">আইনি বাধ্যবাধকতা:</strong> বাংলাদেশের প্রচলিত আইন অনুযায়ী কোনো অনৈতিক বা রাষ্ট্রবিরোধী কাজে এই প্ল্যাটফর্ম ব্যবহার করা যাবে না।</li>
+                    </ul>
+                </div>
+            `
+        };
+
+        function openLegalModal(type) {
+            const modal = document.getElementById('legalModal');
+            const contentContainer = document.getElementById('legalModalContent');
+            const textContainer = document.getElementById('legalTextContent');
+            const titleEl = document.getElementById('legalModalTitle');
+            titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
+            textContainer.innerHTML = legalContents[type];
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                contentContainer.classList.remove('scale-95', 'opacity-0');
+                contentContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeLegalModal() {
+            const modal = document.getElementById('legalModal');
+            const contentContainer = document.getElementById('legalModalContent');
+            contentContainer.classList.remove('scale-100', 'opacity-100');
+            contentContainer.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.querySelector('#mobileMenuBtn i');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => menu.classList.add('active'), 10);
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                menu.classList.remove('active');
+                setTimeout(() => menu.classList.add('hidden'), 300);
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        function scrollToBook() {
+            window.location.href = '/#book';
+        }
+
+        fetchPublicReviews();
+        loadComments();
+    </script>
+</body>
+</html>
