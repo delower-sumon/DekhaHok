@@ -556,7 +556,7 @@
                 <div class="flex items-center space-x-3">
                     <button onclick="scrollToBook()"
                         class="hidden sm:flex btn-primary text-white px-6 py-2 rounded-full font-bold text-sm transition shadow-sm active:scale-95">
-                        দেখা করুন
+                        দেখা হোক
                     </button>
                     <button id="langBtn" onclick="toggleTranslation()" title="Translate to English"
                         class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-xs font-bold text-gray-500 hover:border-emerald-400 hover:text-emerald-600 transition-colors">
@@ -595,7 +595,7 @@
             </a>
             <button onclick="scrollToBook(); toggleMobileMenu();"
                 class="btn-primary text-white w-full py-4 rounded-xl font-bold flex items-center justify-center space-x-2 transition active:scale-95 shadow-lg shadow-emerald-50">
-                <span>দেখা করুন</span>
+                <span>বুকিং</span>
                 <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
         </div>
@@ -1082,7 +1082,7 @@
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-6 scroll-reveal">
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">সিট বুক করুন</h2>
-                <p class="text-xl text-gray-600">নতুন কারো সাথে দেখা করতে চান? প্রয়োজনীয় তথ্য দিয়ে বুক করুন। </p>
+                <p class="text-xl text-gray-600">প্রয়োজনীয় তথ্য দিয়ে বুকিং সম্পন্ন করুন। </p>
             </div>
 
             <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-12 scroll-reveal">
@@ -1164,50 +1164,11 @@
                             placeholder="25">
                         <p id="ageNote" class="text-xs text-red-500 mt-2 font-medium hidden">
                             <i data-lucide="alert-circle" class="w-3 h-3 inline-block mr-1"></i>
-                            ১৮ বছরের নিচে আবেদন গ্রহণ করা হয় না।
+                            আপনার বয়স ১৮ বছরের নিচে হলে সাথে অভিভাবক থাকতে হবে।
                         </p>
                     </div>
 
-                    <!-- Vibe Selection -->
-                    <div>
-                        <label class="badge-pill bg-gray-100 text-gray-600">আপনার পছন্দ (Vibe)</label>
-                        <div class="grid grid-cols-3 gap-3 mt-2">
-                            <button type="button" onclick="selectVibe('Career', this)"
-                                class="vibe-btn p-3 rounded-2xl border border-gray-100 bg-white hover:border-emerald-200 transition-all text-center group relative overflow-hidden">
-                                <div class="vibe-check absolute top-1 right-1 opacity-0 transition-all scale-50">
-                                    <div class="bg-emerald-500 rounded-full p-0.5">
-                                        <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
-                                    </div>
-                                </div>
-                                <i data-lucide="briefcase"
-                                    class="w-5 h-5 mx-auto mb-1 text-gray-400 group-hover:text-emerald-500"></i>
-                                <span class="text-[10px] font-bold text-gray-600">ক্যারিয়ার</span>
-                            </button>
-                            <button type="button" onclick="selectVibe('Travel', this)"
-                                class="vibe-btn p-3 rounded-2xl border border-gray-100 bg-white hover:border-emerald-200 transition-all text-center group relative overflow-hidden">
-                                <div class="vibe-check absolute top-1 right-1 opacity-0 transition-all scale-50">
-                                    <div class="bg-emerald-500 rounded-full p-0.5">
-                                        <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
-                                    </div>
-                                </div>
-                                <i data-lucide="plane"
-                                    class="w-5 h-5 mx-auto mb-1 text-gray-400 group-hover:text-emerald-500"></i>
-                                <span class="text-[10px] font-bold text-gray-600">ভ্রমণ</span>
-                            </button>
-                            <button type="button" onclick="selectVibe('Philosophy', this)"
-                                class="vibe-btn p-3 rounded-2xl border border-gray-100 bg-white hover:border-emerald-200 transition-all text-center group relative overflow-hidden">
-                                <div class="vibe-check absolute top-1 right-1 opacity-0 transition-all scale-50">
-                                    <div class="bg-emerald-500 rounded-full p-0.5">
-                                        <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
-                                    </div>
-                                </div>
-                                <i data-lucide="brain"
-                                    class="w-5 h-5 mx-auto mb-1 text-gray-400 group-hover:text-emerald-500"></i>
-                                <span class="text-[10px] font-bold text-gray-600">ফিলোসফি</span>
-                            </button>
-                        </div>
-                        <input type="hidden" id="selectedVibe" value="">
-                    </div>
+
 
 
                     <!-- Preferences -->
@@ -1218,10 +1179,27 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">আপনার আগ্রহ এবং কি আশা করছেন
-                                    সে সম্পর্কে আমাদের বলুন (Preferences Note)</label>
+                                    সে সম্পর্কে সংক্ষেপে বলুন(Preferences Note)</label>
                                 <textarea id="interests" required rows="3"
-                                    class="input-field w-full px-4 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all resize-none shadow-sm"
-                                    placeholder="আপনার পছন্দের বিষয়সমূহ (যেমন: ব্যবসা, ভ্রমণ, প্রযুক্তি) এবং আপনি এখান থেকে কি আশা করছেন?"></textarea>
+                                    class="input-field w-full px-4 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all resize-none shadow-sm mb-1"
+                                    placeholder="আপনার পছন্দের বিষয়সমূহ। (যেমন: ব্যবসা, ভ্রমণ, প্রযুক্তি)"></textarea>
+
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5 mt-1">মুড(Vibe)</label>
+                                <div class="flex flex-nowrap overflow-x-auto gap-2 pb-1" style="scrollbar-width: none;">
+                                    <button type="button" onclick="selectVibe('Career', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        ক্যারিয়ার
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Travel', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        ভ্রমণ
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Philosophy', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        ফিলোসফি
+                                    </button>
+                                </div>
+                                <input type="hidden" id="selectedVibe" value="">
                             </div>
 
                             <div>
@@ -1382,21 +1360,21 @@
 
                         <!-- Coupon Code -->
                         <div
-                            class="md:col-span-2 max-w-md mx-auto w-full bg-emerald-50/30 rounded-[2rem] p-6 border border-emerald-100 group hover:border-emerald-400 transition-colors">
-                            <label class="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                            class="md:col-span-2 max-w-sm mx-auto w-full bg-emerald-50/30 rounded-[1.5rem] p-5 border border-emerald-100 group hover:border-emerald-400 transition-colors">
+                            <label class="flex justify-center items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                                 <i data-lucide="ticket" class="w-4 h-4 text-emerald-500"></i>
                                 কুপন কোড (Promo)
                             </label>
-                            <div class="flex gap-2">
+                            <div class="flex flex-col gap-2">
                                 <input type="text" id="couponCode"
-                                    class="flex-1 px-5 py-3 rounded-xl border-2 border-white focus:border-emerald-500 focus:outline-none text-base font-mono tracking-widest placeholder:font-sans placeholder:tracking-normal placeholder:text-gray-300 shadow-sm uppercase"
+                                    class="w-full px-4 py-2.5 rounded-xl border-2 border-white focus:border-emerald-500 focus:outline-none text-base font-mono tracking-widest placeholder:font-sans placeholder:tracking-normal placeholder:text-gray-300 shadow-sm uppercase text-center"
                                     placeholder="উদা: DH10">
                                 <button type="button" onclick="applyCoupon()"
-                                    class="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 transition-all active:scale-95">
+                                    class="w-full max-w-[130px] mx-auto px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all active:scale-95 shadow-md shadow-emerald-200">
                                     Apply
                                 </button>
                             </div>
-                            <p id="couponMsg" class="text-[10px] mt-2 font-bold hidden"></p>
+                            <p id="couponMsg" class="text-[10px] mt-2 font-bold text-center hidden"></p>
                         </div>
                     </div>
 
@@ -1820,8 +1798,9 @@
                     </h2>
                 </div>
                 <p class="text-gray-500 max-w-md">
-                    প্রভিয়াস মিটআপগুলোর মেম্বারদের অভিজ্ঞতা থেকে সরাসরি জানুন। আমরা গোপনীয়তা রক্ষায় ইউজারদের পুরো নাম
-                    শেয়ার করি না।
+                    প্রভিয়াস মেম্বারদের অভিজ্ঞতা থেকে আমাদের সার্ভিস সম্পর্কে সরাসরি জানুন। গোপনীয়তা রক্ষায় ইউজারদের
+                    পুরো নাম
+                    প্রকাশ করা হয়না।
                 </p>
             </div>
 
@@ -1838,8 +1817,8 @@
     <section id="blog" class="py-10 bg-[#FDFDFB] border-t border-gray-100 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-10 scroll-reveal">
-                <h2 class="text-4xl font-black text-gray-900 mb-2">ব্লগ (Stories & Safety)</h2>
-                <p class="text-lg text-gray-500">ঢাকার সোশ্যাল লাইফ ও আমাদের আয়োজন নিয়ে জানুন।</p>
+                <h2 class="text-4xl font-black text-gray-900 mb-2">ব্লগ (Stories, Saftey & More...)</h2>
+                <p class="text-lg text-gray-500">সোশ্যাল লাইফ, সেফটি ও আমাদের আয়োজন নিয়ে জানুন।</p>
             </div>
 
             <div id="blogContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -1852,7 +1831,7 @@
             <div id="blogLoaderContainer" class="mt-10 text-center hidden">
                 <button onclick="showMoreBlogs()"
                     class="px-8 py-4 bg-gray-900 text-white rounded-[2rem] font-bold hover:bg-emerald-600 transition-all shadow-xl shadow-gray-200">
-                    আরও ব্লগ দেখুন (See More Blogs)
+                    আরও দেখুন (See More)
                 </button>
             </div>
         </div>
@@ -2266,6 +2245,18 @@
                                     d="M17.472 14.382c-.301-.15-1.767-.872-2.031-.969-.264-.096-.456-.145-.648.145-.192.291-.743.929-.91 1.12-.167.191-.334.215-.634.065-.3-.15-1.268-.468-2.415-1.492-.892-.795-1.494-1.777-1.67-2.078-.176-.3-.02-.462.13-.611.134-.134.3-.349.45-.524.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525-.075-.15-.648-1.562-.888-2.14-.233-.563-.47-.487-.648-.496l-.552-.01c-.192 0-.503.072-.766.356-.264.284-1.006.984-1.006 2.4 0 1.416 1.03 2.784 1.173 2.977.143.193 2.028 3.098 4.912 4.346.685.297 1.22.474 1.637.607.69.219 1.317.189 1.812.115.552-.083 1.767-.722 2.025-1.417.258-.695.258-1.292.181-1.417-.077-.125-.284-.2-.584-.351zM12.004 20.155c-1.47 0-2.91-.397-4.17-1.148l-.299-.178-3.1.813.827-3.022-.195-.311c-.825-1.315-1.26-2.843-1.26-4.417 0-4.49 3.655-8.146 8.148-8.146 2.176 0 4.223.847 5.761 2.386 1.538 1.539 2.385 3.586 2.385 5.76 0 4.492-3.655 8.148-8.148 8.148zm10.662-16.273C20.59 1.796 17.755.5 14.735.5 8.528.5 3.475 5.553 3.475 11.76c0 1.983.517 3.918 1.501 5.63l-1.595 5.8 5.932-1.556c1.654.91 3.515 1.391 5.419 1.391 6.205 0 11.258-5.053 11.258-11.26 0-3.02-.1.176-5.836-2.39-2.39z" />
                             </svg>
                         </a>
+                        <a href="https://linkedin.com/company/dekhahok" target="_blank"
+                            class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#0A66C2] hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -2438,27 +2429,10 @@
         function selectVibe(vibe, btn) {
             if (selectedVibes.has(vibe)) {
                 selectedVibes.delete(vibe);
-                btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'shadow-md', 'shadow-emerald-50');
-                btn.classList.add('border-gray-100', 'bg-white');
-                const i = btn.querySelector('i');
-                if (i) { i.classList.remove('text-emerald-500'); i.classList.add('text-gray-400'); }
-                const s = btn.querySelector('span');
-                if (s) { s.classList.remove('text-emerald-700'); s.classList.add('text-gray-600'); }
-                const check = btn.querySelector('.vibe-check');
-                if (check) { check.classList.add('opacity-0', 'scale-50'); check.classList.remove('opacity-100', 'scale-100'); }
+                btn.className = "vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600";
             } else {
                 selectedVibes.add(vibe);
-                btn.classList.add('border-emerald-500', 'bg-emerald-50', 'shadow-md', 'shadow-emerald-50');
-                btn.classList.remove('border-gray-100', 'bg-white');
-                const icon = btn.querySelector('i');
-                if (icon) { icon.classList.add('text-emerald-500'); icon.classList.remove('text-gray-400'); }
-                const span = btn.querySelector('span');
-                if (span) { span.classList.add('text-emerald-700'); span.classList.remove('text-gray-600'); }
-                const check = btn.querySelector('.vibe-check');
-                if (check) { check.classList.remove('opacity-0', 'scale-50'); check.classList.add('opacity-100', 'scale-100'); }
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 15, spread: 20, origin: { y: 0.7, x: 0.5 }, colors: ['#10b981', '#34d399'] });
-                }
+                btn.className = "vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-emerald-500 text-white border-emerald-400 shadow-md shadow-emerald-500/30";
             }
             document.getElementById('selectedVibe').value = Array.from(selectedVibes).join(',');
         }
@@ -2557,7 +2531,7 @@
                 return;
             }
 
-            document.getElementById('paymentModalFee').textContent = document.getElementById('reservationFee').textContent;
+            document.getElementById('paymentModalFee').innerHTML = document.getElementById('reservationFee').innerHTML;
             openPaymentModal();
         }
 
@@ -2687,7 +2661,8 @@
                 if (firstSlot) selectDate(firstSlot);
 
             } catch (err) {
-                showPaymentError('নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।');
+                console.error(err);
+                showPaymentError('নেটওয়ার্ক বা সার্ভার সমস্যা। আপনার ইন্টারনেট সংযোগ এবং ফর্মের তথ্যগুলো পরীক্ষা করে আবার চেষ্টা করুন।');
             } finally {
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
@@ -3205,6 +3180,12 @@
                 const discountText = data.discount_type === 'percent' ? `${data.value}%` : `৳${data.value}`;
                 msgEl.textContent = `✅ কুপন অ্যাপ্লাই হয়েছে! (${discountText} ডিসকাউন্ট)`;
                 msgEl.className = 'text-[10px] mt-2 font-bold text-emerald-600';
+
+                // Store applied coupon data
+                window._appliedCoupon = data;
+                // Refresh the price display by re-triggering selectGroupSize
+                const currentSize = parseInt(document.getElementById('groupSize').value) || 2;
+                window.selectGroupSize(currentSize);
 
                 // Visual feedback on the input
                 document.getElementById('couponCode').classList.add('border-emerald-500', 'bg-emerald-50');
@@ -4104,18 +4085,34 @@
                     const inner = bookSection.querySelector('.max-w-4xl');
                     if (inner) inner.prepend(badge);
                 }
-            } catch(e) { /* no discount */ }
+            } catch (e) { /* no discount */ }
         }
 
-        const _origSelectGroupSize = selectGroupSize;
-        function selectGroupSize(size) {
+        const _origSelectGroupSize = window.selectGroupSize;
+        window.selectGroupSize = function (size) {
             _origSelectGroupSize(size);
+            const base = size === 2 ? 499 : 249;
+            let finalPrice = base;
+
             if (window._globalDiscountPct) {
-                const pct = window._globalDiscountPct;
-                const base = size === 2 ? 499 : 249;
-                const disc = Math.round(base * (1 - pct / 100));
-                const feeEl = document.getElementById('reservationFee');
-                if (feeEl) feeEl.innerHTML = `<span class="line-through text-gray-300 text-2xl mr-1">&#2547;${base}</span>&#2547;${disc}`;
+                finalPrice = Math.round(base * (1 - window._globalDiscountPct / 100));
+            }
+
+            if (window._appliedCoupon) {
+                if (window._appliedCoupon.discount_type === 'percent') {
+                    finalPrice = Math.round(finalPrice * (1 - window._appliedCoupon.value / 100));
+                } else {
+                    finalPrice = Math.max(0, finalPrice - window._appliedCoupon.value);
+                }
+            }
+
+            const feeEl = document.getElementById('reservationFee');
+            if (feeEl) {
+                if (finalPrice < base) {
+                    feeEl.innerHTML = `<span class="line-through text-gray-300 text-2xl mr-1">&#2547;${base}</span>&#2547;${finalPrice}`;
+                } else {
+                    feeEl.textContent = `৳${base}`;
+                }
             }
         }
 
@@ -4129,4 +4126,4 @@
     </script>
 </body>
 
-</html>
+</html>

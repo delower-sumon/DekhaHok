@@ -91,21 +91,6 @@ async def custom_404_handler(request: Request, __):
 
 @app.get("/", include_in_schema=False)
 def serve_frontend(request: Request):
-    ip = request.client.host if request.client else "unknown"
-    user_agent = request.headers.get("user-agent", "")
-    ip_hash = hashlib.sha256(ip.encode()).hexdigest()
-    
-    conn = get_conn()
-    try:
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO page_views (ip_hash, user_agent) VALUES (%s, %s)", (ip_hash, user_agent))
-        conn.commit()
-        cursor.close()
-    except Exception:
-        conn.rollback()
-    finally:
-        release_conn(conn)
-        
     return templates.TemplateResponse("DekhaHok.html", {"request": request})
 
 
@@ -229,8 +214,13 @@ def create_booking(payload: BookingCreate):
             coupon = cursor.fetchone()
             if coupon:
                 d_type, d_val, d_limit, d_expiry = coupon
-                if d_expiry and datetime.now() > d_expiry:
-                    raise HTTPException(status_code=400, detail="Coupon expired")
+                if d_expiry:
+                    # Make datetime.now() aware if d_expiry is aware, or strip tzinfo from d_expiry
+                    # A safer approach is to use timezone-aware datetime.now(timezone.utc).astimezone() 
+                    # but let's just make sure both are naive or aware.
+                    now = datetime.now(d_expiry.tzinfo) if d_expiry.tzinfo else datetime.now()
+                    if now > d_expiry:
+                        raise HTTPException(status_code=400, detail="Coupon expired")
                 
                 cursor.execute("SELECT COUNT(*) FROM bookings WHERE coupon_code = %s", (payload.coupon_code.upper(),))
                 usage_count = cursor.fetchone()[0]
@@ -996,35 +986,6 @@ def admin_dashboard(x_admin_key: str = Header(...)):
         "open_groups": row[7] or 0,
         "active_locations": row[8] or 0,
     }
-
-
-@app.get("/api/admin/analytics")
-def admin_analytics(x_admin_key: str = Header(...)):
-    """
-    Returns aggregated metrics for website page views tracking.
-    """
-    require_admin(x_admin_key)
-    conn = get_conn()
-    try:
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT 
-                (SELECT COUNT(*) FROM page_views WHERE viewed_at >= NOW() - INTERVAL '1 day') AS today,
-                (SELECT COUNT(*) FROM page_views WHERE viewed_at >= NOW() - INTERVAL '7 days') AS week,
-                (SELECT COUNT(*) FROM page_views WHERE viewed_at >= NOW() - INTERVAL '30 days') AS month,
-                (SELECT COUNT(*) FROM page_views) AS all_time
-        """)
-        row = cursor.fetchone()
-        cursor.close()
-        return {
-            "today": row[0] or 0,
-            "week": row[1] or 0,
-            "month": row[2] or 0,
-            "all_time": row[3] or 0,
-        }
-    finally:
-        release_conn(conn)
-
 
 @app.get("/api/admin/match-suggestions")
 def admin_match_suggestions(x_admin_key: str = Header(...)):

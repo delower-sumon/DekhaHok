@@ -215,13 +215,10 @@
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
         <span>🤝</span><span>Partnerships</span>
       </button>
-      <button onclick="showSection('analytics')" data-section="analytics"
-        class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-        <span>📈</span><span>Analytics</span>
-      </button>
+
       <button onclick="showSection('blogs')" data-section="blogs"
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-        <span>✍️</span><span>Blogs & SEO</span>
+        <span>✍️</span><span>Blogs</span>
       </button>
       <button onclick="showSection('coupons')" data-section="coupons"
         class="nav-btn flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium w-full text-left text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
@@ -248,17 +245,7 @@
         </div>
       </section>
 
-      <!-- ── Analytics Section ────────────────────────────────────────── -->
-      <section id="section-analytics" class="section hidden space-y-6">
-        <div class="flex items-center justify-between">
-          <h1 class="text-2xl font-bold text-gray-800">Website Analytics</h1>
-          <button onclick="loadAnalytics()" class="text-sm text-emerald-700 hover:underline self-start">↻
-            Refresh</button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="analyticsGrid">
-          <!-- Populated internally -->
-        </div>
-      </section>
+
 
       <!-- ── Bookings Section ────────────────────────────────────────── -->
       <section id="section-bookings" class="section hidden space-y-6">
@@ -306,7 +293,7 @@
             + Create Group
           </button>
         </div>
-        
+
         <!-- Smart Suggestions -->
         <div id="matchSuggestions" class="space-y-4"></div>
 
@@ -403,7 +390,9 @@
                 <span class="text-xl">🔥</span>
                 <h2 class="text-lg font-bold text-gray-800">Global Event Discount</h2>
               </div>
-              <p class="text-sm text-gray-500 mb-4">Set a site-wide percentage discount applied to <strong>all price plans</strong> (৳499 & ৳249). Setting to 0 disables the discount. This reflects immediately on the booking page.</p>
+              <p class="text-sm text-gray-500 mb-4">Set a site-wide percentage discount applied to <strong>all price
+                  plans</strong> (৳499 & ৳249). Setting to 0 disables the discount. This reflects immediately on the
+                booking page.</p>
               <div class="flex items-center gap-3">
                 <div class="relative">
                   <input type="number" id="globalDiscountInput" min="0" max="100" step="1" placeholder="e.g. 17"
@@ -420,7 +409,8 @@
                 </button>
               </div>
             </div>
-            <div id="discountPreviewBox" class="bg-white rounded-xl p-4 border border-orange-100 min-w-[160px] text-center hidden">
+            <div id="discountPreviewBox"
+              class="bg-white rounded-xl p-4 border border-orange-100 min-w-[160px] text-center hidden">
               <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Preview</p>
               <div class="space-y-2">
                 <div>
@@ -721,18 +711,21 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Name</label>
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author
+                  Name</label>
                 <input id="blogAuthor" type="text" placeholder="e.g. Delower Sumon"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Title</label>
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author
+                  Title</label>
                 <input id="blogAuthorTitle" type="text" placeholder="e.g. Community Lead"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
               </div>
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Image URL</label>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Image
+                URL</label>
               <input id="blogAuthorImage" type="text" placeholder="https://..."
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
             </div>
@@ -748,7 +741,8 @@
               <div class="flex items-center gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100">
                 <input type="checkbox" id="blogPivoted" class="w-4 h-4 accent-amber-600">
                 <label for="blogPivoted"
-                  class="text-xs font-bold text-amber-800 uppercase tracking-widest cursor-pointer">Pivot this Article (Show at Top)</label>
+                  class="text-xs font-bold text-amber-800 uppercase tracking-widest cursor-pointer">Pivot this Article
+                  (Show at Top)</label>
               </div>
             </div>
           </div>
@@ -780,41 +774,50 @@
   </div>
 
   <!-- ── Coupon Modal (Admin) ──────────────────────────────────────────────── -->
-  <div id="couponModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[70] backdrop-blur-sm p-4">
+  <div id="couponModal"
+    class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[70] backdrop-blur-sm p-4">
     <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md space-y-4">
       <h2 class="text-xl font-bold text-gray-800">Create Promotional Coupon</h2>
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Coupon Code</label>
-          <input id="c_code" type="text" placeholder="e.g. DH20" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 font-mono font-bold uppercase">
+          <input id="c_code" type="text" placeholder="e.g. DH20"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 font-mono font-bold uppercase">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Type</label>
-            <select id="c_type" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+            <select id="c_type"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
               <option value="percent">Percentage (%)</option>
               <option value="fixed">Fixed (৳)</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Value</label>
-            <input id="c_value" type="number" placeholder="20" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+            <input id="c_value" type="number" placeholder="20"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Usage Limit</label>
-            <input id="c_limit" type="number" placeholder="100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+            <input id="c_limit" type="number" placeholder="100"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Expiry Date</label>
-            <input id="c_expiry" type="date" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+            <input id="c_expiry" type="date"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
           </div>
         </div>
       </div>
       <div class="flex gap-3 pt-2">
-        <button onclick="closeCouponModal()" class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition">Cancel</button>
-        <button onclick="saveCoupon()" class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-emerald-50">Create Coupon</button>
+        <button onclick="closeCouponModal()"
+          class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition">Cancel</button>
+        <button onclick="saveCoupon()"
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-emerald-50">Create
+          Coupon</button>
       </div>
     </div>
   </div>
@@ -888,7 +891,7 @@
       if (name === 'groups') loadGroups();
       if (name === 'locations') loadAdminLocations();
       if (name === 'partners') loadPartners();
-      if (name === 'analytics') loadAnalytics();
+
 
       // Close sidebar on mobile after selection
       if (window.innerWidth < 768) {
@@ -1010,22 +1013,6 @@
     </div>`;
     }
 
-    // ── Analytics ──────────────────────────────────────────────────────────────
-    async function loadAnalytics() {
-      try {
-        const res = await adminFetch('/api/admin/analytics');
-        const data = await res.json();
-
-        document.getElementById('analyticsGrid').innerHTML = `
-          ${statCard('Today Views', data.today, 'bg-emerald-50 text-emerald-800 border-emerald-100')}
-          ${statCard('This Week', data.week, 'bg-blue-50 text-blue-800 border-blue-100')}
-          ${statCard('This Month', data.month, 'bg-purple-50 text-purple-800 border-purple-100')}
-          ${statCard('All Time', data.all_time, 'bg-gray-50 text-gray-800 border-gray-100')}
-        `;
-      } catch (err) {
-        toast("Failed loading Analytics", true);
-      }
-    }
 
     // ── Bookings ───────────────────────────────────────────────────────────────
     async function loadBookings() {
@@ -2084,7 +2071,7 @@
           status.classList.add('hidden');
           preview.classList.add('hidden');
         }
-      } catch(e) { console.error(e); }
+      } catch (e) { console.error(e); }
     }
 
     function updateDiscountPreview(pct) {
@@ -2094,7 +2081,7 @@
       document.getElementById('previewP5').innerHTML = `<span style="text-decoration:line-through;color:#d1d5db;font-size:0.75rem">৳249</span> ৳${p5}`;
     }
 
-    document.getElementById('globalDiscountInput')?.addEventListener('input', function() {
+    document.getElementById('globalDiscountInput')?.addEventListener('input', function () {
       const pct = parseFloat(this.value);
       const preview = document.getElementById('discountPreviewBox');
       if (pct > 0 && pct <= 100) {
@@ -2122,7 +2109,7 @@
         } else {
           toast('Failed to save', true);
         }
-      } catch(e) { toast('Error saving discount', true); }
+      } catch (e) { toast('Error saving discount', true); }
       btn.textContent = 'Apply Discount';
       btn.disabled = false;
     }
@@ -2143,7 +2130,7 @@
         } else {
           toast('Failed to remove', true);
         }
-      } catch(e) { toast('Error', true); }
+      } catch (e) { toast('Error', true); }
     }
 
   </script>

@@ -131,12 +131,7 @@ CREATE TABLE IF NOT EXISTS partnership_requests (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS page_views (
-    id SERIAL PRIMARY KEY,
-    ip_hash VARCHAR(64),
-    user_agent TEXT,
-    viewed_at TIMESTAMPTZ DEFAULT NOW()
-);
+
 
 CREATE TABLE IF NOT EXISTS blogs (
     id SERIAL PRIMARY KEY,
