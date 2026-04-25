@@ -2,6 +2,16 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-04-24] - UI Refinements & Codebase Cleanup
+
+### Changed
+- **Vibe Buttons Redesign:** Redesigned the Vibe (Mood) selection buttons into clean, pill-shaped utility buttons. Relocated them immediately beneath the "Preferences Note" input field, organized them into a single horizontally-scrollable row, and removed the previous confetti click animation.
+- **Promo Code Box:** Reduced the overall padding, border-radius, and max-width of the "Coupon Code" section to make it more compact and visually proportional to surrounding elements.
+- **Blog Image SEO:** Modified the blog detail template to display the `image_alt` text as a visible, italicized caption below the cover image.
+- **Footer Links:** Added the missing LinkedIn social icon to the footers of the homepage and the blog detail page.
+
+### Removed
+- **Legacy Analytics Tracking:** Completely removed the `page_views` database table tracking, the root `/` route IP-logging, the `/api/admin/analytics` endpoint from `main.py`, and the corresponding "Analytics" tab from the Admin dashboard in favor of Cloudflare and Google Search Console.
 ## [2026-04-03] - UI & Backend Beta Fixes
 
 ### Added

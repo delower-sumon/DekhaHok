@@ -1029,7 +1029,7 @@
     </div>
 
     <!-- Discovery Section (Guest Browsing) -->
-    <section id="discovery" class="pt-4 pb-10 bg-white relative overflow-hidden">
+    <section id="discovery" class="pt-4 pb-0 bg-white relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 relative z-10">
             <div class="mb-6 text-center scroll-reveal">
                 <h2 class="text-4xl font-black text-gray-900 mb-2">সাম্প্রতিক ইভেন্টসমূহ</h2>
@@ -1062,7 +1062,7 @@
             <div class="mt-8 text-center scroll-reveal">
                 <button onclick="scrollToBook()"
                     class="inline-flex items-center gap-2 text-emerald-600 font-bold hover:gap-4 transition-all group">
-                    <span>আপনিও যুক্ত হতে চান? এখনই বুক করুন</span>
+                    <span>বুকিং সেকশন </span>
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -1071,7 +1071,7 @@
 
 
     <!-- Booking Section -->
-    <section id="book" class="py-10 section-bg-subtle overflow-hidden">
+    <section id="book" class="pt-0 pb-10 section-bg-subtle overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-30">
             <div class="absolute top-0 left-0 w-full h-full"
@@ -1081,7 +1081,7 @@
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-6 scroll-reveal">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">সিট বুক করুন</h2>
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">বুক করুন</h2>
                 <p class="text-xl text-gray-600">প্রয়োজনীয় তথ্য দিয়ে বুকিং সম্পন্ন করুন। </p>
             </div>
 
@@ -1752,30 +1752,22 @@
                     <div
                         class="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-3xl transform rotate-3 opacity-20">
                     </div>
-                    <img src="https://static2.tripoto.com/media/filter/nl/img/2033349/TripDocument/1622812689_cha_and_adda.jpg"
-                        alt="Safe meeting space" class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
-                    <div
-                        class="absolute right-1 bottom-4 z-10 [writing-mode:vertical-lr] rotate-180 bg-white/10 backdrop-blur-md border border-white/20 px-1 py-3 rounded-lg shadow-2xl hover:bg-white/20 transition-all cursor-pointer group">
-                        <a href="https://www.tripoto.com/trip/best-places-to-plan-to-have-coffee-and-adda-with-friends"
-                            target="_blank"
-                            class="text-[8px] font-black text-white/90 group-hover:text-white uppercase tracking-[0.15em] no-underline">
-                            Credit: Tripoto
-                        </a>
-                    </div>
+                    <img src="/static/assets/dekhahok_adda.jpg" alt="Safe meeting space"
+                        class="relative rounded-3xl shadow-2xl w-full object-cover h-96">
                     <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl max-w-xs">
                         <div class="flex items-center space-x-3 mb-2">
                             <div class="flex -space-x-2">
-                                <img src="http://static.photos/people/200x200/1"
+                                <img src="/static/assets/lisa.png"
                                     class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
-                                <img src="http://static.photos/people/200x200/2"
+                                <img src="/static/assets/rubel.png"
                                     class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Matched user">
                             </div>
                             <span class="text-sm font-semibold text-gray-700">Matched!</span>
                         </div>
                         <p class="text-sm text-gray-600">"ঢাকায় মুভ করার পর একা একা লাগছিলো, তারপর দেখা হোকের মাধ্যমে
-                            একজন ভালো মানুষের সাথে পরিচিত হয়েছি।"</p>
+                            একজন ভালো মানুষের সাথে পরিচিত হয়েছি, ধন্যবাদ।"</p>
                         <div class="flex items-center mt-3 text-emerald-700 text-sm font-medium">
-                            <span>— Sarah, Gulshan</span>
+                            <span>— তাহমিনা খান।</span>
                         </div>
                     </div>
                 </div>
@@ -1822,134 +1814,69 @@
             </div>
 
             <div id="blogContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Blog posts will be injected here -->
-                <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
-                <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
-                <div class="animate-pulse bg-white border border-gray-100 rounded-3xl h-96"></div>
+                {% if blogs %}
+                {% for b in blogs[:3] %}
+                <div
+                    class="bg-white rounded-[2.5rem] border {{ 'border-amber-200 shadow-xl shadow-amber-50' if b.is_pivoted else 'border-gray-100' }} overflow-hidden hover:shadow-2xl transition-all group scroll-reveal active">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="{{ b.image or 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500&auto=format&fit=crop&q=60' }}"
+                            alt="{{ b.title }}"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        {% if b.is_pivoted %}
+                        <div class="absolute top-4 left-4 z-10">
+                            <div
+                                class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                                <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                Featured Article
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <a href="/blog/{{ b.slug }}"
+                                class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl text-white font-bold text-sm text-center">পড়ুন
+                                (Read Story)</a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div
+                            class="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2">
+                            <i data-lucide="zap" class="w-3 h-3 fill-current"></i>
+                            <span>{{ b.badge or 'Insight' }}</span>
+                        </div>
+                        <a href="/blog/{{ b.slug }}">
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors cursor-pointer">
+                                {{ b.title }}</h3>
+                        </a>
+                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ b.description or 'DekhaHok
+                            stories and safety guides for DHK social scene.' }}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{{ b.date
+                                }}</span>
+                            <a href="/blog/{{ b.slug }}"
+                                class="p-2 bg-gray-50 rounded-xl text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all">
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-span-full py-12 text-center text-gray-400">শীঘ্রই নতুন ব্লগ আসছে!</div>
+                {% endif %}
             </div>
 
-            <div id="blogLoaderContainer" class="mt-10 text-center hidden">
-                <button onclick="showMoreBlogs()"
-                    class="px-8 py-4 bg-gray-900 text-white rounded-[2rem] font-bold hover:bg-emerald-600 transition-all shadow-xl shadow-gray-200">
+            <div id="blogLoaderContainer" class="mt-10 text-center">
+                <a href="/blog"
+                    class="inline-block px-8 py-4 bg-gray-900 text-white rounded-[2rem] font-bold hover:bg-emerald-600 transition-all shadow-xl shadow-gray-200">
                     আরও দেখুন (See More)
-                </button>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Blog Modal (Full Reading View) -->
-    <div id="blogModal" class="fixed inset-0 z-[9999] hidden">
-        <div class="absolute inset-0 bg-gray-900/80 backdrop-blur-md" onclick="closeBlogModal()"></div>
-        <div id="blogModalContent"
-            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-4xl h-[85vh] bg-white rounded-[3rem] shadow-2xl overflow-hidden transition-all duration-500 scale-90 opacity-0 flex flex-col">
-            <!-- Close btn -->
-            <button onclick="closeBlogModal()"
-                class="absolute right-6 top-6 z-20 w-10 h-10 bg-white/90 backdrop-blur rounded-full shadow-xl flex items-center justify-center hover:bg-white active:scale-90 transition-all">
-                <i data-lucide="x" class="w-5 h-5 text-gray-900"></i>
-            </button>
 
-            <!-- Scrollable Body -->
-            <div class="overflow-y-auto flex-1 custom-scrollbar">
-                <div id="blogModalImage" class="w-full h-80 bg-gray-100 relative">
-                    <img src="" alt="Blog Cover" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div class="absolute bottom-6 left-8 right-8 flex items-end justify-between gap-4">
-                        <div class="flex-1">
-                            <div id="blogModalBadge"
-                                class="inline-flex px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-black uppercase tracking-widest rounded-full mb-2">
-                                Story</div>
-                            <h2 id="blogModalTitle" class="text-2xl font-black text-white leading-tight"></h2>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 mb-1">
-                            <button onclick="handleLike()"
-                                class="w-10 h-10 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition flex items-center justify-center text-white">
-                                <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
-                            </button>
-                            <span id="modalLikeCountHeader" class="text-[10px] font-black text-white">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-8 sm:p-12">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                            <i data-lucide="user" class="w-5 h-5 text-emerald-600"></i>
-                        </div>
-                        <div>
-                            <p id="blogModalAuthor" class="text-sm font-bold text-gray-900"></p>
-                            <p id="blogModalDate" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="blogModalBody"
-                        class="blog-rich-text text-gray-600 text-lg leading-relaxed space-y-6 mb-12">
-                        <!-- Content here -->
-                    </div>
-
-                    <!-- Interactions section (Icons Only, Center Aligned) -->
-                    <div class="pt-6 border-t border-gray-100 flex flex-col items-center gap-4">
-                        <div class="flex items-center gap-8">
-                            <button id="modalLikeBtn" onclick="handleLike()"
-                                class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-500 transition-all group active:scale-95">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
-                                    <i data-lucide="thumbs-up" class="w-4 h-4"></i>
-                                </div>
-                                <span id="modalLikeCount" class="text-[9px] font-black">0</span>
-                            </button>
-                            <button onclick="document.getElementById('commentInput').focus()"
-                                class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-500 transition-all group active:scale-95">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
-                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                                </div>
-                                <span id="modalCommentCount" class="text-[9px] font-black">0</span>
-                            </button>
-                            <button id="modalShareBtn" onclick="handleShare()"
-                                class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-500 transition-all group active:scale-95">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
-                                    <i data-lucide="share-2" class="w-4 h-4"></i>
-                                </div>
-                                <span id="modalShareCount" class="text-[9px] font-black">0</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Comment Section -->
-                    <div class="mt-10 bg-gray-50 rounded-[2rem] p-6 sm:p-8">
-                        <h4 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                            মতামত দিন (Comments)
-                            <span id="commentCountBadge"
-                                class="bg-white px-3 py-1 rounded-full text-xs text-emerald-600 border border-emerald-100 shadow-sm">0</span>
-                        </h4>
-
-                        <!-- Comment Form -->
-                        <div class="space-y-4 mb-10 pb-10 border-b border-gray-200">
-                            <div class="grid sm:grid-cols-2 gap-4">
-                                <input id="commentUserName" type="text" placeholder="আপনার নাম (Name)"
-                                    class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:outline-none focus:border-emerald-500 text-sm shadow-sm">
-                            </div>
-                            <textarea id="commentInput" placeholder="আপনার মতামত লিখুন..."
-                                class="w-full p-6 bg-white border border-gray-100 rounded-2xl focus:outline-none focus:border-emerald-500 min-h-[150px] text-sm shadow-sm"></textarea>
-                            <div class="flex justify-end">
-                                <button onclick="submitBlogComment()" id="submitCommentBtn"
-                                    class="px-8 py-3 bg-gray-900 text-white rounded-2xl text-sm font-bold shadow-xl shadow-gray-200 hover:bg-emerald-600 transition-all active:scale-95">
-                                    পাঠান (Post Comment)
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Existing Comments -->
-                        <div id="blogCommentsList" class="space-y-6">
-                            <!-- Injected by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Premium Trust Banner (Repositioned for trust-building before FAQ) -->
     <div id="top-stats" class="max-w-7xl mx-auto px-4 py-2 flex justify-center">
@@ -3750,218 +3677,6 @@
             } catch (err) { }
         }
 
-        let allBlogPosts = [];
-        let visibleCount = 3;
-
-        async function fetchBlogs() {
-            const container = document.getElementById('blogContainer');
-            try {
-                const res = await fetch('/api/blogs');
-                allBlogPosts = await res.json();
-
-                if (allBlogPosts.length === 0) {
-                    container.innerHTML = '<div class="col-span-full py-12 text-center text-gray-400">শীঘ্রই নতুন ব্লগ আসছে!</div>';
-                    return;
-                }
-
-                renderBlogGrid();
-                if (allBlogPosts.length > visibleCount) {
-                    document.getElementById('blogLoaderContainer').classList.remove('hidden');
-                }
-
-                // Deep-linking support for sharing sitemap URLs
-                const urlParams = new URLSearchParams(window.location.search);
-                const blogSlug = urlParams.get('blog');
-                if (blogSlug) {
-                    const blogIdx = allBlogPosts.findIndex(b => b.slug === blogSlug);
-                    if (blogIdx !== -1) {
-                        openBlogModal(blogIdx);
-                    }
-                }
-            } catch (err) { }
-        }
-
-        function renderBlogGrid() {
-            const container = document.getElementById('blogContainer');
-            container.innerHTML = allBlogPosts.map((b, idx) => `
-                <div class="bg-white rounded-[2.5rem] border ${b.is_pivoted ? 'border-amber-200 shadow-xl shadow-amber-50' : 'border-gray-100'} overflow-hidden hover:shadow-2xl transition-all group scroll-reveal active ${idx >= visibleCount ? 'hidden' : ''}" data-blog-idx="${idx}">
-                    <div class="h-56 overflow-hidden relative">
-                        <img src="${b.image_url || 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500&auto=format&fit=crop&q=60'}" 
-                             alt="${b.title}" 
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        ${b.is_pivoted ? `
-                        <div class="absolute top-4 left-4 z-10">
-                            <div class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
-                                <i data-lucide="star" class="w-3 h-3 fill-current"></i>
-                                Featured Article
-                            </div>
-                        </div>
-                        ` : ''}
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                            <a href="/blog/${b.slug}" class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl text-white font-bold text-sm text-center">পড়ুন (Read Story)</a>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2">
-                            <i data-lucide="zap" class="w-3 h-3 fill-current"></i>
-                            <span>${b.badge_text || 'Insight'}</span>
-                        </div>
-                        <a href="/blog/${b.slug}">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors cursor-pointer">${b.title}</h3>
-                        </a>
-                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">${b.seo_description || 'DekhaHok stories and safety guides for DHK social scene.'}</p>
-                        <div class="flex items-center justify-between">
-                             <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">${new Date(b.created_at).toLocaleDateString('bn-BD')}</span>
-                             <a href="/blog/${b.slug}" class="p-2 bg-gray-50 rounded-xl text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all">
-                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                             </a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function showMoreBlogs() {
-            visibleCount += 3;
-            renderBlogGrid();
-            if (visibleCount >= allBlogPosts.length) {
-                document.getElementById('blogLoaderContainer').classList.add('hidden');
-            }
-        }
-
-        async function openBlogModal(idx) {
-            const b = allBlogPosts[idx];
-            if (!b) return;
-
-            const modal = document.getElementById('blogModal');
-            const content = document.getElementById('blogModalContent');
-
-            document.getElementById('blogModalTitle').innerText = b.title;
-            document.getElementById('blogModalBadge').innerText = b.badge_text || 'Story';
-            document.getElementById('blogModalAuthor').innerText = b.author || 'Team DekhaHok';
-            document.getElementById('blogModalDate').innerText = new Date(b.created_at).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById('blogModalBody').innerHTML = b.content;
-            document.getElementById('blogModalImage').querySelector('img').src = b.image_url || 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80';
-
-            // Interaction counts
-            const likes = b.likes || 0;
-            document.getElementById('modalLikeCount').innerText = likes;
-            document.getElementById('modalLikeCountHeader').innerText = likes;
-            document.getElementById('modalShareCount').innerText = b.shares || 0;
-            currentBlogId = b.id;
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-90', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-            document.body.style.overflow = 'hidden';
-
-            loadComments(b.id);
-            lucide.createIcons();
-        }
-
-        let currentBlogId = null;
-
-        async function handleLike() {
-            if (!currentBlogId) return;
-            try {
-                const res = await fetch(`/api/blogs/${currentBlogId}/like`, { method: 'POST' });
-                const data = await res.json();
-                document.getElementById('modalLikeCount').innerText = data.likes;
-                document.getElementById('modalLikeCountHeader').innerText = data.likes;
-                // Update local data
-                const b = allBlogPosts.find(p => p.id === currentBlogId);
-                if (b) b.likes = data.likes;
-            } catch (err) { }
-        }
-
-        async function handleShare() {
-            if (!currentBlogId) return;
-            try {
-                const res = await fetch(`/api/blogs/${currentBlogId}/share`, { method: 'POST' });
-                const data = await res.json();
-                document.getElementById('modalShareCount').innerText = data.shares;
-
-                const b = allBlogPosts.find(p => p.id === currentBlogId);
-                if (b) b.shares = data.shares;
-
-                if (navigator.share) {
-                    navigator.share({ title: 'DekhaHok Blog', url: window.location.href });
-                } else {
-                    alert('লিংক কপি করা হয়েছে!');
-                }
-            } catch (err) { }
-        }
-
-        async function loadComments(blogId) {
-            const list = document.getElementById('blogCommentsList');
-            const badge = document.getElementById('commentCountBadge');
-            const modalCount = document.getElementById('modalCommentCount');
-
-            try {
-                const res = await fetch(`/api/blogs/${blogId}/comments`);
-                const comments = await res.json();
-
-                badge.innerText = comments.length;
-                modalCount.innerText = comments.length;
-
-                if (comments.length === 0) {
-                    list.innerHTML = '<p class="text-center text-gray-400 py-6">এখনো কোনো মতামত নেই। আপনার মতামত দিন প্রথম!</p>';
-                    return;
-                }
-
-                list.innerHTML = comments.map(c => `
-                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center font-bold text-emerald-600 text-xs">
-                                ${c.user_name[0].toUpperCase()}
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold text-gray-900">${c.user_name}</p>
-                                <p class="text-[9px] font-bold text-gray-400 uppercase">${new Date(c.created_at).toLocaleDateString('bn-BD')}</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-600 leading-relaxed">${c.comment}</p>
-                    </div>
-                `).join('');
-            } catch (err) { }
-        }
-
-        async function submitBlogComment() {
-            if (!currentBlogId) return;
-            const nameInp = document.getElementById('commentUserName');
-            const commInp = document.getElementById('commentInput');
-            const btn = document.getElementById('submitCommentBtn');
-
-            const name = nameInp.value.trim();
-            const comment = commInp.value.trim();
-
-            if (!name || !comment) {
-                alert('অনুগ্রহ করে নাম এবং মতামত দুটোই লিখুন।');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = 'পাঠানো হচ্ছে...';
-
-            try {
-                const res = await fetch(`/api/blogs/${currentBlogId}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_name: name, comment: comment })
-                });
-
-                if (res.ok) {
-                    commInp.value = '';
-                    loadComments(currentBlogId);
-                }
-            } catch (err) { } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'পাঠান (Post Comment)';
-            }
-        }
 
         function toggleFaq(btn) {
             const card = btn.closest('.faq-card');
@@ -4001,16 +3716,6 @@
             }
         }
 
-        function closeBlogModal() {
-            const modal = document.getElementById('blogModal');
-            const content = document.getElementById('blogModalContent');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-90', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }, 300);
-        }
 
         async function fetchPublicReviews() {
             const grid = document.getElementById('reviewsGrid');
@@ -4119,7 +3824,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             fetchDiscoveryGroups();
-            fetchBlogs();
             fetchPublicReviews();
             applyGlobalDiscount();
         });

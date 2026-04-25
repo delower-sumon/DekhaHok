@@ -91,12 +91,73 @@ async def custom_404_handler(request: Request, __):
 
 @app.get("/", include_in_schema=False)
 def serve_frontend(request: Request):
-    return templates.TemplateResponse("DekhaHok.html", {"request": request})
+    conn = get_conn()
+    blogs = []
+    try:
+        cursor = conn.cursor()
+        # Fetch latest 6 published blogs
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC LIMIT 6")
+        rows = cursor.fetchall()
+        for r in rows:
+            blogs.append({
+                "id": r[0], "title": r[1], "slug": r[2], "content": r[3],
+                "keywords": r[4], "description": r[5], "image": r[6],
+                "image_alt": r[7], "badge": r[8], "likes": r[9], "shares": r[10],
+                "author": r[11], "date": str(r[12]), "is_pivoted": r[13]
+            })
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return templates.TemplateResponse("DekhaHok.html", {"request": request, "blogs": blogs})
 
 
 @app.get("/admin", include_in_schema=False)
 def serve_admin():
     return FileResponse("admin/index.html")
+@app.get("/privacy-policy", include_in_schema=False)
+def serve_privacy(request: Request):
+    return templates.TemplateResponse("privacy_policy.html", {"request": request})
+
+
+@app.get("/terms-of-service", include_in_schema=False)
+def serve_terms(request: Request):
+    return templates.TemplateResponse("terms.html", {"request": request})
+
+
+@app.get("/about", include_in_schema=False)
+def serve_about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+
+@app.get("/contact", include_in_schema=False)
+def serve_contact(request: Request):
+    return templates.TemplateResponse("contact.html", {"request": request})
+
+
+@app.get("/partnership", include_in_schema=False)
+def serve_partnership(request: Request):
+    return templates.TemplateResponse("partnership.html", {"request": request})
+
+
+@app.get("/blog", include_in_schema=False)
+def serve_blog_list(request: Request):
+    conn = get_conn()
+    blogs = []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY created_at DESC")
+        rows = cursor.fetchall()
+        for r in rows:
+            blogs.append({
+                "id": r[0], "title": r[1], "slug": r[2], "content": r[3],
+                "keywords": r[4], "description": r[5], "image": r[6],
+                "image_alt": r[7], "badge": r[8], "likes": r[9], "shares": r[10],
+                "author": r[11], "date": str(r[12]), "is_pivoted": r[13]
+            })
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return templates.TemplateResponse("blog_list.html", {"request": request, "blogs": blogs})
 
 
 @app.get("/robots.txt", include_in_schema=False)
@@ -113,8 +174,15 @@ def sitemap():
     base_url = "https://dekhahok.com"
     
     # Static pages
+    current_date = datetime.now().date().isoformat()
     pages = [
-        {"loc": f"{base_url}/", "lastmod": datetime.now().date().isoformat(), "changefreq": "daily", "priority": "1.0"}
+        {"loc": f"{base_url}/", "lastmod": current_date, "changefreq": "daily", "priority": "1.0"},
+        {"loc": f"{base_url}/about", "lastmod": current_date, "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/contact", "lastmod": current_date, "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/partnership", "lastmod": current_date, "changefreq": "monthly", "priority": "0.7"},
+        {"loc": f"{base_url}/blog", "lastmod": current_date, "changefreq": "daily", "priority": "0.9"},
+        {"loc": f"{base_url}/privacy-policy", "lastmod": current_date, "changefreq": "monthly", "priority": "0.3"},
+        {"loc": f"{base_url}/terms-of-service", "lastmod": current_date, "changefreq": "monthly", "priority": "0.3"},
     ]
     
     # Dynamic blogs
@@ -632,22 +700,25 @@ def serve_blog_detail(request: Request, slug: str):
         
         blog_data = {
             "id": row[0],
-            "title": row[1],
-            "content": row[2],
-            "keywords": row[3],
-            "description": row[4],
-            "image": row[5],
-            "image_alt": row[6],
-            "likes": row[7],
-            "shares": row[8],
-            "author": row[9],
-            "author_title": row[10],
-            "author_image_url": row[11],
-            "date": str(row[12]),
-            "badge": row[13],
+            "title": row[1] or "Untitled",
+            "content": row[2] or "",
+            "keywords": row[3] or "",
+            "description": row[4] or "",
+            "image": row[5] or "",
+            "image_alt": row[6] or "",
+            "likes": row[7] or 0,
+            "shares": row[8] or 0,
+            "author": row[9] or "Team DekhaHok",
+            "author_title": row[10] or "Contributor",
+            "author_image_url": row[11] or "",
+            "date": str(row[12].date()) if row[12] else "",
+            "badge": row[13] or "Story",
             "slug": row[14]
         }
         return templates.TemplateResponse("blog_detail.html", {"request": request, "blog": blog_data})
+    except Exception as e:
+        print(f"Error serving blog {slug}: {e}")
+        return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
     finally:
         release_conn(conn)
 
@@ -1712,6 +1783,23 @@ def get_admin_settings(x_admin_key: str = Header(...)):
         rows = cursor.fetchall()
         return {r[0]: r[1] for r in rows}
     finally:
+        release_conn(conn)
+
+@app.patch("/api/admin/settings")
+def update_admin_settings(payload: dict = Body(...), x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        for k, v in payload.items():
+            cursor.execute(
+                "INSERT INTO site_settings (key, value) VALUES (%s, %s) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+                (k, str(v))
+            )
+        conn.commit()
+        return {"message": "Settings updated"}
+    finally:
+        release_conn(conn)
         release_conn(conn)
 
 @app.patch("/api/admin/settings")
