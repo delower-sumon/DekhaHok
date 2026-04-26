@@ -10,16 +10,34 @@ load_dotenv()
 # so we keep our app-side pool small (2-5 is plenty).
 # We use ThreadedConnectionPool for safe access across FastAPI threads.
 # ---------------------------------------------------------------------------
+# Create pool with TCP Keepalives to prevent Neon/Supabase from aggressively dropping idle connections
 _pool = pool.ThreadedConnectionPool(
     minconn=1,
     maxconn=10,
     dsn=os.getenv("DATABASE_URL"),
+    keepalives=1,
+    keepalives_idle=30,
+    keepalives_interval=10,
+    keepalives_count=5
 )
 
 
 def get_conn():
-    """Borrow a connection from the pool."""
-    return _pool.getconn()
+    """
+    Borrow a connection from the pool and verify it is still alive.
+    If the connection is dead, trash it and get a new one.
+    """
+    conn = _pool.getconn()
+    try:
+        # Pre-ping the connection to ensure it hasn't been silently closed by the server
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT 1")
+    except psycopg2.OperationalError:
+        # If the connection is dead, close it properly and throw it away
+        _pool.putconn(conn, close=True)
+        # Fetch a fresh connection
+        conn = _pool.getconn()
+    return conn
 
 
 def release_conn(conn):

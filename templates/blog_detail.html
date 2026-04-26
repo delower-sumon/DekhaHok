@@ -383,21 +383,7 @@
         </div>
     </footer>
 
-    <!-- Legal Modal (Full Parity) -->
-    <div id="legalModal"
-        class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col transform scale-95 opacity-0 transition-all duration-300 relative"
-            id="legalModalContent">
-            <div class="flex items-center justify-between mb-6 flex-shrink-0">
-                <h3 class="text-2xl font-bold text-gray-900" id="legalModalTitle">Policy</h3>
-                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-600">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <div id="legalTextContent"
-                class="overflow-y-auto pr-4 text-sm text-gray-600 leading-relaxed custom-scrollbar py-2"></div>
-        </div>
-    </div>
+
 
     <script>
         lucide.createIcons();
@@ -532,56 +518,7 @@
             }
         }
 
-        const legalContents = {
-            privacy: `
-                <div class="space-y-4">
-                    <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
-                    <p>DekhaHok আপনার ব্যক্তিগত তথ্যের সুরক্ষায় প্রতিশ্রুতিবদ্ধ। আমাদের অ্যাপটি ব্যবহারের সময় আমরা কীভাবে তথ্য সংগ্রহ ও ব্যবহার করি তা নিচে দেওয়া হলো:</p>
-                    <ul class="space-y-3 mt-4">
-                        <li><strong class="text-gray-900">তথ্য সংগ্রহ:</strong> রেজিস্ট্রেশনের সময় আমরা আপনার নাম, ফোন নম্বর এবং সোশ্যাল মিডিয়া প্রোফাইল লিংক সংগ্রহ করি। এটি মূলত আপনার পরিচয় নিশ্চিত করার জন্য করা হয়।</li>
-                        <li><strong class="text-gray-900">তথ্যের ব্যবহার:</strong> সংগৃহীত তথ্য শুধুমাত্র আপনার জন্য উপযুক্ত ম্যাচ (Duo বা Panchayat) খুঁজে বের করতে এবং পার্টনার রেস্টুরেন্টে বুকিং নিশ্চিত করতে ব্যবহার করা হয়।</li>
-                        <li><strong class="text-gray-900">তৃতীয় পক্ষের সাথে তথ্য শেয়ার:</strong> আমরা আপনার তথ্য কোনো তৃতীয় পক্ষের কাছে বিক্রি করি না। শুধুমাত্র আপনার গ্রুপ মেম্বারদের সাথে আপনার নাম (প্রাথমিক পরিচয় হিসেবে) এবং রেস্টুরেন্টের সাথে বুকিংয়ের জন্য প্রয়োজনীয় তথ্য শেয়ার করা হয়।</li>
-                        <li><strong class="text-gray-900">ডেটা সিকিউরিটি:</strong> আপনার সকল তথ্য নিরাপদ সার্ভারে সংরক্ষিত থাকে। আপনি চাইলে যেকোনো সময় আমাদের সাথে যোগাযোগ করে আপনার অ্যাকাউন্ট বা তথ্য মুছে ফেলতে পারেন।</li>
-                    </ul>
-                </div>
-            `,
-            terms: `
-                <div class="space-y-4">
-                    <p class="text-xs text-orange-600 font-semibold mb-4">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
-                    <p>DekhaHok প্ল্যাটফর্মটি ব্যবহারের মাধ্যমে আপনি নিচের শর্তাবলীতে সম্মত হচ্ছেন:</p>
-                    <ul class="space-y-3 mt-4">
-                        <li><strong class="text-gray-900">যোগ্যতা:</strong> এই অ্যাপটি ব্যবহারের জন্য আপনার বয়স কমপক্ষে ১৮ বছর হতে হবে এবং আপনাকে বাংলাদেশের নাগরিক হতে হবে।</li>
-                        <li><strong class="text-gray-900">সঠিক তথ্য প্রদান:</strong> রেজিস্ট্রেশনের সময় সঠিক তথ্য প্রদান করা বাধ্যতামূলক। ভুল বা ভুয়া তথ্য প্রদান করলে আপনার অ্যাকাউন্টটি স্থায়ীভাবে স্থগিত করা হতে পারে।</li>
-                        <li><strong class="text-gray-900">আচরণবিধি:</strong> এটি একটি সামাজিক মেলবন্ধনের প্ল্যাটফর্ম। মিটিং চলাকালীন কোনো প্রকার হয়রানি, অশোভন আচরণ বা অবৈধ কার্যক্রম কঠোরভাবে নিষিদ্ধ। কারো ব্যক্তিগত আচরণের জন্য DekhaHok দায়বদ্ধ নয়, তবে অভিযোগের ভিত্তিতে আমরা যথাযথ ব্যবস্থা গ্রহণ করব।</li>
-                        <li><strong class="text-gray-900">রিফান্ড পলিসি:</strong> একবার বুকিং সম্পন্ন হলে তা সাধারণত পরিবর্তনযোগ্য নয়। যদি DekhaHok বা রেস্টুরেন্ট কোনো কারণে মিটিং বাতিল করে, তবেই পূর্ণ রিফান্ড প্রদান করা হবে। রিফান্ড প্রসেস হতে ৭-১০ কার্যদিবস সময় লাগতে পারে।</li>
-                        <li><strong class="text-gray-900">নিরাপত্তা সতর্কতা:</strong> অফলাইন মিটিং চলাকালীন আপনার ব্যক্তিগত নিরাপত্তা এবং মালামালের দায়িত্ব আপনার নিজের। জনাকীর্ণ এবং পাবলিক প্লেসে (যেমন আমাদের পার্টনার ক্যাফে) দেখা করার জন্য আমরা উৎসাহিত করি।</li>
-                        <li><strong class="text-gray-900">আইনি বাধ্যবাধকতা:</strong> বাংলাদেশের প্রচলিত আইন অনুযায়ী কোনো অনৈতিক বা রাষ্ট্রবিরোধী কাজে এই প্ল্যাটফর্ম ব্যবহার করা যাবে না।</li>
-                    </ul>
-                </div>
-            `
-        };
 
-        function openLegalModal(type) {
-            const modal = document.getElementById('legalModal');
-            const contentContainer = document.getElementById('legalModalContent');
-            const textContainer = document.getElementById('legalTextContent');
-            const titleEl = document.getElementById('legalModalTitle');
-            titleEl.innerText = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
-            textContainer.innerHTML = legalContents[type];
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                contentContainer.classList.remove('scale-95', 'opacity-0');
-                contentContainer.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeLegalModal() {
-            const modal = document.getElementById('legalModal');
-            const contentContainer = document.getElementById('legalModalContent');
-            contentContainer.classList.remove('scale-100', 'opacity-100');
-            contentContainer.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
