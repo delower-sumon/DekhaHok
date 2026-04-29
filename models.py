@@ -23,8 +23,8 @@ class BookingCreate(BaseModel):
     current_location:   Optional[str] = None
     preferred_location: Optional[str] = None
     preferred_meeting_point: Optional[str] = None
-    payment_method:     str         # "bkash" or "nagad"
-    payment_sender_digits: str      # last 2 digits
+    payment_method:     Optional[str] = None         # "bkash" or "nagad"
+    payment_sender_digits: Optional[str] = None      # last 2 digits
     referred_by:        Optional[str] = None # referral code
     interests:          Optional[str] = None # Acquisition: interests
     expectations:       Optional[str] = None # Acquisition: expectations
@@ -72,14 +72,14 @@ class BookingCreate(BaseModel):
     @field_validator("payment_method")
     @classmethod
     def validate_payment_method(cls, v):
-        if v.lower() not in ("bkash", "nagad", "upay"):
+        if v is not None and v.lower() not in ("bkash", "nagad", "upay", "beta_promo"):
             raise ValueError("Invalid payment method")
-        return v.lower()
+        return v.lower() if v else None
 
     @field_validator("payment_sender_digits")
     @classmethod
     def validate_digits(cls, v):
-        if not re.match(r"^\d{2}$", v):
+        if v and not re.match(r"^\d{2}$", v):
             raise ValueError("Sender digits must be exactly 2 digits")
         return v
 
@@ -304,4 +304,3 @@ class BlogCommentResponse(BaseModel):
     user_name: str
     comment: str
     created_at: str
-

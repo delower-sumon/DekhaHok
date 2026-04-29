@@ -266,15 +266,24 @@ def create_booking(payload: BookingCreate):
     """
     Creates a new meetup interested entry. 
     Assigns a unique Tracking ID and calculates the required reservation fee.
-    Supports coupons and vibe-based matching.
+    Supports global site-wide discounts and individual coupons.
     """
-    fee = FEE_MAP.get(payload.group_size, 0)
+    fee = FEE_MAP.get(payload.group_size, 0.0)
     discount = 0.0
     
-    if payload.coupon_code:
-        conn = get_conn()
-        try:
-            cursor = conn.cursor()
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # 1. Apply Global Site-wide Discount
+        cursor.execute("SELECT value FROM site_settings WHERE key = 'global_discount_percent'")
+        row = cursor.fetchone()
+        global_discount_pct = float(row[0]) if row else 0.0
+        if global_discount_pct > 0:
+            fee = round(fee * (1 - global_discount_pct / 100))
+
+        # 2. Apply Coupon Code if provided
+        if payload.coupon_code:
             cursor.execute(
                 "SELECT discount_type, value, usage_limit, expires_at FROM coupons WHERE code = %s",
                 (payload.coupon_code.upper(),)
@@ -283,9 +292,6 @@ def create_booking(payload: BookingCreate):
             if coupon:
                 d_type, d_val, d_limit, d_expiry = coupon
                 if d_expiry:
-                    # Make datetime.now() aware if d_expiry is aware, or strip tzinfo from d_expiry
-                    # A safer approach is to use timezone-aware datetime.now(timezone.utc).astimezone() 
-                    # but let's just make sure both are naive or aware.
                     now = datetime.now(d_expiry.tzinfo) if d_expiry.tzinfo else datetime.now()
                     if now > d_expiry:
                         raise HTTPException(status_code=400, detail="Coupon expired")
@@ -301,81 +307,87 @@ def create_booking(payload: BookingCreate):
                     discount = float(d_val)
             else:
                 raise HTTPException(status_code=400, detail="Invalid coupon code")
-            cursor.close()
-        finally:
-            release_conn(conn)
 
-    fee = max(0.0, fee - discount)
+        fee = max(0.0, fee - discount)
+        payment_status = "unpaid"
+        booking_status = "processing"
+        
+        # Auto-verify free beta bookings
+        if fee == 0.0:
+            payment_status = "paid"
+            if not payload.payment_method:
+                payload.payment_method = "beta_promo"
+            if not payload.payment_sender_digits:
+                payload.payment_sender_digits = "00"
 
-    for _ in range(5):
-        tracking_id = generate_tracking_id()
-        conn = get_conn()
-        try:
-            cursor = conn.cursor()
-            cursor.execute(
-                """
-                INSERT INTO bookings
-                    (tracking_id, name, phone, email, age, group_size,
-                     preferred_date, preferred_time, venue_type,
-                     conversation_style, preferred_people, current_location, preferred_location, 
-                     preferred_meeting_point, payment_method, payment_sender_digits, fee_amount,
-                     interests, expectations, wants_pickup, wants_dropoff, vibe, discount_amount, coupon_code)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING id
-                """,
-                (
-                    tracking_id,
-                    payload.name,
-                    payload.phone,
-                    payload.email,
-                    payload.age,
-                    payload.group_size,
-                    payload.preferred_date,
-                    payload.preferred_time,
-                    payload.venue_type,
-                    payload.conversation_style,
-                    payload.preferred_people,
-                    payload.current_location,
-                    payload.preferred_location,
-                    payload.preferred_meeting_point,
-                    payload.payment_method,
-                    payload.payment_sender_digits,
-                    fee,
-                    payload.interests,
-                    payload.expectations,
-                    payload.wants_pickup,
-                    payload.wants_dropoff,
-                    payload.vibe,
-                    discount,
-                    payload.coupon_code.upper() if payload.coupon_code else None,
-                ),
-            )
-            booking_id = cursor.fetchone()[0]
-            conn.commit()
-            
-            # Generate referral code for this booking
-            ref_code = "".join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-            cursor.execute(
-                "UPDATE bookings SET referral_code = %s, referred_by = %s WHERE id = %s",
-                (ref_code, payload.referred_by, booking_id)
-            )
-            conn.commit()
-            
-            cursor.close()
-            return BookingResponse(
-                tracking_id=tracking_id,
-                message="Booking received! Save your tracking ID to check status.",
-            )
-        except Exception as e:
-            conn.rollback()
-            if "Duplicate entry" in str(e) and "tracking_id" in str(e):
-                continue
-            raise HTTPException(status_code=500, detail="Could not save booking. Please try again.")
-        finally:
-            release_conn(conn)
-
-    raise HTTPException(status_code=500, detail="Could not generate unique tracking ID.")
-
+        for _ in range(5):
+            tracking_id = generate_tracking_id()
+            try:
+                cursor.execute(
+                    """
+                    INSERT INTO bookings
+                        (tracking_id, name, phone, email, age, group_size,
+                         preferred_date, preferred_time, venue_type,
+                         conversation_style, preferred_people, current_location, preferred_location, 
+                         preferred_meeting_point, payment_method, payment_sender_digits, fee_amount,
+                         interests, expectations, wants_pickup, wants_dropoff, vibe, discount_amount, 
+                         coupon_code, payment_status, booking_status)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id
+                    """,
+                    (
+                        tracking_id,
+                        payload.name,
+                        payload.phone,
+                        payload.email,
+                        payload.age,
+                        payload.group_size,
+                        payload.preferred_date,
+                        payload.preferred_time,
+                        payload.venue_type,
+                        payload.conversation_style,
+                        payload.preferred_people,
+                        payload.current_location,
+                        payload.preferred_location,
+                        payload.preferred_meeting_point,
+                        payload.payment_method,
+                        payload.payment_sender_digits,
+                        fee,
+                        payload.interests,
+                        payload.expectations,
+                        payload.wants_pickup,
+                        payload.wants_dropoff,
+                        payload.vibe,
+                        discount,
+                        payload.coupon_code.upper() if payload.coupon_code else None,
+                        payment_status,
+                        booking_status
+                    ),
+                )
+                booking_id = cursor.fetchone()[0]
+                conn.commit()
+                
+                # Generate referral code for this booking
+                ref_code = "".join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+                cursor.execute(
+                    "UPDATE bookings SET referral_code = %s, referred_by = %s WHERE id = %s",
+                    (ref_code, payload.referred_by, booking_id)
+                )
+                conn.commit()
+                
+                return BookingResponse(
+                    tracking_id=tracking_id,
+                    message="Booking received! Save your tracking ID to check status.",
+                )
+            except Exception as e:
+                conn.rollback()
+                if "Duplicate entry" in str(e) and "tracking_id" in str(e):
+                    continue
+                raise HTTPException(status_code=500, detail=f"Could not save booking. {e}")
+                
+        raise HTTPException(status_code=500, detail="Could not generate unique tracking ID.")
+    finally:
+        release_conn(conn)
 
 @app.get("/api/bookings/track/{tracking_id}", response_model=TrackingResponse)
 def track_booking(tracking_id: str):
@@ -830,7 +842,6 @@ def list_public_reviews():
     try:
         cursor = conn.cursor()
         # Fetch high ratings with comments for social proof
-        # Fetch high ratings with unique names for variety and social proof
         cursor.execute("""
             SELECT DISTINCT ON (b.name) r.comment, b.name, b.age, g.venue_name, r.score, r.created_at
             FROM user_ratings r
@@ -1058,56 +1069,6 @@ def admin_dashboard(x_admin_key: str = Header(...)):
         "active_locations": row[8] or 0,
     }
 
-@app.get("/api/admin/match-suggestions")
-def admin_match_suggestions(x_admin_key: str = Header(...)):
-    """
-    Returns groups of users who share the same Vibe, Preferred Date, and Group Size.
-    Helps admins quickly identify 'High-Vibe' matching opportunities.
-    """
-    require_admin(x_admin_key)
-    conn = get_conn()
-    try:
-        cursor = conn.cursor()
-        # Find potential matches: users not in a group, grouped by Vibe, Date, and Size
-        cursor.execute("""
-            SELECT vibe, preferred_date, group_size, COUNT(*) as count
-            FROM bookings
-            WHERE assigned_group_id IS NULL AND booking_status = 'processing'
-            GROUP BY vibe, preferred_date, group_size
-            HAVING COUNT(*) >= 2
-            ORDER BY preferred_date ASC, count DESC
-        """)
-        suggestions = cursor.fetchall()
-        
-        results = []
-        for s in suggestions:
-            vibe, p_date, g_size, count = s
-            # Fetch user details for this suggestion block
-            cursor.execute("""
-                SELECT id, name, phone, tracking_id, preferred_location
-                FROM bookings
-                WHERE assigned_group_id IS NULL 
-                  AND booking_status = 'processing'
-                  AND vibe = %s 
-                  AND preferred_date = %s
-                  AND group_size = %s
-            """, (vibe, p_date, g_size))
-            bookings = cursor.fetchall()
-            results.append({
-                "vibe": vibe or "General",
-                "preferred_date": str(p_date),
-                "group_size": g_size,
-                "count": count,
-                "bookings": [
-                    {"id": b[0], "name": b[1], "phone": b[2], "tracking_id": b[3], "location": b[4]} 
-                    for b in bookings
-                ]
-            })
-        cursor.close()
-    finally:
-        release_conn(conn)
-    return results
-
 
 @app.get("/api/admin/bookings")
 def admin_list_bookings(
@@ -1215,19 +1176,14 @@ def admin_update_booking(
         if payload.booking_status == 'completed':
             cursor.execute("SELECT phone, booking_status FROM bookings WHERE id = %s", (booking_id,))
             row = cursor.fetchone()
-            # Relaxed for local environment and admin override
             if row and row[1] != 'completed':
-                if not row[0] or len(row[0].strip()) < 8: # Relaxed from 11
-                    print(f"[dekhahok] Admin override: booking {booking_id} has short phone '{row[0]}'")
-                    # We still allow it but maybe set a flag 
+                if not row[0] or len(row[0].strip()) < 8:
                     pass
 
         cursor.execute(f"UPDATE bookings SET {set_clause} WHERE id = %s", values)
         conn.commit()
         
-        # Growth Verification Logic: Check if user becomes 'Verified Citizen'
         if payload.booking_status == 'completed':
-            # Criteria: User completed a meetup AND has referred someone
             cursor.execute("SELECT referral_code FROM bookings WHERE id = %s", (booking_id,))
             row = cursor.fetchone()
             if row:
@@ -1241,14 +1197,11 @@ def admin_update_booking(
         if cursor.rowcount == 0:
             raise HTTPException(status_code=404, detail="Booking not found.")
             
-        # Identity-based verification persistence
         if payload.is_verified is True:
-            # Fetch phone for this booking
             cursor.execute("SELECT phone FROM bookings WHERE id = %s", (booking_id,))
             prow = cursor.fetchone()
             if prow:
                 phone_to_verify = prow[0]
-                # Mark ALL bookings with this phone as verified
                 cursor.execute("UPDATE bookings SET is_verified = TRUE WHERE phone = %s", (phone_to_verify,))
         
         conn.commit()
@@ -1265,9 +1218,6 @@ def admin_delete_booking(booking_id: int, x_admin_key: str = Header(...)):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        # group_members should be deleted by CASCADE if schema setup correctly, 
-        # but the schema says ON DELETE CASCADE for booking_id in group_members.
-        # Let's ensure it.
         cursor.execute("DELETE FROM bookings WHERE id = %s", (booking_id,))
         conn.commit()
         if cursor.rowcount == 0:
@@ -1296,7 +1246,6 @@ def admin_list_groups(x_admin_key: str = Header(...)):
         results = []
         for gr in group_rows:
             gid = gr[0]
-            # Fetch members for this group
             cursor.execute(
                 """
                 SELECT b.id, b.name, b.phone, b.tracking_id
@@ -1407,13 +1356,11 @@ def admin_assign_members(
         g_size = group_row[1]
 
         if payload.booking_ids:
-            # Check capacity
             cursor.execute("SELECT COUNT(*) FROM group_members WHERE group_id = %s", (group_id,))
             current_count = cursor.fetchone()[0]
             if current_count + len(payload.booking_ids) > g_size:
-                raise HTTPException(status_code=400, detail=f"Cannot assign {len(payload.booking_ids)} members. Group capacity exceeded (Current: {current_count}/{g_size}).")
+                raise HTTPException(status_code=400, detail=f"Cannot assign {len(payload.booking_ids)} members. Group capacity exceeded.")
 
-            # Check compatibility
             format_strings = ','.join(['%s'] * len(payload.booking_ids))
             cursor.execute(f"SELECT id, group_size FROM bookings WHERE id IN ({format_strings})", tuple(payload.booking_ids))
             bookings_info = cursor.fetchall()
@@ -1423,7 +1370,7 @@ def admin_assign_members(
                 
             for b_info in bookings_info:
                 if b_info[1] != g_size:
-                    raise HTTPException(status_code=400, detail=f"Booking {b_info[0]} has incompatible group size ({b_info[1]} vs {g_size}).")
+                    raise HTTPException(status_code=400, detail=f"Booking {b_info[0]} has incompatible group size.")
 
         for booking_id in payload.booking_ids:
             cursor.execute(
@@ -1475,7 +1422,6 @@ def admin_update_group(
         cursor.execute(f"UPDATE meetup_groups SET {set_clause} WHERE id = %s", values)
         
         if updates.get("status") == 'completed':
-            # Phase 3 requirement: chat should be deleted after the meetup status is completed
             cursor.execute("DELETE FROM group_chats WHERE group_id = %s", (group_id,))
 
         conn.commit()
@@ -1497,9 +1443,7 @@ def admin_delete_group(group_id: int, x_admin_key: str = Header(...)):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        # First remove all member associations
         cursor.execute("DELETE FROM group_members WHERE group_id = %s", (group_id,))
-        # Then remove the group itself
         cursor.execute("DELETE FROM meetup_groups WHERE id = %s", (group_id,))
         conn.commit()
     finally:
@@ -1515,12 +1459,10 @@ def admin_list_locations(x_admin_key: str = Header(...)):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        # Fetch all locations
         cursor.execute("SELECT id, name, is_active FROM locations ORDER BY created_at DESC")
         loc_rows = cursor.fetchall()
         loc_dict = {loc[0]: loc[1] for loc in loc_rows}
         
-        # Fetch all meeting points and group them by location_id
         cursor.execute("SELECT id, location_id, name, is_active, latitude, longitude, point_type FROM meeting_points")
         point_rows = cursor.fetchall()
         
@@ -1687,6 +1629,8 @@ def admin_delete_location(location_id: int, x_admin_key: str = Header(...)):
     finally:
         release_conn(conn)
     return {"message": "Location deleted."}
+
+
 @app.post("/api/admin/blogs", response_model=BlogResponse)
 def admin_create_blog(payload: BlogCreate, x_admin_key: str = Header(...)):
     require_admin(x_admin_key)
@@ -1783,23 +1727,6 @@ def get_admin_settings(x_admin_key: str = Header(...)):
         rows = cursor.fetchall()
         return {r[0]: r[1] for r in rows}
     finally:
-        release_conn(conn)
-
-@app.patch("/api/admin/settings")
-def update_admin_settings(payload: dict = Body(...), x_admin_key: str = Header(...)):
-    require_admin(x_admin_key)
-    conn = get_conn()
-    try:
-        cursor = conn.cursor()
-        for k, v in payload.items():
-            cursor.execute(
-                "INSERT INTO site_settings (key, value) VALUES (%s, %s) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
-                (k, str(v))
-            )
-        conn.commit()
-        return {"message": "Settings updated"}
-    finally:
-        release_conn(conn)
         release_conn(conn)
 
 @app.patch("/api/admin/settings")

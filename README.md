@@ -1,7 +1,20 @@
 # DekhaHok 🤝
 ### *Strangers today, friends tomorrow.*
 
-DekhaHok is a premium social connectivity platform designed to bridge the gap between digital interaction and real-world friendship. In a city as vibrant as Dhaka, we believe that the best stories begin with a simple "Dekha Hok" (Let's Meet).
+**DekhaHok** is Dhaka's premier social connectivity platform, designed to bridge the gap between digital interaction and real-world friendship. In a city as vibrant as Dhaka, we believe the best stories begin with a simple "Dekha Hok" (Let's Meet).
+
+---
+
+## 🌐 Official Links
+- **Website**: [dekhahok.com](https://dekhahok.com)
+- **Email**: [info@dekhahok.com](mailto:info@dekhahok.com)
+- **WhatsApp**: [+880 1884-477720](https://wa.me/8801884477720)
+
+## 📱 Connect With Us
+- **Facebook**: [facebook.com/dekhahok](https://facebook.com/dekhahok)
+- **Instagram**: [instagram.com/dekhahok](https://instagram.com/dekhahok)
+- **LinkedIn**: [linkedin.com/company/dekhahok](https://linkedin.com/company/dekhahok)
+- **YouTube**: [youtube.com/@DekhaHokbd](https://youtube.com/@DekhaHokbd)
 
 ---
 
@@ -25,9 +38,7 @@ No more back-and-forth in group chats. Users book their slot, pay a minimal rese
 ---
 
 ## 🏗️ Platform Ecosystem
-
 The DekhaHok ecosystem is built on a foundation of reliability and elegance:
-
 *   **The Guest Lounge (Frontend)**: A high-conversion, mobile-optimized landing page designed for frictionless discovery and booking.
 *   **The Command Center (Admin)**: A sophisticated management suite for administrators to orchestrate group dynamics, manage partnerships, and oversee Dhaka’s social pulse.
 *   **The Ledger (Backend)**: A robust, low-latency API architecture ensuring real-time tracking and data integrity.
@@ -35,9 +46,7 @@ The DekhaHok ecosystem is built on a foundation of reliability and elegance:
 ---
 
 ## 📂 Information Architecture
-
 For documentation related to the structural and operational components of the project:
-
 - **[Branding & UX](static/style.css)**: Visual identity, color palettes, and interactive design tokens.
 - **[Future Roadmap](future developments.txt)**: Upcoming features and scaling strategies.
 - **[Developer Operations](LOCAL_TESTING_GUIDE.md)**: Guidance on local setup, testing protocols, and technical contributions.
@@ -45,9 +54,9 @@ For documentation related to the structural and operational components of the pr
 ---
 
 ## 🤝 Partnerships
-Are you a venue owner looking to host Dhaka’s most vibrant community? Visit our [Partnership Section](static/DekhaHok.html#partnership) to apply.
+Are you a venue owner looking to host Dhaka’s most vibrant community? Visit our [Partnership Section](https://dekhahok.com/partnership) to apply.
 
 ---
 
-© 2024 DekhaHok. All rights reserved.
+© 2024-2026 DekhaHok. All rights reserved.
 *Made with ❤️ in Dhaka.*
