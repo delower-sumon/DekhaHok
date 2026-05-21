@@ -463,11 +463,11 @@ def track_booking(tracking_id: str):
     meet_time  = row[11]
 
     # Visibility logic: Hide event details until 3 PM the day BEFORE meet_date
-   if meet_date:
-    reveal_dt = datetime.combine(meet_date - timedelta(days=1), time(15, 0))
-    if datetime.now() < reveal_dt:
-        venue_name = "Revealing soon (3 PM day before event)"
-        # Date and Time should stay visible for planning, only name is hidden
+    if meet_date:
+        reveal_dt = datetime.combine(meet_date - timedelta(days=1), time(15, 0))
+        if datetime.now() < reveal_dt:
+            venue_name = "Revealing soon (3 PM day before event)"
+            # Date and Time should stay visible for planning, only name is hidden
 
     return TrackingResponse(
         tracking_id=row[0],
