@@ -4,7 +4,7 @@ import string
 import hashlib
 from typing import Optional
 
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone
 from fastapi import FastAPI, HTTPException, Header, Query, Request, Response, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -228,6 +228,8 @@ def on_startup():
 ADMIN_KEY = os.getenv("ADMIN_SECRET_KEY", "dekhahok-admin-pw-2024")
 FEE_MAP   = {2: 499.00, 5: 249.00}
 
+# Dhaka timezone: UTC+6
+DHAKA_TZ = timezone(timedelta(hours=6))
 
 # ---------------------------------------------------------------------------
 # Admin security check: Simple secret key based authentication
@@ -463,12 +465,18 @@ def track_booking(tracking_id: str):
     meet_date  = row[10]
     meet_time  = row[11]
 
-    # Visibility logic: Hide event details until 3 PM the day BEFORE meet_date
-    if meet_date:
-        reveal_dt = datetime.combine(meet_date - timedelta(days=1), time(15, 0))
-        if datetime.now() < reveal_dt:
-            venue_name = "Revealing soon (3 PM day before event)"
-            # Date and Time should stay visible for planning, only name is hidden
+    # Visibility logic: Hide event details until 3 PM Dhaka time the day BEFORE meet_date
+if meet_date:
+    # Create reveal datetime: 3 PM Dhaka time on the day before meet_date
+    reveal_dt = datetime.combine(meet_date - timedelta(days=1), time(15, 0))
+    # Get current time in Dhaka timezone
+    now_dhaka = datetime.now(DHAKA_TZ)
+    # Create aware version of reveal_dt at Dhaka time for comparison
+    reveal_dt_aware = reveal_dt.replace(tzinfo=DHAKA_TZ)
+    
+    if now_dhaka < reveal_dt_aware:
+        venue_name = "Revealing soon (3 PM day before event)"
+        # Date and Time should stay visible for planning, only name is hidden
 
     return TrackingResponse(
         tracking_id=row[0],
