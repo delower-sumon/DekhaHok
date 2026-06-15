@@ -221,6 +221,8 @@ def init_db():
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS discount_amount NUMERIC(8,2) DEFAULT 0.00")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS coupon_code VARCHAR(20)")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS image_alt TEXT")
+        cursor.execute("ALTER TABLE meetup_groups ADD COLUMN IF NOT EXISTS image_url TEXT")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS gender VARCHAR(10)")
         
         # Coupons table migration
         cursor.execute("""

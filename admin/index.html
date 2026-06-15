@@ -264,6 +264,7 @@
             <option value="confirmed">Confirmed</option>
             <option value="completed">Completed</option>
             <option value="unsuccessful">Unsuccessful</option>
+            <option value="waitlist">Waitlist</option>
           </select>
           <select id="filterPayment" onchange="loadBookings()"
             class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
@@ -478,6 +479,11 @@
             <option value="5">5-person</option>
           </select>
         </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Background Image URL (Optional)</label>
+          <input id="g_image_url" type="text" placeholder="/static/assets/..."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+        </div>
       </div>
       <div class="flex gap-3 pt-2">
         <button onclick="closeGroupModal()"
@@ -523,6 +529,11 @@
             <option value="closed">Closed</option>
             <option value="completed">Completed</option>
           </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Background Image URL (Optional)</label>
+          <input id="eg_image_url" type="text" placeholder="/static/assets/..."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
         </div>
       </div>
       <div class="flex gap-3 pt-2">
@@ -592,6 +603,7 @@
             <option value="confirmed">Confirmed</option>
             <option value="completed">Completed</option>
             <option value="unsuccessful">Unsuccessful</option>
+            <option value="waitlist">Waitlist</option>
           </select>
         </div>
       </div>
@@ -1396,6 +1408,8 @@
         meet_time: document.getElementById('g_time').value,
         group_size: parseInt(document.getElementById('g_size').value),
       };
+      const imageUrl = document.getElementById('g_image_url').value.trim();
+      if (imageUrl) payload.image_url = imageUrl;
       if (!payload.venue_name || !payload.meet_date || !payload.meet_time) {
         toast('Venue, Date and Time are required for initial creation', true); return;
       }
@@ -1424,6 +1438,7 @@
       document.getElementById('eg_date').value = g.meet_date;
       document.getElementById('eg_time').value = g.meet_time;
       document.getElementById('eg_status').value = g.status;
+      document.getElementById('eg_image_url').value = g.image_url || '';
       document.getElementById('editGroupModal').classList.remove('hidden');
     }
 
@@ -1438,11 +1453,13 @@
       const date = document.getElementById('eg_date').value;
       const time = document.getElementById('eg_time').value;
       const status = document.getElementById('eg_status').value;
+      const imageUrl = document.getElementById('eg_image_url').value.trim();
 
       if (venue) payload.venue_name = venue;
       if (date) payload.meet_date = date;
       if (time) payload.meet_time = time;
       if (status) payload.status = status;
+      payload.image_url = imageUrl;
 
       const res = await adminFetch(`/api/admin/groups/${id}`, {
         method: 'PATCH',

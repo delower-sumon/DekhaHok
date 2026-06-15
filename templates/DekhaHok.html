@@ -903,7 +903,7 @@
                         <img src="/static/assets/lisa.png"
                             class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="Lisa">
                     </div>
-                    <span>২১১+ ঢাকাবাসী আমাদের সাথে যোগ দিয়েছেন। </span>
+                    <span id="hero-waitlist-count">১৩+ জন ওয়েটিং লিস্টে আছেন।</span>
                 </div>
             </div>
 
@@ -1105,15 +1105,43 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="badge-pill bg-gray-100 text-gray-600">আপনার বয়স</label>
-                        <input type="number" id="age" min="5" max="80"
-                            class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
-                            placeholder="25">
-                        <p id="ageNote" class="text-xs text-red-500 mt-2 font-medium hidden">
-                            <i data-lucide="alert-circle" class="w-3 h-3 inline-block mr-1"></i>
-                            আপনার বয়স ১৮ বছরের নিচে হলে সাথে অভিভাবক থাকতে হবে।
-                        </p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="badge-pill bg-gray-100 text-gray-600">আপনার বয়স</label>
+                            <input type="number" id="age" min="5" max="80"
+                                class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
+                                placeholder="25">
+                            <p id="ageNote" class="text-xs text-red-500 mt-2 font-medium hidden">
+                                <i data-lucide="alert-circle" class="w-3 h-3 inline-block mr-1"></i>
+                                আপনার বয়স ১৮ বছরের নিচে হলে সাথে অভিভাবক থাকতে হবে।
+                            </p>
+                        </div>
+                        <div>
+                            <label class="badge-pill bg-gray-100 text-gray-600">আপনার জেন্ডার</label>
+                            <select id="gender"
+                                class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all appearance-none"
+                                onchange="window.selectGroupSize(document.getElementById('groupSize').value)">
+                                <option value="" disabled selected>নির্বাচন করুন</option>
+                                <option value="male">পুরুষ</option>
+                                <option value="female">নারী (৮০% ছাড়)</option>
+                                <option value="other">অন্যান্য</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div>
+                            <label class="badge-pill bg-gray-100 text-gray-600">কোথায় থাকেন?</label>
+                            <input type="text" id="currentLocation" required
+                                class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
+                                placeholder="যেমন: মোহাম্মদপুর">
+                        </div>
+                        <div>
+                            <label class="badge-pill bg-gray-100 text-gray-600">মিটআপের এলাকা</label>
+                            <input type="text" id="preferredLocation" required
+                                class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-emerald-500 focus:bg-emerald-50/30 outline-none transition-all"
+                                placeholder="যেমন: ধানমন্ডি">
+                        </div>
                     </div>
 
 
@@ -1135,16 +1163,36 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5 mt-1">মুড(Vibe)</label>
                                 <div class="flex flex-nowrap overflow-x-auto gap-2 pb-1" style="scrollbar-width: none;">
                                     <button type="button" onclick="selectVibe('Career', this)"
-                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
                                         ক্যারিয়ার
                                     </button>
                                     <button type="button" onclick="selectVibe('Travel', this)"
-                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
                                         ভ্রমণ
                                     </button>
                                     <button type="button" onclick="selectVibe('Philosophy', this)"
-                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
                                         ফিলোসফি
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Networking', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        নেটওয়ার্কিং
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Foodie', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        ভোজনরসিক
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Adventure', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        অ্যাডভেঞ্চার
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Creative', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        ব্যবসা
+                                    </button>
+                                    <button type="button" onclick="selectVibe('Quiet', this)"
+                                        class="vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600">
+                                        আত্মোন্নতি
                                     </button>
                                 </div>
                                 <input type="hidden" id="selectedVibe" value="">
@@ -1162,7 +1210,7 @@
                                         </button>
                                         <p id="publicNote" class="text-[11px] text-emerald-700 font-medium">
                                             <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
-                                            শুধুমাত্র নিরাপদ কিছু বাছাইক্রিত পাবলিক প্লেসের ক্ষেত্রে প্রযোজ্য।
+                                            শুধুমাত্র কিছু বাছাইক্রিত পাবলিক প্লেসের ক্ষেত্রে প্রযোজ্য।
                                         </p>
                                     </div>
                                     <div class="space-y-3">
@@ -2091,7 +2139,7 @@
                                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                             </svg>
                         </a>
-                        <a href="https://instagram.com/dekhahok" target="_blank"
+                        <a href="https://instagram.com/dekha_hok" target="_blank"
                             class="w-8 h-8 md:w-9 md:h-9 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#E4405F] transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -2316,10 +2364,10 @@
         function selectVibe(vibe, btn) {
             if (selectedVibes.has(vibe)) {
                 selectedVibes.delete(vibe);
-                btn.className = "vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600";
+                btn.className = "vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-white/50 text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-600";
             } else {
                 selectedVibes.add(vibe);
-                btn.className = "vibe-btn flex-shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all duration-200 border bg-emerald-500 text-white border-emerald-400 shadow-md shadow-emerald-500/30";
+                btn.className = "vibe-btn flex-shrink-0 whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border bg-emerald-50 text-emerald-700 border-emerald-200 shadow-sm shadow-emerald-500/20";
             }
             document.getElementById('selectedVibe').value = Array.from(selectedVibes).join(',');
         }
@@ -2427,6 +2475,11 @@
                 fee = Math.round(fee * (1 - window._globalDiscountPct / 100));
             }
 
+            const genderVal = document.getElementById('gender')?.value;
+            if (genderVal === 'female') {
+                fee = Math.round(fee * 0.2);
+            }
+
             let discount = 0;
             if (window._appliedCoupon) {
                 if (window._appliedCoupon.discount_type === 'percent') {
@@ -2521,6 +2574,9 @@
                 vibe: document.getElementById('selectedVibe').value || null,
                 wants_pickup: document.getElementById('wantsPickup').value === 'true',
                 wants_dropoff: document.getElementById('wantsDropoff').value === 'true',
+                gender: document.getElementById('gender')?.value || null,
+                current_location: document.getElementById('currentLocation')?.value.trim() || null,
+                preferred_location: document.getElementById('preferredLocation')?.value.trim() || null,
             };
 
             // Double check for critical missing fields before sending
@@ -2571,7 +2627,7 @@
                 const titleEl = document.getElementById('successModalTitle');
                 const subTitleEl = document.getElementById('successModalSub');
                 if (isFree) {
-                    titleEl.textContent = 'Welcome to Beta! 🎉';
+                    titleEl.textContent = 'Welcome to DekhaHok! 🎉';
                     subTitleEl.textContent = 'আপনার ফ্রি বুকিংটি সফল হয়েছে। আমরা শীঘ্রই আপনাকে একটি গ্রুপে যুক্ত করব।';
                 } else {
                     titleEl.textContent = 'Booking Received!';
@@ -2744,7 +2800,8 @@
                     processing: { color: 'text-amber-600', bg: 'bg-amber-50', icon: 'clock' },
                     confirmed: { color: 'text-emerald-700', bg: 'bg-emerald-50', icon: 'check-circle' },
                     completed: { color: 'text-blue-700', bg: 'bg-blue-50', icon: 'award' },
-                    unsuccessful: { color: 'text-red-700', bg: 'bg-red-50', icon: 'x-circle' }
+                    unsuccessful: { color: 'text-red-700', bg: 'bg-red-50', icon: 'x-circle' },
+                    waitlist: { color: 'text-purple-700', bg: 'bg-purple-50', icon: 'clock' }
                 }[data.booking_status] || { color: 'text-gray-600', bg: 'bg-gray-50', icon: 'info' };
 
                 // "What's Next" Messages
@@ -2755,6 +2812,8 @@
                     nextAction = "লোকেশন নির্ধারিত হচ্ছে। নির্দিষ্ট সময়ে নির্ধারিত স্থানে উপস্থিত থাকার অনুরোধ করা হলো।";
                 } else if (data.booking_status === 'completed') {
                     nextAction = "আপনার বন্ধুকে খুঁজে পাওয়া গিয়েছে । আপনার বন্ধুদের রেটিং দিতে ভুলবেন না। শীঘ্রই দেখা হবে!";
+                } else if (data.booking_status === 'waitlist') {
+                    nextAction = "আপনার বুকিংটি ওয়েটিং লিস্টে আছে। সিট ফাঁকা হলে আপনাকে জানানো হবে।";
                 }
 
                 // Reveal Time Calculation (3 PM Dhaka Time day before event UTC+6)
@@ -2846,7 +2905,7 @@
 
                         <div class="text-center sm:text-left mt-4 mb-4 pb-4 border-b border-gray-100">
                             <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
-                                ${data.name}, আপনার বুকিং <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'ফাইনাল!' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : 'প্রক্রিয়াধীন')}</span>
+                                ${data.name}, আপনার বুকিং <span class="${statusTheme.color}">${data.booking_status === 'confirmed' ? 'ফাইনাল!' : data.booking_status === 'completed' ? 'সম্পন্ন' : (data.booking_status === 'unsuccessful' ? 'বাতিল' : (data.booking_status === 'waitlist' ? 'ওয়েটিং লিস্টে' : 'প্রক্রিয়াধীন'))}</span>
                             </h2>
                             ${countdownHtml}
                         </div>
@@ -3559,8 +3618,13 @@
                     }
                 }
 
-                container.innerHTML = displayData.map(g => `
-                    <div class="premium-card p-6 rounded-[2.5rem] bg-white border border-gray-100 hover:border-emerald-200 transition-all group scroll-reveal active">
+                container.innerHTML = displayData.map(g => {
+                    const bgImageUrl = g.image_url || (g.venue_name && (g.venue_name.includes('রবীন্দ্র সরোবর') || g.venue_name.includes('Rabindra')) ? '/static/assets/rabindra-sorobor-DekhaHok.jpg' : null);
+                    const bgStyle = bgImageUrl
+                        ? `background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url(${bgImageUrl}); background-size: cover; background-position: center;`
+                        : '';
+                    return `
+                    <div class="premium-card p-6 rounded-[2.5rem] bg-white border border-gray-100 hover:border-emerald-200 transition-all group scroll-reveal active" style="${bgStyle}">
                         <div class="flex justify-between items-start mb-6">
                             <div class="flex items-center gap-2 px-3 py-1 ${g.status === 'upcoming' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'} text-[10px] font-black uppercase tracking-widest rounded-full">
                                 <span class="relative flex h-2 w-2">
@@ -3569,10 +3633,10 @@
                                 </span>
                                 ${g.status}
                             </div>
-                            <div class="text-[10px] font-bold text-gray-300 uppercase tracking-tighter">${g.group_code}</div>
+                            <div class="text-[10px] font-bold text-gray-800 uppercase tracking-tighter">${g.group_code}</div>
                         </div>
                         <h4 class="text-xl font-bold text-gray-900 mb-2 truncate">${g.venue_name}</h4>
-                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
+                        <div class="flex items-center gap-4 text-sm text-gray-800 font-medium mb-6">
                             <div class="flex items-center gap-1">
                                 <i data-lucide="calendar" class="w-4 h-4"></i>
                                 <span>${new Date(g.meet_date).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' })}</span>
@@ -3592,7 +3656,8 @@
                             </button>
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
                 lucide.createIcons();
             } catch (err) { }
         }
@@ -3723,6 +3788,11 @@
                 finalPrice = Math.round(base * (1 - window._globalDiscountPct / 100));
             }
 
+            const gender = document.getElementById('gender')?.value;
+            if (gender === 'female') {
+                finalPrice = Math.round(finalPrice * 0.2);
+            }
+
             if (window._appliedCoupon) {
                 if (window._appliedCoupon.discount_type === 'percent') {
                     finalPrice = Math.round(finalPrice * (1 - window._appliedCoupon.value / 100));
@@ -3741,8 +3811,23 @@
             }
         }
 
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/public/stats');
+                if (res.ok) {
+                    const data = await res.json();
+                    const total = 13 + (data.waitlist_count || 0);
+                    const heroCountEl = document.getElementById('hero-waitlist-count');
+                    if (heroCountEl) {
+                        heroCountEl.innerText = `${total}+ জন ওয়েটিং লিস্টে আছেন।`;
+                    }
+                }
+            } catch (err) { }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+            fetchStats();
             fetchDiscoveryGroups();
             fetchPublicReviews();
             applyGlobalDiscount();

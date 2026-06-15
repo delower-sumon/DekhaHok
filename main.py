@@ -281,6 +281,11 @@ def create_booking(payload: BookingCreate):
         if global_discount_pct > 0:
             fee = round(fee * (1 - global_discount_pct / 100))
 
+        # 1.5 Apply Female Discount
+        if payload.gender and payload.gender.lower() == 'female':
+            female_discount = fee * 0.20
+            discount += female_discount
+
         # 2. Apply Coupon Code if provided
         if payload.coupon_code:
             cursor.execute(
@@ -330,8 +335,8 @@ def create_booking(payload: BookingCreate):
                          conversation_style, preferred_people, current_location, preferred_location, 
                          preferred_meeting_point, payment_method, payment_sender_digits, fee_amount,
                          interests, expectations, wants_pickup, wants_dropoff, vibe, discount_amount, 
-                         coupon_code, payment_status, booking_status)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                         coupon_code, payment_status, booking_status, gender)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     RETURNING id
                     """,
                     (
@@ -360,7 +365,8 @@ def create_booking(payload: BookingCreate):
                         discount,
                         payload.coupon_code.upper() if payload.coupon_code else None,
                         payment_status,
-                        booking_status
+                        booking_status,
+                        payload.gender
                     ),
                 )
                 booking_id = cursor.fetchone()[0]
@@ -800,6 +806,19 @@ def add_blog_comment(blog_id: int, payload: BlogCommentCreate):
 
 # --- PUBLIC DISCOVERY ---
 
+@app.get("/api/public/stats")
+def public_stats():
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM bookings WHERE booking_status = 'waitlist'")
+        waitlist_count = cursor.fetchone()[0]
+        return {
+            "waitlist_count": waitlist_count
+        }
+    finally:
+        release_conn(conn)
+
 @app.get("/api/public/groups", response_model=list[PublicGroupResponse])
 def list_public_groups(location: Optional[str] = Query(None)):
     conn = get_conn()
@@ -809,7 +828,7 @@ def list_public_groups(location: Optional[str] = Query(None)):
         query = """
             SELECT g.id, g.group_code, g.venue_name, g.meet_date, g.meet_time, g.group_size,
                    (SELECT COUNT(*) FROM group_members WHERE group_id = g.id) as member_count,
-                   g.status
+                   g.status, g.image_url
             FROM meetup_groups g
             WHERE g.status IN ('open', 'confirmed', 'completed')
         """
@@ -828,7 +847,7 @@ def list_public_groups(location: Optional[str] = Query(None)):
             results.append(PublicGroupResponse(
                 id=r[0], group_code=r[1], venue_name=r[2],
                 meet_date=r[3], meet_time=format_time_12h(r[4]),
-                group_size=r[5], member_count=r[6], status=r[7]
+                group_size=r[5], member_count=r[6], status=r[7], image_url=r[8]
             ))
         return results
     finally:
@@ -1235,7 +1254,7 @@ def admin_list_groups(x_admin_key: str = Header(...)):
         cursor.execute(
             """
             SELECT g.id, g.group_code, g.venue_name, g.meet_date, g.meet_time,
-                   g.group_size, g.status
+                   g.group_size, g.status, g.image_url
             FROM meetup_groups g
             ORDER BY g.meet_date DESC
             """
@@ -1268,6 +1287,7 @@ def admin_list_groups(x_admin_key: str = Header(...)):
                 "meet_time":    format_time_12h(gr[4]),
                 "group_size":   gr[5],
                 "status":       gr[6],
+                "image_url":    gr[7],
                 "member_count": len(members),
                 "members":      members,
             })
@@ -1318,11 +1338,11 @@ def admin_create_group(payload: GroupCreate, x_admin_key: str = Header(...)):
         cursor = conn.cursor()
         cursor.execute(
             """
-            INSERT INTO meetup_groups (group_code, venue_name, meet_date, meet_time, group_size)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO meetup_groups (group_code, venue_name, meet_date, meet_time, group_size, image_url)
+            VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id
             """,
-            (group_code, payload.venue_name, payload.meet_date, payload.meet_time, payload.group_size),
+            (group_code, payload.venue_name, payload.meet_date, payload.meet_time, payload.group_size, payload.image_url),
         )
         group_id = cursor.fetchone()[0]
         conn.commit()
@@ -1408,6 +1428,7 @@ def admin_update_group(
     if payload.meet_time  is not None: updates["meet_time"]  = payload.meet_time
     if payload.group_size is not None: updates["group_size"] = payload.group_size
     if payload.status     is not None: updates["status"]     = payload.status
+    if payload.image_url  is not None: updates["image_url"]  = payload.image_url
 
     if not updates:
         raise HTTPException(status_code=400, detail="Nothing to update.")

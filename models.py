@@ -23,6 +23,7 @@ class BookingCreate(BaseModel):
     current_location:   Optional[str] = None
     preferred_location: Optional[str] = None
     preferred_meeting_point: Optional[str] = None
+    gender:             Optional[str] = None
     payment_method:     Optional[str] = None         # "bkash" or "nagad"
     payment_sender_digits: Optional[str] = None      # last 2 digits
     referred_by:        Optional[str] = None # referral code
@@ -144,7 +145,7 @@ class AdminBookingUpdate(BaseModel):
     @field_validator("booking_status")
     @classmethod
     def validate_booking(cls, v):
-        if v is not None and v not in ("processing", "confirmed", "completed", "unsuccessful"):
+        if v is not None and v not in ("processing", "confirmed", "completed", "unsuccessful", "waitlist"):
             raise ValueError("Invalid booking_status")
         return v
 
@@ -154,6 +155,7 @@ class GroupCreate(BaseModel):
     meet_date:  date
     meet_time:  str
     group_size: int
+    image_url: Optional[str] = None
 
 
 class GroupAssign(BaseModel):
@@ -166,6 +168,7 @@ class GroupUpdate(BaseModel):
     meet_time:  Optional[str] = None
     group_size: Optional[int] = None
     status:     Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class RatingCreate(BaseModel):
@@ -289,6 +292,7 @@ class PublicGroupResponse(BaseModel):
     group_size: int
     member_count: int
     status: str
+    image_url: Optional[str] = None
 
 # ---------------------------------------------------------------------------
 # Blog Interaction
