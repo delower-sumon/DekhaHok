@@ -2,6 +2,13 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-06-27] - Bug Fixes: Host Edit Data Recall & API Memory Fix
+
+### Fixed
+- **Host Event Edit Recall:** Fixed an issue where the host dashboard edit page (`/host/events/{id}/edit`) failed to recall the previously saved `included` perks and `category` from the database due to a PostgreSQL `JSONB` array conversion error and strict casing in javascript.
+- **API Events Memory Crash (500 Error):** Fixed a critical `500 Internal Server Error` (MemoryError) in the `/api/events` endpoint that occurred after publishing an event with a large Base64 image payload. Replaced raw image fetching with a boolean check to drastically reduce memory usage.
+- **Template Rendering Crash (500 Error):** Fixed an issue in `user_context_processor` where `created_at` timestamps were converted to strings prematurely, causing `local_time_filter` to crash the entire application when a user with unread notifications logged in.
+
 ## [2026-06-26] - Feature Branch: Host Marketplace (Initial Commit)
 
 > **Branch:** `feature/host-marketplace`

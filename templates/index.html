@@ -115,8 +115,10 @@
                         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 opacity-0 scale-50 transition-all duration-700">
                         <div class="bg-white p-6 rounded-3xl shadow-2xl border-2 border-emerald-100 text-center w-56">
                             <div
-                                class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i data-lucide="map-pin" class="w-6 h-6 text-emerald-700"></i>
+                                class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3 overflow-hidden">
+                                <img id="venue-event-img" src="" alt=""
+                                    class="w-full h-full object-cover rounded-full hidden">
+                                <i id="venue-map-pin" data-lucide="map-pin" class="w-6 h-6 text-emerald-700"></i>
                             </div>
                             <p class="text-[10px] uppercase tracking-widest text-emerald-600 font-bold">Top Experience
                             </p>
@@ -253,7 +255,7 @@
             <div>
                 <span
                     class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Experiences</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900">Events & Experience</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900">Events & Experiences</h2>
             </div>
 
             <div
@@ -567,8 +569,9 @@
     <!-- FAQ Section -->
     <section id="faq" class="py-16 bg-white relative overflow-hidden border-t border-zinc-100">
         <div class="max-w-3xl mx-auto px-4 relative z-10">
-            <div class="text-center mb-8 scroll-reveal">
-                <h2 class="text-3xl font-black text-zinc-900 mb-2">জিজ্ঞাসা (FAQ)</h2>
+            <div class="text-center mb-8">
+                <span class="inline-block text-xs font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1 mb-4">সাধারণ জিজ্ঞাসা</span>
+                <h2 class="text-3xl font-black text-zinc-900 mb-2">জিজ্ঞাসা</h2>
                 <p class="text-zinc-500">আপনার মনে থাকা সাধারণ কিছু প্রশ্নের উত্তর।</p>
             </div>
 
@@ -799,10 +802,26 @@
             });
         };
 
+        const venueImg = document.getElementById('venue-event-img');
+        const venuePinIcon = document.getElementById('venue-map-pin');
+
         const animate = () => {
             if (!venueName) return;
-            venueName.textContent = venueNames[venueIndex];
-            venueIndex = (venueIndex + 1) % venueNames.length;
+
+            // Populate card from live events if available, else fall back to static names
+            const liveEvents = (typeof allEvents !== 'undefined' && allEvents.length > 0) ? allEvents : null;
+            if (liveEvents) {
+                const ev = liveEvents[venueIndex % liveEvents.length];
+                venueName.textContent = ev.title || venueNames[venueIndex % venueNames.length];
+                if (ev.image_url && venueImg && venuePinIcon) {
+                    venueImg.src = ev.image_url;
+                    venueImg.classList.remove('hidden');
+                    venuePinIcon.style.display = 'none';
+                }
+            } else {
+                venueName.textContent = venueNames[venueIndex % venueNames.length];
+            }
+            venueIndex = (venueIndex + 1) % Math.max(venueNames.length, (liveEvents ? liveEvents.length : venueNames.length));
 
             const starts = [
                 { l: '10%', t: '20%', d: 'M 10 20 Q 20 50 50 50' },
@@ -847,7 +866,7 @@
         reset();
         animate();
     }
-    setTimeout(startMotion, 1000);
+
 
     // ── Catalog Events Management ───────────────────────────────────────────────────
     let allEvents = [];
@@ -1388,8 +1407,9 @@
     }
 
     // Startup
-    window.onload = function () {
-        loadEvents();
+    window.onload = async function () {
+        await loadEvents();    // populate allEvents first
+        startMotion();         // then start hero animation with real event images
         initMap();
         startAutoScrollCategories();
     };

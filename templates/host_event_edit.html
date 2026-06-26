@@ -214,8 +214,9 @@
             if(existingData.category) {
                 const catSelect = document.getElementById('ev-category');
                 const validCategories = ['art', 'photography', 'food', 'music', 'tech', 'sports', 'workshop', 'networking', 'wellness'];
-                if(validCategories.includes(existingData.category)) {
-                    catSelect.value = existingData.category;
+                const normalizedCategory = existingData.category.toLowerCase();
+                if(validCategories.includes(normalizedCategory)) {
+                    catSelect.value = normalizedCategory;
                 } else {
                     catSelect.value = 'other';
                     document.getElementById('ev-category-other-container').classList.remove('hidden');

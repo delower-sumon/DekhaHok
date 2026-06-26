@@ -148,7 +148,7 @@ def user_context_processor(request: Request):
                 for r in rows:
                     unread_notifications.append({
                         "id": r[0], "type": r[1], "title": r[2], 
-                        "message": r[3], "action_url": r[4], "created_at": str(r[5])
+                        "message": r[3], "action_url": r[4], "created_at": r[5]
                     })
                 
                 # Smart Suggestions for empty notifications
@@ -449,7 +449,10 @@ def serve_host_event_edit(event_id: int, request: Request):
         import json
         included_list = []
         try:
-            included_list = json.loads(event_row[10] or "[]")
+            if isinstance(event_row[10], list):
+                included_list = event_row[10]
+            else:
+                included_list = json.loads(event_row[10] or "[]")
         except:
             pass
             
@@ -1254,7 +1257,8 @@ def api_list_events(category: Optional[str] = None):
         query = """
             SELECT e.id, e.title, e.description, e.category, e.package_tier, e.price_per_person,
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
-                   e.image_url, e.included, e.status, h.id as host_id, u.full_name as host_name,
+                   CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
+                   e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
@@ -1292,7 +1296,8 @@ def api_event_detail(event_id: int):
         cursor.execute("""
             SELECT e.id, e.title, e.description, e.category, e.package_tier, e.price_per_person,
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
-                   e.image_url, e.included, e.status, h.id as host_id, u.full_name as host_name,
+                   CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
+                   e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, h.bio as host_bio, u.id as user_id
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
