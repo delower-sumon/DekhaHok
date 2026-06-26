@@ -168,19 +168,29 @@
 
             <!-- Payment Details (Taas manual step) -->
             <div class="border-t border-zinc-100 pt-6 mb-6">
-                <h4 class="font-bold text-xs uppercase tracking-wider text-zinc-400 mb-3">Pay via bKash or Nagad
+                <h4 class="font-bold text-xs uppercase tracking-wider text-zinc-400 mb-3">Payment Method
                 </h4>
                 <div class="bg-zinc-50 p-5 rounded-2xl border border-zinc-100 space-y-4">
-                    <div class="flex gap-4">
+                    <div class="grid grid-cols-2 gap-4">
                         <!-- bKash Button -->
                         <button type="button" onclick="selectPaymentMode('bkash')" id="btn-pay-bkash"
-                            class="flex-1 flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition">
+                            class="flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition">
                             <span class="text-pink-600 text-lg">bKash</span>
                         </button>
                         <!-- Nagad Button -->
                         <button type="button" onclick="selectPaymentMode('nagad')" id="btn-pay-nagad"
-                            class="flex-1 flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm transition text-zinc-500">
+                            class="flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm transition text-zinc-500">
                             <span class="text-orange-600 text-lg">Nagad</span>
+                        </button>
+                        <!-- DBBL Button -->
+                        <button type="button" onclick="selectPaymentMode('dbbl')" id="btn-pay-dbbl"
+                            class="flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm transition text-zinc-500">
+                            <span class="text-blue-600 text-lg">DBBL</span>
+                        </button>
+                        <!-- Upay Button -->
+                        <button type="button" onclick="selectPaymentMode('upay')" id="btn-pay-upay"
+                            class="flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm transition text-zinc-500">
+                            <span class="text-sky-600 text-lg">Upay</span>
                         </button>
                     </div>
                     <div class="text-xs text-zinc-500 space-y-1">
@@ -301,16 +311,20 @@
 
     function selectPaymentMode(mode) {
         selectedPayment = mode;
-        const btnB = document.getElementById('btn-pay-bkash');
-        const btnN = document.getElementById('btn-pay-nagad');
-
-        if (mode === 'bkash') {
-            btnB.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition';
-            btnN.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition';
-        } else {
-            btnN.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition';
-            btnB.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition';
-        }
+        const buttons = {
+            'bkash': document.getElementById('btn-pay-bkash'),
+            'nagad': document.getElementById('btn-pay-nagad'),
+            'dbbl': document.getElementById('btn-pay-dbbl'),
+            'upay': document.getElementById('btn-pay-upay')
+        };
+        
+        Object.keys(buttons).forEach(key => {
+            if (key === mode) {
+                buttons[key].className = 'flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition';
+            } else {
+                buttons[key].className = 'flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition';
+            }
+        });
     }
 
     // Load event details on page load

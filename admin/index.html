@@ -2276,8 +2276,9 @@
             ? `<button onclick="updateEventStatus(${evt.id}, 'published')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow transition mr-1">Publish</button>`
             : '';
           const draftBtn = evt.status !== 'draft'
-            ? `<button onclick="updateEventStatus(${evt.id}, 'draft')" class="px-3 py-1.5 bg-zinc-500 hover:bg-zinc-600 text-white rounded-lg text-[10px] font-bold shadow transition">Draft</button>`
+            ? `<button onclick="updateEventStatus(${evt.id}, 'draft')" class="px-3 py-1.5 bg-zinc-500 hover:bg-zinc-600 text-white rounded-lg text-[10px] font-bold shadow transition mr-1">Draft</button>`
             : '';
+          const deleteBtn = `<button onclick="deleteEvent(${evt.id}, '${evt.status}')" class="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-[10px] font-bold shadow transition"><i class="fa-solid fa-trash"></i></button>`;
 
           return `
             <tr>
@@ -2288,19 +2289,45 @@
               <td class="px-6 py-4 font-medium text-gray-700">${evt.host_name}</td>
               <td class="px-6 py-4 font-semibold text-gray-800">৳${evt.price}</td>
               <td class="px-6 py-4 font-mono font-bold text-emerald-700">${evt.booked_count} / ${evt.capacity}</td>
-              <td class="px-6 py-4 text-gray-500">${evt.event_date.split('T')[0] || evt.event_date}</td>
+              <td class="px-6 py-4 text-gray-500 text-[11px] font-medium tracking-wide">
+                ${new Date(evt.event_date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </td>
               <td class="px-6 py-4 text-center">
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${badgeColor}">${evt.status}</span>
               </td>
               <td class="px-6 py-4 text-right whitespace-nowrap">
                 ${publishBtn}
                 ${draftBtn}
+                ${deleteBtn}
               </td>
             </tr>
           `;
         }).join('');
       } catch (e) {
         toast("Error loading events", true);
+      }
+    }
+
+    async function deleteEvent(eventId, status) {
+      if (status === 'published') {
+          toast("Cannot delete a published event. Please draft it first.", true);
+          return;
+      }
+      const confirmed = await customConfirm(`Are you sure you want to permanently delete this event?`);
+      if (!confirmed) return;
+      try {
+        const res = await adminFetch(`/api/admin/events/${eventId}`, {
+          method: 'DELETE'
+        });
+        if (res.ok) {
+          toast(`Event deleted successfully ✓`);
+          loadEvents();
+        } else {
+          const data = await res.json();
+          toast(data.detail || "Failed to delete event", true);
+        }
+      } catch (e) {
+        toast("Error deleting event", true);
       }
     }
 

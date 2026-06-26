@@ -3102,6 +3102,29 @@ def update_admin_event(event_id: int, payload: dict = Body(...), x_admin_key: st
     return {"status": "success", "message": "Event status updated successfully"}
 
 
+@app.delete("/api/admin/events/{event_id}")
+def delete_admin_event(event_id: int, x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # Check if event is published
+        cursor.execute("SELECT status FROM events WHERE id = %s", (event_id,))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Event not found")
+        if row[0] == "published":
+            raise HTTPException(status_code=400, detail="Cannot delete a published event. Please unpublish it first.")
+            
+        cursor.execute("DELETE FROM events WHERE id = %s", (event_id,))
+        conn.commit()
+        cursor.close()
+    finally:
+        release_conn(conn)
+    return {"status": "success", "message": "Event deleted successfully"}
+
+
 @app.post("/api/admin/bookings/{booking_id}/transfer")
 def transfer_attendee_event(booking_id: int, payload: dict = Body(...), x_admin_key: str = Header(...)):
     require_admin(x_admin_key)

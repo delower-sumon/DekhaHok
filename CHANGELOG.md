@@ -2,6 +2,18 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-06-27] - Admin Event Deletion, Payment Method Expansion & Contact Update
+
+### Added
+- **Admin Event Deletion:** Added a DELETE endpoint (`/api/admin/events/{event_id}`) in the backend to allow administrators to permanently delete draft/unpublished events. Published events are restricted from deletion.
+- **Admin Delete Event UI:** Integrated a Trash icon delete button into the admin dashboard events table. It prompts for confirmation via `customConfirm` and handles soft-blocking deletion of published events.
+- **DBBL & Upay Payment Options:** Expanded the checkout page's payment method options by adding DBBL and Upay. Included support for validating `dbbl` in `models.py`.
+
+### Changed
+- **Support WhatsApp & Phone Number Update:** Updated the platform's support contact number from `+880 1884-477720` to `+880 1325-900906` across the `base.html` float button, SEO metadata, contact page, and `README.md`.
+- **Checkout Payment Selection UI:** Redesigned the payment selection buttons on the booking page into a grid layout to cleanly support bKash, Nagad, DBBL, and Upay options.
+- **Admin Event Date Display:** Polish event date presentation in the admin dashboard events list by formatting it using `.toLocaleString()` instead of plain string slice.
+
 ## [2026-06-27] - Bug Fixes: Host Edit Data Recall & API Memory Fix
 
 ### Fixed

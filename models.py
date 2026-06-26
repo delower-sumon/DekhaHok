@@ -24,7 +24,7 @@ class BookingCreate(BaseModel):
     preferred_location: Optional[str] = None
     preferred_meeting_point: Optional[str] = None
     gender:             Optional[str] = None
-    payment_method:     Optional[str] = None         # "bkash" or "nagad"
+    payment_method:     Optional[str] = None         # "bkash", "nagad", "dbbl", or "upay"
     payment_sender_digits: Optional[str] = None      # last 2 digits
     referred_by:        Optional[str] = None # referral code
     interests:          Optional[str] = None # Acquisition: interests
@@ -74,7 +74,7 @@ class BookingCreate(BaseModel):
     @field_validator("payment_method")
     @classmethod
     def validate_payment_method(cls, v):
-        if v is not None and v.lower() not in ("bkash", "nagad", "upay", "beta_promo"):
+        if v is not None and v.lower() not in ("bkash", "nagad", "dbbl", "upay", "beta_promo"):
             raise ValueError("Invalid payment method")
         return v.lower() if v else None
 
