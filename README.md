@@ -8,7 +8,7 @@
 ## 🌐 Official Links
 - **Website**: [dekhahok.com](https://dekhahok.com)
 - **Email**: [info@dekhahok.com](mailto:info@dekhahok.com)
-- **WhatsApp**: [+880 1884-477720](https://wa.me/8801884477720)
+- **WhatsApp**: [+880 1325-900906](https://wa.me/8801325900906)
 
 ## 📱 Connect With Us
 - **Facebook**: [facebook.com/dekhahok](https://facebook.com/dekhahok)

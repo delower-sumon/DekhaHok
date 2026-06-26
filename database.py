@@ -163,6 +163,7 @@ CREATE TABLE IF NOT EXISTS blogs (
     is_pivoted BOOLEAN DEFAULT FALSE,
     likes INTEGER DEFAULT 0,
     shares INTEGER DEFAULT 0,
+    views INTEGER DEFAULT 0,
     author TEXT DEFAULT 'Team DekhaHok',
     author_title TEXT,
     author_image_url TEXT,
@@ -191,10 +192,66 @@ def init_db():
         cursor = conn.cursor()
         cursor.execute(SCHEMA_SQL)
         
+        # New tables for marketplace transition
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(200) UNIQUE NOT NULL,
+                password_hash VARCHAR(255),
+                google_id VARCHAR(255) UNIQUE,
+                full_name VARCHAR(120) NOT NULL,
+                avatar_url TEXT,
+                phone VARCHAR(20),
+                role VARCHAR(20) NOT NULL DEFAULT 'user',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """)
+        
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS hosts (
+                id SERIAL PRIMARY KEY,
+                user_id INT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                nid_number VARCHAR(20) NOT NULL,
+                profession VARCHAR(100),
+                category VARCHAR(50) NOT NULL,
+                operating_area VARCHAR(100),
+                bio TEXT,
+                social_links JSONB DEFAULT '{}',
+                verification_status VARCHAR(20) DEFAULT 'PENDING',
+                revenue_share_pct DECIMAL(4,2) DEFAULT 0.50,
+                verified_at TIMESTAMPTZ,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """)
+        
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                id SERIAL PRIMARY KEY,
+                host_id INT REFERENCES hosts(id) ON DELETE SET NULL,
+                slug VARCHAR(250) UNIQUE NOT NULL,
+                title VARCHAR(300) NOT NULL,
+                description TEXT,
+                category VARCHAR(50) NOT NULL,
+                package_tier VARCHAR(20) NOT NULL,
+                price_per_person NUMERIC(8,2) NOT NULL DEFAULT 0.00,
+                capacity INT NOT NULL DEFAULT 10,
+                booked_count INT NOT NULL DEFAULT 0,
+                location_name VARCHAR(300),
+                location_area VARCHAR(100),
+                event_date TIMESTAMPTZ,
+                image_url TEXT,
+                included JSONB DEFAULT '[]',
+                status VARCHAR(20) DEFAULT 'draft',
+                host_payment_status VARCHAR(20) DEFAULT 'unpaid',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """)
+        
         # Migrations for existing DB
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS current_location VARCHAR(200)")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS preferred_location VARCHAR(200)")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS preferred_meeting_point VARCHAR(200)")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS host_payment_status VARCHAR(20) DEFAULT 'unpaid'")
         cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS latitude DECIMAL(10, 8)")
         cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS longitude DECIMAL(11, 8)")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_method VARCHAR(20)")
@@ -223,6 +280,13 @@ def init_db():
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS image_alt TEXT")
         cursor.execute("ALTER TABLE meetup_groups ADD COLUMN IF NOT EXISTS image_url TEXT")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS gender VARCHAR(10)")
+        cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0")
+        cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS profession VARCHAR(100)")
+        
+        # Marketplace foreign key fields for bookings
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_id INT REFERENCES events(id) ON DELETE SET NULL")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS host_id INT REFERENCES hosts(id) ON DELETE SET NULL")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS user_id INT REFERENCES users(id) ON DELETE SET NULL")
         
         # Coupons table migration
         cursor.execute("""
@@ -250,15 +314,6 @@ def init_db():
             )
         """)
         cursor.execute("INSERT INTO site_settings (key, value) VALUES ('global_discount_percent', '0') ON CONFLICT DO NOTHING")
-        
-        # Site Settings table
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS site_settings (
-                key VARCHAR(50) PRIMARY KEY,
-                value TEXT NOT NULL
-            )
-        """)
-        cursor.execute("INSERT INTO site_settings (key, value) VALUES ('global_discount_percent', '0') ON CONFLICT DO NOTHING")
 
         # User Ratings table creation moved here for robustness
         cursor.execute("""
@@ -271,6 +326,20 @@ def init_db():
                 comment      TEXT,
                 created_at   TIMESTAMPTZ DEFAULT NOW(),
                 UNIQUE (rater_id, ratee_id, group_id)
+            )
+        """)
+        
+        # Notifications table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS notifications (
+                id SERIAL PRIMARY KEY,
+                user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                type VARCHAR(50) NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                message TEXT,
+                is_read BOOLEAN DEFAULT FALSE,
+                action_url VARCHAR(255),
+                created_at TIMESTAMPTZ DEFAULT NOW()
             )
         """)
         
@@ -289,6 +358,46 @@ def init_db():
             "networking-events-dhaka"
         ]
         cursor.execute("DELETE FROM blogs WHERE slug IN %s", (tuple(legacy_slugs),))
+        
+        # Create default admin user and host
+        cursor.execute("""
+            INSERT INTO users (email, full_name, role)
+            VALUES ('team@dekhahok.com', 'DekhaHok Team', 'admin')
+            ON CONFLICT (email) DO NOTHING
+        """)
+        cursor.execute("SELECT id FROM users WHERE email = 'team@dekhahok.com'")
+        team_user_id = cursor.fetchone()[0]
+        
+        cursor.execute("""
+            INSERT INTO hosts (user_id, nid_number, category, operating_area, bio, verification_status, revenue_share_pct)
+            VALUES (%s, '0000000000', 'Creative', 'Dhaka', 'Official DekhaHok Host Account', 'VERIFIED', 0.50)
+            ON CONFLICT (user_id) DO NOTHING
+        """, (team_user_id,))
+        cursor.execute("SELECT id FROM hosts WHERE user_id = %s", (team_user_id,))
+        team_host_id = cursor.fetchone()[0]
+        
+        # Migrate legacy bookings with no event_id to default event
+        cursor.execute("SELECT COUNT(*) FROM bookings WHERE event_id IS NULL")
+        unlinked_count = cursor.fetchone()[0]
+        if unlinked_count > 0:
+            cursor.execute("""
+                INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, status)
+                VALUES (%s, 'dekhahok-circle-adda', 'DekhaHok Circle Adda', 'Casual cafe adda for meeting new friends.', 'Lifestyle', 'circle', 299.00, 10000, 'published')
+                ON CONFLICT (slug) DO NOTHING
+            """, (team_host_id,))
+            
+            cursor.execute("SELECT id FROM events WHERE slug = 'dekhahok-circle-adda'")
+            circle_event_id = cursor.fetchone()[0]
+            
+            cursor.execute("""
+                UPDATE bookings 
+                SET event_id = %s, host_id = %s 
+                WHERE event_id IS NULL
+            """, (circle_event_id, team_host_id))
+            
+            cursor.execute("SELECT COUNT(*) FROM bookings WHERE event_id = %s", (circle_event_id,))
+            event_bookings_count = cursor.fetchone()[0]
+            cursor.execute("UPDATE events SET booked_count = %s WHERE id = %s", (event_bookings_count, circle_event_id))
         
         conn.commit()
         cursor.close()

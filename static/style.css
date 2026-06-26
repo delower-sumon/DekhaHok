@@ -371,3 +371,19 @@ body {
         height: 44px !important;
     }
 }
+
+/* Category Marquee Animation */
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 1rem)); }
+}
+
+.animate-marquee {
+  animation: scroll-marquee 25s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

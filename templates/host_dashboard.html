@@ -1,0 +1,457 @@
+{% extends "base.html" %}
+
+{% block title %}Host Dashboard • DekhaHok{% endblock %}
+
+{% block extra_head %}
+<style>
+    .sidebar-scroll::-webkit-scrollbar {
+        width: 4px;
+    }
+    .sidebar-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(16, 185, 129, 0.2);
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="lg:hidden bg-white border-b px-6 py-3.5 flex justify-between items-center sticky top-[73px] z-30 shadow-sm">
+    <button onclick="toggleDashboardSidebar()"
+        class="flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase hover:text-emerald-700 border px-3 py-1.5 rounded-xl bg-zinc-50">
+        <i class="fa-solid fa-bars-staggered"></i>
+        <span>Dashboard Menu</span>
+    </button>
+    <div id="dash-mobile-active-tab" class="text-xs font-bold text-emerald-700 uppercase">Dashboard</div>
+</div>
+
+<div class="flex flex-col lg:flex-row min-h-screen relative">
+    <!-- HOST SIDEBAR -->
+    <div id="dashboard-sidebar"
+        class="hidden lg:flex fixed lg:static top-[123px] lg:top-16 left-0 w-72 h-[calc(100vh-123px)] lg:h-[calc(100vh-64px)] bg-white border-r border-zinc-100 flex-col justify-between sidebar-scroll overflow-y-auto z-40 shadow-2xl lg:shadow-none transition-all duration-300">
+        <div class="p-6">
+            <!-- Sidebar Profile -->
+            <div class="flex items-center gap-x-3 mb-8 pb-6 border-b">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg overflow-hidden border">
+                    <img id="dash-sidebar-profile-img" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <p class="font-bold text-sm text-zinc-800" id="dash-host-name">{{ user.name }}</p>
+                    <p class="text-xs text-zinc-400 font-medium">Verified Community Host</p>
+                </div>
+            </div>
+
+            <!-- Sidebar Links -->
+            <nav class="space-y-1 mb-8">
+                <div onclick="navigateHostTab(0)" id="host-tab-0"
+                    class="host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer bg-emerald-50 text-emerald-700 font-semibold transition-colors">
+                    <i class="fa-solid fa-house w-5 text-center"></i>
+                    <span class="text-sm">Dashboard</span>
+                </div>
+                <div onclick="navigateHostTab(1)" id="host-tab-1"
+                    class="host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer text-zinc-600 transition-colors">
+                    <i class="fa-solid fa-calendar w-5 text-center"></i>
+                    <span class="text-sm">My Events</span>
+                </div>
+                <div onclick="navigateHostTab(2)" id="host-tab-2"
+                    class="host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer text-zinc-600 transition-colors">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <span class="text-sm">Analytics</span>
+                </div>
+            </nav>
+
+            <!-- Onboarding Progress -->
+            <div class="mt-8">
+                <div class="text-[10px] uppercase font-bold tracking-widest text-zinc-400 mb-4">Onboarding Pipeline</div>
+                <div class="space-y-4">
+                    <div class="flex gap-x-3 items-center">
+                        <div class="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-xs text-zinc-800">Profile Verified</div>
+                            <div class="text-emerald-500 text-[10px] font-semibold">Complete</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-x-3 items-center">
+                        <div class="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-xs text-zinc-800">Setup Active Profile</div>
+                            <div class="text-emerald-500 text-[10px] font-semibold">Verified Host</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-x-3 items-center">
+                        {% if events_count > 0 %}
+                        <div class="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-xs text-zinc-800">Create Your Event</div>
+                            <div class="text-emerald-500 text-[10px] font-semibold">Complete</div>
+                        </div>
+                        {% else %}
+                        <div class="w-6 h-6 bg-zinc-100 text-zinc-400 rounded-full flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-hourglass-start text-[10px]"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-xs text-zinc-800">Create Your Event</div>
+                            <div class="text-zinc-500 text-[10px] font-semibold">Not Done Yet</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="flex gap-x-3 items-center">
+                        {% if total_earnings > 0 %}
+                        <div class="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-xs text-zinc-800">Get Paid</div>
+                            <div class="text-emerald-500 text-[10px] font-semibold">Complete</div>
+                        </div>
+                        {% else %}
+                        <div class="w-6 h-6 bg-zinc-100 text-zinc-400 rounded-full flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-hourglass-start text-[10px]"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-xs text-zinc-800">Get Paid</div>
+                            <div class="text-zinc-500 text-[10px] font-semibold">Pending Event Completion</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Host Revenue Share Card -->
+            <div class="mt-10 border-t pt-6">
+                <div class="bg-emerald-50 border border-emerald-100/50 rounded-2xl p-5 text-xs">
+                    <div class="font-bold text-emerald-800 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-percentage text-emerald-600"></i>
+                        <span>Host Revenue Share</span>
+                    </div>
+                    <div class="text-emerald-700 font-semibold mb-1 text-[11px]">{{ (host.revenue_share_pct * 100)|int }}% to Host • {{ (100 - host.revenue_share_pct * 100)|int }}% to DekhaHok</div>
+                    <p class="text-[10px] text-zinc-500 leading-relaxed">
+                        We split ticket revenue. DekhaHok handles checkout gateways, site listing, mapping search, sitemaps, SMS updates, and security check processes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOST MAIN CONTENT -->
+    <div class="flex-grow flex-1 p-4 sm:p-6 md:p-10 bg-zinc-50/50">
+        <!-- DASHBOARD HEADER -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+                <span class="text-emerald-600 text-xs font-bold tracking-wider uppercase">Overview Dashboard</span>
+                <h1 class="text-3xl font-bold text-zinc-900 mt-1">Welcome back, <span id="dash-greeting-name">{{ user.name.split(' ')[0] }}</span></h1>
+            </div>
+
+            <div class="flex items-center gap-4 flex-wrap">
+                <a href="/host/events/new" class="flex items-center gap-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 sm:px-6 h-12 rounded-full transition-all font-semibold text-sm shadow">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Create New Event</span>
+                </a>
+
+                <div class="flex items-center gap-x-3 bg-white border border-zinc-200/60 rounded-full pl-2 pr-5 h-12 shadow-sm">
+                    <img id="dash-header-avatar" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}" alt="Host Profile"
+                        class="w-8 h-8 rounded-full border border-emerald-500 object-cover flex-shrink-0">
+                    <div class="text-left leading-tight">
+                        <div id="dash-header-name" class="text-xs font-bold text-zinc-800">{{ user.name }}</div>
+                        <div id="dash-header-type" class="text-[9px] text-emerald-600 font-semibold uppercase">{{ host.profession }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            <div class="bg-white border rounded-2xl p-4 sm:p-5 shadow-sm">
+                <p class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Total Host Earnings</p>
+                <p class="text-xl sm:text-2xl font-bold text-emerald-700 mt-1">৳{{ "{:,.2f}".format(total_earnings) }}</p>
+                <span class="text-[9px] sm:text-[10px] text-emerald-500 font-semibold flex items-center gap-1 mt-3">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                    <span>Split share: {{ (host.revenue_share_pct * 100)|int }}%</span>
+                </span>
+            </div>
+            <div class="bg-white border rounded-2xl p-4 sm:p-5 shadow-sm">
+                <p class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Events Registered</p>
+                <p class="text-xl sm:text-2xl font-bold text-zinc-800 mt-1">{{ events_count }}</p>
+                <span class="text-[10px] text-zinc-400 block mt-4">Draft & Published events</span>
+            </div>
+            <div class="bg-white border rounded-2xl p-4 sm:p-5 shadow-sm">
+                <p class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">People Reached</p>
+                <p class="text-xl sm:text-2xl font-bold text-zinc-800 mt-1">{{ people_reached }}</p>
+                <span class="text-[9px] sm:text-[10px] text-emerald-500 font-semibold flex items-center gap-1 mt-3">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>Paid & active bookings</span>
+                </span>
+            </div>
+            <div class="bg-white border rounded-2xl p-4 sm:p-5 shadow-sm">
+                <p class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Host Rating</p>
+                <div class="text-xl sm:text-2xl font-bold text-zinc-800 mt-1 flex items-baseline gap-1">
+                    <span>0.0</span>
+                    <span class="text-amber-500 text-lg">★</span>
+                </div>
+                <span class="text-[10px] text-zinc-400 block mt-4">Out of verified meetups</span>
+            </div>
+        </div>
+
+        <!-- UPCOMING EVENTS LIST -->
+        <div class="mb-6 flex items-center justify-between gap-4">
+            <h2 class="font-bold text-lg sm:text-xl text-zinc-800">Your Scheduled Activities</h2>
+            <a href="/host/events/new"
+                class="text-emerald-600 hover:text-emerald-700 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                <i class="fa-solid fa-plus-circle text-sm"></i>
+                <span>Create Event</span>
+            </a>
+        </div>
+
+        <div id="host-events-list" class="space-y-4 mb-10">
+            {% if not events %}
+                <div class="bg-white border border-dashed rounded-3xl p-12 text-center text-zinc-400">
+                    <span class="text-4xl mb-3 block">🗓️</span>
+                    <p class="font-bold text-zinc-600 mb-1">No activities scheduled yet</p>
+                    <p class="text-xs max-w-sm mx-auto mb-4 text-zinc-400">Create your first experience or adda, specify seats capacity and location point, and get started.</p>
+                    <a href="/host/events/new" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl">Create New Event</a>
+                </div>
+            {% else %}
+                {% for evt in events %}
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-emerald-200 transition-colors shadow-sm">
+                        <div class="flex items-center gap-x-4">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-leaf text-emerald-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-zinc-800 flex items-center gap-2">
+                                    <span>{{ evt.title }}</span>
+                                    {% if evt.status == 'draft' %}
+                                        <span class="bg-zinc-100 text-zinc-500 font-mono text-[9px] px-2 py-0.5 rounded-full font-bold uppercase">Draft / Pending Approval</span>
+                                    {% else %}
+                                        <span class="bg-emerald-100 text-emerald-800 font-mono text-[9px] px-2 py-0.5 rounded-full font-bold uppercase">Active</span>
+                                    {% endif %}
+                                </div>
+                                <div class="text-xs text-zinc-400 font-medium">
+                                    {{ evt.event_date }} • {{ evt.formatted_location }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between md:justify-end gap-x-8 text-right">
+                            <div>
+                                <div class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider mb-1">ATTENDING</div>
+                                <div class="font-mono text-emerald-700 font-bold">{{ evt.booked_count }} / {{ evt.capacity }}</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider mb-1">EARNINGS</div>
+                                <div class="font-bold text-zinc-800">৳{{ "{:,.2f}".format(evt.revenue) }}</div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <a href="/host/events/{{ evt.id }}/edit" class="px-6 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-bold rounded-full transition-colors text-center border border-emerald-200">
+                                    EDIT
+                                </a>
+                                <button onclick="manageHostEventRegistry(parseInt('{{ evt.id }}'))" class="px-6 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[10px] sm:text-xs font-bold rounded-full transition-colors border border-zinc-200">
+                                    REGISTRY
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- REVIEWS FEED -->
+        <h2 class="font-bold text-lg sm:text-xl text-zinc-800 mb-5">Latest Attendee Reviews</h2>
+        {% if reviews %}
+        <div class="grid md:grid-cols-2 gap-4">
+            {% for r in reviews %}
+            <div class="bg-white border rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center gap-x-2.5">
+                        <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-xs font-bold text-emerald-700">
+                            {{ r.attendee_name[:2]|upper }}
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm text-zinc-800">{{ r.attendee_name }}</p>
+                            <p class="text-[10px] text-zinc-400 font-medium">Attended {{ r.event_title }}</p>
+                        </div>
+                    </div>
+                    <div class="text-amber-500 text-xs">{{ r.stars }}</div>
+                </div>
+                <p class="text-xs text-zinc-500 leading-relaxed">
+                    {{ r.comment }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white border border-zinc-100 rounded-2xl p-8 text-center text-zinc-500">
+            <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-3 text-zinc-400">
+                <i class="fa-solid fa-comment-dots text-lg"></i>
+            </div>
+            <p class="text-sm font-medium text-zinc-600">No attendee reviews yet</p>
+            <p class="text-xs text-zinc-400 mt-1">Once attendees rate their experience in match groups, their reviews will appear here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ATTENDEE REGISTRY MODAL -->
+<div onclick="if(event.target.id === 'attendee-modal') hideAttendeeModal()" id="attendee-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] items-center justify-center hidden">
+    <div onclick="event.stopImmediatePropagation()"
+        class="bg-white w-full max-w-md mx-4 rounded-3xl p-6 shadow-2xl">
+        <div class="flex justify-between items-center pb-4 border-b">
+            <div>
+                <h3 class="font-bold text-zinc-800 text-lg">Attendee Registry</h3>
+                <p class="text-xs text-zinc-400" id="attendee-modal-title">Event Name</p>
+            </div>
+            <button onclick="hideAttendeeModal()" class="text-zinc-400 hover:text-zinc-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="py-4 space-y-3.5 max-h-[60vh] overflow-y-auto" id="attendee-list-container">
+            <!-- Injected dynamically in JS -->
+        </div>
+
+        <button onclick="hideAttendeeModal()"
+            class="w-full mt-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold rounded-full transition-colors">
+            Close Registry
+        </button>
+    </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div id="toast" onclick="this.classList.add('hidden')"
+    class="fixed bottom-6 right-6 bg-emerald-800 text-white rounded-3xl shadow-2xl flex items-center gap-x-3 pl-5 pr-8 py-4 text-xs font-semibold z-[99999] hidden cursor-pointer transition-all border border-emerald-700">
+    <i class="fa-solid fa-circle-check text-emerald-300"></i>
+    <span id="toast-text">Toast message</span>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="application/json" id="events-data-json">
+    {{ events|tojson|safe }}
+</script>
+
+<script>
+    const eventsData = JSON.parse(document.getElementById('events-data-json').textContent);
+
+    function toggleDashboardSidebar() {
+        const sidebar = document.getElementById('dashboard-sidebar');
+        sidebar.classList.toggle('hidden');
+        sidebar.classList.toggle('flex');
+    }
+
+    function navigateHostTab(tabIndex) {
+        const tabsText = ["Dashboard", "My Events", "Analytics"];
+        document.getElementById('dash-mobile-active-tab').innerText = tabsText[tabIndex];
+
+        document.querySelectorAll('.host-tab').forEach((tab, index) => {
+            if (index === tabIndex) {
+                tab.className = 'host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer bg-emerald-50 text-emerald-700 font-semibold transition-colors';
+            } else {
+                tab.className = 'host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer text-zinc-600 transition-colors';
+            }
+        });
+
+        // Hide sidebar menu on mobile after choosing a tab
+        if (window.innerWidth < 1024) {
+            document.getElementById('dashboard-sidebar').classList.add('hidden');
+        }
+
+        if (tabIndex === 1) {
+            const listEl = document.getElementById('host-events-list');
+            if (listEl) {
+                listEl.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else if (tabIndex === 2) {
+            showToast("Analytics report dashboards are generated automatically. Detailed payouts, clicks and referrals charts will follow in the next release.", 'info');
+        }
+    }
+
+    // Form submission logic moved to host_event_create.html
+
+    function manageHostEventRegistry(evtId) {
+        const evt = eventsData.find(e => e.id === evtId);
+        if (!evt) return;
+
+        document.getElementById('attendee-modal-title').innerText = evt.title;
+        const container = document.getElementById('attendee-list-container');
+        container.innerHTML = '';
+
+        if (evt.attendees.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8 text-zinc-400 text-xs">
+                    <i class="fa-solid fa-users-slash text-2xl mb-2 block"></i>
+                    No attendees registered for this event yet.
+                </div>
+            `;
+        } else {
+            evt.attendees.forEach(att => {
+                const isWaitlist = att.booking_status === "waitlist" || att.booking_status === "processing";
+                const statusBadge = isWaitlist
+                    ? `<span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold ml-1">Waitlist / Pending</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-bold ml-1">${att.booking_status} / ${att.payment_status}</span>`;
+
+                const promoteBtn = isWaitlist
+                    ? `<button onclick="promoteAttendee(${evt.id}, ${att.id})" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px] transition-colors shadow-sm mr-2">Promote</button>`
+                    : "";
+
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-3.5 bg-zinc-50 rounded-2xl border text-xs gap-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-xs font-bold text-emerald-700">
+                                ${att.name.substring(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                                <p class="font-bold text-zinc-800 flex items-center">${att.name} ${statusBadge}</p>
+                                <p class="text-zinc-400 font-mono text-[9px]">${att.tracking_id} • Size: ${att.group_size}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            ${promoteBtn}
+                            <a href="https://wa.me/${att.phone.replace(/[^0-9]/g, '')}" target="_blank" class="flex items-center gap-1 text-emerald-600 font-bold hover:text-emerald-700 flex-shrink-0">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Text</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('attendee-modal').classList.remove('hidden');
+        document.getElementById('attendee-modal').classList.add('flex');
+    }
+
+    function hideAttendeeModal() {
+        document.getElementById('attendee-modal').classList.add('hidden');
+        document.getElementById('attendee-modal').classList.remove('flex');
+    }
+
+    async function promoteAttendee(evtId, bookingId) {
+        if (!confirm("Are you sure you want to promote this waitlisted attendee to confirmed status? This will occupy spots in this event capacity.")) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/events/${evtId}/bookings/${bookingId}/promote`, {
+                method: 'POST'
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showToast("Attendee promoted and ticket confirmed!");
+                hideAttendeeModal();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showToast(`Promotion failed: ${data.detail || 'check spots capacity availability'}`, 'error');
+            }
+        } catch(err) {
+            showToast("Error promoting attendee.", 'error');
+        }
+    }
+</script>
+{% endblock %}

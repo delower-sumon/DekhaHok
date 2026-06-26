@@ -14,17 +14,17 @@ class BookingCreate(BaseModel):
     phone:              str
     email:              Optional[str] = None
     age:                Optional[int] = None
-    group_size:         int
-    preferred_date:     date
-    preferred_time:     str         # "17:00" or "19:00"
-    venue_type:         str
+    group_size:         int = 1
+    preferred_date:     Optional[date] = None
+    preferred_time:     Optional[str] = None         # "17:00" or "19:00"
+    venue_type:         Optional[str] = None
     conversation_style: Optional[str] = None
     preferred_people:   Optional[str] = None
     current_location:   Optional[str] = None
     preferred_location: Optional[str] = None
     preferred_meeting_point: Optional[str] = None
     gender:             Optional[str] = None
-    payment_method:     Optional[str] = None         # "bkash" or "nagad"
+    payment_method:     Optional[str] = None         # "bkash", "nagad", "dbbl", or "upay"
     payment_sender_digits: Optional[str] = None      # last 2 digits
     referred_by:        Optional[str] = None # referral code
     interests:          Optional[str] = None # Acquisition: interests
@@ -33,25 +33,26 @@ class BookingCreate(BaseModel):
     wants_dropoff:      bool = False
     vibe:               Optional[str] = None # Career, Travel, Philosophy
     coupon_code:        Optional[str] = None
+    event_id:           Optional[int] = None
 
     @field_validator("group_size")
     @classmethod
     def validate_group_size(cls, v):
-        if v not in (2, 5):
-            raise ValueError("group_size must be 2 or 5")
+        if v <= 0:
+            raise ValueError("group_size must be positive")
         return v
 
     @field_validator("preferred_time")
     @classmethod
     def validate_preferred_time(cls, v):
-        if v not in ("17:00", "19:00"):
+        if v is not None and v not in ("17:00", "19:00"):
             raise ValueError("preferred_time must be '17:00' or '19:00'")
         return v
 
     @field_validator("venue_type")
     @classmethod
     def validate_venue_type(cls, v):
-        if v not in ("restaurant", "public_place"):
+        if v is not None and v not in ("restaurant", "public_place"):
             raise ValueError("venue_type must be 'restaurant' or 'public_place'")
         return v
 
@@ -73,7 +74,7 @@ class BookingCreate(BaseModel):
     @field_validator("payment_method")
     @classmethod
     def validate_payment_method(cls, v):
-        if v is not None and v.lower() not in ("bkash", "nagad", "upay", "beta_promo"):
+        if v is not None and v.lower() not in ("bkash", "nagad", "dbbl", "upay", "beta_promo"):
             raise ValueError("Invalid payment method")
         return v.lower() if v else None
 
@@ -88,6 +89,8 @@ class BookingCreate(BaseModel):
 class BookingResponse(BaseModel):
     tracking_id: str
     message:     str
+    auto_created_user: Optional[bool] = False
+    temp_password: Optional[str] = None
 
 
 class TrackingResponse(BaseModel):
@@ -308,3 +311,86 @@ class BlogCommentResponse(BaseModel):
     user_name: str
     comment: str
     created_at: str
+
+
+# ---------------------------------------------------------------------------
+# Host Marketplace & Authentication
+# ---------------------------------------------------------------------------
+
+class UserCreate(BaseModel):
+    email: str
+    password: str
+    full_name: str
+    phone: Optional[str] = None
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, v):
+        if not v:
+            return v
+        cleaned = re.sub(r"[\s\-\(\)]", "", v)
+        if not re.match(r"^(\+?880)?01[3-9]\d{8}$", cleaned):
+            raise ValueError("Enter a valid Bangladeshi phone number (01XXXXXXXXX)")
+        return cleaned
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class HostApply(BaseModel):
+    nid_number: str
+    profession: str
+    category: str
+    operating_area: Optional[str] = None
+    bio: Optional[str] = None
+    past_experience: Optional[str] = None
+    why_host: Optional[str] = None
+    social_links: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+    @field_validator("nid_number")
+    @classmethod
+    def validate_nid(cls, v):
+        if not re.match(r"^\d{10,17}$", v):
+            raise ValueError("NID must be between 10 and 17 digits")
+        return v
+
+class EventCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    category: str
+    package_tier: str
+    price_per_person: float
+    capacity: int = 10
+    location_name: Optional[str] = None
+    location_area: Optional[str] = None
+    event_date: str
+    included: Optional[str] = None
+    image_base64: Optional[str] = None
+
+    @field_validator("package_tier")
+    @classmethod
+    def validate_tier(cls, v):
+        if v not in ("circle", "experience", "premium"):
+            raise ValueError("package_tier must be 'circle', 'experience', or 'premium'")
+        return v
+
+    @field_validator("capacity")
+    @classmethod
+    def validate_capacity(cls, v):
+        if v <= 0:
+            raise ValueError("capacity must be positive")
+        return v
+
+    @field_validator("included")
+    @classmethod
+    def validate_included(cls, v):
+        if v:
+            try:
+                import json
+                parsed = json.loads(v)
+                if not isinstance(parsed, list):
+                    raise ValueError("must be a JSON array")
+            except json.JSONDecodeError:
+                raise ValueError("must be a valid JSON array")
+        return v

@@ -180,13 +180,13 @@
                     formView.classList.add('hidden');
                     successView.classList.remove('hidden');
                 } else {
-                    alert('আবেদন জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                    showToast('আবেদন জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
                     btn.disabled = false;
                     btn.innerText = 'আবেদন জমা দিন';
                 }
             } catch (e) {
                 console.error(e);
-                alert('ইন্টারনেট সংযোগ চেক করুন।');
+                showToast('ইন্টারনেট সংযোগ চেক করুন।', 'error');
                 btn.disabled = false;
                 btn.innerText = 'আবেদন জমা দিন';
             }

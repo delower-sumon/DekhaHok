@@ -1,0 +1,1417 @@
+{% extends "base.html" %}
+
+{% block title %}DekhaHok • দেখা হোক, হোক বন্ধুত্ব{% endblock %}
+
+{% block extra_head %}
+<!-- Leaflet Maps CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    /* Styling for the hero stage nodes and paths */
+    #connection-svg {
+        pointer-events: none;
+    }
+
+    .custom-map-marker {
+        background: none;
+        border: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ================= HOMEPAGE VIEW ================= -->
+<div id="home-view" class="view active">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden max-w-7xl mx-auto px-4 sm:px-8 pt-6 sm:pt-12 pb-6">
+        <!-- Decorative blobs -->
+        <div class="blob w-[200px] sm:w-[280px] h-[200px] sm:h-[280px] bg-emerald-500/10 top-10 left-[-50px]">
+        </div>
+        <div class="blob w-[250px] sm:w-[350px] h-[250px] sm:h-[350px] bg-emerald-500/10 top-0 right-0 -mr-24 -mt-24">
+        </div>
+        <div class="blob w-[180px] sm:w-[250px] h-[180px] sm:h-[250px] bg-emerald-600/5 bottom-0 left-0 -ml-24 -mb-24">
+        </div>
+
+        <div class="relative z-10 grid md:grid-cols-12 gap-8 md:gap-12 items-center">
+            <!-- Left Column -->
+            <div class="md:col-span-7">
+                <div
+                    class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Now live in Dhaka City
+                </div>
+                <h1
+                    class="bengali text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-6 text-zinc-900">
+                    দেখা হোক,<br><span class="text-emerald-700">হোক বন্ধুত্ব..</span>
+                </h1>
+                <p class="text-zinc-600 text-sm sm:text-base md:text-lg leading-relaxed mb-8 max-w-lg">
+                    Dhaka's human connection infrastructure layer. We coordinate photography walks, cafe crawls, and
+                    professional discussions to solve the trust deficit. Meet interesting people naturally.
+                </p>
+                <div class="flex flex-wrap gap-3 sm:gap-4 mb-8">
+                    <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
+                        class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-5 sm:px-7 py-3 rounded-full font-medium flex items-center gap-2 shadow-md text-sm">
+                        Explore Events
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                    <a href="/host/apply"
+                        class="border border-zinc-200 hover:border-emerald-500 bg-white transition-all text-zinc-800 px-5 sm:px-7 py-3 rounded-full font-medium shadow-sm text-sm inline-flex items-center justify-center">
+                        Become a Host
+                    </a>
+
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex -space-x-2">
+                        <div
+                            class="w-8 h-8 rounded-full bg-emerald-100 border-2 border-white flex items-center justify-center text-xs">
+                            📸</div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-amber-100 border-2 border-white flex items-center justify-center text-xs">
+                            ☕</div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs">
+                            💼</div>
+                    </div>
+                    <p class="text-xs sm:text-sm text-zinc-500">1,280+ Dhakaites have joined curated real-world
+                        activities</p>
+                </div>
+            </div>
+
+            <!-- Right Column - Connection SVG Hero Animation -->
+            <div class="md:col-span-5 relative h-[350px] lg:h-[450px] flex items-center justify-center">
+                <!-- Animation Stage -->
+                <div id="animation-stage" class="relative w-full h-full">
+                    <div class="absolute inset-0 opacity-10"
+                        style="background-image: radial-gradient(#10B981 1px, transparent 1px); background-size: 40px 40px;">
+                    </div>
+
+                    <svg class="absolute inset-0 w-full h-full" id="connection-svg" viewBox="0 0 100 100"
+                        preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#105745;stop-opacity:1" />
+                                <stop offset="60%" style="stop-color:#0A4732;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path id="path-1" d="" fill="none" stroke="url(#pathGradient)" stroke-width="0.5"
+                            stroke-dasharray="200" stroke-dashoffset="200" class="path-line" />
+                        <path id="path-2" d="" fill="none" stroke="url(#pathGradient)" stroke-width="0.5"
+                            stroke-dasharray="200" stroke-dashoffset="200" class="path-line" />
+                        <path id="path-3" d="" fill="none" stroke="url(#pathGradient)" stroke-width="0.5"
+                            stroke-dasharray="200" stroke-dashoffset="200" class="path-line" />
+                    </svg>
+
+                    <div id="node-1"
+                        class="absolute w-8 h-8 bg-green-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                    </div>
+                    <div id="node-2"
+                        class="absolute w-8 h-8 bg-pink-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                    </div>
+                    <div id="node-3"
+                        class="absolute w-8 h-8 bg-green-500 rounded-full z-20 transition-all duration-1000 opacity-0">
+                    </div>
+
+                    <div id="central-venue"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 opacity-0 scale-50 transition-all duration-700">
+                        <div class="bg-white p-6 rounded-3xl shadow-2xl border-2 border-emerald-100 text-center w-56">
+                            <div
+                                class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3 overflow-hidden">
+                                <img id="venue-event-img" src="" alt=""
+                                    class="w-full h-full object-cover rounded-full hidden">
+                                <i id="venue-map-pin" data-lucide="map-pin" class="w-6 h-6 text-emerald-700"></i>
+                            </div>
+                            <p class="text-[10px] uppercase tracking-widest text-emerald-600 font-bold">Top Experience
+                            </p>
+                            <p class="font-bold text-gray-800 text-lg"></p>
+                            <p class="text-xs text-gray-400">Friday, 5:00 PM</p>
+                            <div class="flex justify-center -space-x-2 mt-4">
+                                <div
+                                    class="w-8 h-8 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-xs">
+                                    📸</div>
+                                <div
+                                    class="w-8 h-8 rounded-full border-2 border-white bg-amber-100 flex items-center justify-center text-xs">
+                                    ☕</div>
+                                <div
+                                    class="w-8 h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-xs">
+                                    💼</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trust Bar -->
+        <div
+            class="mt-6 bg-white/60 border border-zinc-200/50 rounded-2xl py-4 px-4 text-center text-xs text-zinc-500 flex items-center justify-center gap-x-6 sm:gap-x-8 flex-wrap gap-y-2.5">
+            <div class="flex items-center gap-x-2">
+                <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+                <span>Verified Community Hosts</span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <i class="fa-solid fa-users text-emerald-600"></i>
+                <span>Small Curated Groups (Max 12)</span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <i class="fa-solid fa-heart text-emerald-600"></i>
+                <span>Taas (Trust as a Service) layer</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Bar -->
+    <div class="bg-white border-y border-zinc-100 overflow-hidden relative">
+        <div id="secondary-navbar"
+            class="bg-white py-3.5 text-xs flex items-center gap-x-4 sm:gap-x-6 text-zinc-500 font-medium animate-marquee px-4 w-max">
+            <button onclick="filterCategory('all')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 bg-zinc-100 rounded-full text-emerald-700 font-bold"
+                id="filter-all">
+                <i class="fa-solid fa-compass"></i>
+                <span>All Events</span>
+            </button>
+            <button onclick="filterCategory('creative')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-creative">
+                <span>🎨</span>
+                <span>Creative</span>
+            </button>
+            <button onclick="filterCategory('professional')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-professional">
+                <span>💼</span>
+                <span>Professional</span>
+            </button>
+            <button onclick="filterCategory('lifestyle')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-lifestyle">
+                <span>🌱</span>
+                <span>Lifestyle</span>
+            </button>
+            <button onclick="filterCategory('travel')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-travel">
+                <span>✈️</span>
+                <span>Travel</span>
+            </button>
+            <button onclick="filterCategory('cafe')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-cafe">
+                <span>☕</span>
+                <span>Cafe Explorer</span>
+            </button>
+            <button onclick="filterCategory('arts')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-arts">
+                <span>🖼️</span>
+                <span>Arts & Crafts</span>
+            </button>
+            <button onclick="filterCategory('tech')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-tech">
+                <span>🚀</span>
+                <span>Tech & Startups</span>
+            </button>
+            <button onclick="filterCategory('photography')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-photography">
+                <span>📸</span>
+                <span>Photography Walk</span>
+            </button>
+            <button onclick="filterCategory('books')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-books">
+                <span>📚</span>
+                <span>Book Discussion</span>
+            </button>
+            <button onclick="filterCategory('chess')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-chess">
+                <span>♟️</span>
+                <span>Chess</span>
+            </button>
+            <button onclick="filterCategory('city')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-city">
+                <span>🗺️</span>
+                <span>City Guide</span>
+            </button>
+            <button onclick="filterCategory('movies')"
+                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
+                id="filter-movies">
+                <span>🎬</span>
+                <span>Movies</span>
+            </button>
+        </div>
+        <script>
+            // Duplicate category bar for seamless marquee
+            const nav = document.getElementById('secondary-navbar');
+            nav.innerHTML += nav.innerHTML;
+        </script>
+    </div>
+
+    <!-- Curated Experiences Catalog -->
+    <section id="catalog-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50">
+        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+            <div>
+                <span
+                    class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Experiences</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900">Events & Experiences</h2>
+            </div>
+
+            <div
+                class="flex items-center gap-x-2 sm:gap-x-3 bg-white border border-zinc-200 rounded-full p-1 shadow-sm">
+                <!-- Dropdown -->
+                <div class="relative pl-1 hidden sm:block">
+                    <select id="area-filter" onchange="setAreaFilter(this.value)"
+                        class="bg-transparent text-zinc-600 text-xs font-bold pl-3 pr-7 py-1 outline-none cursor-pointer appearance-none">
+                        <option value="all">📍 All Areas</option>
+                        <option value="Gulshan">Gulshan</option>
+                        <option value="Banani">Banani</option>
+                        <option value="Dhanmondi">Dhanmondi</option>
+                        <option value="Mirpur">Mirpur</option>
+                        <option value="Uttara">Uttara</option>
+                        <option value="Baily Road">Baily Road</option>
+                        <option value="Bashundhara">Bashundhara</option>
+                    </select>
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </div>
+                </div>
+
+                <div class="hidden sm:block w-[1px] h-4 bg-zinc-200"></div>
+
+                <div class="flex items-center gap-x-1">
+                    <button onclick="setTimeFilter('all')" id="time-all"
+                        class="bg-emerald-100 text-emerald-700 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all">All
+                        Time</button>
+                    <button onclick="setTimeFilter('weekend')" id="time-weekend"
+                        class="text-zinc-500 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold rounded-full transition-all">This
+                        Weekend</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Catalog Event Cards Grid -->
+        <div id="events-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamically injected via loadEvents() -->
+        </div>
+
+        <div id="no-events-view"
+            class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
+            <span class="text-4xl">🧭</span>
+            <h3 class="font-bold mt-4 text-zinc-800">No events found</h3>
+            <p class="text-zinc-400 text-xs mt-1">Please select another category or check back later!</p>
+        </div>
+    </section>
+
+    <!-- Ticket Status Tracker Section -->
+    <section id="status-tracking-view" class="bg-white border-t border-b border-zinc-100 py-6 relative">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <div class="bg-zinc-50/80 p-6 md:p-10 rounded-[2.5rem] border border-zinc-100 shadow-sm">
+                <div class="flex items-center justify-center gap-3 mb-6">
+                    <div class="w-11 h-11 bg-emerald-50 rounded-2xl flex items-center justify-center">
+                        <i class="fa-solid fa-location-dot text-emerald-700 text-xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <h2 class="text-2xl font-bold text-zinc-900">Track Booking Status</h2>
+                        <p class="text-xs text-zinc-500">Check meeting point, confirm slots, and chat with members.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2 relative">
+                    <input id="trackingInput" type="text" placeholder="Enter DH-XXXXXXXX tracking code..."
+                        class="flex-1 border-2 border-zinc-200/80 bg-white rounded-2xl px-6 py-3.5 font-mono text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                    <button onclick="checkBookingStatus()"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-2xl font-bold text-sm whitespace-nowrap shadow-md transition-all active:scale-95">
+                        Track Ticket
+                    </button>
+                </div>
+
+                <!-- tracking result container -->
+                <div id="trackingResult" class="hidden text-left mt-8 space-y-4">
+                    <!-- Loaded dynamically via checkBookingStatus() -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Packages Section -->
+    <section id="packages" class="bg-emerald-50/30 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="text-center mb-12">
+                <span
+                    class="px-3.5 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full uppercase">Packages</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-zinc-900 mt-3">Simple,
+                    Activity-focused Pricing</h2>
+                <p class="text-zinc-500 text-sm max-w-lg mx-auto">No subscriptions. Pay as you go. Verified hosts and
+                    security included.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- Package 1 -->
+                <div
+                    class="card-hover bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/60 flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-black text-zinc-400 uppercase tracking-wider mb-2">DekhaHok Circle</p>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-4xl font-bold text-zinc-900">৳299</span>
+                            <span class="text-zinc-400 text-sm">/person</span>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Casual adda, coffee & public tea meetups</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Curated small groups</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
+                        class="w-full border border-zinc-200 hover:border-emerald-600 text-zinc-700 hover:text-emerald-700 py-3 rounded-full font-bold transition-all text-xs uppercase tracking-wider">Explore
+                        Circle</button>
+                </div>
+
+                <!-- Package 2 -->
+                <div
+                    class="card-hover bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-600 shadow-lg relative flex flex-col justify-between">
+                    <span
+                        class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider">Most
+                        Popular</span>
+                    <div>
+                        <p class="text-xs font-black text-emerald-600 uppercase tracking-wider mb-2 mt-2">DekhaHok
+                            Experience</p>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-4xl font-bold text-zinc-900">৳499</span>
+                            <span class="text-zinc-400 text-sm">/person</span>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Themed walks (Photography, Cafe trails, film discussions)</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Curated matched groups</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Dedicated host & refreshments included</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-full font-bold transition-all text-xs shadow-md uppercase tracking-wider">Explore
+                        Experiences</button>
+                </div>
+
+                <!-- Package 3 -->
+                <div
+                    class="card-hover bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/60 flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-black text-zinc-400 uppercase tracking-wider mb-2">Premium Experience</p>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-4xl font-bold text-zinc-900">৳999+</span>
+                            <span class="text-zinc-400 text-sm">/person</span>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Exclusive restaurants, workshops, day trips</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Transportation, complete entries, host fee included</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
+                        class="w-full border border-zinc-200 hover:border-emerald-600 text-zinc-700 hover:text-emerald-700 py-3 rounded-full font-bold transition-all text-xs uppercase tracking-wider">Explore
+                        Premium</button>
+                </div>
+            </div>
+
+            <!-- Passport Membership -->
+            <div
+                class="mt-16 max-w-4xl mx-auto bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+                <div class="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <span
+                            class="bg-white/20 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">Coming
+                            Soon</span>
+                        <h3 class="text-2xl md:text-3xl font-bold mb-3 mt-3">DekhaHok Passport</h3>
+                        <p class="text-emerald-50 text-sm mb-6">A monthly connection passport for regular explorers.
+                            Early bookings and discounts.</p>
+                        <ul class="space-y-2 text-xs text-emerald-100">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-300"></i> 1
+                                free experience meetup/month</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-300"></i>
+                                Priority booking on filling events</li>
+                        </ul>
+                    </div>
+                    <div class="md:text-right">
+                        <div
+                            class="inline-block bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-left">
+                            <p class="text-emerald-100 text-[10px] uppercase tracking-wider font-semibold">Monthly
+                                Membership</p>
+                            <p class="text-4xl font-bold my-2 text-white">৳499</p>
+                            <button onclick="showToast('Passport Membership registration coming soon!', 'info')"
+                                class="w-full bg-white text-emerald-700 hover:bg-zinc-100 transition-all py-2.5 rounded-full font-bold mt-3 text-xs shadow">Get
+                                Passport</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaflet Map Integration -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-8 py-16 bg-white border-t border-zinc-100">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-zinc-900 tracking-tight">Active Connection Hubs</h2>
+            <p class="text-zinc-500 text-sm mt-1">Explore verified cafes and meeting spaces across Dhaka.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div id="map" class="lg:col-span-8 h-[400px] rounded-3xl border border-zinc-100 shadow-sm z-10"></div>
+            <div class="lg:col-span-4 bg-zinc-50 rounded-3xl p-6 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <h3 class="font-bold text-zinc-800 text-lg">Dhaka Network Coverage</h3>
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-zinc-500 text-sm">Meeting Areas</span>
+                        <span id="stat-areas" class="font-black text-emerald-700 text-base">8+</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-zinc-500 text-sm">Active Cafes / Places</span>
+                        <span id="stat-points" class="font-black text-emerald-700 text-base">Loading...</span>
+                    </div>
+                </div>
+                <div class="mt-6 border-t border-zinc-200 pt-6">
+                    <p class="text-xs text-zinc-400 italic">Select any map pin to find location coordinates on Google
+                        Maps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Blogs Section (Separate layout but previews) -->
+    <section class="bg-zinc-50 py-16 border-t border-zinc-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <span
+                        class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Articles</span>
+                    <h2 class="text-3xl font-bold text-zinc-900 mt-2">Latest from DekhaHok</h2>
+                </div>
+                <a href="/blog"
+                    class="text-emerald-700 hover:text-emerald-800 font-bold text-xs uppercase tracking-wider">Read All
+                    Articles &rarr;</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% for b in blogs %}
+                <a href="/blog/{{ b.slug }}"
+                    class="card-hover bg-white rounded-3xl border border-zinc-200/50 overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-44 overflow-hidden relative bg-zinc-100">
+                            {% if b.image %}
+                            <img src="{{ b.image }}" alt="{{ b.image_alt or b.title }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            {% else %}
+                            <div
+                                class="w-full h-full flex items-center justify-center text-emerald-800 bg-emerald-50 text-2xl font-bold">
+                                🌱</div>
+                            {% endif %}
+                            {% if b.badge %}
+                            <span
+                                class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">{{
+                                b.badge }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="p-6">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{{ b.date
+                                }}</span>
+                            <h3
+                                class="font-bold text-zinc-800 text-base mt-2 group-hover:text-emerald-700 transition line-clamp-2 leading-tight">
+                                {{ b.title }}</h3>
+                            <p class="text-zinc-500 text-xs mt-2 line-clamp-3 leading-relaxed">{{ b.description }}</p>
+                        </div>
+                    </div>
+                    <div
+                        class="p-6 pt-0 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400 mt-4">
+                        <span>By {{ b.author }}</span>
+                        <span class="text-emerald-700 font-bold group-hover:underline">Read More</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Support CTA -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-8 py-20 text-center">
+        <span
+            class="text-xs uppercase tracking-widest font-black bg-zinc-100 text-zinc-500 px-4 py-2 rounded-full">Build
+            Connection</span>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-zinc-900 mt-6">Earn by hosting experiences
+        </h2>
+        <p class="text-zinc-500 text-sm max-w-2xl mx-auto mb-8">Share your passion, capture stunning walks, or organize
+            book discussions. Keep creative control, receive a 50/50 revenue share, and let us handle payment ledger
+            entries, attendee waitlists, and safety logistics.</p>
+        <a href="/host/apply"
+            class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-8 py-4 rounded-full font-bold text-base shadow-md inline-flex items-center justify-center">
+            Apply to Host Now
+        </a>
+        <p class="mt-6 text-xs text-zinc-400 italic">"We build the trust layer. You create the experience."</p>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-16 bg-white relative overflow-hidden border-t border-zinc-100">
+        <div class="max-w-3xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-8">
+                <span class="inline-block text-xs font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1 mb-4">সাধারণ জিজ্ঞাসা</span>
+                <h2 class="text-3xl font-black text-zinc-900 mb-2">জিজ্ঞাসা</h2>
+                <p class="text-zinc-500">আপনার মনে থাকা সাধারণ কিছু প্রশ্নের উত্তর।</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 (Expanded by default) -->
+                <div
+                    class="faq-card bg-white rounded-[2rem] border border-emerald-100 shadow-xl shadow-emerald-50/30 overflow-hidden transition-all duration-500">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-users w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-lg font-bold text-zinc-900">"দেখা হোক" আসলে কী?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-up w-5 h-5 text-zinc-400 transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content transition-all duration-500" style="max-height: 1000px; opacity: 1;">
+                        <div class="px-6 pb-6 space-y-4">
+                            <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                                <p class="text-sm text-emerald-800 leading-relaxed">"দেখা হোক" হলো একটি মার্কেটপ্লেস
+                                    যেখানে আপনি যাচাইকৃত লোকাল হোস্টদের দ্বারা আয়োজিত চমৎকার সব এক্সপেরিয়েন্স এবং মিটআপ
+                                    খুঁজে পেতে ও বুক করতে পারবেন।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-user-check w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700">আমি কার সাথে দেখা করছি তা কীভাবে নিশ্চিত
+                                হবো?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6 space-y-4">
+                            <p class="text-sm text-zinc-500 leading-relaxed">প্রতিটি হোস্টকে একটি কঠোর NID ভেরিফিকেশন
+                                প্রক্রিয়ার মধ্য দিয়ে যেতে হয়। যাচাইকরণ সম্পন্ন হলেই তারা "Verified Host" ব্যাজ পান।
+                                এছাড়াও, আমরা তাদের প্রোফাইলে অন্যান্য ইউজারদের আসল রেটিং ও রিভিউ প্রকাশ করি।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-location-dot w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700">ভেন্যুগুলো কি নিরাপদ?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-zinc-500 leading-relaxed">হ্যাঁ। সকল এক্সপেরিয়েন্স অত্যন্ত সতর্কতার
+                                সাথে নির্বাচিত পাবলিক স্পেস বা স্বনামধন্য ভেন্যুতে অনুষ্ঠিত হয় যাতে অংশগ্রহণকারীদের
+                                সর্বোচ্চ নিরাপত্তা নিশ্চিত করা যায়।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-ticket w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700">বুকিং করার পর স্ট্যাটাস কীভাবে চেক
+                                করবো?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-zinc-500 leading-relaxed">বুকিং সম্পন্ন হওয়ার সাথে সাথে আপনি একটি
+                                ইউনিক Tracking ID পাবেন। হোমপেজে এই আইডি প্রবেশ করলেই আপনার বুকিংটি কোন পর্যায়ে আছে তা
+                                রিয়েল-টাইমে দেখতে পারবেন।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 (Refund) -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-rotate-left w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700">আমি কি টাকা ফেরত নিতে পারবো? (Refund
+                                Policy)</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="px-6 pb-6">
+                            <p class="text-sm text-zinc-500 leading-relaxed">হ্যাঁ, যদি হোস্ট ইভেন্টটি বাতিল করেন বা
+                                কোনো কারণে আপনার বুকিং বাতিল হয়ে যায়, তবে আপনি ৩ কার্যদিবসের মধ্যে ১০০% সম্পূর্ণ
+                                রিফান্ড পাবেন।</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ================= GROUP CHAT ACCESS MODAL ================= -->
+<div id="chatAccessModal" class="fixed inset-0 bg-black/60 z-[9999] hidden items-center justify-center p-4">
+    <div id="chatAccessModalContent"
+        class="bg-white rounded-3xl p-6 max-w-sm w-full border shadow-2xl transform scale-90 opacity-0 transition-all duration-300 text-center space-y-4">
+        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto text-emerald-700">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-zinc-800 text-lg leading-tight">Verification Required</h4>
+            <p class="text-xs text-zinc-400 mt-1">Please enter your Ticket Tracking ID to access this meetup chat.</p>
+        </div>
+        <input type="text" id="chatAccessInput" placeholder="DH-XXXXXXXX"
+            class="w-full text-center py-3 border rounded-xl font-mono text-sm focus:outline-none focus:border-emerald-500 shadow-inner uppercase">
+        <p id="chatAccessError" class="text-[10px] text-rose-500 font-bold hidden"></p>
+        <div class="flex gap-2 pt-2">
+            <button onclick="closeChatAccessModal()"
+                class="flex-1 py-2.5 border rounded-xl hover:bg-zinc-50 text-zinc-500 font-bold text-xs uppercase">Cancel</button>
+            <button onclick="submitChatAccess()"
+                class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow uppercase">Verify</button>
+        </div>
+        <button onclick="toggleForgotIdHelp()"
+            class="text-[10px] text-emerald-600 hover:underline block mx-auto mt-2">Forgot Ticket ID?</button>
+        <p id="forgotIdHelp" class="text-[9px] text-zinc-400 hidden mt-1 leading-normal">Your Tracking ID is displayed
+            on the success screen during checkout, and dispatched via manual SMS/WhatsApp logs. Contact support if lost.
+        </p>
+    </div>
+</div>
+
+<!-- ================= GROUP CHAT OVERLAY DRAWER ================= -->
+<div id="chatOverlay" class="fixed inset-0 bg-black/40 z-[9998] hidden" onclick="closeChat()"></div>
+<div id="chatDrawer"
+    class="fixed bottom-0 right-0 left-0 sm:left-auto sm:w-[450px] bg-white h-[85vh] sm:h-screen rounded-t-[2.5rem] sm:rounded-l-[2.5rem] sm:rounded-t-none shadow-2xl z-[9999] transform translate-y-full transition-transform duration-300 flex flex-col justify-between">
+    <!-- Header -->
+    <div
+        class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50 rounded-t-[2.5rem] sm:rounded-tl-[2.5rem] sm:rounded-tr-none">
+        <div class="flex items-center gap-3">
+            <div
+                class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-700 shadow-inner">
+                <i data-lucide="message-square" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-zinc-800 text-base leading-tight">Group Chat Room</h4>
+                <p class="text-[10px] text-zinc-400 mt-0.5">Connect with your matched meetup group members.</p>
+            </div>
+        </div>
+        <button onclick="closeChat()"
+            class="w-8 h-8 flex items-center justify-center border rounded-xl hover:bg-white text-zinc-400 hover:text-zinc-600 transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+    </div>
+
+    <!-- Message list -->
+    <div id="chatMessages" class="p-6 flex-grow overflow-y-auto space-y-4 bg-zinc-50/30">
+        <!-- Loaded via loadChatMessages() -->
+    </div>
+
+    <!-- Message input -->
+    <div class="p-4 border-t bg-white flex items-center gap-2">
+        <input type="text" id="chatInputMsg" placeholder="Type a message..."
+            class="flex-1 px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+            onkeydown="if(event.key==='Enter') sendChatMsg()">
+        <button onclick="sendChatMsg()"
+            class="w-11 h-11 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center shadow transition active:scale-95">
+            <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // ── Hero Canvas Nodes Connecting Animation ─────────────────────────────────────
+    function startMotion() {
+        const stage = document.getElementById('animation-stage');
+        if (!stage) return;
+        const nodes = [1, 2, 3].map(i => document.getElementById(`node-${i}`));
+        const paths = [1, 2, 3].map(i => document.getElementById(`path-${i}`));
+        const venue = document.getElementById('central-venue');
+        const venueName = venue.querySelector('p.font-bold');
+
+        const venueNames = ["📸 Photography Walk", "✈️ Travel to Cox's Bazar", "♟️ DekhaHok Circle Event", "☕ Cafe Explorer", "📚 Book Discussion"];
+        let venueIndex = 0;
+
+        const reset = () => {
+            venue.style.opacity = '0';
+            venue.style.transform = 'translate(-50%, -50%) scale(0.5)';
+            nodes.forEach(n => {
+                n.style.opacity = '0';
+                n.style.transitionDuration = '0s'; // Instant reset
+                n.style.transform = 'scale(1)';
+            });
+            paths.forEach(p => {
+                p.style.transitionDuration = '0s'; // Instant reset
+                p.style.strokeDashoffset = '200';
+            });
+        };
+
+        const venueImg = document.getElementById('venue-event-img');
+        const venuePinIcon = document.getElementById('venue-map-pin');
+
+        const animate = () => {
+            if (!venueName) return;
+
+            // Populate card from live events if available, else fall back to static names
+            const liveEvents = (typeof allEvents !== 'undefined' && allEvents.length > 0) ? allEvents : null;
+            if (liveEvents) {
+                const ev = liveEvents[venueIndex % liveEvents.length];
+                venueName.textContent = ev.title || venueNames[venueIndex % venueNames.length];
+                if (ev.image_url && venueImg && venuePinIcon) {
+                    venueImg.src = ev.image_url;
+                    venueImg.classList.remove('hidden');
+                    venuePinIcon.style.display = 'none';
+                }
+            } else {
+                venueName.textContent = venueNames[venueIndex % venueNames.length];
+            }
+            venueIndex = (venueIndex + 1) % Math.max(venueNames.length, (liveEvents ? liveEvents.length : venueNames.length));
+
+            const starts = [
+                { l: '10%', t: '20%', d: 'M 10 20 Q 20 50 50 50' },
+                { l: '85%', t: '15%', d: 'M 85 15 Q 70 30 50 50' },
+                { l: '70%', t: '85%', d: 'M 70 85 Q 60 70 50 50' }
+            ];
+
+            // Set initial positions instantly
+            starts.forEach((pos, i) => {
+                nodes[i].style.left = pos.l;
+                nodes[i].style.top = pos.t;
+                paths[i].setAttribute('d', pos.d);
+            });
+
+            // Force reflow
+            void stage.offsetWidth;
+
+            // Start animation
+            starts.forEach((pos, i) => {
+                nodes[i].style.transitionDuration = '1.5s';
+                nodes[i].style.opacity = '1';
+                paths[i].style.transitionDuration = '1.5s';
+            });
+
+            // Move nodes and lines simultaneously
+            setTimeout(() => {
+                paths.forEach(p => p.style.strokeDashoffset = '0');
+                nodes.forEach(n => { n.style.left = '48%'; n.style.top = '48%'; });
+            }, 50);
+
+            // Once they meet in the middle
+            setTimeout(() => {
+                nodes.forEach(n => n.style.opacity = '0');
+                venue.style.opacity = '1';
+                venue.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 1600);
+
+            // Reset and loop
+            setTimeout(() => { reset(); setTimeout(animate, 500); }, 5000);
+        };
+
+        reset();
+        animate();
+    }
+
+
+    // ── Catalog Events Management ───────────────────────────────────────────────────
+    let allEvents = [];
+    let displayedEvents = [];
+    let currentCategory = 'all';
+    let currentTimeFilter = 'all';
+    let currentArea = 'all';
+
+    async function loadEvents() {
+        try {
+            const res = await fetch('/api/events');
+            allEvents = await res.json();
+            applyFilters();
+        } catch (err) {
+            console.error("Failed to load catalog events:", err);
+        }
+    }
+
+    function filterCategory(cat) {
+        currentCategory = cat;
+        // style changes
+        const buttons = document.querySelectorAll('#secondary-navbar button');
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-zinc-100', 'text-emerald-700', 'font-bold');
+            btn.classList.add('hover:text-emerald-700', 'text-zinc-500');
+        });
+
+        // Handle duplicated IDs gracefully by using attribute selector
+        const activeBtns = document.querySelectorAll(`[id="filter-${cat}"]`);
+        activeBtns.forEach(activeBtn => {
+            activeBtn.classList.remove('hover:text-emerald-700', 'text-zinc-500');
+            activeBtn.classList.add('bg-zinc-100', 'text-emerald-700', 'font-bold');
+        });
+        applyFilters();
+    }
+
+    function setTimeFilter(filter) {
+        currentTimeFilter = filter;
+        const btnAll = document.getElementById('time-all');
+        const btnWk = document.getElementById('time-weekend');
+        if (filter === 'all') {
+            btnAll.classList.add('bg-emerald-100', 'text-emerald-700');
+            btnWk.classList.remove('bg-emerald-100', 'text-emerald-700');
+            btnWk.classList.add('text-zinc-500');
+        } else {
+            btnWk.classList.add('bg-emerald-100', 'text-emerald-700');
+            btnAll.classList.remove('bg-emerald-100', 'text-emerald-700');
+            btnAll.classList.add('text-zinc-500');
+        }
+        applyFilters();
+    }
+
+    function setAreaFilter(area) {
+        currentArea = area;
+        applyFilters();
+    }
+
+    function applyFilters() {
+        let filtered = [...allEvents];
+
+        // Category Filter
+        if (currentCategory !== 'all') {
+            filtered = filtered.filter(e => e.category.toLowerCase() === currentCategory.toLowerCase());
+        }
+
+        // Area Filter
+        if (currentArea !== 'all') {
+            filtered = filtered.filter(e => e.location_area && e.location_area.toLowerCase() === currentArea.toLowerCase());
+        }
+
+        // Time Filter (Weekend: Friday or Saturday)
+        if (currentTimeFilter === 'weekend') {
+            filtered = filtered.filter(e => {
+                if (!e.event_date) return false;
+                const d = new Date(e.event_date);
+                const day = d.getDay(); // 5 = Friday, 6 = Saturday
+                return day === 5 || day === 6;
+            });
+        }
+
+        displayedEvents = filtered;
+        renderCatalogGrid(displayedEvents);
+    }
+
+    function renderCatalogGrid(events) {
+        const grid = document.getElementById('events-grid');
+        const noEvents = document.getElementById('no-events-view');
+        grid.innerHTML = '';
+
+        if (events.length === 0) {
+            noEvents.classList.remove('hidden');
+            return;
+        }
+        noEvents.classList.add('hidden');
+
+        events.forEach(e => {
+            const spotsLeft = e.capacity - e.booked_count;
+            const isSoldOut = spotsLeft <= 0;
+            const badgeClass = isSoldOut ? 'bg-zinc-100 text-zinc-500 border-zinc-200' : (spotsLeft <= 3 ? 'bg-rose-50 text-rose-700 border-rose-100' : 'bg-emerald-50 text-emerald-800 border-emerald-100');
+            const badgeText = isSoldOut ? 'Waitlist' : (spotsLeft <= 3 ? 'Filling Fast' : 'Spots Available');
+
+            let dateStr = 'TBA';
+            if (e.event_date) {
+                const d = new Date(e.event_date);
+                let h = d.getHours();
+                const ampm = h >= 12 ? 'Pm' : 'Am';
+                h = h % 12 || 12;
+                dateStr = d.toLocaleString('en-US', { month: 'long' }) + ' ' + d.getDate() + ', ' + h + ampm;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'event-card bg-white rounded-3xl border border-zinc-200/50 shadow-sm overflow-hidden flex flex-col justify-between group cursor-pointer hover:shadow-md transition-all';
+            card.onclick = () => openBooking(e.id);
+            card.innerHTML = `
+                <div>
+                    <!-- Image -->
+                    <div class="h-48 relative bg-zinc-100 overflow-hidden">
+                        <img src="${e.image_url || 'https://picsum.photos/seed/' + e.id + '/600/400'}" alt="${e.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">${e.package_tier}</span>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="p-5 space-y-3">
+                        <div class="flex items-center justify-end mb-1">
+                            <span class="text-[10px] text-zinc-400 font-bold font-mono">${dateStr}</span>
+                        </div>
+                        <h3 class="font-bold text-zinc-800 text-base leading-tight line-clamp-2">${e.title}</h3>
+                        <p class="text-zinc-500 text-xs line-clamp-2 leading-relaxed">${e.description || ''}</p>
+                        
+                        <!-- Host badge & Event Capacity -->
+                        <div class="flex items-center justify-between pt-2 mt-2 border-t border-zinc-50">
+                            <div class="flex items-center gap-2">
+                                <img src="${e.host_avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + e.host_name}" alt="${e.host_name}" class="w-6 h-6 rounded-full object-cover border">
+                                <span class="text-[10px] font-bold text-zinc-600 truncate max-w-[100px]">By ${e.host_name.split(' ')[0]}</span>
+                            </div>
+                            <span class="px-2.5 py-1 border text-[9px] font-black rounded-xl uppercase tracking-tight shadow-sm ${badgeClass}">
+                                ${badgeText} &bull; ${e.booked_count}/${e.capacity}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Checkout CTA -->
+                <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
+                    <span class="font-black text-emerald-800 text-base">৳${Math.round(e.price_per_person)}</span>
+                    <button onclick="event.stopPropagation(); openBooking(${e.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow active:scale-95 uppercase">
+                        ${isSoldOut ? 'Join Waitlist' : 'Book Now'}
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // ── Interactive Booking Checkout Flow ──────────────────────────────────────────
+    function openBooking(eventId) {
+        if (IS_LOGGED_IN) {
+            window.location.href = "/booking/" + eventId;
+        } else {
+            openAuthModal("/booking/" + eventId);
+        }
+    }
+
+    // ── Ticket Status Tracking ─────────────────────────────────────────────────────
+    async function checkBookingStatus() {
+        const inputVal = document.getElementById('trackingInput').value.trim();
+        const resultEl = document.getElementById('trackingResult');
+        if (!inputVal) return;
+
+        resultEl.innerHTML = '<p class="text-zinc-400 font-bold text-center py-6">Searching booking record...</p>';
+        resultEl.classList.remove('hidden');
+
+        try {
+            const res = await fetch(`/api/bookings/track/${inputVal}`);
+            if (!res.ok) {
+                const err = await res.json();
+                resultEl.innerHTML = `<div class="p-6 text-center text-rose-500 font-bold bg-rose-50 rounded-2xl border border-rose-100">❌ ${err.detail || 'Ticket not found.'}</div>`;
+                return;
+            }
+            const data = await res.json();
+
+            // Build Status stepper indices
+            const steps = ["processing", "confirmed", "place", "completed"];
+            let activeIdx = steps.indexOf(data.booking_status.toLowerCase());
+            if (activeIdx === -1) activeIdx = 0; // fallback
+
+            // Stepper HTML builder
+            const progressPct = (activeIdx / 3) * 100;
+            const isVenueRevealed = data.booking_status.toLowerCase() === 'confirmed' || data.booking_status.toLowerCase() === 'completed';
+
+            let groupMembersHtml = '';
+            if (data.group_members && data.group_members.length > 0) {
+                groupMembersHtml = `
+                    <div class="mt-6 border-t border-zinc-100 pt-6">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-zinc-400 mb-3">Matched Group Friends</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            ${data.group_members.map(m => `
+                                <div class="bg-zinc-50 border p-4 rounded-2xl flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">⭐</div>
+                                        <div>
+                                            <p class="text-xs font-bold text-zinc-800 leading-tight">${m.name}</p>
+                                            <p class="text-[9px] text-zinc-400 mt-0.5">Verified</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-[10px] text-zinc-500 font-bold">Age: ${m.age || '—'}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            resultEl.innerHTML = `
+                <div class="bg-white border rounded-[2rem] p-6 space-y-6 mt-4 shadow-sm animate-in fade-in slide-in-from-bottom-3 duration-500">
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <div>
+                            <span class="text-[9px] font-black text-emerald-700 uppercase tracking-widest leading-none">Ticket Status Tracker</span>
+                            <h3 class="font-bold text-zinc-800 text-lg mt-0.5">${data.name}</h3>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full text-xs font-bold uppercase">${data.booking_status}</span>
+                    </div>
+
+                    <!-- Stepper -->
+                    <div class="relative py-4">
+                        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-100 -translate-y-1/2"></div>
+                        <div class="absolute top-1/2 left-0 h-0.5 bg-emerald-500 -translate-y-1/2 transition-all duration-500" style="width: ${progressPct}%"></div>
+                        
+                        <div class="relative flex justify-between">
+                            <div class="w-7 h-7 rounded-full ${activeIdx >= 0 ? 'bg-emerald-600 text-white' : 'bg-white border text-zinc-400'} flex items-center justify-center text-xs font-bold">1</div>
+                            <div class="w-7 h-7 rounded-full ${activeIdx >= 1 ? 'bg-emerald-600 text-white' : 'bg-white border text-zinc-400'} flex items-center justify-center text-xs font-bold">2</div>
+                            <div class="w-7 h-7 rounded-full ${activeIdx >= 2 ? 'bg-emerald-600 text-white' : 'bg-white border text-zinc-400'} flex items-center justify-center text-xs font-bold">3</div>
+                            <div class="w-7 h-7 rounded-full ${activeIdx >= 3 ? 'bg-emerald-600 text-white' : 'bg-white border text-zinc-400'} flex items-center justify-center text-xs font-bold">4</div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-2">
+                            <span>Processing</span>
+                            <span>Confirmed</span>
+                            <span>Place Set</span>
+                            <span>Met Up</span>
+                        </div>
+                    </div>
+
+                    <!-- Details grids -->
+                    <div class="grid grid-cols-2 gap-4 text-sm bg-zinc-50/50 p-4 rounded-2xl border">
+                        <div>
+                            <p class="text-[10px] text-zinc-400 font-bold uppercase">Meetup Date</p>
+                            <p class="font-bold text-zinc-800 mt-1">${data.meet_date || data.preferred_date}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-zinc-400 font-bold uppercase">Time Slot</p>
+                            <p class="font-bold text-zinc-800 mt-1">${data.meet_time || data.preferred_time}</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-[10px] text-zinc-400 font-bold uppercase">Location / Meeting Point</p>
+                            <p class="font-bold text-zinc-800 mt-1">
+                                <i class="fa-solid ${isVenueRevealed ? 'fa-map-pin text-emerald-600' : 'fa-lock text-amber-500'} mr-1.5"></i>
+                                ${isVenueRevealed ? (data.assigned_venue || 'Cafes revealed shortly!') : '🔒 Hidden for safety until payment verification.'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Matched Members -->
+                    ${groupMembersHtml}
+
+                    <!-- Support buttons -->
+                    <div class="flex gap-2 pt-2">
+                        ${isVenueRevealed ? `
+                            <button onclick="openChat(${data.assigned_group_id}, '${data.tracking_id}')" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow uppercase flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-comments"></i>
+                                Open Chat Room
+                            </button>
+                        ` : ''}
+                        <a href="https://wa.me/8801884477720" target="_blank" class="flex-1 py-3 border border-zinc-200 hover:bg-zinc-50 text-zinc-700 font-bold text-xs rounded-xl uppercase flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-headset text-emerald-600"></i>
+                            Emergency Support
+                        </a>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+
+        } catch (err) {
+            resultEl.innerHTML = `<div class="p-6 text-center text-rose-500 font-bold bg-rose-50 rounded-2xl border border-rose-100">❌ Error connecting.</div>`;
+        }
+    }
+
+    // ── Group Chat Rooms ──────────────────────────────────────────────────────────
+    let chatInterval;
+    let currentChatGroupId;
+    let currentTrackingId;
+    let pendingChatGroupId = null;
+    let pendingChatTrackingId = null;
+
+    function openChat(groupId, trackingId) {
+        const sessionKey = `chat_auth_${groupId}`;
+        if (!sessionStorage.getItem(sessionKey)) {
+            pendingChatGroupId = groupId;
+            pendingChatTrackingId = trackingId;
+            document.getElementById('chatAccessInput').value = '';
+            document.getElementById('chatAccessError').classList.add('hidden');
+            document.getElementById('chatAccessModal').classList.remove('hidden');
+            return;
+        }
+
+        currentChatGroupId = groupId;
+        currentTrackingId = trackingId;
+        document.getElementById('chatOverlay').classList.remove('hidden');
+        document.getElementById('chatDrawer').classList.add('translate-x-0');
+        document.getElementById('chatDrawer').classList.remove('translate-x-full');
+        loadChatMessages();
+        chatInterval = setInterval(loadChatMessages, 3000);
+        lucide.createIcons();
+    }
+
+    function submitChatAccess() {
+        const code = document.getElementById('chatAccessInput').value.trim().toUpperCase();
+        const err = document.getElementById('chatAccessError');
+
+        if (code !== pendingChatTrackingId) {
+            err.textContent = "❌ Invalid Tracking ID for this chat room.";
+            err.classList.remove('hidden');
+            return;
+        }
+
+        sessionStorage.setItem(`chat_auth_${pendingChatGroupId}`, 'true');
+        closeChatAccessModal();
+        openChat(pendingChatGroupId, pendingChatTrackingId);
+    }
+
+    function closeChatAccessModal() {
+        document.getElementById('chatAccessModal').classList.add('hidden');
+    }
+
+    function toggleForgotIdHelp() {
+        document.getElementById('forgotIdHelp').classList.toggle('hidden');
+    }
+
+    function closeChat() {
+        document.getElementById('chatOverlay').classList.add('hidden');
+        document.getElementById('chatDrawer').classList.add('translate-x-full');
+        document.getElementById('chatDrawer').classList.remove('translate-x-0');
+        clearInterval(chatInterval);
+    }
+
+    async function loadChatMessages() {
+        if (!currentChatGroupId) return;
+        try {
+            const res = await fetch(`/api/bookings/chat/${currentChatGroupId}`, {
+                headers: { 'tracking-id': currentTrackingId }
+            });
+            const messages = await res.json();
+            const container = document.getElementById('chatMessages');
+
+            const html = messages.map(msg => `
+                <div class="flex flex-col ${msg.is_me ? 'items-end' : 'items-start'}">
+                    <span class="text-[9px] text-zinc-400 px-1 mb-0.5">${msg.sender}</span>
+                    <div class="${msg.is_me ? 'bg-emerald-600 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-white border text-zinc-800 rounded-r-2xl rounded-tl-2xl'} px-4 py-2.5 shadow-sm max-w-[85%]">
+                        <p class="text-xs">${msg.message}</p>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-center text-zinc-300 text-xs py-10">No messages yet. Send a greeting!</p>';
+
+            const scroll = container.scrollHeight - container.scrollTop === container.clientHeight || container.scrollTop === 0;
+            container.innerHTML = html;
+            if (scroll) container.scrollTop = container.scrollHeight;
+        } catch (err) { }
+    }
+
+    async function sendChatMsg() {
+        const input = document.getElementById('chatInputMsg');
+        const text = input.value.trim();
+        if (!text || !currentChatGroupId) return;
+
+        try {
+            const res = await fetch('/api/bookings/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'tracking-id': currentTrackingId
+                },
+                body: JSON.stringify({
+                    group_id: currentChatGroupId,
+                    message: text
+                })
+            });
+            if (res.ok) {
+                input.value = '';
+                loadChatMessages();
+            }
+        } catch (err) { }
+    }
+
+    // ── Map Points Loading ──────────────────────────────────────────────────────────
+    async function initMap() {
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([23.8103, 90.4125], 12);
+
+        L.control.zoom({ position: 'topright' }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        try {
+            const res = await fetch('/api/all-points');
+            const points = await res.json();
+
+            // Stats
+            document.getElementById('stat-points').textContent = points.length + ' Cafes';
+            const areaCount = [...new Set(points.map(p => p.location_id))].length;
+            document.getElementById('stat-areas').textContent = areaCount + '+ Areas';
+
+            points.forEach(p => {
+                if (p.latitude && p.longitude) {
+                    const isRestaurant = p.point_type === 'restaurant';
+                    const bgColor = isRestaurant ? '#10b981' : '#235540';
+
+                    const customIcon = L.divIcon({
+                        html: `
+                            <div class="relative group">
+                                <div class="flex items-center">
+                                   <div class="relative w-8 h-8 flex items-center justify-center">
+                                        <div class="absolute inset-0 bg-[${bgColor}] rounded-full rounded-bl-none rotate-[45deg] translate-y-[-2px] shadow-lg border-2 border-white"></div>
+                                        <div class="absolute w-2.5 h-2.5 bg-white rounded-full z-10 translate-y-[-2px]"></div>
+                                   </div>
+                                   <div class="ml-2 bg-white/95 backdrop-blur-sm border border-emerald-100 px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap transform transition-all group-hover:scale-105">
+                                        <p class="text-[10px] font-black text-gray-900 leading-none">${p.name}</p>
+                                   </div>
+                                </div>
+                            </div>
+                        `,
+                        className: 'custom-map-marker',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32]
+                    });
+
+                    const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
+                    marker.on('click', () => {
+                        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + (p.area_name || '') + ', Dhaka')}`, '_blank');
+                    });
+                }
+            });
+        } catch (err) {
+            console.error('Map loading failed:', err);
+        }
+    }
+
+    function startAutoScrollCategories() {
+        const nav = document.getElementById('secondary-navbar');
+        if (!nav) return;
+
+        let direction = 1; // 1 for right, -1 for left
+        let speed = 0.4; // slow pixel per frame
+        let isMoving = true;
+
+        // Only run on mobile screen sizes (< 768px)
+        if (window.innerWidth >= 768) return;
+
+        function scrollStep() {
+            if (!isMoving) return;
+
+            nav.scrollLeft += direction * speed;
+
+            // Check bounds
+            const maxScroll = nav.scrollWidth - nav.clientWidth;
+            if (nav.scrollLeft >= maxScroll - 1) {
+                direction = -1;
+            } else if (nav.scrollLeft <= 1) {
+                direction = 1;
+            }
+
+            requestAnimationFrame(scrollStep);
+        }
+
+        // Pause on manual touch / mouse drag
+        nav.addEventListener('touchstart', () => { isMoving = false; }, { passive: true });
+        nav.addEventListener('touchend', () => {
+            isMoving = true;
+            requestAnimationFrame(scrollStep);
+        }, { passive: true });
+        nav.addEventListener('mousedown', () => { isMoving = false; });
+        nav.addEventListener('mouseup', () => {
+            isMoving = true;
+            requestAnimationFrame(scrollStep);
+        });
+
+        // Start scroll
+        requestAnimationFrame(scrollStep);
+    }
+
+    // FAQ Toggle function
+    function toggleFaq(btn) {
+        const card = btn.closest('.faq-card');
+        const content = card.querySelector('.faq-content');
+        const icon = btn.querySelector('.faq-icon');
+        const allCards = document.querySelectorAll('.faq-card');
+
+        // Close others
+        allCards.forEach(c => {
+            if (c !== card) {
+                const otherContent = c.querySelector('.faq-content');
+                const otherIcon = c.querySelector('.faq-icon');
+                otherContent.style.maxHeight = '0px';
+                otherContent.style.opacity = '0';
+                otherIcon.classList.remove('fa-chevron-up');
+                otherIcon.classList.add('fa-chevron-down');
+                c.classList.remove('rounded-[2rem]', 'border-emerald-100', 'shadow-xl', 'shadow-emerald-50/30');
+                c.classList.add('rounded-[1.5rem]', 'border-zinc-100', 'shadow-sm');
+                const otherIconWrapper = c.querySelector('div > div:first-child');
+                otherIconWrapper.classList.remove('bg-emerald-50', 'text-emerald-600');
+                otherIconWrapper.classList.add('bg-zinc-50', 'text-zinc-400');
+            }
+        });
+
+        // Toggle current
+        const isOpen = content.style.maxHeight !== '0px' && content.style.maxHeight !== '';
+
+        if (isOpen) {
+            content.style.maxHeight = '0px';
+            content.style.opacity = '0';
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+            card.classList.remove('rounded-[2rem]', 'border-emerald-100', 'shadow-xl', 'shadow-emerald-50/30');
+            card.classList.add('rounded-[1.5rem]', 'border-zinc-100', 'shadow-sm');
+            const iconWrapper = card.querySelector('div > div:first-child');
+            iconWrapper.classList.remove('bg-emerald-50', 'text-emerald-600');
+            iconWrapper.classList.add('bg-zinc-50', 'text-zinc-400');
+        } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            content.style.opacity = '1';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+            card.classList.add('rounded-[2rem]', 'border-emerald-100', 'shadow-xl', 'shadow-emerald-50/30');
+            card.classList.remove('rounded-[1.5rem]', 'border-zinc-100', 'shadow-sm');
+            const iconWrapper = card.querySelector('div > div:first-child');
+            iconWrapper.classList.add('bg-emerald-50', 'text-emerald-600');
+            iconWrapper.classList.remove('bg-zinc-50', 'text-zinc-400');
+        }
+    }
+
+    // Startup
+    window.onload = async function () {
+        await loadEvents();    // populate allEvents first
+        startMotion();         // then start hero animation with real event images
+        initMap();
+        startAutoScrollCategories();
+    };
+</script>
+{% endblock %}

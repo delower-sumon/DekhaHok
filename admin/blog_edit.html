@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Editor - DekhaHok Admin</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Quill Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { background-color: #F8FAFC; }
+        .ql-editor { min-height: 400px; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.7; }
+        .ql-toolbar { border-radius: 0.75rem 0.75rem 0 0 !important; border-color: #E5E7EB !important; background: #F9FAFB; padding: 12px !important; }
+        .ql-container { border-radius: 0 0 0.75rem 0.75rem !important; border-color: #E5E7EB !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/admin" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition text-gray-500">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h1 class="font-bold text-xl text-gray-800" id="page-title">Loading Editor...</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/admin" class="px-5 py-2 text-sm font-bold text-gray-600 hover:text-gray-900 transition">Cancel</a>
+                <button onclick="saveBlog()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md transition transform active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    Publish Post
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-10">
+        <input id="blogId" type="hidden">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Core Fields -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Article Title *</label>
+                    <input id="blogTitle" type="text" placeholder="e.g. 5 Best Cafes in Dhaka"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg focus:outline-none focus:border-emerald-400 font-bold mb-4">
+                    
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Content (Rich Text) *</label>
+                    <div id="editor-container" class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                        <!-- Quill editor goes here -->
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-user-pen text-emerald-600"></i> Author Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Name</label>
+                            <input id="blogAuthor" type="text" placeholder="e.g. Delower Sumon" value="Team DekhaHok"
+                                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Title</label>
+                            <input id="blogAuthorTitle" type="text" placeholder="e.g. Community Lead"
+                                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Author Profile Picture</label>
+                        <div class="flex items-center gap-3">
+                            <input id="blogAuthorImageFile" type="file" accept="image/*" onchange="handleAuthorImageUpload(event)" class="hidden">
+                            <button type="button" onclick="document.getElementById('blogAuthorImageFile').click()" class="px-4 py-2 bg-emerald-50 text-emerald-700 font-bold rounded-xl text-xs border border-emerald-200 hover:bg-emerald-100 transition shadow-sm">Upload Photo</button>
+                            <span id="blogAuthorImageStatus" class="text-xs text-gray-400 font-mono truncate max-w-[150px]">No file selected</span>
+                        </div>
+                        <input id="blogAuthorImage" type="hidden">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Meta & Media -->
+            <div class="space-y-6">
+                
+                <!-- Publishing Status -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-rocket text-blue-500"></i> Publishing</h3>
+                    
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Status</label>
+                    <select id="blogStatus"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 mb-4 bg-gray-50 font-bold text-gray-700">
+                        <option value="published">🟢 Published Live</option>
+                        <option value="draft">🟡 Draft (Hidden)</option>
+                    </select>
+
+                    <div class="flex items-center gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                        <input type="checkbox" id="blogPivoted" class="w-4 h-4 accent-amber-600">
+                        <label for="blogPivoted"
+                            class="text-xs font-bold text-amber-800 uppercase tracking-widest cursor-pointer leading-tight">Pin Article (Show at Top)</label>
+                    </div>
+                </div>
+
+                <!-- Media -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-image text-purple-500"></i> Cover Media</h3>
+                    
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Hero Cover Image</label>
+                    <div class="flex flex-col gap-2 mb-4">
+                        <input id="blogImageFile" type="file" accept="image/*" onchange="handleBlogImageUpload(event)" class="hidden">
+                        <button type="button" onclick="document.getElementById('blogImageFile').click()" class="w-full py-3 bg-gray-50 text-gray-700 font-bold rounded-xl text-sm border border-gray-200 hover:bg-gray-100 transition shadow-sm border-dashed">
+                            <i class="fa-solid fa-upload mr-2"></i> Upload Cover
+                        </button>
+                        <span id="blogImageStatus" class="text-xs text-gray-400 font-mono truncate text-center block w-full">No file selected</span>
+                    </div>
+                    <input id="blogImage" type="hidden">
+                    <p class="text-[10px] text-gray-400 mb-4 text-center">Recommended: 800x400px. Max: 2MB.</p>
+
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Image Alt Text (SEO)</label>
+                    <input id="blogImageAlt" type="text" placeholder="e.g. Dhaka city skyline"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-400">
+                </div>
+
+                <!-- SEO & Meta -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-magnifying-glass text-amber-500"></i> Metadata & SEO</h3>
+                    
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">URL Slug (Optional)</label>
+                    <input id="blogSlug" type="text" placeholder="custom-url-slug"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-400 mb-4 bg-gray-50">
+
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Badge/Category</label>
+                    <input id="blogBadge" type="text" placeholder="e.g. Meetup Guide"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-400 mb-4">
+
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Keywords (CSV)</label>
+                    <input id="blogKeywords" type="text" placeholder="Dhaka, Meetup, Friends..."
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-400 mb-4">
+
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">SEO Description</label>
+                    <textarea id="blogSeo" rows="4" placeholder="Summary for Google search..."
+                        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 resize-none"></textarea>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Init Quill
+        const quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Determine if editing or creating
+        const pathParts = window.location.pathname.split('/');
+        const isEditing = pathParts.length === 5 && pathParts[4] === 'edit';
+        const targetId = isEditing ? pathParts[3] : null;
+
+        document.getElementById('page-title').textContent = isEditing ? "Edit Blog Post" : "Create New Blog Post";
+
+        // Fetch API Helper
+        async function adminFetch(url, options = {}) {
+            const token = localStorage.getItem('adminKey');
+            if (!token) {
+                window.location.href = '/admin';
+                return null;
+            }
+            options.headers = options.headers || {};
+            options.headers['x-admin-key'] = token;
+            const res = await fetch(url, options);
+            if (res.status === 401 || res.status === 403) {
+                window.location.href = '/admin';
+                return null;
+            }
+            return res;
+        }
+
+        function toast(msg, isError = false) {
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: isError ? 'error' : 'success',
+                title: msg,
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
+
+        function handleBlogImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            document.getElementById('blogImageStatus').textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('blogImage').value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleAuthorImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            document.getElementById('blogAuthorImageStatus').textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('blogAuthorImage').value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Load Existing Data
+        if (isEditing) {
+            loadBlogData();
+        }
+
+        async function loadBlogData() {
+            const res = await adminFetch('/api/blogs');
+            if (!res) return;
+            const blogs = await res.json();
+            const b = blogs.find(bl => bl.id == targetId);
+            if (!b) {
+                toast("Blog not found!", true);
+                return;
+            }
+
+            document.getElementById('blogId').value = b.id;
+            document.getElementById('blogTitle').value = b.title;
+            document.getElementById('blogSlug').value = b.slug || '';
+            document.getElementById('blogBadge').value = b.badge_text || '';
+            document.getElementById('blogKeywords').value = b.keywords || '';
+            document.getElementById('blogSeo').value = b.seo_description || '';
+            document.getElementById('blogImage').value = b.image_url || '';
+            document.getElementById('blogImageAlt').value = b.image_alt || '';
+            document.getElementById('blogStatus').value = b.status || 'published';
+            document.getElementById('blogPivoted').checked = !!b.is_pivoted;
+            document.getElementById('blogAuthor').value = b.author || 'Team DekhaHok';
+            document.getElementById('blogAuthorTitle').value = b.author_title || '';
+            document.getElementById('blogAuthorImage').value = b.author_image_url || '';
+            
+            if (b.image_url) {
+                document.getElementById('blogImageStatus').textContent = "Existing cover loaded";
+            }
+            if (b.author_image_url) {
+                document.getElementById('blogAuthorImageStatus').textContent = "Existing photo loaded";
+            }
+
+            quill.clipboard.dangerouslyPasteHTML(b.content || '');
+        }
+
+        async function saveBlog() {
+            const id = document.getElementById('blogId').value;
+            const payload = {
+                title: document.getElementById('blogTitle').value.trim(),
+                slug: document.getElementById('blogSlug').value.trim() || null,
+                content: quill.root.innerHTML,
+                keywords: document.getElementById('blogKeywords').value.trim() || null,
+                seo_description: document.getElementById('blogSeo').value.trim() || null,
+                image_url: document.getElementById('blogImage').value || null,
+                image_alt: document.getElementById('blogImageAlt').value.trim() || null,
+                badge_text: document.getElementById('blogBadge').value.trim() || null,
+                status: document.getElementById('blogStatus').value,
+                is_pivoted: document.getElementById('blogPivoted').checked,
+                author: document.getElementById('blogAuthor').value.trim() || 'Team DekhaHok',
+                author_title: document.getElementById('blogAuthorTitle').value.trim() || null,
+                author_image_url: document.getElementById('blogAuthorImage').value || null
+            };
+
+            if (!payload.title) {
+                toast("Title is required", true);
+                return;
+            }
+            if (!quill.getText().trim()) {
+                toast("Content is required", true);
+                return;
+            }
+
+            const method = id ? 'PATCH' : 'POST';
+            const url = id ? `/api/admin/blogs/${id}` : '/api/admin/blogs';
+
+            try {
+                const res = await adminFetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (res && res.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: id ? 'Updated!' : 'Published!',
+                        text: 'Blog post saved successfully.',
+                        confirmButtonColor: '#059669'
+                    }).then(() => {
+                        window.location.href = "/admin?tab=blogs";
+                    });
+                } else {
+                    const err = await res.json();
+                    toast(err.detail || "Error saving blog", true);
+                }
+            } catch (e) {
+                toast("Network error. Try again.", true);
+            }
+        }
+    </script>
+</body>
+</html>
