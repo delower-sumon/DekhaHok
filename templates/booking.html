@@ -1,0 +1,590 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Booking • DekhaHok{% endblock %}
+
+{% block seo_meta %}
+    {% if event %}
+    <meta name="description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
+    <link rel="canonical" href="https://dekhahok.com/booking/{{ event_id }}">
+    <meta property="og:title" content="{{ event.title }} | দেখা হোক">
+    <meta property="og:description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
+    <meta property="og:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
+    <meta property="og:type" content="event">
+    <meta property="og:url" content="https://dekhahok.com/booking/{{ event_id }}">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ event.title }} | দেখা হোক">
+    <meta name="twitter:description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
+    <meta name="twitter:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <a href="/" class="flex items-center gap-2 text-zinc-400 hover:text-emerald-700 mb-6 transition-all font-medium text-sm w-max">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Cancel and Back</span>
+    </a>
+
+    <!-- Top Selected Event Card (Dynamically populated) -->
+    <div id="booking-event-card" class="bg-emerald-50/40 border border-emerald-100 rounded-[2rem] p-4 sm:p-6 mb-8 flex items-center justify-between gap-4 shadow-sm opacity-0 transition-opacity duration-300">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-zinc-200 shadow-inner flex-shrink-0">
+                <img id="b-event-img" src="" alt="Event" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <span class="bg-emerald-100 text-emerald-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest" id="b-event-tier">EXPERIENCE</span>
+                <h1 class="text-lg sm:text-2xl font-bold text-zinc-900 mt-1 mb-1 leading-tight" id="b-event-title">Loading Event...</h1>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium">
+                    <span class="flex items-center gap-1"><i class="fa-regular fa-calendar text-emerald-600"></i> <span id="b-event-date">TBA</span></span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-emerald-600"></i> <span id="b-event-location">TBA</span></span>
+                    <span class="flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md"><i class="fa-solid fa-user-check"></i> <span id="b-event-top-spots">0/0 Booked</span></span>
+                </div>
+            </div>
+        </div>
+        <div class="text-right hidden sm:block">
+            <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mb-0.5">Ticket Price</p>
+            <p class="text-3xl font-black text-emerald-700" id="b-event-price">৳0</p>
+        </div>
+    </div>
+
+    <!-- Included Items -->
+    <div id="booking-included-container" class="hidden mb-8 border border-emerald-100 bg-emerald-50/30 rounded-2xl p-4 sm:p-5">
+        <h3 class="text-xs font-black text-emerald-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-gift"></i> What's Included</h3>
+        <ul id="booking-included-list" class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-zinc-700 font-medium">
+            <!-- Dynamically populated -->
+        </ul>
+    </div>
+
+    {% if existing_booking %}
+    <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 text-center mt-6">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-check text-2xl"></i>
+        </div>
+        <h2 class="text-xl font-bold text-zinc-900 mb-2">You're already booked!</h2>
+        <p class="text-sm text-zinc-600 mb-6">You have successfully booked this event. You can track your booking status using your tracking ID.</p>
+        <div class="bg-white px-4 py-3 rounded-xl border border-emerald-200 inline-block mb-6 shadow-sm">
+            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest block mb-1">Tracking ID</span>
+            <span class="font-mono text-2xl font-black text-emerald-700 tracking-wider">{{ existing_booking.tracking_id }}</span>
+        </div>
+        <div>
+            <a href="/?track={{ existing_booking.tracking_id }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow transition inline-block">Track Booking</a>
+        </div>
+    </div>
+    {% else %}
+    
+    {% if user %}
+    <!-- Progress Bar -->
+    <div class="flex items-center justify-between mb-8 relative px-2 max-w-xl mx-auto">
+        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-200 -translate-y-1/2 z-0"></div>
+        <div id="booking-progress-bar" class="absolute top-1/2 left-0 h-0.5 bg-emerald-600 transition-all duration-500 -translate-y-1/2 z-10 w-[0%]">
+        </div>
+
+        <div id="booking-step-c1" class="z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm transition-all duration-300">1</div>
+        <div id="booking-step-c2" class="z-20 w-9 h-9 rounded-full bg-white border-2 border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-sm transition-all duration-300">2</div>
+        <div id="booking-step-c3" class="z-20 w-9 h-9 rounded-full bg-white border-2 border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-sm transition-all duration-300">3</div>
+    </div>
+
+    <!-- State Panels -->
+    <div class="bg-white border border-zinc-200/80 rounded-[2rem] p-6 sm:p-8 shadow-sm">
+        
+        <!-- Step 1: Personal Details -->
+        <div id="booking-step-1" class="space-y-6">
+            <div>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 1: Contact Details</h2>
+                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Attendee Personal Details</p>
+            </div>
+
+            <form onsubmit="nextBookingStep(2, event)" class="space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-600">Full Name *</label>
+                        <input type="text" id="booking-name" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="Your full name" value="{% if user %}{{ user.name }}{% endif %}">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-600">Email Address *</label>
+                        <input type="email" id="booking-email" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="you@example.com" value="{% if user %}{{ user.email }}{% endif %}">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-600">WhatsApp / Phone *</label>
+                        <input type="tel" id="booking-phone" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. 01700000000">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-600">Gender *</label>
+                            <select id="booking-gender" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-600">Age *</label>
+                            <input type="number" id="booking-age" min="18" max="80" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="24">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-600">Meetup Preferences Note (Optional)</label>
+                    <textarea id="booking-expectations" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none" placeholder="Tell the host about your expectations or any specific questions you have."></textarea>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow transition-colors">Continue to Tickets</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Step 2: Tickets & Payment -->
+        <div id="booking-step-2" class="hidden space-y-6">
+            <div>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 2: Tickets & Payment</h2>
+                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Checkout & Billing</p>
+            </div>
+
+            <!-- Warning Banner -->
+            <div class="bg-amber-50 text-amber-800 p-4 rounded-xl text-xs flex items-start gap-3 border border-amber-100 mb-6">
+                <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-600"></i>
+                <p><strong>Anti-Flake Policy:</strong> Tickets are non-refundable within 48 hours of the event to ensure group sizing and host preparation.</p>
+            </div>
+
+            <!-- Qty Selector -->
+            <div class="flex items-center justify-between p-4 border border-zinc-200 rounded-2xl bg-zinc-50/50 mb-6">
+                <div>
+                    <p class="font-bold text-zinc-800">Number of Tickets</p>
+                    <p class="text-[10px] text-rose-500 font-bold uppercase tracking-wide" id="checkout-event-spots">Spots available</p>
+                </div>
+                <div class="flex items-center bg-white border rounded-xl shadow-sm overflow-hidden">
+                    <button type="button" onclick="adjustTicketQty(-1)" class="w-10 h-10 flex items-center justify-center hover:bg-zinc-50 text-zinc-500 border-r transition">-</button>
+                    <input type="number" id="booking-qty" value="1" min="1" max="5" class="w-12 h-10 text-center font-bold text-sm focus:outline-none" readonly>
+                    <button type="button" onclick="adjustTicketQty(1)" class="w-10 h-10 flex items-center justify-center hover:bg-zinc-50 text-zinc-500 border-l transition">+</button>
+                </div>
+            </div>
+
+
+            <!-- Payment Details (Taas manual step) -->
+            <div class="border-t border-zinc-100 pt-6 mb-6">
+                <h4 class="font-bold text-xs uppercase tracking-wider text-zinc-400 mb-3">Pay via bKash or Nagad
+                </h4>
+                <div class="bg-zinc-50 p-5 rounded-2xl border border-zinc-100 space-y-4">
+                    <div class="flex gap-4">
+                        <!-- bKash Button -->
+                        <button type="button" onclick="selectPaymentMode('bkash')" id="btn-pay-bkash"
+                            class="flex-1 flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition">
+                            <span class="text-pink-600 text-lg">bKash</span>
+                        </button>
+                        <!-- Nagad Button -->
+                        <button type="button" onclick="selectPaymentMode('nagad')" id="btn-pay-nagad"
+                            class="flex-1 flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm transition text-zinc-500">
+                            <span class="text-orange-600 text-lg">Nagad</span>
+                        </button>
+                    </div>
+                    <div class="text-xs text-zinc-500 space-y-1">
+                        <p>1. Send <strong>Cash Out</strong> or <strong>Send Money</strong> of total amount to:
+                            <strong class="text-zinc-800">01884477720</strong></p>
+                        <p>2. Enter your payment sender last 2 digits below for manual verification ledger matching.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                        <div>
+                            <label
+                                class="block text-[10px] font-bold mb-1 text-zinc-500 uppercase tracking-widest">Sender
+                                digits (Last 2) *</label>
+                            <input type="text" id="booking-digits" maxlength="2" required placeholder="e.g. 45"
+                                class="w-full px-4 py-2 border border-zinc-200 rounded-xl text-center text-sm font-mono focus:outline-none focus:border-emerald-500 shadow-inner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bill Summary -->
+            <div class="bg-zinc-50 p-5 rounded-2xl border border-zinc-200 space-y-3 font-mono text-sm mb-6 shadow-inner">
+                <!-- Compact Coupon Code -->
+                <div class="mb-4 flex gap-2">
+                    <input type="text" id="booking-coupon" class="flex-1 px-3 py-1.5 rounded-lg border border-zinc-200 text-xs focus:outline-none focus:border-emerald-500 shadow-inner uppercase font-mono bg-white" placeholder="PROMO CODE">
+                    <button type="button" onclick="applyCoupon()" class="bg-zinc-800 hover:bg-zinc-900 text-white px-4 py-1.5 rounded-lg font-bold text-xs transition">Apply</button>
+                </div>
+                <p id="coupon-message" class="text-[10px] mb-3 -mt-2 font-bold hidden"></p>
+
+                <div class="flex justify-between text-zinc-500">
+                    <span>Base Ticket</span>
+                    <span id="booking-base-price">৳0</span>
+                </div>
+                <div class="flex justify-between text-emerald-600 hidden" id="booking-discount-row">
+                    <span>Discount (Female/Promo)</span>
+                    <span id="booking-discount-amount">-৳0</span>
+                </div>
+                <div class="border-t border-zinc-200 pt-3 mt-3 flex justify-between font-black text-lg text-zinc-900">
+                    <span>Total Cost</span>
+                    <span id="booking-total-price">৳0</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-4 border-t border-zinc-100">
+                <button onclick="nextBookingStep(1)" class="px-5 py-2 border rounded-xl hover:bg-zinc-50 font-bold text-xs uppercase text-zinc-500 transition">Back</button>
+                <button onclick="validateAndSubmitBooking()" id="btn-booking-confirm" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    Confirm Booking
+                </button>
+            </div>
+            <p id="booking-error-msg" class="text-rose-500 text-xs font-bold text-center mt-3 hidden"></p>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="booking-step-3" class="hidden text-center py-8 space-y-6">
+            <div class="w-20 h-20 bg-emerald-100 rounded-[2rem] flex items-center justify-center mx-auto shadow-inner">
+                <span class="text-4xl text-emerald-600"><i class="fa-solid fa-check-double"></i></span>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-zinc-900 mb-2">Booking Confirmed!</h2>
+                <p class="text-sm text-zinc-500 max-w-sm mx-auto">Your spot is secured. Use the tracking ID below to check venue details and chat with group members.</p>
+            </div>
+            
+            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 max-w-sm mx-auto shadow-sm">
+                <p class="text-[10px] uppercase font-bold tracking-widest text-emerald-600 mb-2">Your Ticket Tracking ID</p>
+                <div class="flex items-center justify-center gap-3">
+                    <strong class="text-3xl font-mono text-zinc-900 tracking-wider" id="success-ticket-id">DH-XXXXXX</strong>
+                    <button id="copy-ticket-btn" onclick="copyTicketId()" class="text-emerald-600 hover:text-emerald-700 p-2 hover:bg-emerald-100 rounded-xl transition flex items-center gap-1" title="Copy Code">
+                        <i id="copy-ticket-icon" class="fa-regular fa-copy text-xl"></i>
+                        <span id="copy-ticket-text" class="text-xs font-bold hidden">Copied!</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Auto Account Creation Notice -->
+            <div id="booking-credentials-box" class="hidden bg-zinc-50 border border-zinc-200 rounded-2xl p-5 max-w-sm mx-auto text-left shadow-sm">
+                <h4 class="font-bold text-xs text-emerald-800 flex items-center gap-2 uppercase tracking-wider mb-2">
+                    <i class="fa-solid fa-user-plus text-emerald-600"></i>
+                    Account Created!
+                </h4>
+                <p class="text-xs text-zinc-500 mb-3 leading-relaxed">
+                    We've registered an attendee account for you so you can easily track tickets.
+                </p>
+                <div class="bg-white border rounded-xl p-3 text-xs font-mono select-all space-y-1">
+                    <div><span class="text-zinc-400">Name:</span> <span id="success-user-name" class="text-zinc-800 font-bold"></span></div>
+                    <div><span class="text-zinc-400">Pass:</span> <span id="success-user-pwd" class="text-zinc-800 font-bold"></span></div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <a href="/" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow transition">Done & Track Ticket</a>
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <!-- Unauthenticated State -->
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 sm:p-8 text-center mt-6">
+        <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-lock text-2xl"></i>
+        </div>
+        <h2 class="text-xl font-bold text-zinc-900 mb-2">Login Required to Book</h2>
+        <p class="text-sm text-zinc-600 mb-6">You need to have an account to secure your spot for this event. Don't worry, it only takes a few seconds!</p>
+        <div>
+            <button onclick="openAuthModal(window.location.pathname)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow transition inline-block w-full sm:w-auto">Login / Sign Up to Continue</button>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% endif %}
+</div>
+
+<script>
+    const TARGET_EVENT_ID = parseInt('{{ event_id }}');
+    let selectedEvent = null;
+    let appliedCoupon = null;
+    let selectedPayment = 'bkash';
+
+    function selectPaymentMode(mode) {
+        selectedPayment = mode;
+        const btnB = document.getElementById('btn-pay-bkash');
+        const btnN = document.getElementById('btn-pay-nagad');
+
+        if (mode === 'bkash') {
+            btnB.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition';
+            btnN.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition';
+        } else {
+            btnN.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition';
+            btnB.className = 'flex-1 flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition';
+        }
+    }
+
+    // Load event details on page load
+    async function initBookingPage() {
+        try {
+            const res = await fetch('/api/events');
+            const events = await res.json();
+            selectedEvent = events.find(e => e.id === TARGET_EVENT_ID);
+            
+            if (!selectedEvent) {
+                alert("Event not found or has expired.");
+                window.location.href = "/";
+                return;
+            }
+
+            // Populate top card
+            document.getElementById('b-event-img').src = selectedEvent.image_url || 'https://picsum.photos/seed/' + selectedEvent.id + '/600/400';
+            document.getElementById('b-event-title').textContent = selectedEvent.title;
+            document.getElementById('b-event-price').textContent = `৳${Math.round(selectedEvent.price_per_person)}`;
+            document.getElementById('b-event-tier').textContent = selectedEvent.package_tier;
+            document.getElementById('b-event-date').textContent = selectedEvent.event_date ? new Date(selectedEvent.event_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBA';
+            document.getElementById('b-event-location').textContent = selectedEvent.location_name || 'TBA';
+            
+            // Populate Included items
+            const includedContainer = document.getElementById('booking-included-container');
+            const includedList = document.getElementById('booking-included-list');
+            if (selectedEvent.included && Array.isArray(selectedEvent.included) && selectedEvent.included.length > 0) {
+                includedList.innerHTML = selectedEvent.included.map(item => `
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                        <span>${item}</span>
+                    </li>
+                `).join('');
+                includedContainer.classList.remove('hidden');
+            }
+            
+            document.getElementById('booking-event-card').classList.remove('opacity-0');
+
+            // Set capacity
+            const spotsLeft = selectedEvent.capacity - selectedEvent.booked_count;
+            const spotsEl = document.getElementById('checkout-event-spots');
+            const topSpotsEl = document.getElementById('b-event-top-spots');
+            if (topSpotsEl) topSpotsEl.textContent = `${selectedEvent.booked_count}/${selectedEvent.capacity} Booked`;
+
+            if (spotsLeft <= 0) {
+                spotsEl.textContent = `Waitlist Mode • ${selectedEvent.capacity}/${selectedEvent.capacity} Booked`;
+                spotsEl.className = 'text-rose-500 font-bold text-[10px] uppercase tracking-wide';
+                document.getElementById('booking-qty').value = 1;
+                document.getElementById('booking-qty').disabled = true;
+            } else {
+                spotsEl.textContent = `${selectedEvent.booked_count}/${selectedEvent.capacity} Booked • Only ${spotsLeft} spots available`;
+                spotsEl.className = 'text-emerald-600 font-bold text-[10px] uppercase tracking-wide';
+            }
+
+            calculateBookingTotal();
+            
+            // Render lucide icons if available
+            if(typeof lucide !== 'undefined') lucide.createIcons();
+
+        } catch (err) {
+            console.error("Failed to load event data", err);
+        }
+    }
+
+    function nextBookingStep(step, e) {
+        if(e) e.preventDefault();
+
+        // Hide all
+        document.getElementById('booking-step-1').classList.add('hidden');
+        document.getElementById('booking-step-2').classList.add('hidden');
+        document.getElementById('booking-step-3').classList.add('hidden');
+        
+        // Show target
+        document.getElementById(`booking-step-${step}`).classList.remove('hidden');
+
+        // Update progress bar UI
+        const pBar = document.getElementById('booking-progress-bar');
+        const c1 = document.getElementById('booking-step-c1');
+        const c2 = document.getElementById('booking-step-c2');
+        const c3 = document.getElementById('booking-step-c3');
+
+        if(step === 1) {
+            pBar.style.width = '0%';
+            c2.className = 'z-20 w-9 h-9 rounded-full bg-white border-2 border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-sm transition-all duration-300';
+            c3.className = 'z-20 w-9 h-9 rounded-full bg-white border-2 border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-sm transition-all duration-300';
+        } else if(step === 2) {
+            pBar.style.width = '50%';
+            c2.className = 'z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm transition-all duration-300';
+            c3.className = 'z-20 w-9 h-9 rounded-full bg-white border-2 border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-sm transition-all duration-300';
+        } else if(step === 3) {
+            pBar.style.width = '100%';
+            c2.className = 'z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm transition-all duration-300';
+            c3.className = 'z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm transition-all duration-300';
+        }
+    }
+
+    function adjustTicketQty(amt) {
+        const input = document.getElementById('booking-qty');
+        let val = parseInt(input.value) + amt;
+        if (!selectedEvent) return;
+        const spotsLeft = selectedEvent.capacity - selectedEvent.booked_count;
+        if (spotsLeft <= 0) {
+            input.value = 1;
+            return;
+        }
+        if (val < 1) val = 1;
+        if (val > Math.min(5, spotsLeft)) val = Math.min(5, spotsLeft);
+        input.value = val;
+        calculateBookingTotal();
+    }
+
+    function calculateBookingTotal() {
+        if (!selectedEvent) return;
+        const qty = parseInt(document.getElementById('booking-qty').value) || 1;
+        const isWaitlist = (selectedEvent.capacity - selectedEvent.booked_count) <= 0;
+        
+        if (isWaitlist) {
+            document.getElementById('booking-base-price').textContent = '৳0';
+            document.getElementById('booking-total-price').textContent = '৳0';
+            return;
+        }
+
+        const gender = document.getElementById('booking-gender').value;
+        const basePrice = selectedEvent.price_per_person * qty;
+        let discount = 0;
+
+
+        // Promo code discount logic
+        if (appliedCoupon) {
+            if (appliedCoupon.discount_type === 'percent') {
+                discount += basePrice * (appliedCoupon.value / 100);
+            } else if (appliedCoupon.discount_type === 'flat') {
+                discount += appliedCoupon.value;
+            }
+        }
+
+        const total = Math.max(0, basePrice - discount);
+
+        document.getElementById('booking-base-price').textContent = `৳${Math.round(basePrice)}`;
+        
+        const discRow = document.getElementById('booking-discount-row');
+        if (discount > 0) {
+            discRow.classList.remove('hidden');
+            document.getElementById('booking-discount-amount').textContent = `-৳${Math.round(discount)}`;
+        } else {
+            discRow.classList.add('hidden');
+        }
+
+        document.getElementById('booking-total-price').textContent = `৳${Math.round(total)}`;
+    }
+
+    // Recalculate on gender change
+    document.getElementById('booking-gender').addEventListener('change', calculateBookingTotal);
+
+    async function applyCoupon() {
+        const code = document.getElementById('booking-coupon').value.trim();
+        const msg = document.getElementById('coupon-message');
+        if (!code) return;
+
+        try {
+            const res = await fetch('/api/coupons/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                appliedCoupon = data;
+                msg.textContent = `Coupon applied! Discount: ${data.discount_type === 'percent' ? data.value + '%' : '৳' + data.value}`;
+                msg.className = "text-[10px] mt-1.5 font-bold text-emerald-600 block";
+                calculateBookingTotal();
+            } else {
+                appliedCoupon = null;
+                msg.textContent = data.detail || "Invalid or expired coupon code.";
+                msg.className = "text-[10px] mt-1.5 font-bold text-rose-500 block";
+                calculateBookingTotal();
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    async function validateAndSubmitBooking() {
+        const btn = document.getElementById('btn-booking-confirm');
+        const err = document.getElementById('booking-error-msg');
+        err.classList.add('hidden');
+
+        const digits = document.getElementById('booking-digits').value;
+        const spotsLeft = selectedEvent.capacity - selectedEvent.booked_count;
+        
+        const totalText = document.getElementById('booking-total-price').textContent.replace('৳', '');
+        const totalAmount = parseInt(totalText) || 0;
+
+        if (spotsLeft > 0 && totalAmount > 0 && !/^\d{2}$/.test(digits)) {
+            err.textContent = "Please enter the last 2 digits of the transaction phone number.";
+            err.classList.remove('hidden');
+            return;
+        }
+
+        const payload = {
+            event_id: selectedEvent.id,
+            name: document.getElementById('booking-name').value,
+            email: document.getElementById('booking-email').value || null,
+            phone: document.getElementById('booking-phone').value,
+            gender: document.getElementById('booking-gender').value,
+            age: parseInt(document.getElementById('booking-age').value) || null,
+            group_size: parseInt(document.getElementById('booking-qty').value) || 1,
+            expectations: document.getElementById('booking-expectations').value || null,
+            coupon_code: appliedCoupon ? appliedCoupon.code : null,
+            payment_method: selectedPayment,
+            payment_sender_digits: (spotsLeft > 0 && totalAmount > 0) ? digits : "00"
+        };
+
+        if(!payload.name || !payload.phone || !payload.email) {
+            err.textContent = "Please fill in all required personal details.";
+            err.classList.remove('hidden');
+            nextBookingStep(1);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i> Processing...`;
+
+        try {
+            const res = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('success-ticket-id').textContent = data.tracking_id;
+                if (data.temp_password) {
+                    document.getElementById('booking-credentials-box').classList.remove('hidden');
+                    document.getElementById('success-user-name').textContent = payload.name;
+                    document.getElementById('success-user-pwd').textContent = data.temp_password;
+                }
+                nextBookingStep(3);
+            } else {
+                let errMsg = "Booking failed. Please try again.";
+                if (Array.isArray(data.detail)) {
+                    errMsg = data.detail[0].msg;
+                } else if (data.detail) {
+                    errMsg = data.detail;
+                }
+                err.textContent = errMsg;
+                err.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-lock text-xs"></i> Confirm Booking`;
+            }
+        } catch (error) {
+            err.textContent = "Network error. Please try again.";
+            err.classList.remove('hidden');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-lock text-xs"></i> Confirm Booking`;
+        }
+    }
+
+    function copyTicketId() {
+        const txt = document.getElementById('success-ticket-id').textContent;
+        navigator.clipboard.writeText(txt).then(() => {
+            const icon = document.getElementById('copy-ticket-icon');
+            const text = document.getElementById('copy-ticket-text');
+            icon.className = 'fa-solid fa-check text-xl text-emerald-600';
+            text.classList.remove('hidden');
+            setTimeout(() => {
+                icon.className = 'fa-regular fa-copy text-xl';
+                text.classList.add('hidden');
+            }, 2000);
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', initBookingPage);
+</script>
+{% endblock %}

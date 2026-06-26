@@ -1,0 +1,2446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DekhaHok — Admin</title>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F9FBFA;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #059669 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    .status-processing {
+      background: #fefce8;
+      color: #854d0e;
+      border: 1px solid #fef08a;
+    }
+
+    .status-confirmed {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #d1fae5;
+    }
+
+    .status-unsuccessful {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fee2e2;
+    }
+
+    .status-completed {
+      background: #f0fdfa;
+      color: #1e40af;
+      border: 1px solid #ccfbf1;
+    }
+
+    .status-paid {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #d1fae5;
+    }
+
+    .status-unpaid {
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #ffedd5;
+    }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+    }
+
+    #toast {
+      transition: opacity 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0 !important;
+      }
+    }
+
+    /* Quill Tooltip Fixes for Tailwind */
+    .ql-tooltip {
+      z-index: 100 !important;
+    }
+
+    .ql-tooltip input[type="text"] {
+      border: 1px solid #ccc !important;
+      color: #333 !important;
+      padding: 4px 8px !important;
+      border-radius: 4px !important;
+    }
+
+    .ql-tooltip a.ql-action::before {
+      background-color: transparent !important;
+    }
+
+    /* Admin Tabs Scrollbar */
+    .tabs-scrollbar::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .tabs-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .tabs-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .tabs-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+
+<body class="text-gray-800">
+
+  <!-- ── Login Overlay ─────────────────────────────────────────────────── -->
+  <div id="loginOverlay" class="fixed inset-0 bg-emerald-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-xl p-10 w-full max-w-sm text-center space-y-5">
+      <a href="/admin"
+        class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl mx-auto flex items-center justify-center hover:opacity-90 transition">
+        <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
+      </a>
+      <a href="/admin" class="block">
+        <h1 class="text-2xl font-bold text-gray-800">DekhaHok <span
+            class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">Admin</span>
+        </h1>
+      </a>
+      <input id="adminKeyInput" type="password" placeholder="Enter admin key"
+        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400"
+        onkeydown="if(event.key==='Enter') login()">
+      <button onclick="login()"
+        class="w-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-100">
+        Login
+      </button>
+      <p id="loginError" class="text-red-500 text-sm hidden">Invalid key. Try again.</p>
+    </div>
+  </div>
+
+  <!-- ── Toast ─────────────────────────────────────────────────────────── -->
+  <div id="toast"
+    class="fixed top-12 right-5 z-50 bg-gray-900 text-white px-6 py-4 rounded-2xl text-sm font-semibold shadow-2xl transition-all duration-300 translate-y-[-120%] opacity-0 pointer-events-none">
+    Message
+  </div>
+
+  <!-- ── Custom Confirm Modal ─────────────────────────────────────────────────── -->
+  <div id="confirmModal"
+    class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[60] backdrop-blur-sm p-4">
+    <div
+      class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm transform scale-95 opacity-0 transition-all duration-300"
+      id="confirmModalContent">
+      <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
+        <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500"></i>
+      </div>
+      <h3 class="text-lg font-bold text-gray-900 mb-2">Are you sure?</h3>
+      <p id="confirmModalText" class="text-sm text-gray-500 mb-6">This action cannot be undone.</p>
+      <div class="flex gap-3">
+        <button id="confirmCancelBtn"
+          class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
+          Cancel
+        </button>
+        <button id="confirmOkBtn"
+          class="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── App Shell ──────────────────────────────────────────────────────── -->
+  <!-- ── App Shell ──────────────────────────────────────────────────────── -->
+  <div id="app" class="hidden min-h-screen bg-zinc-50/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 py-10">
+
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+          <div class="flex items-center gap-2 text-rose-600 font-bold text-xs uppercase tracking-widest mb-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-600 animate-pulse"></span>
+            <span>System Operations</span>
+          </div>
+          <h1 class="text-3xl font-extrabold text-zinc-900 tracking-tight">DekhaHok Administrator</h1>
+          <p class="text-zinc-500 text-sm mt-1">Manage host infrastructure, review experiences, audit billing, and
+            monitor system trust.</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="loadDashboard()"
+            class="px-4 py-2 text-xs font-semibold bg-white border rounded-xl hover:bg-zinc-50 text-zinc-700 shadow-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Sync Ledger</span>
+          </button>
+          <a href="/"
+            class="px-4 py-2 text-xs font-semibold bg-white border rounded-xl hover:bg-zinc-50 text-zinc-700 shadow-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-house"></i>
+            <span>Go to Website</span>
+          </a>
+          <button onclick="logout()"
+            class="px-4 py-2 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl shadow-md flex items-center gap-1.5">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Platform stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between text-zinc-400 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider">Gross Platform Volume</span>
+            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i class="fa-solid fa-sack-dollar text-sm"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-black text-zinc-900" id="admin-stat-volume">৳0</div>
+          <div class="text-[10px] text-emerald-600 font-semibold mt-1"><i class="fa-solid fa-arrow-trend-up"></i> +12.4%
+            vs last week</div>
+        </div>
+
+        <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between text-zinc-400 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider">Active Verified Hosts</span>
+            <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <i class="fa-solid fa-user-shield text-sm"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-black text-zinc-900" id="admin-stat-hosts">0</div>
+          <div class="text-[10px] text-blue-600 font-semibold mt-1"><i class="fa-solid fa-check-double"></i> 100%
+            NID-verified</div>
+        </div>
+
+        <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between text-zinc-400 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider">Experiences Published</span>
+            <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <i class="fa-solid fa-map-location-dot text-sm"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-black text-zinc-900" id="admin-stat-events">0</div>
+          <div class="text-[10px] text-indigo-600 font-semibold mt-1"><i class="fa-solid fa-circle-check"></i> Across
+            active categories</div>
+        </div>
+
+        <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between text-zinc-400 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider">Tickets Issued</span>
+            <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+              <i class="fa-solid fa-ticket-simple text-sm"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-black text-zinc-900" id="admin-stat-tickets">0</div>
+          <div class="text-[10px] text-rose-600 font-semibold mt-1"><i class="fa-solid fa-circle-info"></i> bKash
+            gateway active</div>
+        </div>
+      </div>
+
+      <!-- Admin Tab selection -->
+      <div
+        class="flex flex-wrap md:flex-nowrap border-b border-zinc-200 mb-6 gap-y-1 md:gap-y-0 md:overflow-x-auto whitespace-normal md:whitespace-nowrap tabs-scrollbar">
+        <button onclick="showSection('dashboard')" id="admin-tab-btn-dashboard" data-section="dashboard"
+          class="admin-tab-btn px-3 py-2 border-b-2 border-emerald-500 text-emerald-700 font-bold text-[10px] md:text-[11px] bg-emerald-50/40 rounded-t-lg transition-all flex items-center gap-1 shadow-sm">
+          <i class="fa-solid fa-chart-line text-xs"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="showSection('hosts')" id="admin-tab-btn-hosts" data-section="hosts"
+          class="admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1">
+          <i class="fa-solid fa-user-check text-xs"></i>
+          <span>Host Audits</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold"
+            id="admin-badge-pending-hosts">0</span>
+        </button>
+        <button onclick="showSection('events')" id="admin-tab-btn-events" data-section="events"
+          class="admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1">
+          <i class="fa-solid fa-folder-open text-xs"></i>
+          <span>Experience Feeds</span>
+          <span class="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-[10px] font-bold"
+            id="admin-badge-events">0</span>
+        </button>
+        <button onclick="showSection('bookings')" id="admin-tab-btn-bookings" data-section="bookings"
+          class="admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1">
+          <i class="fa-solid fa-table-list text-xs"></i>
+          <span>Ticket Ledger</span>
+          <span class="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-[10px] font-bold"
+            id="admin-badge-bookings">0</span>
+        </button>
+        <button onclick="showSection('payouts')" id="admin-tab-btn-payouts" data-section="payouts"
+          class="admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1">
+          <i class="fa-solid fa-money-bill-wave text-xs"></i>
+          <span>Payouts</span>
+        </button>
+        <button onclick="showSection('groups')" id="admin-tab-btn-groups" data-section="groups"
+          class="admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1">
+          <i class="fa-solid fa-users text-xs"></i>
+          <span>Match Groups</span>
+        </button>
+        <button onclick="showSection('blogs')" id="admin-tab-btn-blogs" data-section="blogs"
+          class="admin-tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-500 font-semibold text-[11px] md:text-xs hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-pen-nib text-xs"></i>
+          <span>Blogs & Stories</span>
+        </button>
+        <button onclick="showSection('locations')" id="admin-tab-btn-locations" data-section="locations"
+          class="admin-tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-500 font-semibold text-[11px] md:text-xs hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-map-pin text-xs"></i>
+          <span>Operations & Data</span>
+        </button>
+        <button onclick="showSection('coupons')" id="admin-tab-btn-coupons" data-section="coupons"
+          class="admin-tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-500 font-semibold text-[11px] md:text-xs hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-tags text-xs"></i>
+          <span>Discounts & Coupons</span>
+        </button>
+      </div>
+
+      <!-- Main content -->
+      <div class="main-content mt-6">
+
+        <!-- ── Dashboard Section ───────────────────────────────────────── -->
+        <section id="section-dashboard" class="section space-y-6">
+          <div class="bg-white rounded-2xl border border-gray-100 p-4 md:p-6 overflow-hidden">
+            <h2 class="font-semibold text-gray-700 mb-4">Recent Bookings (last 10)</h2>
+            <div id="recentBookingsTable" class="overflow-x-auto -mx-4 md:mx-0"></div>
+          </div>
+        </section>
+
+
+
+        <!-- ── Bookings Section ────────────────────────────────────────── -->
+        <section id="section-bookings" class="section hidden space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <h1 class="text-2xl font-bold text-gray-800">All Bookings</h1>
+            <button onclick="loadBookings()" class="text-sm text-emerald-700 hover:underline self-start">↻
+              Refresh</button>
+          </div>
+
+          <!-- Filters -->
+          <div class="flex flex-wrap gap-3 bg-white p-4 rounded-2xl border border-gray-100">
+            <select id="filterStatus" onchange="loadBookings()"
+              class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
+              <option value="">All Statuses</option>
+              <option value="processing">Processing</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="completed">Completed</option>
+              <option value="unsuccessful">Unsuccessful</option>
+              <option value="waitlist">Waitlist</option>
+            </select>
+            <select id="filterPayment" onchange="loadBookings()"
+              class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
+              <option value="">All Payments</option>
+              <option value="unpaid">Unpaid</option>
+              <option value="paid">Paid</option>
+            </select>
+            <select id="filterGroupSize" onchange="loadBookings()"
+              class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
+              <option value="">All Sizes</option>
+              <option value="2">2-person</option>
+              <option value="5">5-person</option>
+            </select>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div id="bookingsTable" class="overflow-x-auto"></div>
+          </div>
+        </section>
+
+        <!-- ── Groups Section ─────────────────────────────────────────── -->
+        <section id="section-groups" class="section hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">Meetup Groups</h1>
+            <button onclick="openCreateGroup()"
+              class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
+              + Create Group
+            </button>
+          </div>
+
+          <!-- Smart Suggestions -->
+          <div id="matchSuggestions" class="space-y-4"></div>
+
+          <div id="groupsList" class="grid grid-cols-1 gap-4 pt-4 border-t border-gray-100"></div>
+        </section>
+
+        <!-- ── Locations Section ───────────────────────────────────────── -->
+        <section id="section-locations" class="section hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">Platform Data & Operations</h1>
+          </div>
+
+          <!-- ── Partnerships Sub-section ── -->
+          <div class="space-y-6 pt-4">
+            <h2 class="text-xl font-bold text-gray-800">Partnership Requests</h2>
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+              <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                  <tr>
+                    <th class="px-6 py-3 text-left">Restaurant</th>
+                    <th class="px-6 py-3 text-left">Contact</th>
+                    <th class="px-6 py-3 text-left">Status</th>
+                    <th class="px-6 py-3 text-left">Applied At</th>
+                    <th class="px-6 py-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="partnersTableBody" class="divide-y divide-gray-50"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── Locations Sub-section ── -->
+          <div class="space-y-6 pt-10 mt-6 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-bold text-gray-800">Manage areas</h2>
+              <div class="flex gap-2">
+                <input id="newLocName" type="text" placeholder="New area name..."
+                  class="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                <button onclick="addLocation()"
+                  class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
+                  + Add
+                </button>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+              <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                  <tr>
+                    <th class="px-6 py-3 text-left">Area Name</th>
+                    <th class="px-6 py-3 text-left">Status</th>
+                    <th class="px-6 py-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="locationsTableBody" class="divide-y divide-gray-50">
+                  <!-- filled by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Host Audits Section ── -->
+        <section id="section-hosts" class="section hidden space-y-6">
+          <h1 class="text-2xl font-bold text-gray-800">Host Verification Pipeline</h1>
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-medium">
+                <tr>
+                  <th class="px-6 py-3">Host Details</th>
+                  <th class="px-6 py-3">NID Code</th>
+                  <th class="px-6 py-3">Operating Area</th>
+                  <th class="px-6 py-3">Category</th>
+                  <th class="px-6 py-3 text-center">Rev Share</th>
+                  <th class="px-6 py-3 text-center">Status</th>
+                  <th class="px-6 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="hostsTableBody" class="divide-y divide-gray-50"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ── Experience Feeds Section ── -->
+        <section id="section-events" class="section hidden space-y-6">
+          <h1 class="text-2xl font-bold text-gray-800">Discover Feed Moderation</h1>
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-medium">
+                <tr>
+                  <th class="px-6 py-3">Event Title</th>
+                  <th class="px-6 py-3">Host</th>
+                  <th class="px-6 py-3">Price</th>
+                  <th class="px-6 py-3">Booked/Capacity</th>
+                  <th class="px-6 py-3">Date</th>
+                  <th class="px-6 py-3 text-center">Status</th>
+                  <th class="px-6 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="eventsTableBody" class="divide-y divide-gray-50 font-medium"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ── Host Payouts Section ── -->
+        <section id="section-payouts" class="section hidden space-y-6">
+          <h1 class="text-2xl font-bold text-gray-800">Host Payouts Management</h1>
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-medium">
+                <tr>
+                  <th class="px-6 py-3">Event Title</th>
+                  <th class="px-6 py-3">Host Name</th>
+                  <th class="px-6 py-3">Host Phone</th>
+                  <th class="px-6 py-3">Event Date</th>
+                  <th class="px-6 py-3">Total Revenue</th>
+                  <th class="px-6 py-3">Payout Status</th>
+                  <th class="px-6 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="payoutsTableBody" class="divide-y divide-gray-50 font-medium"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ── Blogs Section ────────────────────────────────────────────── -->
+        <section id="section-blogs" class="section hidden space-y-6">
+            <a href="/admin/blogs/new"
+              class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50 inline-block text-center">
+              + New Post
+            </a>
+          </div>
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                <tr>
+                  <th class="px-6 py-3">Title</th>
+                  <th class="px-6 py-3">Status</th>
+                  <th class="px-6 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="blogsTableBody" class="divide-y divide-gray-50">
+                <!-- filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ── Coupons Section ────────────────────────────────────────────── -->
+        <section id="section-coupons" class="section hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">Discounts</h1>
+            <button onclick="openCouponModal()"
+              class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
+              + New Coupon
+            </button>
+          </div>
+
+          <!-- Global Event Discount Panel -->
+          <div class="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-2xl p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xl">🔥</span>
+                  <h2 class="text-lg font-bold text-gray-800">Global Event Discount</h2>
+                </div>
+                <p class="text-sm text-gray-500 mb-4">Set a site-wide percentage discount applied to <strong>all price
+                    plans</strong> (৳499 & ৳249). Setting to 0 disables the discount. This reflects immediately on the
+                  booking page.</p>
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <input type="number" id="globalDiscountInput" min="0" max="100" step="1" placeholder="e.g. 17"
+                      class="w-32 border-2 border-orange-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:border-orange-400 bg-white">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
+                  </div>
+                  <button onclick="saveGlobalDiscount()" id="saveDiscountBtn"
+                    class="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl text-sm font-bold hover:opacity-90 transition shadow-md">
+                    Apply Discount
+                  </button>
+                  <button onclick="clearGlobalDiscount()"
+                    class="px-5 py-2.5 border border-gray-200 text-gray-500 rounded-xl text-sm font-bold hover:bg-gray-50 transition">
+                    Remove Discount
+                  </button>
+                </div>
+              </div>
+              <div id="discountPreviewBox"
+                class="bg-white rounded-xl p-4 border border-orange-100 min-w-[160px] text-center hidden">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Preview</p>
+                <div class="space-y-2">
+                  <div>
+                    <p class="text-[10px] text-gray-400">Dwaito (2-person)</p>
+                    <p class="font-black text-gray-900" id="previewP2">৳499</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] text-gray-400">Ponchayet (5-person)</p>
+                    <p class="font-black text-gray-900" id="previewP5">৳249</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="currentDiscountStatus" class="mt-4 text-sm font-semibold text-orange-700 hidden"></div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                <tr>
+                  <th class="px-6 py-3">Code</th>
+                  <th class="px-6 py-3">Discount</th>
+                  <th class="px-6 py-3">Limit</th>
+                  <th class="px-6 py-3">Expires</th>
+                  <th class="px-6 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="couponsTableBody" class="divide-y divide-gray-50"></tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /main -->
+    </div><!-- /max-w-7xl -->
+  </div><!-- /app -->
+
+  <!-- ── Create Group Modal ─────────────────────────────────────────────── -->
+  <div id="groupModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-40">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md space-y-4">
+      <h2 class="text-xl font-bold text-gray-800">Create New Group</h2>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Venue (from Meeting Points)</label>
+          <select id="g_venue"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="">Select a venue...</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Date</label>
+            <input id="g_date" type="date"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
+            <input id="g_time" type="time"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Group Size</label>
+          <select id="g_size"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="2">2-person</option>
+            <option value="5">5-person</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Background Image URL (Optional)</label>
+          <input id="g_image_url" type="text" placeholder="/static/assets/..."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+        </div>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeGroupModal()"
+          class="flex-1 border border-gray-200 text-gray-600 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
+          Cancel
+        </button>
+        <button onclick="createGroup()"
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition">
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ── Edit Group Modal ─────────────────────────────────────────────────── -->
+  <div id="editGroupModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-40">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md space-y-4">
+      <h2 class="text-xl font-bold text-gray-800">Edit Meetup Group</h2>
+      <input id="eg_id" type="hidden">
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Venue (from Meeting Points)</label>
+          <select id="eg_venue"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Date</label>
+            <input id="eg_date" type="date"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
+            <input id="eg_time" type="time"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
+          <select id="eg_status"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">Background Image URL (Optional)</label>
+          <input id="eg_image_url" type="text" placeholder="/static/assets/..."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+        </div>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeEditGroupModal()"
+          class="flex-1 border border-gray-200 text-gray-600 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition">Cancel</button>
+        <button onclick="saveGroupEdit()"
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">Save
+          Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Assign Members Modal ───────────────────────────────────────────── -->
+  <div id="assignModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-40">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl space-y-4 max-h-[80vh] flex flex-col">
+      <h2 class="text-xl font-bold text-gray-800">Assign Members to <span id="assignGroupCode"
+          class="text-emerald-700"></span></h2>
+      <p class="text-sm text-gray-500">Select unassigned bookings with matching group size.</p>
+      <div id="assignableList" class="overflow-y-auto flex-1 space-y-2 border border-gray-100 rounded-xl p-3"></div>
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeAssignModal()"
+          class="flex-1 border border-gray-200 text-gray-600 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
+          Cancel
+        </button>
+        <button onclick="submitAssignment()"
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-emerald-50">
+          Assign Selected
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Edit Booking Modal ────────────────────────────────────────────────── -->
+  <div id="editModal"
+    class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[60] backdrop-blur-sm p-6 md:p-12">
+    <div
+      class="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-10 w-full max-w-lg space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-gray-800">Edit Booking</h2>
+        <span id="edit_tracking_id"
+          class="text-xs font-mono font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full"></span>
+      </div>
+      <input id="edit_id" type="hidden">
+
+      <!-- Preferences display -->
+      <div id="pref_display" class="bg-amber-50 p-4 rounded-xl border border-amber-100 mt-2">
+        <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-1.5 flex items-center gap-1">
+          <i data-lucide="message-square" class="w-3 h-3"></i> User Note / Preferences
+        </p>
+        <p id="edit_interests_val" class="text-sm text-amber-900 leading-relaxed italic"></p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Payment Status</label>
+          <select id="edit_payment"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Booking Status</label>
+          <select id="edit_status"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400">
+            <option value="processing">Processing</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="unsuccessful">Unsuccessful</option>
+            <option value="waitlist">Waitlist</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="rejection_container" class="hidden">
+        <label class="block text-xs font-bold text-red-400 uppercase tracking-widest mb-1.5">Rejection Reason</label>
+        <textarea id="edit_rejection" rows="2"
+          class="w-full border border-red-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-400"
+          placeholder="Why is this booking unsuccessful?"></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-xs bg-gray-50 p-3 rounded-xl border border-gray-100">
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Payment Method</p>
+          <p id="info_method" class="font-bold text-gray-800">-</p>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Sender Digits</p>
+          <p id="info_digits" class="font-bold text-gray-800">-</p>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Admin Notes (Internal
+          Only)</label>
+        <textarea id="edit_notes" rows="3"
+          class="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium"
+          placeholder="E.g. Verified over call, special requirements..."></textarea>
+      </div>
+
+      <div class="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+        <input type="checkbox" id="edit_is_verified" class="w-4 h-4 accent-emerald-600">
+        <label for="edit_is_verified"
+          class="text-xs font-bold text-emerald-800 uppercase tracking-widest cursor-pointer">Verified Citizen
+          Badge</label>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
+          <input type="checkbox" id="edit_wants_pickup" class="w-4 h-4 accent-emerald-600">
+          <label for="edit_wants_pickup"
+            class="text-[10px] font-bold text-gray-700 uppercase tracking-widest cursor-pointer">Pickup
+            Requested</label>
+        </div>
+        <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
+          <input type="checkbox" id="edit_wants_dropoff" class="w-4 h-4 accent-emerald-600">
+          <label for="edit_wants_dropoff"
+            class="text-[10px] font-bold text-gray-700 uppercase tracking-widest cursor-pointer">Drop-off
+            Requested</label>
+        </div>
+      </div>
+
+      <div class="flex gap-4 pt-2">
+        <button onclick="closeEditModal()"
+          class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition">Cancel</button>
+        <button onclick="saveEdit()"
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-emerald-50">Save
+          Changes</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ── Coupon Modal (Admin) ──────────────────────────────────────────────── -->
+  <div id="couponModal"
+    class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[70] backdrop-blur-sm p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md space-y-4">
+      <h2 class="text-xl font-bold text-gray-800">Create Promotional Coupon</h2>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Coupon Code</label>
+          <input id="c_code" type="text" placeholder="e.g. DH20"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 font-mono font-bold uppercase">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Type</label>
+            <select id="c_type"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+              <option value="percent">Percentage (%)</option>
+              <option value="fixed">Fixed (৳)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Value</label>
+            <input id="c_value" type="number" placeholder="20"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Usage Limit</label>
+            <input id="c_limit" type="number" placeholder="100"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Expiry Date</label>
+            <input id="c_expiry" type="date"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeCouponModal()"
+          class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition">Cancel</button>
+        <button onclick="saveCoupon()"
+          class="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg shadow-emerald-50">Create
+          Coupon</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Transfer Ticket Modal ── -->
+  <div id="transferModal" onclick="if(event.target.id === 'transferModal') closeTransferModal()"
+    class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm p-4">
+    <div onclick="event.stopImmediatePropagation()" class="bg-white w-full max-w-md mx-auto rounded-2xl shadow-2xl p-6">
+      <div class="flex justify-between items-center pb-4 border-b">
+        <div>
+          <h3 class="font-bold text-gray-900 text-lg">Transfer Attendee</h3>
+          <p class="text-xs text-gray-400">Move attendee to another event</p>
+        </div>
+        <button onclick="closeTransferModal()" class="text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-4">
+        <input type="hidden" id="transfer_booking_id">
+        <div>
+          <label class="block text-xs font-semibold mb-1 text-gray-400 uppercase tracking-wider">Attendee</label>
+          <p id="transfer-attendee-name" class="text-sm font-bold text-gray-800">-</p>
+          <p id="transfer-attendee-ticket" class="text-xs text-gray-500 font-mono">-</p>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1 text-gray-400 uppercase tracking-wider">Current Event</label>
+          <p id="transfer-current-event" class="text-xs text-gray-600 font-semibold">-</p>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-2 text-gray-400 uppercase tracking-wider">Target Event *</label>
+          <select id="transfer-target-event-select"
+            class="w-full border border-gray-200 focus:border-emerald-500 focus:outline-none rounded-xl px-4 py-3 text-sm">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+      </div>
+
+      <div class="flex gap-x-3 mt-4">
+        <button onclick="closeTransferModal()"
+          class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl transition-colors">
+          Cancel
+        </button>
+        <button onclick="executeTransfer()"
+          class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-colors shadow">
+          Confirm Transfer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Icons ──────────────────────────────────────────────────────────────────
+    lucide.createIcons();
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    // Core application state including the admin authentication key 
+    // and caching for active data sections.
+    let ADMIN_KEY = '';
+    let currentAssignGroupId = null;
+    let allBookings = [];
+
+    const API = '';  // same origin — FastAPI serves both frontend and API
+
+    // ── Auth ───────────────────────────────────────────────────────────────────
+    /**
+     * Authenticates the admin user by validating the provided secret key
+     * against the backend. Persists logic for the current session.
+     */
+    async function login(keyFromStorage = null) {
+      const key = keyFromStorage || document.getElementById('adminKeyInput').value.trim();
+      if (!key) return;
+
+      const res = await fetch(`${API}/api/admin/dashboard`, {
+        headers: { 'X-Admin-Key': key }
+      });
+
+      if (res.ok) {
+        ADMIN_KEY = key;
+        localStorage.setItem('adminKey', key);
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        showSection('dashboard');
+      } else {
+        if (!keyFromStorage) {
+          document.getElementById('loginError').classList.remove('hidden');
+        } else {
+          localStorage.removeItem('adminKey');
+        }
+      }
+    }
+
+    function logout() {
+      ADMIN_KEY = '';
+      localStorage.removeItem('adminKey');
+      location.reload();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedKey = localStorage.getItem('adminKey');
+      if (savedKey) {
+        login(savedKey);
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab) {
+          setTimeout(() => showSection(tab), 150);
+        }
+      }
+    });
+
+    // ── Navigation ─────────────────────────────────────────────────────────────
+    function showSection(name) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      const sect = document.getElementById(`section-${name}`);
+      if (sect) sect.classList.remove('hidden');
+
+      document.querySelectorAll('.admin-tab-btn').forEach(b => {
+        const active = b.dataset.section === name;
+        if (active) {
+          b.className = "admin-tab-btn px-3 py-2 border-b-2 border-emerald-500 text-emerald-700 font-bold text-[10px] md:text-[11px] bg-emerald-50/40 rounded-t-lg transition-all flex items-center gap-1 shadow-sm";
+        } else {
+          b.className = "admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1";
+        }
+      });
+
+      if (name === 'dashboard') loadDashboard();
+      if (name === 'bookings') loadBookings();
+      if (name === 'groups') loadGroups();
+      if (name === 'locations') {
+        loadAdminLocations();
+        loadPartners();
+      }
+      if (name === 'hosts') loadHosts();
+      if (name === 'events') loadEvents();
+      if (name === 'payouts') loadPayouts();
+    }
+
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sb.classList.toggle('active');
+      overlay.classList.toggle('hidden');
+    }
+
+    let toastTimeout;
+    function toast(msg, isError = false) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = `fixed top-12 right-5 z-50 ${isError ? 'bg-red-600' : 'bg-gray-900'} text-white px-6 py-4 rounded-2xl text-sm font-semibold shadow-2xl transition-all duration-300`;
+
+      el.classList.remove('translate-y-[-120%]', 'opacity-0', 'pointer-events-none');
+      el.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        el.classList.remove('translate-y-0', 'opacity-100');
+        el.classList.add('translate-y-[-120%]', 'opacity-0');
+        setTimeout(() => el.classList.add('pointer-events-none'), 300);
+      }, 500);
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function adminFetch(url, opts = {}) {
+      return fetch(API + url, {
+        ...opts,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': ADMIN_KEY,
+          ...(opts.headers || {}),
+        },
+      });
+    }
+
+    function customConfirm(text) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        const content = document.getElementById('confirmModalContent');
+        const textEl = document.getElementById('confirmModalText');
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+
+        textEl.textContent = text || 'This action cannot be undone.';
+        modal.classList.remove('hidden');
+        lucide.createIcons(); // ensure icons in modal are rendered
+        setTimeout(() => {
+          content.classList.remove('scale-95', 'opacity-0');
+          content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        const onOk = () => { cleanup(); resolve(true); };
+        const onCancel = () => { cleanup(); resolve(false); };
+        const cleanup = () => {
+          content.classList.remove('scale-100', 'opacity-100');
+          content.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => modal.classList.add('hidden'), 300);
+          okBtn.removeEventListener('click', onOk);
+          cancelBtn.removeEventListener('click', onCancel);
+        };
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+      });
+    }
+
+    function statusBadge(s) {
+      return `<span class="badge status-${s}">${s}</span>`;
+    }
+
+    function paymentBadge(s) {
+      return `<span class="badge status-${s}">${s}</span>`;
+    }
+
+    // ── Dashboard ──────────────────────────────────────────────────────────────
+    async function loadDashboard() {
+      const [statsRes, bookingsRes] = await Promise.all([
+        adminFetch('/api/admin/dashboard'),
+        adminFetch('/api/admin/bookings'),
+      ]);
+      const stats = await statsRes.json();
+      const bookings = await bookingsRes.json();
+
+      // Update static counter cards
+      document.getElementById('admin-stat-volume').textContent = '৳' + Number(stats.revenue).toLocaleString();
+      document.getElementById('admin-stat-hosts').textContent = stats.verified_hosts;
+      document.getElementById('admin-stat-events').textContent = stats.published_events;
+      document.getElementById('admin-stat-tickets').textContent = stats.tickets_issued;
+
+      // Update other badges
+      const pendingHostsBadge = document.getElementById('admin-badge-pending-hosts');
+      if (pendingHostsBadge) pendingHostsBadge.textContent = stats.pending_hosts || '0';
+      const eventsBadge = document.getElementById('admin-badge-events');
+      if (eventsBadge) eventsBadge.textContent = stats.published_events || '0';
+      const bookingsBadge = document.getElementById('admin-badge-bookings');
+      if (bookingsBadge) bookingsBadge.textContent = stats.total || '0';
+
+      const recent = bookings.slice(0, 10);
+      allBookings = bookings; // Populate global state for lookups
+      document.getElementById('recentBookingsTable').innerHTML = bookingsTableHTML(recent);
+      lucide.createIcons();
+    }
+
+    function statCard(label, value, color) {
+      return `
+    <div class="bg-white rounded-2xl border p-5 ${color} transition shadow-sm hover:shadow-md">
+      <p class="text-xs font-bold opacity-60 uppercase tracking-wider">${label}</p>
+      <p class="text-3xl font-bold mt-1">${value}</p>
+    </div>`;
+    }
+
+
+    // ── Bookings ───────────────────────────────────────────────────────────────
+    async function loadBookings() {
+      const status = document.getElementById('filterStatus')?.value || '';
+      const payment = document.getElementById('filterPayment')?.value || '';
+      const size = document.getElementById('filterGroupSize')?.value || '';
+
+      let url = '/api/admin/bookings?';
+      if (status) url += `status=${status}&`;
+      if (payment) url += `payment=${payment}&`;
+      if (size) url += `group_size=${size}&`;
+
+      const res = await adminFetch(url);
+      allBookings = await res.json();
+      document.getElementById('bookingsTable').innerHTML = bookingsTableHTML(allBookings);
+      const bookingsBadge = document.getElementById('admin-badge-bookings');
+      if (bookingsBadge) bookingsBadge.textContent = allBookings.length;
+      lucide.createIcons();
+    }
+
+    let statusSortDir = 'asc';
+    function toggleStatusSort() {
+      statusSortDir = statusSortDir === 'asc' ? 'desc' : 'asc';
+      allBookings.sort((a, b) => {
+        if (statusSortDir === 'asc') return a.booking_status.localeCompare(b.booking_status);
+        return b.booking_status.localeCompare(a.booking_status);
+      });
+      document.getElementById('bookingsTable').innerHTML = bookingsTableHTML(allBookings);
+      lucide.createIcons();
+    }
+
+    function bookingsTableHTML(bookings) {
+      if (!bookings.length) return `<p class="p-6 text-gray-400 text-sm">No bookings found.</p>`;
+      return `
+    <table class="w-full text-[11px] table-auto">
+      <thead class="bg-gray-50 text-gray-500 text-[10px] uppercase">
+        <tr>
+          <th class="px-2 py-2 text-left">Tracking ID</th>
+          <th class="px-2 py-2 text-left">Name</th>
+          <th class="px-2 py-2 text-left">Phone</th>
+          <th class="px-2 py-2 text-left">Size</th>
+          <th class="px-2 py-2 text-left">Date</th>
+          <th class="px-2 py-2 text-left">Location (Cur/Pref)</th>
+          <th class="px-2 py-2 text-left">Venue</th>
+          <th class="px-2 py-2 text-left">Fee</th>
+          <th class="px-2 py-2 text-left">Payment</th>
+          <th class="px-2 py-2 text-left cursor-pointer hover:bg-gray-200 transition-colors rounded-lg" onclick="toggleStatusSort()" title="Sort by Status">Status ⇅</th>
+          <th class="px-2 py-2 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        ${bookings.map(b => `
+          <tr class="hover:bg-gray-50 border-b border-gray-100">
+            <td class="px-2 py-2 font-mono text-[10px] font-black text-emerald-700 whitespace-nowrap">${b.tracking_id}</td>
+            <td class="px-2 py-2 font-bold text-gray-900">${b.name}</td>
+            <td class="px-2 py-2 text-gray-500 whitespace-nowrap">${b.phone}</td>
+            <td class="px-2 py-2 whitespace-nowrap">${b.group_size}P</td>
+            <td class="px-2 py-2 text-gray-500 whitespace-nowrap leading-tight">
+              ${b.preferred_date}<br/>
+              <span class="text-[9px] font-mono text-emerald-700">${b.preferred_time === '17:00:00' ? '5:00 PM' : b.preferred_time === '19:00:00' ? '7:00 PM' : b.preferred_time || '-'}</span>
+            </td>
+            <td class="px-2 py-2 text-[10px]">
+              <div class="text-emerald-700 font-medium truncate max-w-[120px]">🏠 ${b.current_location || '-'}</div>
+              <div class="text-emerald-500 font-bold truncate max-w-[120px]">📍 ${b.preferred_location || '-'}</div>
+            </td>
+            <td class="px-2 py-2 text-gray-500 whitespace-nowrap">${b.venue_type === 'restaurant' ? '🍽 Resto' : '🌳 Public'}</td>
+            <td class="px-2 py-2 font-bold">৳${b.fee_amount}</td>
+            <td class="px-2 py-2">
+              ${paymentBadge(b.payment_status)}
+              <div class="text-[9px] text-gray-400 font-mono mt-0.5">
+                ${b.payment_method === 'beta_promo' ? 'PROMO' : (b.payment_method || '-')} ${b.payment_sender_digits ? `(*${b.payment_sender_digits})` : ''}
+              </div>
+            </td>
+            <td class="px-2 py-2">
+              <div class="flex flex-col gap-1">
+                ${statusBadge(b.booking_status)}
+                <div class="flex flex-wrap gap-1">
+                  ${b.is_verified ? `<span class="px-1 py-0.5 bg-blue-50 text-blue-600 rounded text-[8px] font-black uppercase">V</span>` : ''}
+                  ${b.wants_pickup ? `<span class="px-1 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[8px] font-black uppercase">P</span>` : ''}
+                  ${b.wants_dropoff ? `<span class="px-1 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[8px] font-black uppercase">D</span>` : ''}
+                </div>
+              </div>
+            </td>
+            <td class="px-2 py-2 whitespace-nowrap">
+              <div class="flex gap-2">
+                <button onclick="openEditModalById(${b.id})" class="text-emerald-700 hover:bg-emerald-50 p-1 rounded transition" title="Edit Booking"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+                <button onclick="openTransferModal(${b.id})" class="text-blue-600 hover:bg-blue-50 p-1 rounded transition" title="Transfer Booking"><i data-lucide="shuffle" class="w-3.5 h-3.5"></i></button>
+                <button onclick="deleteBooking(${b.id})" class="text-red-500 hover:bg-red-50 p-1 rounded transition" title="Delete Booking"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+    }
+
+    // ── Edit Booking ───────────────────────────────────────────────────────────
+    function openEditModalById(id) {
+      const b = allBookings.find(x => x.id === id);
+      if (!b) return toast('Booking not found', true);
+
+      document.getElementById('edit_id').value = b.id;
+      document.getElementById('edit_payment').value = b.payment_status;
+      document.getElementById('edit_status').value = b.booking_status;
+      document.getElementById('edit_notes').value = b.admin_notes || '';
+      document.getElementById('edit_rejection').value = b.rejection_reason || '';
+      document.getElementById('edit_is_verified').checked = !!b.is_verified;
+      document.getElementById('edit_wants_pickup').checked = !!b.wants_pickup;
+      document.getElementById('edit_wants_dropoff').checked = !!b.wants_dropoff;
+
+      // Show/hide rejection field
+      const toggleRejection = (s) => {
+        document.getElementById('rejection_container').classList.toggle('hidden', s !== 'unsuccessful');
+      };
+
+      document.getElementById('edit_status').onchange = (e) => toggleRejection(e.target.value);
+      toggleRejection(b.booking_status);
+
+      document.getElementById('edit_tracking_id').textContent = b.tracking_id;
+      const prefNote = b.interests || 'No preferences provided.';
+      document.getElementById('edit_interests_val').textContent = prefNote;
+
+      document.getElementById('info_method').textContent = b.payment_method || '-';
+      document.getElementById('info_digits').textContent = b.payment_sender_digits || '--';
+
+      document.getElementById('editModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    async function saveEdit() {
+      const id = document.getElementById('edit_id').value;
+      const payload = {
+        payment_status: document.getElementById('edit_payment').value,
+        booking_status: document.getElementById('edit_status').value,
+        admin_notes: document.getElementById('edit_notes').value,
+        rejection_reason: document.getElementById('edit_rejection').value,
+        is_verified: document.getElementById('edit_is_verified').checked,
+        wants_pickup: document.getElementById('edit_wants_pickup').checked,
+        wants_dropoff: document.getElementById('edit_wants_dropoff').checked,
+      };
+      const res = await adminFetch(`/api/admin/bookings/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        toast('Booking updated ✓');
+        closeEditModal();
+        loadBookings();
+      } else {
+        const err = await res.json();
+        toast(err.detail || 'Update failed', true);
+      }
+    }
+
+    async function deleteBooking(id) {
+      const confirmed = await customConfirm('Are you sure you want to delete this booking? This action cannot be undone.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/bookings/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast('Booking deleted ✓');
+        loadBookings();
+        if (document.getElementById('section-dashboard').classList.contains('hidden') === false) {
+          loadDashboard();
+        }
+      } else {
+        toast('Delete failed', true);
+      }
+    }
+
+    // ── Groups Management ──────────────────────────────────────────────────────
+    /**
+     * Fetches and displays all meetup groups, including their members 
+     * and current statuses (Open/Closed/Completed).
+     */
+    async function loadGroups() {
+      const res = await adminFetch('/api/admin/groups');
+      const groups = await res.json();
+      const container = document.getElementById('groupsList');
+
+      if (!groups.length) {
+        container.innerHTML = `<p class="text-gray-400 text-sm">No groups yet. Create one to start assigning bookings.</p>`;
+        // Still load suggestions even if no groups exist
+        loadMatchSuggestions();
+        return;
+      }
+
+      container.innerHTML = groups.map(g => `
+    <div class="bg-white rounded-2xl border border-gray-100 p-5 md:p-6">
+      <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div class="flex-1">
+          <p class="font-mono text-xs text-emerald-700 font-bold uppercase tracking-wider">${g.group_code}</p>
+          <h3 class="font-black text-gray-800 mt-1 text-xl">${g.venue_name}</h3>
+          <p class="text-sm text-gray-500 mt-1">📅 ${g.meet_date} &nbsp;⏰ ${g.meet_time} &nbsp;👥 ${g.group_size}-person</p>
+          
+          <div class="mt-4 p-5 bg-emerald-50/50 border border-emerald-100/50 rounded-2xl">
+            <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <i data-lucide="users" class="w-3.5 h-3.5"></i> Assigned Members
+            </p>
+            <div class="space-y-3">
+                ${(g.members || []).map(m => `
+                    <div class="flex items-center justify-between text-sm py-2 border-b border-gray-200/40 last:border-0 group">
+                        <div>
+                            <span class="font-bold text-gray-800">${m.name}</span>
+                            <span class="text-xs text-gray-400 ml-2 font-medium">${m.phone}</span>
+                            <span class="text-xs font-mono text-emerald-600 ml-2">(${m.tracking_id})</span>
+                        </div>
+                        <button onclick="removeMemberAction(${g.id}, ${m.id})" 
+                                class="hidden group-hover:block text-red-500 text-xs hover:underline font-bold">
+                            Remove
+                        </button>
+                    </div>
+                `).join('') || '<p class="text-xs text-gray-400 italic">No members assigned yet.</p>'}
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 md:gap-3">
+          <span class="text-sm text-gray-400 w-full md:w-auto mb-1 md:mb-0">${g.member_count}/${g.group_size} members</span>
+          ${statusBadge(g.status)}
+          <button onclick="openEditGroupModal(${JSON.stringify(g).replace(/"/g, '&quot;')})"
+            class="text-sm text-emerald-700 hover:text-emerald-800 font-bold px-2">Edit</button>
+          <button onclick="deleteGroup(${g.id})"
+            class="text-sm text-red-500 hover:text-red-700 font-bold px-2">Delete</button>
+          <button onclick="openAssignModal(${g.id}, '${g.group_code}', ${g.group_size})"
+            class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-100 transition whitespace-nowrap">
+            Assign Members
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+      lucide.createIcons();
+      loadMatchSuggestions();
+    }
+
+    async function loadMatchSuggestions() {
+      const res = await adminFetch('/api/admin/match-suggestions');
+      if (!res.ok) return;
+      const data = await res.json();
+      const container = document.getElementById('matchSuggestions');
+
+      if (!data.length) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="bg-amber-50/30 border border-amber-100 p-6 rounded-[2.5rem] mb-6">
+          <h2 class="text-sm font-black text-amber-800 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Match Suggestions
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            ${data.map(s => `
+              <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition-all group">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[9px] font-black uppercase tracking-widest rounded-full">${s.vibe}</span>
+                  <span class="text-[9px] font-bold text-gray-300 uppercase tracking-widest">${s.date}</span>
+                </div>
+                <div class="space-y-1 mb-4">
+                  <p class="text-sm font-black text-gray-800">${s.potential_count} Ready Users</p>
+                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">${s.size}-Person Group</p>
+                </div>
+                <div class="space-y-2 mb-6 max-h-24 overflow-y-auto pr-1 custom-scrollbar">
+                  ${s.members.map(m => `
+                    <div class="flex flex-col p-2 bg-gray-50 rounded-lg">
+                      <span class="text-[10px] font-bold text-gray-700">${m.name}</span>
+                      <span class="text-[9px] text-gray-400">${m.location}</span>
+                    </div>
+                  `).join('')}
+                </div>
+                <button onclick="quickCreateGroup('${s.vibe}', '${s.date}', ${s.size})" 
+                  class="w-full py-2.5 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-amber-600 transition shadow-lg shadow-amber-100">
+                  Setup Group
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function quickCreateGroup(vibe, date, size) {
+      openCreateGroup();
+      document.getElementById('g_date').value = date;
+      document.getElementById('g_size').value = size;
+      toast(`Suggesting ${vibe} meetup for ${date}`);
+    }
+
+    async function removeMemberAction(groupId, bookingId) {
+      const confirmed = await customConfirm('Remove this member from the group? They will be set back to "Processing" status.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/groups/${groupId}/members/${bookingId}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        toast('Member removed ✓');
+        loadGroups();
+      } else {
+        toast('Failed to remove member', true);
+      }
+    }
+
+    // ── Create Group ───────────────────────────────────────────────────────────
+    async function openCreateGroup() {
+      // Load venues
+      const res = await fetch('/api/all-points');
+      const points = await res.json();
+      const select = document.getElementById('g_venue');
+      select.innerHTML = '<option value="">Select a venue...</option>' +
+        points.map(p => `<option value="${p.name}">${p.name} (${p.point_type === 'restaurant' ? 'Restaurant' : 'Public'})</option>`).join('');
+
+      document.getElementById('groupModal').classList.remove('hidden');
+    }
+
+    // ── Partnerships ───────────────────────────────────────────────────────────
+    async function loadPartners() {
+      const res = await adminFetch('/api/admin/partnerships');
+      const partners = await res.json();
+      const tbody = document.getElementById('partnersTableBody');
+      if (!partners.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">No requests yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = partners.map(p => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 font-medium text-gray-900">${p.restaurant_name}</td>
+          <td class="px-6 py-4 text-gray-500">${p.contact_number}</td>
+          <td class="px-6 py-4">
+            <select onchange="updatePartnerStatus(${p.id}, this.value)" class="text-xs border border-gray-200 rounded px-2 py-1 outline-none bg-white font-bold ${p.status === 'pending' ? 'text-amber-600' : p.status === 'done' ? 'text-emerald-700' : 'text-emerald-500'}">
+              <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
+              <option value="contacted" ${p.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="done" ${p.status === 'done' ? 'selected' : ''}>Done</option>
+            </select>
+          </td>
+          <td class="px-6 py-4 text-gray-500 text-xs">${new Date(p.created_at).toLocaleString()}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="deletePartner(${p.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updatePartnerStatus(id, status) {
+      const res = await adminFetch(`/api/admin/partnerships/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        toast('Partnership updated ✓');
+        loadPartners();
+      } else {
+        toast('Failed to update', true);
+      }
+    }
+
+    async function deletePartner(id) {
+      const confirmed = await customConfirm('Are you sure you want to delete this partnership record?');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/partnerships/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        toast('Partnership deleted ✓');
+        loadPartners();
+      } else {
+        toast('Failed to delete', true);
+      }
+    }
+    function closeGroupModal() {
+      document.getElementById('groupModal').classList.add('hidden');
+    }
+
+    async function createGroup() {
+      const payload = {
+        venue_name: document.getElementById('g_venue').value.trim(),
+        meet_date: document.getElementById('g_date').value,
+        meet_time: document.getElementById('g_time').value,
+        group_size: parseInt(document.getElementById('g_size').value),
+      };
+      const imageUrl = document.getElementById('g_image_url').value.trim();
+      if (imageUrl) payload.image_url = imageUrl;
+      if (!payload.venue_name || !payload.meet_date || !payload.meet_time) {
+        toast('Venue, Date and Time are required for initial creation', true); return;
+      }
+      const res = await adminFetch('/api/admin/groups', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        toast('Group created ✓');
+        closeGroupModal();
+        loadGroups();
+      } else {
+        toast('Failed to create group', true);
+      }
+    }
+
+    // ── Edit Group ─────────────────────────────────────────────────────────────
+    async function openEditGroupModal(g) {
+      // Load venues
+      const res = await fetch('/api/all-points');
+      const points = await res.json();
+      const select = document.getElementById('eg_venue');
+      select.innerHTML = points.map(p => `<option value="${p.name}" ${g.venue_name === p.name ? 'selected' : ''}>${p.name} (${p.point_type === 'restaurant' ? 'Restaurant' : 'Public'})</option>`).join('');
+
+      document.getElementById('eg_id').value = g.id;
+      document.getElementById('eg_date').value = g.meet_date;
+      document.getElementById('eg_time').value = g.meet_time;
+      document.getElementById('eg_status').value = g.status;
+      document.getElementById('eg_image_url').value = g.image_url || '';
+      document.getElementById('editGroupModal').classList.remove('hidden');
+    }
+
+    function closeEditGroupModal() {
+      document.getElementById('editGroupModal').classList.add('hidden');
+    }
+
+    async function saveGroupEdit() {
+      const id = document.getElementById('eg_id').value;
+      const payload = {};
+      const venue = document.getElementById('eg_venue').value;
+      const date = document.getElementById('eg_date').value;
+      const time = document.getElementById('eg_time').value;
+      const status = document.getElementById('eg_status').value;
+      const imageUrl = document.getElementById('eg_image_url').value.trim();
+
+      if (venue) payload.venue_name = venue;
+      if (date) payload.meet_date = date;
+      if (time) payload.meet_time = time;
+      if (status) payload.status = status;
+      payload.image_url = imageUrl;
+
+      const res = await adminFetch(`/api/admin/groups/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        toast('Group updated ✓');
+        closeEditGroupModal();
+        loadGroups();
+      } else {
+        toast('Update failed', true);
+      }
+    }
+
+    async function deleteGroup(id) {
+      const confirmed = await customConfirm('Are you sure you want to delete this group? Members will be unassigned.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/groups/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast('Group deleted ✓');
+        loadGroups();
+      } else {
+        toast('Failed to delete', true);
+      }
+    }
+
+    // ── Assign Members ─────────────────────────────────────────────────────────
+    async function openAssignModal(groupId, groupCode, groupSize) {
+      currentAssignGroupId = groupId;
+      document.getElementById('assignGroupCode').textContent = groupCode;
+      document.getElementById('assignModal').classList.remove('hidden');
+
+      // Load bookings with matching group size
+      const res = await adminFetch(`/api/admin/bookings?group_size=${groupSize}`);
+      const all = await res.json();
+
+      // Filter for unassigned bookings (no group ID)
+      const bookings = all.filter(b => !b.assigned_group_id);
+
+      const list = document.getElementById('assignableList');
+
+      if (!bookings.length) {
+        list.innerHTML = `<p class="text-gray-400 text-sm p-3">No unassigned bookings for ${groupSize}-person groups.</p>`;
+        return;
+      }
+
+      list.innerHTML = bookings.map(b => `
+    <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer border-b border-gray-50 last:border-0">
+      <input type="checkbox" value="${b.id}" class="assign-check w-4 h-4 accent-emerald-600">
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <p class="font-bold text-sm text-gray-800">${b.name} <span class="text-xs text-emerald-700 font-mono font-bold">${b.tracking_id}</span></p>
+          <div class="flex gap-1">
+            ${paymentBadge(b.payment_status)}
+            ${statusBadge(b.booking_status)}
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-1">
+          ${b.phone} · Prefers: ${b.venue_type === 'restaurant' ? '🍽' : '🌳'} · ${b.preferred_date} (${b.preferred_time})
+        </p>
+      </div>
+    </label>
+  `).join('');
+    }
+
+    function closeAssignModal() {
+      document.getElementById('assignModal').classList.add('hidden');
+      currentAssignGroupId = null;
+    }
+
+    async function submitAssignment() {
+      const checked = [...document.querySelectorAll('.assign-check:checked')].map(c => parseInt(c.value));
+      if (!checked.length) { toast('Select at least one booking', true); return; }
+
+      const res = await adminFetch(`/api/admin/groups/${currentAssignGroupId}/assign`, {
+        method: 'POST',
+        body: JSON.stringify({ booking_ids: checked }),
+      });
+
+      if (res.ok) {
+        toast(`${checked.length} member(s) assigned ✓`);
+        closeAssignModal();
+        loadGroups();
+      } else {
+        toast('Assignment failed', true);
+      }
+    }
+
+    // ── Locations ──────────────────────────────────────────────────────────────
+    async function loadAdminLocations() {
+      const res = await adminFetch('/api/admin/locations');
+      const locations = await res.json();
+      console.log('Loaded admin locations:', locations); // DEBUG
+      const body = document.getElementById('locationsTableBody');
+
+      if (!locations.length) {
+        body.innerHTML = `<tr><td colspan="3" class="p-6 text-gray-400 text-sm text-center">No locations found.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = locations.map(loc => `
+        <tr class="hover:bg-gray-50 align-top">
+          <td class="px-6 py-4">
+            <div class="font-medium text-gray-800">${loc.name}</div>
+            <div class="mt-4 p-3 bg-gray-50/50 rounded-xl border border-gray-100">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center">
+                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> Meeting Points
+              </p>
+              <div id="points-${loc.id}" class="space-y-1.5 ml-1 text-xs text-gray-600">
+                 ${renderPointsHtml(loc.points, loc.id)}
+              </div>
+              <div class="mt-3 pt-3 border-t border-gray-200/50 space-y-2">
+                <input type="text" id="newPoint-${loc.id}" placeholder="Point/Branch name..." 
+                  class="text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-400 w-full font-medium">
+                <div class="flex gap-2">
+                    <input type="text" id="lat-${loc.id}" placeholder="Lat: 23.7xx" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-1/2">
+                    <input type="text" id="lng-${loc.id}" placeholder="Lng: 90.3xx" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-1/2">
+                </div>
+                <select id="type-${loc.id}" class="text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg w-full bg-white">
+                  <option value="public_place">Public Place</option>
+                  <option value="restaurant">Partner Restaurant</option>
+                  <option value="gen_restaurant">Restaurant</option>
+                  <option value="cinema">Cinema Hall</option>
+                </select>
+                <div class="flex items-center justify-between">
+                    <a href="https://www.latlong.net/" target="_blank" class="text-[9px] text-blue-500 hover:underline">Find Coords ↗</a>
+                    <button onclick="addMeetingPoint(${loc.id})" 
+                      class="text-[10px] bg-gray-800 text-white px-4 py-1.5 rounded-lg font-bold hover:bg-gray-900 transition">Add Point</button>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span class="badge ${loc.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
+              ${loc.is_active ? 'Active' : 'Inactive'}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-right space-x-3">
+            <button onclick="toggleLocationStatus(${loc.id}, ${!loc.is_active})"
+              class="text-xs font-semibold ${loc.is_active ? 'text-gray-400 hover:text-gray-600' : 'text-blue-600 hover:text-blue-700'}">
+              ${loc.is_active ? 'Deactivate' : 'Activate'}
+            </button>
+            <button onclick="deleteLocation(${loc.id})"
+              class="text-xs font-semibold text-red-500 hover:text-red-700">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function renderPointsHtml(points, locId) {
+      if (!points || !points.length) {
+        return `<span class="text-gray-400 italic">No points added.</span>`;
+      }
+      return points.map(p => `
+            <div class="flex flex-col group py-1.5 border-b border-gray-50 last:border-0" id="point-display-${p.id}">
+                <div class="flex items-center justify-between">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-gray-800 flex items-center gap-2">
+                            • ${p.name}
+                            <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${p.point_type === 'restaurant' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'}">
+                                ${p.point_type === 'restaurant' ? 'Partner Restaurant' : 'Public Place'}
+                            </span>
+                        </span>
+                        ${p.latitude ? `<span class="text-[9px] text-gray-400 ml-3 font-mono">${p.latitude}, ${p.longitude}</span>` : ''}
+                    </div>
+                    <div class="hidden group-hover:flex items-center gap-1">
+                        <button onclick="togglePointEdit(${p.id}, true)" class="p-1 hover:bg-blue-50 text-blue-500 rounded transition" title="Edit">
+                            <i data-lucide="edit" class="w-3 h-3"></i>
+                        </button>
+                        <button onclick="deleteMeetingPoint(${p.id}, ${locId})" class="p-1 hover:bg-red-50 text-red-500 rounded transition" title="Delete">
+                            <i data-lucide="trash-2" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="point-edit-${p.id}" class="hidden p-3 bg-white rounded-xl shadow-inner border-2 border-blue-100 my-2 space-y-2">
+                 <input type="text" id="edit-name-${p.id}" value="${p.name}" placeholder="Name" class="text-xs w-full px-2 py-1.5 border border-gray-200 rounded-lg">
+                 <div class="flex gap-2">
+                     <input type="text" id="edit-lat-${p.id}" value="${p.latitude || ''}" placeholder="Lat" class="text-[10px] w-1/2 px-2 py-1.5 border border-gray-200 rounded-lg">
+                     <input type="text" id="edit-lng-${p.id}" value="${p.longitude || ''}" placeholder="Lng" class="text-[10px] w-1/2 px-2 py-1.5 border border-gray-200 rounded-lg">
+                 </div>
+                 <select id="edit-type-${p.id}" class="text-[10px] w-full px-2 py-1.5 border border-gray-200 rounded-lg">
+                     <option value="public_place" ${p.point_type === 'public_place' ? 'selected' : ''}>Public Place</option>
+                     <option value="restaurant" ${p.point_type === 'restaurant' ? 'selected' : ''}>Partner Restaurant</option>
+                     <option value="gen_restaurant" ${p.point_type === 'gen_restaurant' ? 'selected' : ''}>Restaurant</option>
+                     <option value="cinema" ${p.point_type === 'cinema' ? 'selected' : ''}>Cinema Hall</option>
+                 </select>
+                 <div class="flex justify-end gap-3 items-center">
+                     <button onclick="togglePointEdit(${p.id}, false)" class="text-[10px] text-gray-400 font-bold hover:text-gray-600 transition">Cancel</button>
+                     <button onclick="saveEditPoint(${p.id}, ${locId})" class="text-[10px] bg-blue-600 text-white font-bold px-4 py-1.5 rounded-lg hover:bg-blue-700 shadow-sm transition">Update</button>
+                 </div>
+            </div>
+        `).join('');
+    }
+
+    async function loadMeetingPointsForAdmin(locId) {
+      const res = await fetch(`${API}/api/locations/${locId}/points`);
+      const points = await res.json();
+      const container = document.getElementById(`points-${locId}`);
+      if (!points.length) {
+        container.innerHTML = `<span class="text-gray-400 italic">No points added.</span>`;
+        return;
+      }
+      container.innerHTML = points.map(p => `
+            <div class="flex items-center justify-between group py-0.5">
+                <span>• ${p.name}</span>
+                <button onclick="deleteMeetingPoint(${p.id}, ${locId})" 
+                  class="hidden group-hover:block text-red-500 hover:text-red-700 transition">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i>
+                </button>
+            </div>
+        `).join('');
+      lucide.createIcons();
+    }
+
+    async function addMeetingPoint(locId) {
+      const btn = event.target;
+      const input = document.getElementById(`newPoint-${locId}`);
+      const latInput = document.getElementById(`lat-${locId}`);
+      const lngInput = document.getElementById(`lng-${locId}`);
+      const typeSelect = document.getElementById(`type-${locId}`);
+
+      const name = input.value.trim();
+      const lat = latInput.value.trim();
+      const lng = lngInput.value.trim();
+      const point_type = typeSelect.value;
+
+      if (!name) return;
+
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '⏳';
+
+      const payload = {
+        location_id: locId,
+        name,
+        latitude: lat ? parseFloat(lat) : null,
+        longitude: lng ? parseFloat(lng) : null,
+        point_type
+      };
+
+      const res = await adminFetch(`/api/admin/locations/${locId}/points`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+
+      if (res.ok) {
+        toast(`"${name}" added ✓`);
+        input.value = '';
+        latInput.value = '';
+        lngInput.value = '';
+        loadAdminLocations(); // refresh everything to get points
+      } else {
+        toast('Failed to add meetup point', true);
+      }
+    }
+
+    async function deleteMeetingPoint(pointId, locId) {
+      const confirmed = await customConfirm('Delete this meeting point?');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/points/${pointId}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        loadAdminLocations();
+      } else {
+        toast('Failed to delete point', true);
+      }
+    }
+
+    function togglePointEdit(id, show) {
+      document.getElementById(`point-display-${id}`).classList.toggle('hidden', show);
+      document.getElementById(`point-edit-${id}`).classList.toggle('hidden', !show);
+      if (show) lucide.createIcons();
+    }
+
+    async function saveEditPoint(id, locId) {
+      const name = document.getElementById(`edit-name-${id}`).value.trim();
+      const lat = document.getElementById(`edit-lat-${id}`).value.trim();
+      const lng = document.getElementById(`edit-lng-${id}`).value.trim();
+      const point_type = document.getElementById(`edit-type-${id}`).value;
+
+      if (!name) return toast('Name is required', true);
+
+      const res = await adminFetch(`/api/admin/points/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          location_id: locId,
+          name,
+          latitude: lat ? parseFloat(lat) : null,
+          longitude: lng ? parseFloat(lng) : null,
+          point_type
+        })
+      });
+
+      if (res.ok) {
+        toast('Point updated ✓');
+        loadAdminLocations();
+      } else {
+        toast('Update failed', true);
+      }
+    }
+
+    async function deleteLocation(id) {
+      const confirmed = await customConfirm('Are you sure? This will delete the location and all its meeting points.');
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/locations/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast('Location deleted ✓');
+        loadAdminLocations();
+      } else {
+        toast('Delete failed', true);
+      }
+    }
+
+    async function addLocation() {
+      const name = document.getElementById('newLocName').value.trim();
+      if (!name) return;
+
+      const res = await adminFetch('/api/admin/locations', {
+        method: 'POST',
+        body: JSON.stringify({ name }),
+      });
+
+      if (res.ok) {
+        toast('Location added ✓');
+        document.getElementById('newLocName').value = '';
+        loadAdminLocations();
+      } else {
+        toast('Failed to add location', true);
+      }
+    }
+
+    async function toggleLocationStatus(id, newStatus) {
+      const res = await adminFetch(`/api/admin/locations/${id}?is_active=${newStatus}`, {
+        method: 'PATCH',
+      });
+      if (res.ok) {
+        toast('Status updated ✓');
+        loadAdminLocations();
+      } else {
+        toast('Update failed', true);
+      }
+    }
+
+    async function deleteLocation(id) {
+      if (!confirm('Are you sure you want to delete this location?')) return;
+      const res = await adminFetch(`/api/admin/locations/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast('Location deleted ✓');
+        loadAdminLocations();
+      } else {
+        toast('Delete failed', true);
+      }
+    }
+    // ── Blog Management (SEO) ──────────────────────────────────────────────────
+    let quill = null;
+    function initQuill() {
+      if (quill) return;
+
+      const Link = Quill.import('formats/link');
+      class CustomLink extends Link {
+        static sanitize(url) {
+          if (url && !url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('/') && !url.startsWith('mailto:')) {
+            return `https://${url}`;
+          }
+          return super.sanitize(url);
+        }
+      }
+      Quill.register(CustomLink, true);
+
+      quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['link', 'blockquote', 'code-block'],
+            [{ 'color': [] }, { 'background': [] }],
+            ['clean']
+          ]
+        }
+      });
+    }
+
+    async function loadBlogs() {
+      try {
+        const res = await adminFetch('/api/blogs');
+        const blogs = await res.json();
+        const tbody = document.getElementById('blogsTableBody');
+
+        if (blogs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-10 text-center text-gray-400">No articles found. Create your first one!</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = blogs.map(b => `
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4 font-bold text-gray-900">${b.title}</td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${b.status === 'published' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'}">
+                ${b.status}
+              </span>
+              ${b.is_pivoted ? '<span class="ml-2 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-100 text-amber-700">★ Pivoted</span>' : ''}
+            </td>
+            <td class="px-6 py-4 text-right space-x-3">
+              <a href="/admin/blogs/${b.id}/edit" class="text-xs font-bold text-emerald-600 hover:underline">Edit</a>
+              <button onclick="deleteBlog(${b.id})" class="text-xs font-bold text-red-500 hover:underline">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        toast("Failed to load blogs", true);
+      }
+    }
+
+
+
+    async function deleteBlog(id) {
+      const confirmed = await customConfirm("Are you sure you want to delete this article?");
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/blogs/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast("Article deleted ✓");
+        loadBlogs();
+      } else {
+        toast("Delete failed", true);
+      }
+    }
+
+    // Update showSection to handle blogs
+    const originalShowSection = showSection;
+    showSection = function (name) {
+      originalShowSection(name);
+      if (name === 'blogs') loadBlogs();
+      if (name === 'coupons') { loadCoupons(); loadCurrentDiscount(); }
+    };
+
+    // ── Coupon Management ──────────────────────────────────────────────────────
+    async function loadCoupons() {
+      try {
+        const res = await adminFetch('/api/admin/coupons');
+        const coupons = await res.json();
+        const tbody = document.getElementById('couponsTableBody');
+
+        if (!coupons.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-10 text-center text-gray-400">No coupons found. Create one to drive growth!</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = coupons.map(c => `
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4 font-mono font-black text-emerald-700">${c.code}</td>
+            <td class="px-6 py-4 font-bold text-gray-800">${c.discount_type === 'percent' ? c.value + '%' : '৳' + c.value}</td>
+            <td class="px-6 py-4 text-gray-500 text-xs">${c.usage_limit || '∞'}</td>
+            <td class="px-6 py-4 text-gray-500 text-xs">${c.expires_at ? new Date(c.expires_at).toLocaleDateString() : 'Never'}</td>
+            <td class="px-6 py-4 text-right">
+              <button onclick="deleteCoupon(${c.id})" class="text-xs font-bold text-red-500 hover:underline">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        toast("Failed to load coupons", true);
+      }
+    }
+
+    function openCouponModal() {
+      document.getElementById('couponModal').classList.remove('hidden');
+    }
+
+    function closeCouponModal() {
+      document.getElementById('couponModal').classList.add('hidden');
+    }
+
+    async function saveCoupon() {
+      const payload = {
+        code: document.getElementById('c_code').value.trim(),
+        discount_type: document.getElementById('c_type').value,
+        value: parseFloat(document.getElementById('c_value').value),
+        usage_limit: parseInt(document.getElementById('c_limit').value) || null,
+        expires_at: document.getElementById('c_expiry').value || null
+      };
+
+      if (!payload.code || isNaN(payload.value)) return toast("Code and value are required", true);
+
+      const res = await adminFetch('/api/admin/coupons', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        toast('Coupon created ✓');
+        closeCouponModal();
+        loadCoupons();
+      } else {
+        toast("Failed to create coupon", true);
+      }
+    }
+
+    async function deleteCoupon(id) {
+      const confirmed = await customConfirm("Delete this coupon? It will no longer be usable by new bookings.");
+      if (!confirmed) return;
+      const res = await adminFetch(`/api/admin/coupons/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast("Coupon deleted ✓");
+        loadCoupons();
+      } else {
+        toast("Delete failed", true);
+      }
+    }
+
+
+    // ── Global Discount Management ─────────────────────────────────────────────
+    async function loadCurrentDiscount() {
+      try {
+        const res = await adminFetch('/api/admin/settings');
+        const data = await res.json();
+        const pct = parseFloat(data.global_discount_percent || 0);
+        const inp = document.getElementById('globalDiscountInput');
+        const status = document.getElementById('currentDiscountStatus');
+        const preview = document.getElementById('discountPreviewBox');
+        inp.value = pct > 0 ? pct : '';
+        if (pct > 0) {
+          status.textContent = `Active: ${pct}% discount is currently live on the booking page.`;
+          status.classList.remove('hidden');
+          updateDiscountPreview(pct);
+          preview.classList.remove('hidden');
+        } else {
+          status.classList.add('hidden');
+          preview.classList.add('hidden');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function updateDiscountPreview(pct) {
+      const p2 = Math.round(499 * (1 - pct / 100));
+      const p5 = Math.round(249 * (1 - pct / 100));
+      document.getElementById('previewP2').innerHTML = `<span style="text-decoration:line-through;color:#d1d5db;font-size:0.75rem">৳499</span> ৳${p2}`;
+      document.getElementById('previewP5').innerHTML = `<span style="text-decoration:line-through;color:#d1d5db;font-size:0.75rem">৳249</span> ৳${p5}`;
+    }
+
+    document.getElementById('globalDiscountInput')?.addEventListener('input', function () {
+      const pct = parseFloat(this.value);
+      const preview = document.getElementById('discountPreviewBox');
+      if (pct > 0 && pct <= 100) {
+        preview.classList.remove('hidden');
+        updateDiscountPreview(pct);
+      } else {
+        preview.classList.add('hidden');
+      }
+    });
+
+    async function saveGlobalDiscount() {
+      const pct = parseFloat(document.getElementById('globalDiscountInput').value);
+      if (isNaN(pct) || pct < 0 || pct > 100) return toast('Enter a valid percentage (0-100)', true);
+      const btn = document.getElementById('saveDiscountBtn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+      try {
+        const res = await adminFetch('/api/admin/settings', {
+          method: 'PATCH',
+          body: JSON.stringify({ global_discount_percent: pct.toString() })
+        });
+        if (res.ok) {
+          toast(`🔥 ${pct}% global discount applied!`);
+          loadCurrentDiscount();
+        } else {
+          toast('Failed to save', true);
+        }
+      } catch (e) { toast('Error saving discount', true); }
+      btn.textContent = 'Apply Discount';
+      btn.disabled = false;
+    }
+
+    async function clearGlobalDiscount() {
+      const confirmed = await customConfirm('Remove the global discount? Prices will return to normal on the booking page.');
+      if (!confirmed) return;
+      try {
+        const res = await adminFetch('/api/admin/settings', {
+          method: 'PATCH',
+          body: JSON.stringify({ global_discount_percent: '0' })
+        });
+        if (res.ok) {
+          toast('Discount removed ✓');
+          document.getElementById('globalDiscountInput').value = '';
+          document.getElementById('discountPreviewBox').classList.add('hidden');
+          document.getElementById('currentDiscountStatus').classList.add('hidden');
+        } else {
+          toast('Failed to remove', true);
+        }
+      } catch (e) { toast('Error', true); }
+    }
+
+    // ── Host Audits Section ──
+    async function loadHosts() {
+      try {
+        const res = await adminFetch('/api/admin/hosts');
+        const hosts = await res.json();
+
+        const pendingCount = hosts.filter(h => h.verification_status === 'PENDING').length;
+        const pendingBadge = document.getElementById('admin-badge-pending-hosts');
+        if (pendingBadge) pendingBadge.textContent = pendingCount;
+
+        const tbody = document.getElementById('hostsTableBody');
+        if (!hosts.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-400">No host profiles registered yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = hosts.map(h => {
+          let badgeColor = 'bg-gray-100 text-gray-600';
+          if (h.verification_status === 'VERIFIED') badgeColor = 'bg-emerald-100 text-emerald-800';
+          if (h.verification_status === 'SUSPENDED') badgeColor = 'bg-red-100 text-red-800';
+          if (h.verification_status === 'PENDING') badgeColor = 'bg-amber-100 text-amber-800';
+
+          const verifyBtn = h.verification_status !== 'VERIFIED'
+            ? `<button onclick="updateHostStatus(${h.id}, 'VERIFIED')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow transition mr-1">Verify</button>`
+            : '';
+          const suspendBtn = h.verification_status !== 'SUSPENDED'
+            ? `<button onclick="updateHostStatus(${h.id}, 'SUSPENDED')" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg text-[10px] font-bold shadow transition">Suspend</button>`
+            : '';
+
+          return `
+            <tr>
+              <td class="px-6 py-4">
+                <div class="font-bold text-gray-800 text-sm">${h.name}</div>
+                <div class="text-gray-400 text-[10px] font-medium">${h.email}</div>
+              </td>
+              <td class="px-6 py-4 font-mono font-bold text-gray-600">${h.nid_number}</td>
+              <td class="px-6 py-4 capitalize font-semibold">${h.category}</td>
+              <td class="px-6 py-4">${h.operating_area || '-'}</td>
+              <td class="px-6 py-4 text-center font-semibold text-gray-800">
+                <input type="number" step="0.05" min="0" max="1" value="${h.revenue_share_pct}" 
+                  onchange="updateHostRevShare(${h.id}, this.value)" 
+                  class="w-16 border rounded px-1.5 py-1 text-center font-bold">
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${badgeColor}">${h.verification_status}</span>
+              </td>
+              <td class="px-6 py-4 text-right whitespace-nowrap">
+                ${verifyBtn}
+                ${suspendBtn}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        toast("Error loading hosts", true);
+      }
+    }
+
+    async function updateHostStatus(hostId, status) {
+      const confirmed = await customConfirm(`Change host status to ${status}?`);
+      if (!confirmed) return;
+      try {
+        const res = await adminFetch(`/api/admin/hosts/${hostId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ verification_status: status })
+        });
+        if (res.ok) {
+          toast(`Host status updated to ${status} ✓`);
+          loadHosts();
+        } else {
+          toast("Failed to update status", true);
+        }
+      } catch (e) { toast("Error updating host", true); }
+    }
+
+    async function updateHostRevShare(hostId, shareVal) {
+      const share = parseFloat(shareVal);
+      if (isNaN(share) || share < 0 || share > 1) return toast("Enter value between 0.0 and 1.0", true);
+      try {
+        const res = await adminFetch(`/api/admin/hosts/${hostId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ revenue_share_pct: share })
+        });
+        if (res.ok) {
+          toast(`Revenue share updated to ${share * 100}%`);
+          loadHosts();
+        }
+      } catch (e) { toast("Error", true); }
+    }
+
+    // ── Experience Feeds Section ──
+    async function loadEvents() {
+      try {
+        const res = await adminFetch('/api/admin/events');
+        const events = await res.json();
+
+        const eventsBadge = document.getElementById('admin-badge-events');
+        if (eventsBadge) eventsBadge.textContent = events.length;
+
+        const tbody = document.getElementById('eventsTableBody');
+        if (!events.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-400">No events found in feed.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = events.map(evt => {
+          let badgeColor = 'bg-gray-100 text-gray-600';
+          if (evt.status === 'published') badgeColor = 'bg-emerald-100 text-emerald-800';
+          if (evt.status === 'draft') badgeColor = 'bg-amber-100 text-amber-800';
+          if (evt.status === 'cancelled') badgeColor = 'bg-red-100 text-red-800';
+
+          const publishBtn = evt.status !== 'published'
+            ? `<button onclick="updateEventStatus(${evt.id}, 'published')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow transition mr-1">Publish</button>`
+            : '';
+          const draftBtn = evt.status !== 'draft'
+            ? `<button onclick="updateEventStatus(${evt.id}, 'draft')" class="px-3 py-1.5 bg-zinc-500 hover:bg-zinc-600 text-white rounded-lg text-[10px] font-bold shadow transition">Draft</button>`
+            : '';
+
+          return `
+            <tr>
+              <td class="px-6 py-4">
+                <div class="font-bold text-gray-800 text-sm">${evt.title}</div>
+                <div class="text-zinc-400 text-[10px] font-semibold uppercase tracking-wider">${evt.package_tier}</div>
+              </td>
+              <td class="px-6 py-4 font-medium text-gray-700">${evt.host_name}</td>
+              <td class="px-6 py-4 font-semibold text-gray-800">৳${evt.price}</td>
+              <td class="px-6 py-4 font-mono font-bold text-emerald-700">${evt.booked_count} / ${evt.capacity}</td>
+              <td class="px-6 py-4 text-gray-500">${evt.event_date.split('T')[0] || evt.event_date}</td>
+              <td class="px-6 py-4 text-center">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${badgeColor}">${evt.status}</span>
+              </td>
+              <td class="px-6 py-4 text-right whitespace-nowrap">
+                ${publishBtn}
+                ${draftBtn}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        toast("Error loading events", true);
+      }
+    }
+
+    async function updateEventStatus(eventId, status) {
+      const confirmed = await customConfirm(`Change event status to ${status}?`);
+      if (!confirmed) return;
+      try {
+        const res = await adminFetch(`/api/admin/events/${eventId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status: status })
+        });
+        if (res.ok) {
+          toast(`Event status updated to ${status} ✓`);
+          loadEvents();
+        } else {
+          toast("Failed to update status", true);
+        }
+      } catch (e) { toast("Error updating event", true); }
+    }
+
+    // ── Host Payouts Section ──
+    async function loadPayouts() {
+      try {
+        const res = await adminFetch('/api/admin/payouts');
+        const payouts = await res.json();
+
+        const tbody = document.getElementById('payoutsTableBody');
+        if (!payouts.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-400">No published events found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = payouts.map(p => {
+          let badgeColor = p.host_payment_status === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
+
+          const actionBtn = p.host_payment_status !== 'paid'
+            ? `<button onclick="updatePayoutStatus(${p.event_id}, 'paid')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow transition">Mark Paid</button>`
+            : `<button onclick="updatePayoutStatus(${p.event_id}, 'unpaid')" class="px-3 py-1.5 bg-zinc-500 hover:bg-zinc-600 text-white rounded-lg text-[10px] font-bold shadow transition">Mark Unpaid</button>`;
+
+          return `
+            <tr class="border-b border-gray-50 hover:bg-gray-50">
+              <td class="px-6 py-4 font-bold text-gray-800 text-sm">${p.event_title}</td>
+              <td class="px-6 py-4 font-medium text-gray-700">${p.host_name}</td>
+              <td class="px-6 py-4 font-mono text-gray-500">${p.host_phone}</td>
+              <td class="px-6 py-4 text-gray-500">${p.event_date ? p.event_date.split('T')[0] : 'TBA'}</td>
+              <td class="px-6 py-4 font-bold text-emerald-700">৳${p.total_revenue}</td>
+              <td class="px-6 py-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${badgeColor}">${p.host_payment_status}</span>
+              </td>
+              <td class="px-6 py-4 text-right whitespace-nowrap">
+                ${actionBtn}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        toast("Error loading payouts", true);
+      }
+    }
+
+    async function updatePayoutStatus(eventId, status) {
+      const confirmed = await customConfirm(`Mark this event's host as ${status}?`);
+      if (!confirmed) return;
+      try {
+        const res = await adminFetch(`/api/admin/payouts/${eventId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ host_payment_status: status })
+        });
+        if (res.ok) {
+          toast(`Host payout status updated to ${status} ✓`);
+          loadPayouts();
+        } else {
+          toast("Failed to update status", true);
+        }
+      } catch (e) { toast("Error updating payout", true); }
+    }
+
+    // ── Booking Transfer Modal ──
+    async function openTransferModal(bookingId) {
+      const b = allBookings.find(x => x.id === bookingId);
+      if (!b) return toast('Booking not found', true);
+
+      document.getElementById('transfer_booking_id').value = b.id;
+      document.getElementById('transfer-attendee-name').innerText = b.name;
+      document.getElementById('transfer-attendee-ticket').innerText = b.tracking_id;
+      document.getElementById('transfer-current-event').innerText = b.event_title;
+
+      try {
+        const res = await adminFetch('/api/admin/events');
+        const events = await res.json();
+
+        const select = document.getElementById('transfer-target-event-select');
+        select.innerHTML = '<option value="">Choose target event...</option>';
+
+        events.forEach(evt => {
+          if (evt.id !== b.event_id) {
+            select.innerHTML += `<option value="${evt.id}">${evt.title} (${evt.event_date.split('T')[0]}) - ৳${evt.price}</option>`;
+          }
+        });
+
+        document.getElementById('transferModal').classList.remove('hidden');
+        lucide.createIcons();
+      } catch (e) {
+        toast('Error loading events list', true);
+      }
+    }
+
+    function closeTransferModal() {
+      document.getElementById('transferModal').classList.add('hidden');
+    }
+
+    async function executeTransfer() {
+      const bookingId = document.getElementById('transfer_booking_id').value;
+      const targetEventId = parseInt(document.getElementById('transfer-target-event-select').value);
+
+      if (!targetEventId) {
+        return toast('Please select a target event', true);
+      }
+
+      const confirmed = await customConfirm('Are you sure you want to transfer this booking? Event pricing and spots capacity will adjust.');
+      if (!confirmed) return;
+
+      try {
+        const res = await adminFetch(`/api/admin/bookings/${bookingId}/transfer`, {
+          method: 'POST',
+          body: JSON.stringify({ target_event_id: targetEventId })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          toast('Booking transferred successfully ✓');
+          closeTransferModal();
+          loadBookings();
+        } else {
+          toast(data.detail || 'Transfer failed', true);
+        }
+      } catch (e) {
+        toast('Error performing transfer', true);
+      }
+    }
+
+  </script>
+</body>
+
+</html>

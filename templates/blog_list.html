@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}ব্লগ ও স্টোরি | দেখা হোক - DekhaHok{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content="দেখা হোক-এর সব গল্প, নিরাপত্তা নির্দেশিকা এবং আড্ডা নিয়ে আমাদের ব্লগ।">
+    <link rel="canonical" href="https://dekhahok.com/blog">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="ব্লগ ও স্টোরি | দেখা হোক - DekhaHok">
+    <meta property="og:description" content="দেখা হোক-এর সব গল্প, নিরাপত্তা নির্দেশিকা এবং আড্ডা নিয়ে আমাদের ব্লগ।">
+    <meta property="og:url" content="https://dekhahok.com/blog">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+{% endblock %}
+
+{% block extra_head %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .blog-siliguri { font-family: 'Hind Siliguri', sans-serif !important; }
+        .blog-card:hover { transform: translateY(-4px); transition: all 0.3s ease; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="blog-siliguri bg-gray-50/50 py-12 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 mt-6">
+            <h1 class="text-4xl md:text-5xl font-black text-zinc-950 mb-4">আমাদের গল্প (Blog)</h1>
+            <p class="text-sm sm:text-base text-zinc-500 max-w-2xl mx-auto">সোশ্যাল লাইফ, সেফটি ও দেখা হোক-এর আয়োজন নিয়ে সব আড্ডা ও গল্প এখানে পাবেন।</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% if blogs %}
+                {% for b in blogs %}
+                <div class="bg-white rounded-[2.5rem] border {{ 'border-amber-200 shadow-xl shadow-amber-50' if b.is_pivoted else 'border-zinc-200/50' }} overflow-hidden blog-card flex flex-col justify-between">
+                    <div>
+                        <div class="h-60 overflow-hidden relative">
+                            <img src="{{ b.image or 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500&auto=format&fit=crop&q=60' }}" 
+                                 alt="{{ b.title }}" 
+                                 class="w-full h-full object-cover">
+                            {% if b.is_pivoted %}
+                            <div class="absolute top-4 left-4">
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                                    <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                    Featured
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-3">
+                                <i data-lucide="zap" class="w-3 h-3 fill-current"></i>
+                                <span>{{ b.badge or 'Insight' }}</span>
+                            </div>
+                            <a href="/blog/{{ b.slug }}">
+                                <h3 class="text-2xl font-bold text-zinc-800 mb-3 leading-snug hover:text-emerald-600 transition-colors">{{ b.title }}</h3>
+                            </a>
+                            <p class="text-zinc-500 text-sm mb-6 line-clamp-3 leading-relaxed">{{ b.description or 'DekhaHok stories and safety guides for DHK social scene.' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 pt-0">
+                        <div class="flex items-center justify-between pt-6 border-t border-zinc-100">
+                             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{{ b.date }}</span>
+                             <a href="/blog/{{ b.slug }}" class="flex items-center gap-2 text-sm font-black text-emerald-600 hover:gap-3 transition-all">
+                                পড়ুন <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                             </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-full py-20 text-center">
+                    <div class="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="book-open" class="w-10 h-10 text-zinc-300"></i>
+                    </div>
+                    <p class="text-zinc-400 font-bold">শীঘ্রই নতুন ব্লগ আসছে!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}

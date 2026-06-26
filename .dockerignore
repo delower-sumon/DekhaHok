@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+env/
+.git/
+.gitignore
+*.db
+LOCAL_TESTING_GUIDE.md
+future developments.txt
+mysql_local_setup.sql

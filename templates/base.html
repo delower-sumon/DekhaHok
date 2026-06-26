@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DekhaHok • দেখা হোক, হোক বন্ধুত্ব{% endblock %}</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Leaflet Maps CSS (for host events mapping) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+
+    <script>
+        const IS_LOGGED_IN = "{{ 'true' if user else 'false' }}" === "true";
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#235540',
+                        primaryLight: '#387A5C',
+                        primaryBg: '#EDF6F1',
+                        dark: '#15211B',
+                        muted: '#798D83',
+                        border: '#E5EBE7',
+                        bg: '#FCFDFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        bengali: ['Noto Sans Bengali', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .blob {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(100px);
+                z-index: 0;
+            }
+            .card-hover {
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .card-hover:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 20px rgba(35, 85, 64, 0.06);
+            }
+            .event-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .event-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 15px 30px -10px rgba(16, 185, 129, 0.1);
+            }
+        }
+    </style>
+
+    {% block seo_meta %}
+    <meta name="description" content="ঢাকার সেরা সোশ্যাল ইভেন্টে যুক্ত হোন দেখা হোক-এ। নিরাপদ পরিবেশে নতুন কারও সাথে দেখা করুন, আড্ডা দিন।">
+    <link rel="canonical" href="https://dekhahok.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dekhahok.com/">
+    <meta property="og:title" content="দেখা হোক | বন্ধুদের সাথে আড্ডা ও ইভেন্ট বুকিং প্ল্যাটফর্ম">
+    <meta property="og:description" content="ঢাকায় নতুন মানুষের সাথে দেখা করুন, আড্ডা দিন। জনপ্রিয় রেস্তোরাঁ ও ক্যাফেতে ইভেন্ট বুকিং করুন সহজে।">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://dekhahok.com/">
+    <meta name="twitter:title" content="দেখা হোক | বন্ধুদের সাথে আড্ডা ও ইভেন্ট বুকিং প্ল্যাটফর্ম">
+    <meta name="twitter:description" content="ঢাকায় নতুন মানুষের সাথে দেখা করুন, আড্ডা দিন। জনপ্রিয় রেস্তোরাঁ ও ক্যাফেতে ইভেন্ট বুকিং করুন সহজে।">
+    <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+    {% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-zinc-50 text-zinc-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Global Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[99999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- NAVBAR -->
+    <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto sm:px-2">
+            <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-x-2.5 group">
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" />
+                </a>
+
+                <!-- Desktop Menu Links -->
+                <div class="hidden md:flex items-center gap-x-6 lg:gap-x-8 text-sm font-semibold">
+                    <a href="/" class="nav-link text-zinc-600 hover:text-emerald-700 transition-colors">Home</a>
+                    <a href="/#catalog-section"
+                        class="nav-link text-zinc-600 hover:text-emerald-700 transition-colors">Experiences</a>
+                    <a href="/#status-tracking-view"
+                        class="nav-link text-zinc-600 hover:text-emerald-700 transition-colors">Track Booking</a>
+
+                    {% if user %}
+                    {% if user.role == 'host' or user.role == 'admin' %}
+                    <a href="/host/dashboard"
+                        class="nav-link text-zinc-600 hover:text-emerald-700 transition-colors">Host Dashboard</a>
+                    {% endif %}
+
+                    {% if user.role == 'admin' %}
+                    <a href="/admin" class="nav-link text-zinc-600 hover:text-emerald-700 transition-colors">Admin
+                        Panel</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Right Menu Action Buttons -->
+                <div class="flex items-center gap-x-2 sm:gap-x-4">
+                    <div class="hidden lg:flex items-center bg-zinc-100 rounded-3xl px-4 py-1.5 text-xs font-semibold">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse mr-2"></div>
+                        <span class="text-emerald-700">Dhaka</span>
+                    </div>
+
+                    {% if not user or user.role == 'user' %}
+                    <a href="/host/apply"
+                        class="px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold bg-white border border-emerald-200 hover:border-emerald-300 transition-colors rounded-3xl flex items-center gap-x-2 shadow-sm text-zinc-700 hover:text-emerald-700">
+                        <i class="fa-solid fa-leaf text-emerald-600"></i>
+                        <span class="hidden sm:inline">Become a Host</span>
+                    </a>
+                    {% endif %}
+
+                    {% if user %}
+                    
+                    <!-- Notification Bell (All Authenticated Users) -->
+                    <div class="relative group mr-1 sm:mr-2">
+                        <button class="w-8 sm:w-9 h-8 sm:h-9 rounded-2xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus:outline-none">
+                            <i class="fa-regular fa-bell text-[15px]"></i>
+                            {% if unread_notifications|length > 0 %}
+                            <div class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse"></div>
+                            {% endif %}
+                        </button>
+                        
+                        <!-- Notification Dropdown Menu -->
+                        <div class="absolute right-0 top-full pt-2 w-64 sm:w-80 hidden group-hover:block hover:block z-50">
+                            <div class="bg-white border border-zinc-100 rounded-3xl shadow-xl overflow-hidden">
+                                <div class="px-4 py-3 border-b border-zinc-100 bg-zinc-50 flex justify-between items-center">
+                                    <span class="text-xs font-black text-zinc-800">Notifications</span>
+                                    {% if unread_notifications|length > 0 %}
+                                    <span class="bg-red-100 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded-full">{{ unread_notifications|length }} New</span>
+                                    {% endif %}
+                                </div>
+                                <div class="max-h-72 overflow-y-auto">
+                                    {% if unread_notifications|length == 0 %}
+                                        {% if suggested_events and user.role == 'user' %}
+                                            <div class="px-4 py-2 bg-emerald-50/50 border-b border-emerald-100">
+                                                <p class="text-[10px] font-black text-emerald-800 uppercase tracking-wide">Suggested for You</p>
+                                            </div>
+                                            {% for event in suggested_events %}
+                                            <a href="/booking/{{ event.id }}" class="block px-4 py-3 border-b border-zinc-50 hover:bg-emerald-50 transition-colors group/item">
+                                                <div class="flex gap-3 items-center">
+                                                    <div class="w-8 h-8 rounded-xl bg-white border border-emerald-100 shadow-sm flex items-center justify-center shrink-0">
+                                                        <i class="fa-solid fa-ticket text-emerald-600 text-[10px]"></i>
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <p class="text-xs font-bold text-zinc-800 leading-tight truncate group-hover/item:text-emerald-700 transition-colors">{{ event.title }}</p>
+                                                        <p class="text-[10px] text-zinc-500 truncate mt-0.5">{{ event.category }}</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="px-4 py-8 text-center text-zinc-400">
+                                                <i class="fa-regular fa-bell-slash text-2xl mb-2 opacity-50"></i>
+                                                <p class="text-xs font-semibold">You're all caught up!</p>
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        {% for notif in unread_notifications %}
+                                        <div id="notif-{{ notif.id }}" class="px-4 py-3 border-b border-zinc-50 hover:bg-emerald-50/30 transition-colors relative group/item">
+                                            <div class="flex gap-3 items-start">
+                                                <div class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-sm shadow-emerald-200"></div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-xs font-bold text-zinc-800 leading-tight mb-0.5">{{ notif.title }}</p>
+                                                    <p class="text-[10px] text-zinc-500 leading-snug">{{ notif.message }}</p>
+                                                    <p class="text-[9px] text-zinc-400 mt-1 font-medium">{{ notif.created_at|local_time }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 flex gap-2 pl-5 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                                <button data-notif-id="{{ notif.id }}" data-action-url="{{ notif.action_url }}" onclick="handleNotifClick(this)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-[9px] font-bold px-3 py-1 rounded-full transition-colors shrink-0">View & Mark Read</button>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Authenticated User Avatar -->
+                    <div class="relative group">
+                        <button
+                            class="w-8 sm:w-9 h-8 sm:h-9 rounded-2xl flex items-center justify-center overflow-hidden border border-emerald-100 focus:outline-none"
+                            title="Profile Details">
+                            <img src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}"
+                                alt="{{ user.name }}" class="w-full h-full object-cover" referrerpolicy="no-referrer">
+                        </button>
+                        <!-- User Dropdown Menu Wrapper (Bridges hover gap) -->
+                        <div class="absolute right-0 top-full pt-2 w-48 hidden group-hover:block hover:block z-50">
+                            <div class="bg-white border border-zinc-100 rounded-2xl shadow-xl py-2">
+                                <div class="px-4 py-2 border-b border-zinc-50">
+                                    <p class="text-xs font-black text-zinc-800 truncate">{{ user.name }}</p>
+                                    <p class="text-[10px] text-zinc-400 truncate mt-0.5">{{ user.email }}</p>
+                                    <p class="text-[9px] font-black text-emerald-600 uppercase mt-1 tracking-wider">{{
+                                        user.role }} Account</p>
+                                </div>
+                                <a href="/#status-tracking-view"
+                                    class="block px-4 py-2 text-xs text-zinc-600 hover:bg-emerald-50 hover:text-emerald-700 transition">My
+                                    Tickets</a>
+                                <button onclick="openAvatarModal()"
+                                    class="w-full text-left block px-4 py-2 text-xs text-zinc-600 hover:bg-emerald-50 hover:text-emerald-700 transition">Edit
+                                    Profile</button>
+                                {% if user.role == 'host' or user.role == 'admin' %}
+                                <a href="/host/dashboard"
+                                    class="block px-4 py-2 text-xs text-zinc-600 hover:bg-emerald-50 hover:text-emerald-700 transition">Dashboard</a>
+                                {% endif %}
+                                <button onclick="handleLogout()"
+                                    class="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 transition border-t mt-1">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Anonymous User Login Link -->
+                    <button onclick="openAuthModal(window.location.pathname)"
+                        class="w-8 sm:w-9 h-8 sm:h-9 bg-zinc-100 hover:bg-zinc-200 transition-colors rounded-2xl flex items-center justify-center flex-shrink-0"
+                        title="Login Profile">
+                        <i class="fa-solid fa-user text-zinc-600 text-sm"></i>
+                    </button>
+                    {% endif %}
+
+                    <!-- Mobile Hamburger Button -->
+                    <button onclick="toggleMobileMenu()"
+                        class="md:hidden w-8 sm:w-9 h-8 sm:h-9 flex items-center justify-center text-zinc-600 hover:text-emerald-700 focus:outline-none border rounded-2xl hover:bg-zinc-50"
+                        aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU DRAWER OVERLAY -->
+    <div id="mobile-drawer"
+        class="fixed inset-0 bg-black/60 z-[9999] hidden items-start justify-end transition-opacity duration-300">
+        <div class="w-72 bg-white h-full p-6 shadow-2xl flex flex-col justify-between animate-slide-in">
+            <div>
+                <div class="flex justify-between items-center pb-6 border-b">
+                    <div class="flex items-center gap-x-2">
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto" />
+                    </div>
+                    <button onclick="toggleMobileMenu()"
+                        class="text-zinc-400 hover:text-zinc-600 w-8 h-8 flex items-center justify-center border rounded-xl">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <nav class="mt-8 space-y-4 font-semibold text-sm">
+                    <a href="/"
+                        class="block py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Home</a>
+                    <a href="/#catalog-section"
+                        class="block py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Experiences</a>
+                    <a href="/#status-tracking-view"
+                        class="block py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Track
+                        Booking</a>
+
+                    {% if user %}
+                    {% if user.role == 'host' or user.role == 'admin' %}
+                    <a href="/host/dashboard"
+                        class="block py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Host
+                        Dashboard</a>
+                    {% endif %}
+
+                    {% if user.role == 'admin' %}
+                    <a href="/admin"
+                        class="block py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Admin
+                        Panel</a>
+                    {% endif %}
+                    {% else %}
+                    <button onclick="openAuthModal(window.location.pathname)"
+                        class="block w-full text-left py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Login /
+                        Signup</button>
+                    {% endif %}
+                </nav>
+            </div>
+
+            <div class="border-t pt-6 text-xs text-zinc-400">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span class="text-emerald-700 font-bold">Dhaka, Bangladesh</span>
+                </div>
+                <p>&copy; 2026 DekhaHok</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWS PANEL -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white pt-16 pb-8 border-t border-emerald-950/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Branding -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-x-2.5">
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
+                            class="h-8 w-auto brightness-0 invert" />
+                    </div>
+                    <p class="text-zinc-400 text-xs sm:text-sm">Building the human connection infrastructure of Dhaka.
+                        We offer structured, host-led activities where meeting new people happens naturally.</p>
+                </div>
+
+                <!-- Navigation Links -->
+                <div>
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Explore</h4>
+                    <ul class="space-y-2.5 text-xs text-zinc-400">
+                        <li><a href="/#catalog-section" class="hover:text-emerald-400 transition">Discover
+                                Experiences</a></li>
+                        <li><a href="/host/apply" class="hover:text-emerald-400 transition">Become a Host</a></li>
+                        <li><a href="/blog" class="hover:text-emerald-400 transition">Read Blog</a></li>
+                        <li><a href="/partnership" class="hover:text-emerald-400 transition">Partner with Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal / Guidelines -->
+                <div>
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Guidelines & Safety</h4>
+                    <ul class="space-y-2.5 text-xs text-zinc-400">
+                        <li><a href="/privacy-policy" class="hover:text-emerald-400 transition">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition">Terms of Service</a>
+                        </li>
+                        <li><a href="/about" class="hover:text-emerald-400 transition">About DekhaHok</a></li>
+                        <li><a href="/contact" class="hover:text-emerald-400 transition">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Language Selection / Translation -->
+                <div class="space-y-4">
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Language / ভাষা</h4>
+                    <button onclick="toggleTranslation()" id="langBtn"
+                        class="flex items-center gap-2 bg-emerald-900/30 hover:bg-emerald-900/50 border border-emerald-800/60 px-4 py-2 rounded-xl text-xs text-emerald-400 font-bold transition">
+                        En
+                    </button>
+                    <!-- Google Translate Widget Container (Hidden) -->
+                    <div id="google_translate_element" class="hidden"></div>
+                </div>
+            </div>
+
+            <!-- Bottom Row -->
+            <div
+                class="border-t border-emerald-950/40 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+                <div class="flex items-center gap-2">
+                    <span>Made with</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" class="text-rose-500 fill-current">
+                        <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
+                    <span>in Dhaka.</span>
+                </div>
+                <p>&copy; 2026 DekhaHok. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script>
+        // Global in-app toast notification function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 max-w-sm pointer-events-auto border text-xs font-bold bg-white/95 backdrop-blur`;
+
+            let icon = '';
+            if (type === 'success') {
+                toast.className += ' text-emerald-800 border-emerald-100 bg-emerald-50/95';
+                icon = '<i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>';
+            } else if (type === 'error') {
+                toast.className += ' text-rose-800 border-rose-100 bg-rose-50/95';
+                icon = '<i class="fa-solid fa-circle-xmark text-rose-600 text-base"></i>';
+            } else if (type === 'warning') {
+                toast.className += ' text-amber-800 border-amber-100 bg-amber-50/95';
+                icon = '<i class="fa-solid fa-circle-exclamation text-amber-600 text-base"></i>';
+            } else {
+                toast.className += ' text-zinc-800 border-zinc-100 bg-zinc-50/95';
+                icon = '<i class="fa-solid fa-circle-info text-zinc-600 text-base"></i>';
+            }
+
+            toast.innerHTML = `
+                ${icon}
+                <span class="flex-grow">${message}</span>
+                <button onclick="this.parentElement.remove()" class="text-zinc-400 hover:text-zinc-600 ml-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+            container.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Auto dismiss
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobile-drawer');
+            drawer.classList.toggle('hidden');
+            drawer.classList.toggle('flex');
+        }
+
+        async function handleLogout() {
+            try {
+                const res = await fetch('/auth/logout', { method: 'POST' });
+                if (res.ok) {
+                    window.location.href = '/';
+                }
+            } catch (err) {
+                console.error("Logout failed:", err);
+            }
+        }
+
+        // Global Google Translate Loader
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'bn',
+                includedLanguages: 'en,bn',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+
+        function toggleTranslation() {
+            const btn = document.getElementById('langBtn');
+            const isEnglishActive = btn.textContent.trim() === 'En';
+
+            const translateSelect = document.querySelector('select.goog-te-combo');
+            if (translateSelect) {
+                translateSelect.value = isEnglishActive ? 'en' : 'bn';
+                translateSelect.dispatchEvent(new Event('change'));
+                btn.textContent = isEnglishActive ? 'Bn' : 'En';
+            } else {
+                // If Translate script isn't fully loaded yet, fallback to reloading or alert
+                showToast("Translation service loading. Please try again in a moment!", "info");
+            }
+        }
+
+        // --- User Avatar Modal Javascript ---
+        let userAvatarBase64 = "";
+
+        function openAvatarModal() {
+            const modal = document.getElementById('avatar-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            userAvatarBase64 = "";
+            document.getElementById('btn-save-avatar').disabled = true;
+            document.getElementById('avatar-preview-img').src = "{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name if user else '' }}";
+        }
+
+        function closeAvatarModal() {
+            const modal = document.getElementById('avatar-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function previewUserAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                userAvatarBase64 = e.target.result;
+                document.getElementById('avatar-preview-img').src = userAvatarBase64;
+                document.getElementById('btn-save-avatar').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function updateUserProfile() {
+            const newName = document.getElementById('user-profile-name').value.trim();
+            if (!userAvatarBase64 && !newName) return;
+
+            const btn = document.getElementById('btn-save-profile');
+            btn.disabled = true;
+            btn.textContent = "Saving...";
+
+            const payload = {};
+            if (userAvatarBase64) payload.avatar_base64 = userAvatarBase64;
+            if (newName) payload.full_name = newName;
+
+            try {
+                const res = await fetch('/api/users/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    showToast("Profile photo updated successfully!");
+                    closeAvatarModal();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    const data = await res.json();
+                    showToast(data.detail || "Failed to update profile photo", "error");
+                    btn.disabled = false;
+                    btn.textContent = "Save New Photo";
+                }
+            } catch (err) {
+                showToast("Network error. Please try again.", "error");
+                btn.disabled = false;
+                btn.textContent = "Save New Photo";
+            }
+        }
+    </script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- USER PROFILE PHOTO UPLOAD MODAL -->
+    <div onclick="if(event.target.id === 'avatar-modal') closeAvatarModal()" id="avatar-modal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] items-center justify-center hidden">
+        <div onclick="event.stopImmediatePropagation()"
+            class="bg-white w-full max-w-sm mx-4 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-zinc-800 text-lg">Update Profile</h3>
+                <button onclick="closeAvatarModal()" class="text-zinc-400 hover:text-zinc-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-center">
+                <!-- Name Edit -->
+                <div class="text-left">
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Full Name</label>
+                    <input type="text" id="user-profile-name" value="{{ user.name if user else '' }}"
+                        class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                </div>
+
+                <hr class="border-zinc-100">
+
+                <div
+                    class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-emerald-500 relative group bg-zinc-50">
+                    <img id="avatar-preview-img"
+                        src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name if user else '' }}"
+                        class="w-full h-full object-cover" referrerpolicy="no-referrer">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-zinc-500 uppercase tracking-wider">Select new
+                        image</label>
+                    <input type="file" id="user-avatar-file" accept="image/*" class="hidden"
+                        onchange="previewUserAvatar(event)">
+                    <button onclick="document.getElementById('user-avatar-file').click()"
+                        class="w-full py-2.5 px-4 bg-zinc-100 hover:bg-zinc-200 border rounded-2xl font-bold text-xs text-zinc-700 transition">
+                        Choose File
+                    </button>
+                    <p class="text-[10px] text-zinc-400 mt-1">Recommended: 400x400 px, < 2MB</p>
+                </div>
+
+                <button onclick="updateUserProfile()" id="btn-save-profile"
+                    class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-xs shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    Save Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL AUTH MODAL -->
+    <div onclick="if(event.target.id === 'global-auth-modal') closeAuthModal()" id="global-auth-modal"
+        class="hidden fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-white border border-zinc-200/80 rounded-[2rem] p-5 sm:p-6 shadow-xl max-w-sm w-full relative animate-scale-in max-h-[95vh] overflow-y-auto">
+            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="space-y-4">
+                <!-- Logo Header -->
+                <div class="text-center space-y-3">
+                    <div class="flex justify-center mb-2">
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto mx-auto" />
+                    </div>
+                    <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">লগইন / রেজিস্ট্রেশন</h2>
+                    <p class="text-xs text-zinc-400">Join the trust layer of Dhaka and connect with like minded people!</p>
+                </div>
+
+                <!-- Google OAuth Authentication -->
+                <a href="/auth/google" id="modal-google-login-btn"
+                    class="w-full flex items-center justify-center gap-2 border border-zinc-200 hover:border-emerald-500 bg-white hover:bg-emerald-50/20 py-2.5 rounded-xl font-bold text-[13px] text-zinc-700 shadow-sm transition active:scale-95">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.328 0-6.027-2.7-6.027-6.028s2.699-6.028 6.027-6.028c1.528 0 2.914.57 3.985 1.5l3.143-3.143C18.966 2.76 15.822 1.5 12.24 1.5 6.444 1.5 1.758 6.186 1.758 12s4.686 10.5 10.482 10.5c6.054 0 10.076-4.256 10.076-10.259 0-.69-.06-1.35-.175-1.956H12.24Z" />
+                        <path fill="#4285F4" d="M22.139 10.285H12.24V14.4h6.887c-.287 1.066-.883 2.01-1.688 2.684l3.143 2.443c1.837-1.697 2.899-4.19 2.899-7.25 0-.69-.06-1.35-.175-1.956Z" />
+                        <path fill="#FBBC05" d="M12.24 22.5c2.796 0 5.136-.92 6.843-2.516l-3.143-2.443c-.87.585-1.986.931-3.7.931-2.617 0-4.832-1.766-5.621-4.143L3.382 16.73A10.476 10.476 0 0 0 12.24 22.5Z" />
+                        <path fill="#34A853" d="M6.619 14.33a5.966 5.966 0 0 1 0-4.66L3.382 7.27a10.476 10.476 0 0 0 0 9.46l3.237-2.4Z" />
+                    </svg>
+                    <span>Continue with Google</span>
+                </a>
+
+                <!-- Separator -->
+                <div class="flex items-center gap-3 text-xs text-zinc-400 font-bold uppercase py-1">
+                    <div class="h-[1px] flex-1 bg-zinc-100"></div>
+                    <span>Or,</span>
+                    <div class="h-[1px] flex-1 bg-zinc-100"></div>
+                </div>
+
+                <!-- Tab Controls -->
+                <div class="flex items-center gap-2 bg-zinc-100/60 border rounded-2xl p-1">
+                    <button onclick="switchAuthModalTab('login')" id="modal-btn-tab-login"
+                        class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm">
+                        Login
+                    </button>
+                    <button onclick="switchAuthModalTab('signup')" id="modal-btn-tab-signup"
+                        class="flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Form Panels -->
+                <div>
+                    <!-- Login Form -->
+                    <form id="modal-auth-login-form" onsubmit="handleModalLogin(event)" class="space-y-3">
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Email Address</label>
+                            <input type="email" id="modal-login-email" required
+                                class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
+                                placeholder="name@domain.com">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Password</label>
+                            <input type="password" id="modal-login-password" required
+                                class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
+                                placeholder="••••••••">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-[13px] shadow-md transition active:scale-95 mt-2">
+                            Log In
+                        </button>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="modal-auth-signup-form" onsubmit="handleModalSignup(event)" class="space-y-3 hidden">
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Full Name</label>
+                            <input type="text" id="modal-signup-name" required
+                                class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
+                                placeholder="e.g. Rahat Ahmed">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Email Address</label>
+                            <input type="email" id="modal-signup-email" required
+                                class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
+                                placeholder="yourmail@domain.com">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Phone Number (Optional)</label>
+                            <input type="tel" id="modal-signup-phone"
+                                class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
+                                placeholder="01XXXXXXXXX">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Password</label>
+                            <input type="password" id="modal-signup-password" required
+                                class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
+                                placeholder="Min 6 characters">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-[13px] shadow-md transition active:scale-95 mt-2">
+                            Register Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let modalAuthNextUrl = '/';
+        
+        function openAuthModal(nextUrl = null, mode = 'login') {
+            const modal = document.getElementById('global-auth-modal');
+            if(nextUrl) {
+                modalAuthNextUrl = nextUrl;
+                document.getElementById('modal-google-login-btn').href = `/auth/google?next=${encodeURIComponent(nextUrl)}`;
+            } else {
+                modalAuthNextUrl = window.location.pathname;
+                document.getElementById('modal-google-login-btn').href = `/auth/google?next=${encodeURIComponent(modalAuthNextUrl)}`;
+            }
+            switchAuthModalTab(mode);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('global-auth-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function switchAuthModalTab(tab) {
+            const btnL = document.getElementById('modal-btn-tab-login');
+            const btnS = document.getElementById('modal-btn-tab-signup');
+            const formL = document.getElementById('modal-auth-login-form');
+            const formS = document.getElementById('modal-auth-signup-form');
+
+            if (tab === 'login') {
+                btnL.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm';
+                btnS.className = 'flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600';
+                formL.classList.remove('hidden');
+                formS.classList.add('hidden');
+            } else {
+                btnS.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm';
+                btnL.className = 'flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600';
+                formS.classList.remove('hidden');
+                formL.classList.add('hidden');
+            }
+        }
+
+        async function handleModalLogin(e) {
+            e.preventDefault();
+            const payload = {
+                email: document.getElementById('modal-login-email').value.trim(),
+                password: document.getElementById('modal-login-password').value
+            };
+
+            try {
+                const res = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (window.location.pathname === modalAuthNextUrl || modalAuthNextUrl === '/') {
+                        window.location.reload();
+                    } else {
+                        window.location.href = modalAuthNextUrl;
+                    }
+                } else {
+                    showToast(`Login failed: ${data.detail || 'Check credentials'}`, 'error');
+                }
+            } catch (err) {
+                showToast("Network connection error. Try again.", 'error');
+            }
+        }
+
+        async function handleModalSignup(e) {
+            e.preventDefault();
+            const phone = document.getElementById('modal-signup-phone').value.trim();
+            const payload = {
+                full_name: document.getElementById('modal-signup-name').value.trim(),
+                email: document.getElementById('modal-signup-email').value.trim(),
+                phone: phone ? phone.replace(/[\s\-\(\)]/g, '') : null,
+                password: document.getElementById('modal-signup-password').value
+            };
+
+            if (payload.password.length < 6) {
+                showToast("Password must be at least 6 characters.", 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (window.location.pathname === modalAuthNextUrl || modalAuthNextUrl === '/') {
+                        window.location.reload();
+                    } else {
+                        window.location.href = modalAuthNextUrl;
+                    }
+                } else {
+                    showToast(`Signup failed: ${data.detail || 'Email already exists'}`, 'error');
+                }
+            } catch (err) {
+                showToast("Network connection error. Try again.", 'error');
+            }
+        }
+        function handleNotifClick(btn) {
+            const notifId = btn.getAttribute('data-notif-id');
+            const actionUrl = btn.getAttribute('data-action-url');
+            markNotificationRead(notifId, actionUrl);
+        }
+
+        async function markNotificationRead(notifId, actionUrl) {
+            try {
+                const res = await fetch(`/api/notifications/${notifId}/read`, { method: 'PATCH' });
+                if (res.ok) {
+                    if (actionUrl && actionUrl !== 'None') {
+                        window.location.href = actionUrl;
+                    } else {
+                        document.getElementById(`notif-${notifId}`).style.display = 'none';
+                    }
+                }
+            } catch(e) { console.error("Error marking notification read", e); }
+        }
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+
+    <!-- FLOATING WHATSAPP SUPPORT BUTTON -->
+    <a href="https://wa.me/8801884477720" target="_blank"
+        class="fixed bottom-6 right-6 z-[9999] bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 group"
+        title="Chat with support via WhatsApp" id="whatsapp-support">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+        <span
+            class="absolute right-16 bg-zinc-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-md">Support
+            Chat</span>
+    </a>
+</body>
+
+</html>

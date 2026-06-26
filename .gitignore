@@ -1,0 +1,16 @@
+venv/
+.venv/
+__pycache__/
+*.db
+.env
+.DS_Store
+*.zip
+*.rar
+*.log
+.agents/
+brain/
+scratch/
+=
+task_growth.md
+future developments.txt
+mysql_local_setup.sql

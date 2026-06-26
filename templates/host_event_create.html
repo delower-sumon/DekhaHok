@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Event • DekhaHok{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <a href="/host/dashboard" class="flex items-center gap-2 text-zinc-400 hover:text-emerald-700 mb-8 transition-all font-medium text-sm">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
+    </a>
+
+    <h1 class="text-3xl font-bold mb-2 text-zinc-900">Submit New Experience</h1>
+    <p class="text-zinc-500 mb-10 text-sm">Design your event, set your pricing, and share it with the DekhaHok community.</p>
+
+    <!-- Progress Bar -->
+    <div class="flex items-center justify-between mb-10 relative px-2">
+        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-200 -translate-y-1/2 z-0"></div>
+        <div id="event-progress-bar" class="absolute top-1/2 left-0 h-0.5 bg-emerald-600 transition-all duration-500 -translate-y-1/2 z-10 w-[0%]"></div>
+
+        <div class="z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm">1</div>
+        <div id="progress-circle-2" class="z-20 w-9 h-9 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-medium text-sm transition-colors duration-500">2</div>
+        <div id="progress-circle-3" class="z-20 w-9 h-9 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-medium text-sm transition-colors duration-500">3</div>
+    </div>
+
+    <!-- State Panels -->
+    <div class="bg-white border border-zinc-200/80 rounded-[2rem] p-8 shadow-sm relative">
+        
+        <!-- Form Step 1: Basics -->
+        <div id="event-step-1" class="space-y-6">
+            <div>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 1: The Basics</h2>
+                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Title & Concept</p>
+            </div>
+
+            <form onsubmit="goToStep2(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Catchy Event Title *</label>
+                    <input type="text" id="ev-title" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Midnight Old Dhaka Photo Walk">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Category *</label>
+                    <select id="ev-category" onchange="toggleCategoryOther()" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
+                        <option value="art">🎨 Art & Exhibition</option>
+                        <option value="photography">📷 Photography</option>
+                        <option value="food">🍔 Food Exploration</option>
+                        <option value="music">🎵 Music & Concert</option>
+                        <option value="tech">💻 Tech Meetup</option>
+                        <option value="sports">⚽ Sports & Fitness</option>
+                        <option value="workshop">🎓 Workshop & Class</option>
+                        <option value="networking">🤝 Networking & Mixer</option>
+                        <option value="wellness">🧘 Wellness & Health</option>
+                        <option value="other">✨ Other</option>
+                    </select>
+                </div>
+
+                <div id="ev-category-other-container" class="hidden">
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Custom Category Name *</label>
+                    <input type="text" id="ev-category-other" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Pottery Workshop">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Brief Description *</label>
+                    <textarea id="ev-desc" required rows="3" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none" placeholder="Tell users what they will be doing..."></textarea>
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 transition-colors text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Next Step</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Form Step 2: Logistics & Pricing -->
+        <div id="event-step-2" class="space-y-6 hidden">
+            <div>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 2: Logistics & Pricing</h2>
+                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Capacity & Cost</p>
+            </div>
+
+            <form onsubmit="goToStep3(event)" class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Capacity *</label>
+                        <input type="number" id="ev-capacity" required min="2" max="100" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="12">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Price (BDT) *</label>
+                        <input type="number" id="ev-price" required min="0" step="0.01" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Package Tier *</label>
+                    <select id="ev-tier" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
+                        <option value="experience">Base Experience (Standard)</option>
+                        <option value="circle">DekhaHok Circle (Community specific)</option>
+                        <option value="premium">Premium (High-end)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Location Venue *</label>
+                    <input type="text" id="ev-location" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Crimson Cup Coffee">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Location Area *</label>
+                    <select id="ev-area" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
+                        <option value="dhanmondi">Dhanmondi</option>
+                        <option value="gulshan">Gulshan</option>
+                        <option value="banani">Banani</option>
+                        <option value="mirpur">Mirpur</option>
+                        <option value="uttara">Uttara</option>
+                        <option value="bashundhara">Bashundhara R/A</option>
+                        <option value="old-dhaka">Old Dhaka</option>
+                        <option value="shahbag">Shahbag</option>
+                        <option value="farmgate">Farmgate</option>
+                        <option value="banglamotor">Banglamotor</option>
+                        <option value="nilkhet">Nilkhet</option>
+                        <option value="azimpur">Azimpur</option>
+                        <option value="savar">Savar</option>
+                        <option value="tongi">Tongi</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button type="button" onclick="goBackToStep1()" class="text-zinc-500 hover:text-zinc-700 font-bold text-xs uppercase tracking-wider px-4">Back</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 transition-colors text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Next Step</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Form Step 3: Media -->
+        <div id="event-step-3" class="space-y-6 hidden">
+            <div>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 3: Details & Media</h2>
+                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Date, Perks & Cover Image</p>
+            </div>
+
+            <form onsubmit="submitFinalEvent(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Date & Time *</label>
+                    <input type="datetime-local" id="ev-date" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white shadow-inner">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">What's Included *</label>
+                    <textarea id="ev-includes" required rows="5" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-y font-mono" placeholder="Coffee, Notebook, Facilitator"></textarea>
+                    <span class="text-[10px] text-zinc-400 mt-1 block">Comma separated list (e.g., Coffee, Photography Guide, Transport)</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Event Cover Image *</label>
+                    <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-2xl p-6 text-center hover:bg-zinc-50 transition-colors" onclick="document.getElementById('ev-image').click()">
+                        <input type="file" id="ev-image" accept="image/*" required class="hidden" onchange="previewImage(event)">
+                        
+                        <div id="image-upload-prompt" class="space-y-2 pointer-events-none">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <p class="text-sm font-bold text-zinc-700">Click to upload cover image</p>
+                            <p class="text-[10px] text-zinc-400 uppercase tracking-widest">Recommended: 1200x800 px or 600x400 px | Max 2MB</p>
+                        </div>
+
+                        <div id="image-preview-container" class="hidden w-full h-48 rounded-xl overflow-hidden relative pointer-events-none">
+                            <img id="image-preview" src="" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-white font-bold text-sm bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm"><i class="fa-solid fa-pen mr-2"></i>Change Image</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="submit-error" class="hidden bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold p-3 rounded-xl text-center"></div>
+
+                <div class="flex justify-between pt-4">
+                    <button type="button" onclick="goBackToStep2()" class="text-zinc-500 hover:text-zinc-700 font-bold text-xs uppercase tracking-wider px-4">Back</button>
+                    <button type="submit" id="submit-btn" class="bg-emerald-600 hover:bg-emerald-700 transition-colors text-white px-8 py-3 rounded-xl font-bold text-sm uppercase tracking-wider shadow">Submit for Review</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div id="toast" onclick="this.classList.add('hidden')"
+    class="fixed bottom-6 right-6 bg-emerald-800 text-white rounded-3xl shadow-2xl flex items-center gap-x-3 pl-5 pr-8 py-4 text-xs font-semibold z-[99999] hidden cursor-pointer transition-all border border-emerald-700">
+    <i class="fa-solid fa-circle-check text-emerald-300"></i>
+    <span id="toast-text">Toast message</span>
+</div>
+
+<script>
+    let eventImageBase64 = null;
+
+    function showToast(msg, isError=false) {
+        const toast = document.getElementById('toast');
+        const text = document.getElementById('toast-text');
+        text.innerText = msg;
+        if(isError) {
+            toast.className = "fixed bottom-6 right-6 bg-rose-600 text-white rounded-3xl shadow-2xl flex items-center gap-x-3 pl-5 pr-8 py-4 text-xs font-semibold z-[99999] cursor-pointer transition-all border border-rose-700";
+            toast.querySelector('i').className = "fa-solid fa-triangle-exclamation text-rose-200";
+        } else {
+            toast.className = "fixed bottom-6 right-6 bg-emerald-800 text-white rounded-3xl shadow-2xl flex items-center gap-x-3 pl-5 pr-8 py-4 text-xs font-semibold z-[99999] cursor-pointer transition-all border border-emerald-700";
+            toast.querySelector('i').className = "fa-solid fa-circle-check text-emerald-300";
+        }
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 4000);
+    }
+
+    function toggleCategoryOther() {
+        const cat = document.getElementById('ev-category').value;
+        const otherContainer = document.getElementById('ev-category-other-container');
+        const otherInput = document.getElementById('ev-category-other');
+        if (cat === 'other') {
+            otherContainer.classList.remove('hidden');
+            otherInput.required = true;
+        } else {
+            otherContainer.classList.add('hidden');
+            otherInput.required = false;
+        }
+    }
+
+    function goToStep2(e) {
+        e.preventDefault();
+        document.getElementById('event-step-1').classList.add('hidden');
+        document.getElementById('event-step-2').classList.remove('hidden');
+        document.getElementById('event-progress-bar').classList.remove('w-[0%]');
+        document.getElementById('event-progress-bar').classList.add('w-[50%]');
+        
+        const circle2 = document.getElementById('progress-circle-2');
+        circle2.classList.remove('bg-white', 'border', 'border-zinc-200', 'text-zinc-400');
+        circle2.classList.add('bg-emerald-600', 'text-white');
+    }
+
+    function goBackToStep1() {
+        document.getElementById('event-step-2').classList.add('hidden');
+        document.getElementById('event-step-1').classList.remove('hidden');
+        document.getElementById('event-progress-bar').classList.remove('w-[50%]');
+        document.getElementById('event-progress-bar').classList.add('w-[0%]');
+        
+        const circle2 = document.getElementById('progress-circle-2');
+        circle2.classList.add('bg-white', 'border', 'border-zinc-200', 'text-zinc-400');
+        circle2.classList.remove('bg-emerald-600', 'text-white');
+    }
+
+    function goToStep3(e) {
+        e.preventDefault();
+        document.getElementById('event-step-2').classList.add('hidden');
+        document.getElementById('event-step-3').classList.remove('hidden');
+        document.getElementById('event-progress-bar').classList.remove('w-[50%]');
+        document.getElementById('event-progress-bar').classList.add('w-[100%]');
+        
+        const circle3 = document.getElementById('progress-circle-3');
+        circle3.classList.remove('bg-white', 'border', 'border-zinc-200', 'text-zinc-400');
+        circle3.classList.add('bg-emerald-600', 'text-white');
+    }
+
+    function goBackToStep2() {
+        document.getElementById('event-step-3').classList.add('hidden');
+        document.getElementById('event-step-2').classList.remove('hidden');
+        document.getElementById('event-progress-bar').classList.remove('w-[100%]');
+        document.getElementById('event-progress-bar').classList.add('w-[50%]');
+        
+        const circle3 = document.getElementById('progress-circle-3');
+        circle3.classList.add('bg-white', 'border', 'border-zinc-200', 'text-zinc-400');
+        circle3.classList.remove('bg-emerald-600', 'text-white');
+    }
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (file.size > 2 * 1024 * 1024) {
+            showToast("File size must be under 2MB", true);
+            event.target.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            eventImageBase64 = e.target.result;
+            document.getElementById('image-upload-prompt').classList.add('hidden');
+            document.getElementById('image-preview-container').classList.remove('hidden');
+            document.getElementById('image-preview').src = eventImageBase64;
+        }
+        reader.readAsDataURL(file);
+    }
+
+    async function submitFinalEvent(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submit-btn');
+        const errorEl = document.getElementById('submit-error');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Submitting...`;
+        errorEl.classList.add('hidden');
+
+        // Compile payload
+        const title = document.getElementById('ev-title').value.trim();
+        let category = document.getElementById('ev-category').value;
+        if (category === 'other') {
+            category = document.getElementById('ev-category-other').value.trim();
+        }
+        const description = document.getElementById('ev-desc').value.trim();
+
+        const capacity = parseInt(document.getElementById('ev-capacity').value);
+        const price = parseFloat(document.getElementById('ev-price').value);
+        const tier = document.getElementById('ev-tier').value;
+        const locationName = document.getElementById('ev-location').value.trim();
+        const area = document.getElementById('ev-area').value;
+
+        const date = document.getElementById('ev-date').value;
+        let included = document.getElementById('ev-includes').value.trim();
+
+        if (!included) {
+            included = "[]";
+        } else if (!included.startsWith('[')) {
+            // Auto-convert comma-separated list to JSON array
+            included = JSON.stringify(included.split(',').map(s => s.trim()).filter(s => s));
+        }
+
+        if (!eventImageBase64) {
+            errorEl.innerText = "Please upload an event cover image.";
+            errorEl.classList.remove('hidden');
+            btn.disabled = false;
+            btn.innerHTML = "Submit for Review";
+            return;
+        }
+
+        const payload = {
+            title: title,
+            description: description,
+            category: category,
+            package_tier: tier,
+            price_per_person: price,
+            capacity: capacity,
+            location_name: locationName,
+            location_area: area,
+            event_date: date,
+            included: included,
+            image_base64: eventImageBase64
+        };
+
+        try {
+            const res = await fetch('/api/host/events/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                showToast("Event submitted successfully! Pending admin approval.");
+                setTimeout(() => {
+                    window.location.href = "/host/dashboard";
+                }, 2000);
+            } else {
+                let errMsg = "Error creating event.";
+                if (Array.isArray(data.detail)) {
+                    errMsg = data.detail[0].msg;
+                } else if (data.detail) {
+                    errMsg = data.detail;
+                }
+                errorEl.innerText = errMsg;
+                errorEl.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = "Submit for Review";
+            }
+        } catch (err) {
+            errorEl.innerText = "Network error. Please try again.";
+            errorEl.classList.remove('hidden');
+            btn.disabled = false;
+            btn.innerHTML = "Submit for Review";
+        }
+    }
+</script>
+{% endblock %}
