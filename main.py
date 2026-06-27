@@ -772,6 +772,11 @@ def get_login_page(request: Request):
 def google_login(request: Request, next: Optional[str] = None):
     import urllib.parse
     client_id = os.getenv("GOOGLE_CLIENT_ID")
+    if not client_id or "apps.googleusercontent.com" not in client_id:
+        raise HTTPException(
+            status_code=500,
+            detail="Google OAuth configuration error: GOOGLE_CLIENT_ID is missing or invalid in the server environment variables. Please check your deployment settings."
+        )
     host = request.headers.get("host", "localhost:8000")
     scheme = "https" if "dekhahok.com" in host else "http"
     redirect_uri = f"{scheme}://{host}/auth/callback"
@@ -792,6 +797,11 @@ def google_login(request: Request, next: Optional[str] = None):
 async def google_callback(request: Request, code: str, state: str, response: Response):
     client_id = os.getenv("GOOGLE_CLIENT_ID")
     client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+    if not client_id or not client_secret:
+        raise HTTPException(
+            status_code=500,
+            detail="Google OAuth configuration error: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is missing from the environment."
+        )
     host = request.headers.get("host", "localhost:8000")
     scheme = "https" if "dekhahok.com" in host else "http"
     redirect_uri = f"{scheme}://{host}/auth/callback"
