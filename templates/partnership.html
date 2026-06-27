@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,33 +9,36 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="পার্টনারশিপ | DekhaHok • Meet, Explore, and Create Experiences">
-    <meta property="og:description"
-        content="দেখা হোক-এর পার্টনার রেস্টুরেন্ট বা ক্যাফে হিসেবে যুক্ত হওয়ার জন্য আবেদন করুন।">
+    <meta property="og:description" content="দেখা হোক-এর পার্টনার রেস্টুরেন্ট বা ক্যাফে হিসেবে যুক্ত হওয়ার জন্য আবেদন করুন।">
     <meta property="og:url" content="https://dekhahok.com/partnership">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
 
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://dekhahok.com/partnership">
+    <meta name="twitter:title" content="পার্টনারশিপ | DekhaHok • Meet, Explore, and Create Experiences">
+    <meta name="twitter:description" content="দেখা হোক-এর পার্টনার রেস্টুরেন্ট বা ক্যাফে হিসেবে যুক্ত হওয়ার জন্য আবেদন করুন।">
+    <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+
+    <link rel="icon" type="image/png" href="/static/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
     <style>
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-        }
-
+        body { font-family: 'Inter', 'Hind Siliguri', sans-serif; }
         .btn-primary {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             transition: all 0.3s ease;
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px -10px #059669;
         }
     </style>
 </head>
-
 <body class="bg-gray-50 min-h-screen flex flex-col">
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
@@ -52,8 +54,7 @@
         <div class="max-w-md mx-auto bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-gray-900 mb-2">পার্টনারশিপ</h1>
-                <p class="text-gray-500">আপনার রেস্টুরেন্ট বা ক্যাফে নিয়ে আমাদের সাথে যুক্ত হতে নিচের ফর্মটি পূরণ করুন।
-                </p>
+                <p class="text-gray-500">আপনার রেস্টুরেন্ট বা ক্যাফে নিয়ে আমাদের সাথে যুক্ত হতে নিচের ফর্মটি পূরণ করুন।</p>
             </div>
 
             <!-- Form View -->
@@ -75,84 +76,127 @@
                             class="w-full px-4 py-3 rounded-xl border border-gray-100 focus:outline-none focus:border-emerald-500 bg-gray-50 transition-all">
                     </div>
                     <button type="submit" id="partnerSubmitBtn"
-                        class="btn-primary w-full py-4 text-white font-bold rounded-xl shadow-lg mt-4">আবেদন জমা
-                        দিন</button>
+                        class="btn-primary w-full py-4 text-white font-bold rounded-xl shadow-lg mt-4">আবেদন জমা দিন</button>
                 </form>
             </div>
 
             <!-- Success View -->
             <div id="partnershipSuccessView" class="hidden text-center py-8 space-y-4">
-                <div
-                    class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i data-lucide="check-circle" class="w-12 h-12"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-900">আবেদন সফল!</h2>
-                <p class="text-gray-600 leading-relaxed">আপনার তথ্য আমাদের কাছে পৌঁছেছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ
-                    করব। ধন্যবাদ!</p>
+                <p class="text-gray-600 leading-relaxed">আপনার তথ্য আমাদের কাছে পৌঁছেছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব। ধন্যবাদ!</p>
                 <a href="/" class="inline-block mt-6 text-emerald-600 font-bold hover:underline">হোমপেজে ফিরে যান</a>
             </div>
         </div>
     </main>
 
-    <footer class="relative z-[999] bg-gray-900 text-white pt-16 pb-8" style="pointer-events: auto !important;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div class="col-span-2">
-                    <div class="flex items-center mb-4 cursor-pointer" onclick="window.location.href='/'">
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white pt-16 pb-8 border-t border-emerald-950/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Branding -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-x-2.5">
                         <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
-                            class="h-[34px] md:h-[42px] w-auto brightness-0 invert" />
+                            class="h-8 w-auto brightness-0 invert" />
                     </div>
-                    <p class="text-gray-400 max-w-sm">জনপ্রিয় রেস্তোরাঁ বা জায়গা একসাথে ঘুরে দেখুন এবং সাক্ষাতে গড়ে
-                        তুলুন প্রাণবন্ত বন্ধুত্ব।</p>
+                    <p class="text-zinc-400 text-xs sm:text-sm">Building the human connection infrastructure of Dhaka.
+                        We offer structured, host-led activities where meeting new people happens naturally.</p>
                 </div>
+
+                <!-- Navigation Links -->
                 <div>
-                    <h4 class="font-bold mb-4">লিংকস</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="/#how-it-works" class="hover:text-emerald-400 transition block">কিভাবে কাজ করে</a>
-                        </li>
-                        <li><a href="/#safety" class="hover:text-emerald-400 transition block">নিরাপত্তা</a></li>
-                        <li><a href="/about" class="hover:text-emerald-400 transition block">আমাদের সম্পর্কে</a></li>
-                        <li><a href="/contact" class="hover:text-emerald-400 transition block">যোগাযোগ</a></li>
-                        <li><a href="/partnership"
-                                class="hover:text-emerald-400 transition block font-bold text-white">পার্টনারশিপ</a>
-                        </li>
-                        <li><a href="/privacy-policy" class="hover:text-emerald-400 transition block">গোপনীয়তা নীতি</a>
-                        </li>
-                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition block">ব্যবহারের
-                                শর্তাবলী</a></li>
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Explore</h4>
+                    <ul class="space-y-2.5 text-xs text-zinc-400">
+                        <li><a href="/#catalog-section" class="hover:text-emerald-400 transition">Discover
+                                Experiences</a></li>
+                        <li><a href="/host/apply" class="hover:text-emerald-400 transition">Become a Host</a></li>
+                        <li><a href="/blog" class="hover:text-emerald-400 transition">Read Blog</a></li>
+                        <li><a href="/partnership" class="hover:text-emerald-400 transition">Partner with Us</a></li>
                     </ul>
                 </div>
+
+                <!-- Legal / Guidelines -->
                 <div>
-                    <h4 class="font-bold mb-4">যোগাযোগ</h4>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <a href="https://facebook.com/dekhahok" target="_blank" class="w-9 h-9 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#1877F2] transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                        </a>
-                        <a href="https://instagram.com/dekhahok" target="_blank" class="w-9 h-9 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#E4405F] transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-                        </a>
-                        <a href="https://linkedin.com/company/dekhahok" target="_blank" class="w-9 h-9 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#0A66C2] transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                        </a>
-                        <a href="https://wa.me/8801884477720" target="_blank" class="w-9 h-9 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#25D366] transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"></path></svg>
-                        </a>
-                        <a href="https://www.youtube.com/@DekhaHokbd" target="_blank" class="w-9 h-9 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-[#FF0000] transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.14 1 12 1 12s0 3.86.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.86 23 12 23 12s0-3.86-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
-                        </a>
-                    </div>
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Guidelines & Safety</h4>
+                    <ul class="space-y-2.5 text-xs text-zinc-400">
+                        <li><a href="/privacy-policy" class="hover:text-emerald-400 transition">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition">Terms of Service</a></li>
+                        <li><a href="/safety" class="hover:text-emerald-400 transition">Safety Guidelines</a></li>
+                        <li><a href="/host-guidelines" class="hover:text-emerald-400 transition">Host Agreement</a></li>
+                        <li><a href="/about" class="hover:text-emerald-400 transition">About DekhaHok</a></li>
+                        <li><a href="/contact" class="hover:text-emerald-400 transition">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Language Selection / Translation -->
+                <div class="space-y-4">
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Language / ভাষা</h4>
+                    <button onclick="toggleTranslation()" id="langBtn"
+                        class="flex items-center gap-2 bg-emerald-900/30 hover:bg-emerald-900/50 border border-emerald-800/60 px-4 py-2 rounded-xl text-xs text-emerald-400 font-bold transition">
+                        En
+                    </button>
+                    <!-- Google Translate Widget Container (Hidden) -->
+                    <div id="google_translate_element" class="hidden"></div>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 flex justify-between items-center">
-                <p class="text-gray-500 text-sm">© 2026 DekhaHok. All rights reserved.</p>
+
+            <!-- Bottom Row -->
+            <div
+                class="border-t border-emerald-950/40 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+                <div class="flex items-center gap-2">
+                    <span>Made with</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" class="text-rose-500 fill-current">
+                        <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
+                    <span>in Dhaka.</span>
+                </div>
+                <p>&copy; 2026 DekhaHok. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <!-- FLOATING WHATSAPP SUPPORT BUTTON -->
+    <a href="https://wa.me/8801325900906" target="_blank"
+        class="fixed bottom-6 right-6 z-[9999] bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 group"
+        title="Chat with support via WhatsApp" id="whatsapp-support">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+        <span
+            class="absolute right-16 bg-zinc-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-md">Support Chat</span>
+    </a>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             lucide.createIcons();
         });
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'bn',
+                includedLanguages: 'en,bn',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+
+        function toggleTranslation() {
+            const btn = document.getElementById('langBtn');
+            const isEnglishActive = btn.textContent.trim() === 'En';
+
+            const translateSelect = document.querySelector('select.goog-te-combo');
+            if (translateSelect) {
+                translateSelect.value = isEnglishActive ? 'en' : 'bn';
+                translateSelect.dispatchEvent(new Event('change'));
+                btn.textContent = isEnglishActive ? 'Bn' : 'En';
+            } else {
+                alert("Translation service loading. Please try again in a moment!");
+            }
+        }
+
 
         async function submitPartnership(event) {
             event.preventDefault();
@@ -180,18 +224,17 @@
                     formView.classList.add('hidden');
                     successView.classList.remove('hidden');
                 } else {
-                    showToast('আবেদন জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
+                    alert('আবেদন জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
                     btn.disabled = false;
                     btn.innerText = 'আবেদন জমা দিন';
                 }
             } catch (e) {
                 console.error(e);
-                showToast('ইন্টারনেট সংযোগ চেক করুন।', 'error');
+                alert('ইন্টারনেট সংযোগ চেক করুন।');
                 btn.disabled = false;
                 btn.innerText = 'আবেদন জমা দিন';
             }
         }
     </script>
 </body>
-
 </html>

@@ -376,28 +376,33 @@ def init_db():
         cursor.execute("SELECT id FROM hosts WHERE user_id = %s", (team_user_id,))
         team_host_id = cursor.fetchone()[0]
         
-        # Migrate legacy bookings with no event_id to default event
-        cursor.execute("SELECT COUNT(*) FROM bookings WHERE event_id IS NULL")
-        unlinked_count = cursor.fetchone()[0]
-        if unlinked_count > 0:
-            cursor.execute("""
-                INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, status)
-                VALUES (%s, 'dekhahok-circle-adda', 'DekhaHok Circle Adda', 'Casual cafe adda for meeting new friends.', 'Lifestyle', 'circle', 299.00, 10000, 'published')
-                ON CONFLICT (slug) DO NOTHING
-            """, (team_host_id,))
+        # Migrate legacy bookings with no event_id to default event (runs once)
+        cursor.execute("SELECT COUNT(*) FROM site_settings WHERE key = 'legacy_bookings_migrated'")
+        already_migrated = cursor.fetchone()[0] > 0
+        if not already_migrated:
+            cursor.execute("SELECT COUNT(*) FROM bookings WHERE event_id IS NULL")
+            unlinked_count = cursor.fetchone()[0]
+            if unlinked_count > 0:
+                cursor.execute("""
+                    INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, status)
+                    VALUES (%s, 'dekhahok-circle-adda', 'DekhaHok Circle Adda', 'Casual cafe adda for meeting new friends.', 'Lifestyle', 'circle', 299.00, 10000, 'published')
+                    ON CONFLICT (slug) DO NOTHING
+                """, (team_host_id,))
+                
+                cursor.execute("SELECT id FROM events WHERE slug = 'dekhahok-circle-adda'")
+                circle_event_id = cursor.fetchone()[0]
+                
+                cursor.execute("""
+                    UPDATE bookings 
+                    SET event_id = %s, host_id = %s 
+                    WHERE event_id IS NULL
+                """, (circle_event_id, team_host_id))
+                
+                cursor.execute("SELECT COUNT(*) FROM bookings WHERE event_id = %s", (circle_event_id,))
+                event_bookings_count = cursor.fetchone()[0]
+                cursor.execute("UPDATE events SET booked_count = %s WHERE id = %s", (event_bookings_count, circle_event_id))
             
-            cursor.execute("SELECT id FROM events WHERE slug = 'dekhahok-circle-adda'")
-            circle_event_id = cursor.fetchone()[0]
-            
-            cursor.execute("""
-                UPDATE bookings 
-                SET event_id = %s, host_id = %s 
-                WHERE event_id IS NULL
-            """, (circle_event_id, team_host_id))
-            
-            cursor.execute("SELECT COUNT(*) FROM bookings WHERE event_id = %s", (circle_event_id,))
-            event_bookings_count = cursor.fetchone()[0]
-            cursor.execute("UPDATE events SET booked_count = %s WHERE id = %s", (event_bookings_count, circle_event_id))
+            cursor.execute("INSERT INTO site_settings (key, value) VALUES ('legacy_bookings_migrated', 'true') ON CONFLICT DO NOTHING")
         
         conn.commit()
         cursor.close()

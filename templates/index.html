@@ -22,7 +22,7 @@
 <!-- ================= HOMEPAGE VIEW ================= -->
 <div id="home-view" class="view active">
     <!-- Hero Section -->
-    <section class="relative overflow-hidden max-w-7xl mx-auto px-4 sm:px-8 pt-6 sm:pt-12 pb-6">
+    <section class="relative overflow-hidden max-w-7xl mx-auto px-4 sm:px-8 pt-4 sm:pt-6 pb-4">
         <!-- Decorative blobs -->
         <div class="blob w-[200px] sm:w-[280px] h-[200px] sm:h-[280px] bg-emerald-500/10 top-10 left-[-50px]">
         </div>
@@ -35,12 +35,12 @@
             <!-- Left Column -->
             <div class="md:col-span-7">
                 <div
-                    class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6">
+                    class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-4">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     Now live in Dhaka City
                 </div>
                 <h1
-                    class="bengali text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-6 text-zinc-900">
+                    class="bengali text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-4 text-zinc-900">
                     দেখা হোক,
                     <div class="dropping-texts text-emerald-700">
                         <div>নেটওয়ার্কিং<span class="sr-only">, Networking</span></div>
@@ -49,11 +49,11 @@
                         <div>ট্রাভেল<span class="sr-only">, Travel</span></div>
                     </div>
                 </h1>
-                <p class="text-zinc-600 text-sm sm:text-base md:text-lg leading-relaxed mb-8 max-w-lg">
+                <p class="text-zinc-600 text-sm sm:text-base md:text-lg leading-relaxed mb-5 max-w-lg">
                     বাংলাদেশের অসংখ্য গল্প, ভ্রমণ ও অভিজ্ঞতা।
                     দেখা হোক — meaningful activities এবং real-life experiences-এর একটি বিশ্বস্ত প্ল্যাটফর্ম।
                 </p>
-                <div class="flex flex-wrap gap-3 sm:gap-4 mb-8">
+                <div class="flex flex-wrap gap-3 sm:gap-4 mb-5">
                     <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
                         class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-5 sm:px-7 py-3 rounded-full font-medium flex items-center gap-2 shadow-md text-sm">
                         Explore Events
@@ -83,7 +83,7 @@
             </div>
 
             <!-- Right Column - Connection SVG Hero Animation -->
-            <div class="md:col-span-5 relative h-[350px] lg:h-[450px] flex items-center justify-center">
+            <div class="md:col-span-5 relative h-[300px] lg:h-[380px] flex items-center justify-center">
                 <!-- Animation Stage -->
                 <div id="animation-stage" class="relative w-full h-full">
                     <div class="absolute inset-0 opacity-10"
@@ -156,7 +156,7 @@
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-users text-emerald-600"></i>
-                <span>Small Curated Groups (Max 12)</span>
+                <span>Small Curated Groups</span>
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-heart text-emerald-600"></i>
@@ -319,13 +319,14 @@
                         <i class="fa-solid fa-location-dot text-emerald-700 text-xl"></i>
                     </div>
                     <div class="text-left">
-                        <h2 class="text-2xl font-bold text-zinc-900">Track Booking Status</h2>
-                        <p class="text-xs text-zinc-500">Check meeting point, confirm slots, and chat with members.</p>
+                        <h2 class="text-2xl font-bold text-zinc-900">বুকিং ট্র্যাক করুন</h2>
+                        <p class="text-xs text-zinc-500">মিটিং পয়েন্ট দেখুন, স্লট নিশ্চিত করুন এবং গ্রুপের সদস্যদের সাথে
+                            চ্যাট করুন।</p>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-2 relative">
-                    <input id="trackingInput" type="text" placeholder="Enter DH-XXXXXXXX tracking code..."
+                    <input id="trackingInput" type="text" placeholder="DH-XXXXXXXX অথবা অপনার মোবাইল নাম্বার দিন।"
                         class="flex-1 border-2 border-zinc-200/80 bg-white rounded-2xl px-6 py-3.5 font-mono text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
                     <button onclick="checkBookingStatus()"
                         class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-2xl font-bold text-sm whitespace-nowrap shadow-md transition-all active:scale-95">
@@ -342,15 +343,15 @@
     </section>
 
     <!-- Pricing Packages Section -->
-    <section id="packages" class="bg-emerald-50/30 py-20">
+    <section id="packages" class="bg-emerald-50/30 pt-8 pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-8">
             <div class="text-center mb-12">
                 <span
                     class="px-3.5 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full uppercase">Packages</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-zinc-900 mt-3">Simple,
-                    Activity-focused Pricing</h2>
-                <p class="text-zinc-500 text-sm max-w-lg mx-auto">No subscriptions. Pay as you go. Verified hosts and
-                    security included.</p>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-zinc-900 mt-3">সহজ এবং
+                    কার্যক্রম-ভিত্তিক মূল্য তালিকা।</h2>
+                <p class="text-zinc-500 text-sm max-w-lg mx-auto">মাসিক ফি ছাড়া পে-অ্যাজ-ইউ-গো সুবিধা। নিরাপদ ও যাচাইকৃত
+                    হোস্টের নিশ্চয়তা।</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -360,17 +361,21 @@
                     <div>
                         <p class="text-xs font-black text-zinc-400 uppercase tracking-wider mb-2">DekhaHok Circle</p>
                         <div class="flex items-baseline gap-1 mb-6">
-                            <span class="text-4xl font-bold text-zinc-900">৳299</span>
+                            <span class="text-4xl font-bold text-zinc-900">৳২৯৯</span>
                             <span class="text-zinc-400 text-sm">/person</span>
                         </div>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Casual adda, coffee & public tea meetups</span>
+                                <span>Casual Adda</span>
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Curated small groups</span>
+                                <span>Coffee & Public Tea Meetups</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Curated Small Groups</span>
                             </li>
                         </ul>
                     </div>
@@ -389,13 +394,13 @@
                         <p class="text-xs font-black text-emerald-600 uppercase tracking-wider mb-2 mt-2">DekhaHok
                             Experience</p>
                         <div class="flex items-baseline gap-1 mb-6">
-                            <span class="text-4xl font-bold text-zinc-900">৳499</span>
+                            <span class="text-4xl font-bold text-zinc-900">৳৪৯৯</span>
                             <span class="text-zinc-400 text-sm">/person</span>
                         </div>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Themed walks (Photography, Cafe trails, film discussions)</span>
+                                <span>Themed walks (Photography, Cafe trails, film discussions etc.)</span>
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
@@ -418,17 +423,21 @@
                     <div>
                         <p class="text-xs font-black text-zinc-400 uppercase tracking-wider mb-2">Premium Experience</p>
                         <div class="flex items-baseline gap-1 mb-6">
-                            <span class="text-4xl font-bold text-zinc-900">৳999+</span>
+                            <span class="text-4xl font-bold text-zinc-900">৳৯৯৯+</span>
                             <span class="text-zinc-400 text-sm">/person</span>
                         </div>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Exclusive restaurants, workshops, day trips</span>
+                                <span>Exclusive restaurants</span>
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Transportation, complete entries, host fee included</span>
+                                <span>Day trips</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Workshops</span>
                             </li>
                         </ul>
                     </div>
@@ -483,7 +492,7 @@
             <div id="map" class="lg:col-span-8 h-[400px] rounded-3xl border border-zinc-100 shadow-sm z-10"></div>
             <div class="lg:col-span-4 bg-zinc-50 rounded-3xl p-6 flex flex-col justify-between">
                 <div class="space-y-4">
-                    <h3 class="font-bold text-zinc-800 text-lg">Dhaka Network Coverage</h3>
+                    <h3 class="font-bold text-zinc-800 text-lg">Network Coverage</h3>
                     <div class="flex justify-between items-center py-2 border-b">
                         <span class="text-zinc-500 text-sm">Meeting Areas</span>
                         <span id="stat-areas" class="font-black text-emerald-700 text-base">8+</span>
@@ -502,7 +511,7 @@
     </section>
 
     <!-- Latest Blogs Section (Separate layout but previews) -->
-    <section class="bg-zinc-50 py-16 border-t border-zinc-100">
+    <section class="bg-zinc-50 py-10 border-t border-zinc-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-8">
             <div class="flex justify-between items-end mb-8">
                 <div>
@@ -556,24 +565,25 @@
     </section>
 
     <!-- Support CTA -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-8 py-20 text-center">
+    <section class="max-w-5xl mx-auto px-4 sm:px-8 py-10 text-center">
         <span
             class="text-xs uppercase tracking-widest font-black bg-zinc-100 text-zinc-500 px-4 py-2 rounded-full">Build
             Connection</span>
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-zinc-900 mt-6">Earn by hosting experiences
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-zinc-900 mt-6">হোস্ট হয়ে আয় করুন
         </h2>
-        <p class="text-zinc-500 text-sm max-w-2xl mx-auto mb-8">Share your passion, capture stunning walks, or organize
-            book discussions. Keep creative control, receive a 50/50 revenue share, and let us handle payment ledger
-            entries, attendee waitlists, and safety logistics.</p>
+        <p class="text-zinc-500 text-sm max-w-2xl mx-auto mb-8">আপনার অভিজ্ঞতা শেয়ার করুন, আপনার ইভেন্ট আপনি আয়োজন করুন।
+            আপনি নিজের ইচ্ছেমতো ইভেন্ট সাজাতে পারবেন,আমরা আকর্ষণীয় রেভিনিউ শেয়ার করে থাকি। আমরা পেমেন্ট হিসাব রাখা,
+            অংশগ্রহণকারী
+            তালিকা তৈরি করে সমন্বয় এবং নিরাপত্তা ব্যবস্থাপনার নিশ্চিত করে থাকি।</p>
         <a href="/host/apply"
             class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-8 py-4 rounded-full font-bold text-base shadow-md inline-flex items-center justify-center">
-            Apply to Host Now
+            হোস্ট করুন..
         </a>
         <p class="mt-6 text-xs text-zinc-400 italic">"We build the trust layer. You create the experience."</p>
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="py-16 bg-white relative overflow-hidden border-t border-zinc-100">
+    <section id="faq" class="py-10 bg-white relative overflow-hidden border-t border-zinc-100">
         <div class="max-w-3xl mx-auto px-4 relative z-10">
             <div class="text-center mb-8">
                 <span

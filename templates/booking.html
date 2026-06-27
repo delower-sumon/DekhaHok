@@ -40,6 +40,8 @@
                     <span class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-emerald-600"></i> <span id="b-event-location">TBA</span></span>
                     <span class="flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md"><i class="fa-solid fa-user-check"></i> <span id="b-event-top-spots">0/0 Booked</span></span>
                 </div>
+                <!-- Event Description -->
+                <p id="b-event-desc" class="text-xs text-zinc-500 mt-2.5 leading-relaxed max-w-xl"></p>
             </div>
         </div>
         <div class="text-right hidden sm:block">
@@ -343,6 +345,7 @@
             // Populate top card
             document.getElementById('b-event-img').src = selectedEvent.image_url || 'https://picsum.photos/seed/' + selectedEvent.id + '/600/400';
             document.getElementById('b-event-title').textContent = selectedEvent.title;
+            document.getElementById('b-event-desc').textContent = selectedEvent.description || '';
             document.getElementById('b-event-price').textContent = `৳${Math.round(selectedEvent.price_per_person)}`;
             document.getElementById('b-event-tier').textContent = selectedEvent.package_tier;
             document.getElementById('b-event-date').textContent = selectedEvent.event_date ? new Date(selectedEvent.event_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBA';

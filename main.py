@@ -46,6 +46,11 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse(os.path.join("static", "favicon.png"))
+
+
 templates = Jinja2Templates(directory="templates")
 
 # ---------------------------------------------------------------------------
@@ -291,6 +296,17 @@ def serve_partnership(request: Request):
     return templates.TemplateResponse("partnership.html", {"request": request})
 
 
+@app.get("/safety", include_in_schema=False)
+def serve_safety(request: Request):
+    return templates.TemplateResponse("safety.html", {"request": request})
+
+
+@app.get("/host-guidelines", include_in_schema=False)
+def serve_host_guidelines(request: Request):
+    return templates.TemplateResponse("host_guidelines.html", {"request": request})
+
+
+
 @app.get("/blog", include_in_schema=False)
 def serve_blog_list(request: Request):
     conn = get_conn()
@@ -468,6 +484,7 @@ def serve_host_event_edit(event_id: int, request: Request):
             "location_area": event_row[8],
             "event_date_iso": event_row[9].strftime('%Y-%m-%dT%H:%M') if event_row[9] else "",
             "included": included_list if isinstance(included_list, list) else [],
+            "included_str": "\n".join(included_list) if isinstance(included_list, list) else "",
             "image_url": event_row[11] or ""
         }
     finally:
@@ -657,6 +674,8 @@ def sitemap():
         {"loc": f"{base_url}/blog", "lastmod": current_date, "changefreq": "daily", "priority": "0.9"},
         {"loc": f"{base_url}/privacy-policy", "lastmod": current_date, "changefreq": "monthly", "priority": "0.3"},
         {"loc": f"{base_url}/terms-of-service", "lastmod": current_date, "changefreq": "monthly", "priority": "0.3"},
+        {"loc": f"{base_url}/safety", "lastmod": current_date, "changefreq": "monthly", "priority": "0.4"},
+        {"loc": f"{base_url}/host-guidelines", "lastmod": current_date, "changefreq": "monthly", "priority": "0.4"},
     ]
     
     # Dynamic blogs

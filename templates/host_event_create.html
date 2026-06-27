@@ -61,7 +61,8 @@
 
                 <div>
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Brief Description *</label>
-                    <textarea id="ev-desc" required rows="3" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none" placeholder="Tell users what they will be doing..."></textarea>
+                    <textarea id="ev-desc" required maxlength="150" rows="3" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none" placeholder="Tell users what they will be doing..."></textarea>
+                    <span class="text-[10px] text-zinc-400 mt-1 block">Brief summary of the experience (max 150 characters).</span>
                 </div>
 
                 <div class="flex justify-end pt-4">
@@ -145,9 +146,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">What's Included *</label>
-                    <textarea id="ev-includes" required rows="5" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-y font-mono" placeholder="Coffee, Notebook, Facilitator"></textarea>
-                    <span class="text-[10px] text-zinc-400 mt-1 block">Comma separated list (e.g., Coffee, Photography Guide, Transport)</span>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">What's Included (One item per line) *</label>
+                    <textarea id="ev-includes" required rows="5" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-y font-mono" placeholder="Coffee&#10;Notebook&#10;Facilitator"></textarea>
+                    <span class="text-[10px] text-zinc-400 mt-1 block">Write each item on a new line (e.g., Coffee, then press Enter for the next item)</span>
                 </div>
 
                 <div>
@@ -319,8 +320,8 @@
         if (!included) {
             included = "[]";
         } else if (!included.startsWith('[')) {
-            // Auto-convert comma-separated list to JSON array
-            included = JSON.stringify(included.split(',').map(s => s.trim()).filter(s => s));
+            // Auto-convert newline-separated list to JSON array
+            included = JSON.stringify(included.split('\n').map(s => s.trim()).filter(s => s));
         }
 
         if (!eventImageBase64) {
