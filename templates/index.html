@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}DekhaHok • দেখা হোক, হোক বন্ধুত্ব{% endblock %}
+{% block title %}DekhaHok • Meet, Explore, and Create Experiences{% endblock %}
 
 {% block extra_head %}
 <!-- Leaflet Maps CSS -->
@@ -41,11 +41,17 @@
                 </div>
                 <h1
                     class="bengali text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-6 text-zinc-900">
-                    দেখা হোক,<br><span class="text-emerald-700">হোক বন্ধুত্ব..</span>
+                    দেখা হোক,
+                    <div class="dropping-texts text-emerald-700">
+                        <div>নেটওয়ার্কিং<span class="sr-only">, Networking</span></div>
+                        <div>ইভেন্টস<span class="sr-only">, Events</span></div>
+                        <div>এক্সপেরিয়েন্স<span class="sr-only">, Experiences</span></div>
+                        <div>ট্রাভেল<span class="sr-only">, Travel</span></div>
+                    </div>
                 </h1>
                 <p class="text-zinc-600 text-sm sm:text-base md:text-lg leading-relaxed mb-8 max-w-lg">
-                    Dhaka's human connection infrastructure layer. We coordinate photography walks, cafe crawls, and
-                    professional discussions to solve the trust deficit. Meet interesting people naturally.
+                    বাংলাদেশের অসংখ্য গল্প, ভ্রমণ ও অভিজ্ঞতা।
+                    দেখা হোক — meaningful activities এবং real-life experiences-এর একটি বিশ্বস্ত প্ল্যাটফর্ম।
                 </p>
                 <div class="flex flex-wrap gap-3 sm:gap-4 mb-8">
                     <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
@@ -71,7 +77,7 @@
                             class="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs">
                             💼</div>
                     </div>
-                    <p class="text-xs sm:text-sm text-zinc-500">1,280+ Dhakaites have joined curated real-world
+                    <p class="text-xs sm:text-sm text-zinc-500">380+ Hosts and users have joined DekhaHok
                         activities</p>
                 </div>
             </div>
@@ -154,7 +160,7 @@
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-heart text-emerald-600"></i>
-                <span>Taas (Trust as a Service) layer</span>
+                <span>Taas (Trust as a Service)</span>
             </div>
         </div>
     </section>
@@ -162,7 +168,7 @@
     <!-- Category Bar -->
     <div class="bg-white border-y border-zinc-100 overflow-hidden relative">
         <div id="secondary-navbar"
-            class="bg-white py-3.5 text-xs flex items-center gap-x-4 sm:gap-x-6 text-zinc-500 font-medium animate-marquee px-4 w-max">
+            class="bg-white py-3.5 text-xs flex flex-nowrap whitespace-nowrap items-center gap-x-4 sm:gap-x-6 text-zinc-500 font-medium animate-marquee px-4 w-max">
             <button onclick="filterCategory('all')"
                 class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 bg-zinc-100 rounded-full text-emerald-700 font-bold"
                 id="filter-all">
@@ -570,7 +576,9 @@
     <section id="faq" class="py-16 bg-white relative overflow-hidden border-t border-zinc-100">
         <div class="max-w-3xl mx-auto px-4 relative z-10">
             <div class="text-center mb-8">
-                <span class="inline-block text-xs font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1 mb-4">সাধারণ জিজ্ঞাসা</span>
+                <span
+                    class="inline-block text-xs font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1 mb-4">সাধারণ
+                    জিজ্ঞাসা</span>
                 <h2 class="text-3xl font-black text-zinc-900 mb-2">জিজ্ঞাসা</h2>
                 <p class="text-zinc-500">আপনার মনে থাকা সাধারণ কিছু প্রশ্নের উত্তর।</p>
             </div>
@@ -1313,48 +1321,7 @@
         }
     }
 
-    function startAutoScrollCategories() {
-        const nav = document.getElementById('secondary-navbar');
-        if (!nav) return;
 
-        let direction = 1; // 1 for right, -1 for left
-        let speed = 0.4; // slow pixel per frame
-        let isMoving = true;
-
-        // Only run on mobile screen sizes (< 768px)
-        if (window.innerWidth >= 768) return;
-
-        function scrollStep() {
-            if (!isMoving) return;
-
-            nav.scrollLeft += direction * speed;
-
-            // Check bounds
-            const maxScroll = nav.scrollWidth - nav.clientWidth;
-            if (nav.scrollLeft >= maxScroll - 1) {
-                direction = -1;
-            } else if (nav.scrollLeft <= 1) {
-                direction = 1;
-            }
-
-            requestAnimationFrame(scrollStep);
-        }
-
-        // Pause on manual touch / mouse drag
-        nav.addEventListener('touchstart', () => { isMoving = false; }, { passive: true });
-        nav.addEventListener('touchend', () => {
-            isMoving = true;
-            requestAnimationFrame(scrollStep);
-        }, { passive: true });
-        nav.addEventListener('mousedown', () => { isMoving = false; });
-        nav.addEventListener('mouseup', () => {
-            isMoving = true;
-            requestAnimationFrame(scrollStep);
-        });
-
-        // Start scroll
-        requestAnimationFrame(scrollStep);
-    }
 
     // FAQ Toggle function
     function toggleFaq(btn) {
@@ -1411,7 +1378,6 @@
         await loadEvents();    // populate allEvents first
         startMotion();         // then start hero animation with real event images
         initMap();
-        startAutoScrollCategories();
     };
 </script>
 {% endblock %}

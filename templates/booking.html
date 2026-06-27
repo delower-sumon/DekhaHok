@@ -6,14 +6,14 @@
     {% if event %}
     <meta name="description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
     <link rel="canonical" href="https://dekhahok.com/booking/{{ event_id }}">
-    <meta property="og:title" content="{{ event.title }} | দেখা হোক">
+    <meta property="og:title" content="{{ event.title }} | DekhaHok • Meet, Explore, and Create Experiences">
     <meta property="og:description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
     <meta property="og:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
     <meta property="og:type" content="event">
     <meta property="og:url" content="https://dekhahok.com/booking/{{ event_id }}">
     
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ event.title }} | দেখা হোক">
+    <meta name="twitter:title" content="{{ event.title }} | DekhaHok • Meet, Explore, and Create Experiences">
     <meta name="twitter:description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
     <meta name="twitter:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
     {% endif %}

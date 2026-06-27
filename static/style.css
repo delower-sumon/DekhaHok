@@ -384,6 +384,80 @@ body {
   width: max-content;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Hero Dropping Texts Animation */
+.dropping-texts {
+  display: block;
+  position: relative;
+  height: 1.2em; /* Automatically scales height with font size */
+  margin-top: 0.1em;
+}
+
+.dropping-texts > div {
+  font-size: 0px;
+  opacity: 0;
+  margin-left: -30px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 700;
+  background: transparent;
+}
+
+.dropping-texts > div:nth-child(1) {
+  animation: roll 5s linear infinite 0s;
+}
+.dropping-texts > div:nth-child(2) {
+  animation: roll 5s linear infinite 1.25s;
+}
+.dropping-texts > div:nth-child(3) {
+  animation: roll 5s linear infinite 2.5s;
+}
+.dropping-texts > div:nth-child(4) {
+  animation: roll 5s linear infinite 3.75s;
+}
+
+@keyframes roll {
+  0% {
+    font-size: 0px;
+    opacity: 0;
+    margin-left: -30px;
+    margin-top: 0px;
+    transform: rotate(-25deg);
+  }
+  3% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  5% {
+    font-size: inherit;
+    opacity: 1;
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+  20% {
+    font-size: inherit;
+    opacity: 1;
+    margin-left: 0px;
+    margin-top: 0px;
+    transform: rotate(0deg);
+  }
+  25% {
+    font-size: 0px;
+    opacity: 0.3;
+    margin-left: 20px;
+    margin-top: 40px;
+  }
+  100% {
+    font-size: 0px;
+    opacity: 0;
+    margin-left: -30px;
+    margin-top: 0px;
+    transform: rotate(15deg);
+  }
 }
