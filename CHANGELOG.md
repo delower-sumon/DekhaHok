@@ -2,6 +2,22 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-06-28] - After-Merge Fixes, Subpage Translation Sync & Database Startup Fix
+
+### Added
+- **New Guidelines Pages**: Created `templates/safety.html` (Safety Guidelines) and `templates/host_guidelines.html` (Host Agreement) with tailored green styling, custom SEO metadata tags, and floating WhatsApp buttons. Registered their corresponding FastAPI routes `/safety` and `/host-guidelines` in `main.py`.
+- **Event Brief Description on Booking Details**: Appended a brief description container into the selection card of `templates/booking.html`, populated dynamically on load.
+
+### Changed
+- **Subpage Footer Synchronization**: Replaced outdated footers on all custom sub-pages (`privacy_policy.html`, `terms.html`, `about.html`, `contact.html`, `partnership.html`, `safety.html`, `host_guidelines.html`) with the homepage's unified footer layout, complete with translation capability (En / Bn language toggle button via Google Translate widget).
+- **Newline-Separated Included Items**: Modified form parsing logic and input guidelines in both `host_event_create.html` and `host_event_edit.html` to allow hosts to input experience perks line-by-line (using newlines instead of commas). Enhanced the FastAPI edit route to populate the textarea dynamically using newline joining.
+- **Brief Description Restrained**: Set `maxlength="150"` constraint on the Brief Description textarea across the host create and edit event pages to keep descriptions concise.
+- **Dynamic sitemap.xml Expansion**: Updated `/sitemap.xml` dynamic generation route to include the two new static pages `/safety` and `/host-guidelines`.
+
+### Fixed
+- **Favicon 404 Route**: Resolved favicon fetch failures on custom sub-pages by registering a direct `/favicon.ico` route in the backend returning the static favicon asset.
+- **Default Event Startup Restoration Loop**: Solved a bug in the startup routine `init_db()` in `database.py` where the default "DekhaHok Circle Adda" event (previously deleted from the admin dashboard) was continuously re-created due to bookings with `event_id IS NULL` triggering the legacy migration block. Integrated a persistent site setting flag `'legacy_bookings_migrated'` to bypass the check after initial completion.
+
 ## [2026-06-27] - Admin Event Deletion, Payment Method Expansion & Contact Update
 
 ### Added
