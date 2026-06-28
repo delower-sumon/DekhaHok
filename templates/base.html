@@ -85,18 +85,20 @@
     </style>
 
     {% block seo_meta %}
-    <meta name="description" content="ঢাকার সেরা সোশ্যাল ইভেন্টে যুক্ত হোন দেখা হোক-এ। নিরাপদ পরিবেশে নতুন কারও সাথে দেখা করুন, আড্ডা দিন।">
+    <meta name="description" content="ভ্রমণ, শেখা ও নতুন অভিজ্ঞতার মাধ্যমে মানুষের সাথে যুক্ত হওয়ার একটি বিশ্বস্ত প্ল্যাটফর্ম। A trusted platform to connect with people through travel, learning, and new experiences.">
     <link rel="canonical" href="https://dekhahok.com/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dekhahok.com/">
     <meta property="og:title" content="DekhaHok • Meet, Explore, and Create Experiences">
-    <meta property="og:description" content="ঢাকায় নতুন মানুষের সাথে দেখা করুন, আড্ডা দিন। জনপ্রিয় রেস্তোরাঁ ও ক্যাফেতে ইভেন্ট বুকিং করুন সহজে।">
+    <meta property="og:description"
+        content="ভ্রমণ, শেখা ও নতুন অভিজ্ঞতার মাধ্যমে মানুষের সাথে যুক্ত হওয়ার একটি বিশ্বস্ত প্ল্যাটফর্ম। A trusted platform to connect with people through travel, learning, and new experiences.">
     <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
-    
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://dekhahok.com/">
     <meta name="twitter:title" content="DekhaHok • Meet, Explore, and Create Experiences">
-    <meta name="twitter:description" content="ঢাকায় নতুন মানুষের সাথে দেখা করুন, আড্ডা দিন। জনপ্রিয় রেস্তোরাঁ ও ক্যাফেতে ইভেন্ট বুকিং করুন সহজে।">
+    <meta name="twitter:description"
+        content="ভ্রমণ, শেখা ও নতুন অভিজ্ঞতার মাধ্যমে মানুষের সাথে যুক্ত হওয়ার একটি বিশ্বস্ত প্ল্যাটফর্ম। A trusted platform to connect with people through travel, learning, and new experiences.">
     <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
     {% endblock %}
     {% block extra_head %}{% endblock %}
@@ -153,66 +155,90 @@
                     {% endif %}
 
                     {% if user %}
-                    
+
                     <!-- Notification Bell (All Authenticated Users) -->
                     <div class="relative group mr-1 sm:mr-2">
-                        <button class="w-8 sm:w-9 h-8 sm:h-9 rounded-2xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus:outline-none">
+                        <button
+                            class="w-8 sm:w-9 h-8 sm:h-9 rounded-2xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus:outline-none">
                             <i class="fa-regular fa-bell text-[15px]"></i>
                             {% if unread_notifications|length > 0 %}
-                            <div class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse"></div>
+                            <div
+                                class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse">
+                            </div>
                             {% endif %}
                         </button>
-                        
+
                         <!-- Notification Dropdown Menu -->
-                        <div class="absolute right-0 top-full pt-2 w-64 sm:w-80 hidden group-hover:block hover:block z-50">
+                        <div
+                            class="absolute right-0 top-full pt-2 w-64 sm:w-80 hidden group-hover:block hover:block z-50">
                             <div class="bg-white border border-zinc-100 rounded-3xl shadow-xl overflow-hidden">
-                                <div class="px-4 py-3 border-b border-zinc-100 bg-zinc-50 flex justify-between items-center">
+                                <div
+                                    class="px-4 py-3 border-b border-zinc-100 bg-zinc-50 flex justify-between items-center">
                                     <span class="text-xs font-black text-zinc-800">Notifications</span>
                                     {% if unread_notifications|length > 0 %}
-                                    <span class="bg-red-100 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded-full">{{ unread_notifications|length }} New</span>
+                                    <span
+                                        class="bg-red-100 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded-full">{{
+                                        unread_notifications|length }} New</span>
                                     {% endif %}
                                 </div>
                                 <div class="max-h-72 overflow-y-auto">
                                     {% if unread_notifications|length == 0 %}
-                                        {% if suggested_events and user.role == 'user' %}
-                                            <div class="px-4 py-2 bg-emerald-50/50 border-b border-emerald-100">
-                                                <p class="text-[10px] font-black text-emerald-800 uppercase tracking-wide">Suggested for You</p>
+                                    {% if suggested_events and user.role == 'user' %}
+                                    <div class="px-4 py-2 bg-emerald-50/50 border-b border-emerald-100">
+                                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-wide">
+                                            Suggested for You</p>
+                                    </div>
+                                    {% for event in suggested_events %}
+                                    <a href="/booking/{{ event.id }}"
+                                        class="block px-4 py-3 border-b border-zinc-50 hover:bg-emerald-50 transition-colors group/item">
+                                        <div class="flex gap-3 items-center">
+                                            <div
+                                                class="w-8 h-8 rounded-xl bg-white border border-emerald-100 shadow-sm flex items-center justify-center shrink-0">
+                                                <i class="fa-solid fa-ticket text-emerald-600 text-[10px]"></i>
                                             </div>
-                                            {% for event in suggested_events %}
-                                            <a href="/booking/{{ event.id }}" class="block px-4 py-3 border-b border-zinc-50 hover:bg-emerald-50 transition-colors group/item">
-                                                <div class="flex gap-3 items-center">
-                                                    <div class="w-8 h-8 rounded-xl bg-white border border-emerald-100 shadow-sm flex items-center justify-center shrink-0">
-                                                        <i class="fa-solid fa-ticket text-emerald-600 text-[10px]"></i>
-                                                    </div>
-                                                    <div class="flex-1 min-w-0">
-                                                        <p class="text-xs font-bold text-zinc-800 leading-tight truncate group-hover/item:text-emerald-700 transition-colors">{{ event.title }}</p>
-                                                        <p class="text-[10px] text-zinc-500 truncate mt-0.5">{{ event.category }}</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            {% endfor %}
-                                        {% else %}
-                                            <div class="px-4 py-8 text-center text-zinc-400">
-                                                <i class="fa-regular fa-bell-slash text-2xl mb-2 opacity-50"></i>
-                                                <p class="text-xs font-semibold">You're all caught up!</p>
-                                            </div>
-                                        {% endif %}
-                                    {% else %}
-                                        {% for notif in unread_notifications %}
-                                        <div id="notif-{{ notif.id }}" class="px-4 py-3 border-b border-zinc-50 hover:bg-emerald-50/30 transition-colors relative group/item">
-                                            <div class="flex gap-3 items-start">
-                                                <div class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-sm shadow-emerald-200"></div>
-                                                <div class="flex-1 min-w-0">
-                                                    <p class="text-xs font-bold text-zinc-800 leading-tight mb-0.5">{{ notif.title }}</p>
-                                                    <p class="text-[10px] text-zinc-500 leading-snug">{{ notif.message }}</p>
-                                                    <p class="text-[9px] text-zinc-400 mt-1 font-medium">{{ notif.created_at|local_time }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 flex gap-2 pl-5 opacity-0 group-hover/item:opacity-100 transition-opacity">
-                                                <button data-notif-id="{{ notif.id }}" data-action-url="{{ notif.action_url }}" onclick="handleNotifClick(this)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-[9px] font-bold px-3 py-1 rounded-full transition-colors shrink-0">View & Mark Read</button>
+                                            <div class="flex-1 min-w-0">
+                                                <p
+                                                    class="text-xs font-bold text-zinc-800 leading-tight truncate group-hover/item:text-emerald-700 transition-colors">
+                                                    {{ event.title }}</p>
+                                                <p class="text-[10px] text-zinc-500 truncate mt-0.5">{{ event.category
+                                                    }}</p>
                                             </div>
                                         </div>
-                                        {% endfor %}
+                                    </a>
+                                    {% endfor %}
+                                    {% else %}
+                                    <div class="px-4 py-8 text-center text-zinc-400">
+                                        <i class="fa-regular fa-bell-slash text-2xl mb-2 opacity-50"></i>
+                                        <p class="text-xs font-semibold">You're all caught up!</p>
+                                    </div>
+                                    {% endif %}
+                                    {% else %}
+                                    {% for notif in unread_notifications %}
+                                    <div id="notif-{{ notif.id }}"
+                                        class="px-4 py-3 border-b border-zinc-50 hover:bg-emerald-50/30 transition-colors relative group/item">
+                                        <div class="flex gap-3 items-start">
+                                            <div
+                                                class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-sm shadow-emerald-200">
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-xs font-bold text-zinc-800 leading-tight mb-0.5">{{
+                                                    notif.title }}</p>
+                                                <p class="text-[10px] text-zinc-500 leading-snug">{{ notif.message }}
+                                                </p>
+                                                <p class="text-[9px] text-zinc-400 mt-1 font-medium">{{
+                                                    notif.created_at|local_time }}</p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mt-2 flex gap-2 pl-5 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                            <button data-notif-id="{{ notif.id }}"
+                                                data-action-url="{{ notif.action_url }}"
+                                                onclick="handleNotifClick(this)"
+                                                class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-[9px] font-bold px-3 py-1 rounded-full transition-colors shrink-0">View
+                                                & Mark Read</button>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
                                     {% endif %}
                                 </div>
                             </div>
@@ -308,7 +334,8 @@
                     {% endif %}
                     {% else %}
                     <button onclick="openAuthModal(window.location.pathname)"
-                        class="block w-full text-left py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Login /
+                        class="block w-full text-left py-3 px-4 rounded-xl hover:bg-zinc-50 text-zinc-600 hover:text-emerald-700">Login
+                        /
                         Signup</button>
                     {% endif %}
                 </nav>
@@ -360,7 +387,8 @@
                     <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Guidelines & Safety</h4>
                     <ul class="space-y-2.5 text-xs text-zinc-400">
                         <li><a href="/privacy-policy" class="hover:text-emerald-400 transition">Privacy Policy</a></li>
-                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition">Terms of Service</a></li>
+                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition">Terms of Service</a>
+                        </li>
                         <li><a href="/safety" class="hover:text-emerald-400 transition">Safety Guidelines</a></li>
                         <li><a href="/host-guidelines" class="hover:text-emerald-400 transition">Host Agreement</a></li>
                         <li><a href="/about" class="hover:text-emerald-400 transition">About DekhaHok</a></li>
@@ -372,7 +400,7 @@
                 <div class="space-y-4">
                     <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Language / ভাষা</h4>
                     <button onclick="toggleTranslation()" id="langBtn"
-                        class="flex items-center gap-2 bg-emerald-900/30 hover:bg-emerald-900/50 border border-emerald-800/60 px-4 py-2 rounded-xl text-xs text-emerald-400 font-bold transition">
+                        class="hidden flex items-center gap-2 bg-emerald-900/30 hover:bg-emerald-900/50 border border-emerald-800/60 px-4 py-2 rounded-xl text-xs text-emerald-400 font-bold transition">
                         En
                     </button>
                     <!-- Google Translate Widget Container (Hidden) -->
@@ -612,11 +640,13 @@
     <!-- GLOBAL AUTH MODAL -->
     <div onclick="if(event.target.id === 'global-auth-modal') closeAuthModal()" id="global-auth-modal"
         class="hidden fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm items-center justify-center p-4">
-        <div class="bg-white border border-zinc-200/80 rounded-[2rem] p-5 sm:p-6 shadow-xl max-w-sm w-full relative animate-scale-in max-h-[95vh] overflow-y-auto">
-            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 transition">
+        <div
+            class="bg-white border border-zinc-200/80 rounded-[2rem] p-5 sm:p-6 shadow-xl max-w-sm w-full relative animate-scale-in max-h-[95vh] overflow-y-auto">
+            <button onclick="closeAuthModal()"
+                class="absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 transition">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            
+
             <div class="space-y-4">
                 <!-- Logo Header -->
                 <div class="text-center space-y-3">
@@ -624,17 +654,22 @@
                         <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto mx-auto" />
                     </div>
                     <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">লগইন / রেজিস্ট্রেশন</h2>
-                    <p class="text-xs text-zinc-400">Join the trust layer of Dhaka and connect with like minded people!</p>
+                    <p class="text-xs text-zinc-400">Join the trust layer of Dhaka and connect with like minded people!
+                    </p>
                 </div>
 
                 <!-- Google OAuth Authentication -->
                 <a href="/auth/google" id="modal-google-login-btn"
                     class="w-full flex items-center justify-center gap-2 border border-zinc-200 hover:border-emerald-500 bg-white hover:bg-emerald-50/20 py-2.5 rounded-xl font-bold text-[13px] text-zinc-700 shadow-sm transition active:scale-95">
                     <svg class="w-5 h-5" viewBox="0 0 24 24">
-                        <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.328 0-6.027-2.7-6.027-6.028s2.699-6.028 6.027-6.028c1.528 0 2.914.57 3.985 1.5l3.143-3.143C18.966 2.76 15.822 1.5 12.24 1.5 6.444 1.5 1.758 6.186 1.758 12s4.686 10.5 10.482 10.5c6.054 0 10.076-4.256 10.076-10.259 0-.69-.06-1.35-.175-1.956H12.24Z" />
-                        <path fill="#4285F4" d="M22.139 10.285H12.24V14.4h6.887c-.287 1.066-.883 2.01-1.688 2.684l3.143 2.443c1.837-1.697 2.899-4.19 2.899-7.25 0-.69-.06-1.35-.175-1.956Z" />
-                        <path fill="#FBBC05" d="M12.24 22.5c2.796 0 5.136-.92 6.843-2.516l-3.143-2.443c-.87.585-1.986.931-3.7.931-2.617 0-4.832-1.766-5.621-4.143L3.382 16.73A10.476 10.476 0 0 0 12.24 22.5Z" />
-                        <path fill="#34A853" d="M6.619 14.33a5.966 5.966 0 0 1 0-4.66L3.382 7.27a10.476 10.476 0 0 0 0 9.46l3.237-2.4Z" />
+                        <path fill="#EA4335"
+                            d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.328 0-6.027-2.7-6.027-6.028s2.699-6.028 6.027-6.028c1.528 0 2.914.57 3.985 1.5l3.143-3.143C18.966 2.76 15.822 1.5 12.24 1.5 6.444 1.5 1.758 6.186 1.758 12s4.686 10.5 10.482 10.5c6.054 0 10.076-4.256 10.076-10.259 0-.69-.06-1.35-.175-1.956H12.24Z" />
+                        <path fill="#4285F4"
+                            d="M22.139 10.285H12.24V14.4h6.887c-.287 1.066-.883 2.01-1.688 2.684l3.143 2.443c1.837-1.697 2.899-4.19 2.899-7.25 0-.69-.06-1.35-.175-1.956Z" />
+                        <path fill="#FBBC05"
+                            d="M12.24 22.5c2.796 0 5.136-.92 6.843-2.516l-3.143-2.443c-.87.585-1.986.931-3.7.931-2.617 0-4.832-1.766-5.621-4.143L3.382 16.73A10.476 10.476 0 0 0 12.24 22.5Z" />
+                        <path fill="#34A853"
+                            d="M6.619 14.33a5.966 5.966 0 0 1 0-4.66L3.382 7.27a10.476 10.476 0 0 0 0 9.46l3.237-2.4Z" />
                     </svg>
                     <span>Continue with Google</span>
                 </a>
@@ -695,7 +730,8 @@
                                 placeholder="yourmail@domain.com">
                         </div>
                         <div class="space-y-1">
-                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Phone Number (Optional)</label>
+                            <label class="block text-[11px] font-bold text-zinc-600 text-left">Phone Number
+                                (Optional)</label>
                             <input type="tel" id="modal-signup-phone"
                                 class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                 placeholder="01XXXXXXXXX">
@@ -718,10 +754,10 @@
 
     <script>
         let modalAuthNextUrl = '/';
-        
+
         function openAuthModal(nextUrl = null, mode = 'login') {
             const modal = document.getElementById('global-auth-modal');
-            if(nextUrl) {
+            if (nextUrl) {
                 modalAuthNextUrl = nextUrl;
                 document.getElementById('modal-google-login-btn').href = `/auth/google?next=${encodeURIComponent(nextUrl)}`;
             } else {
@@ -839,7 +875,7 @@
                         document.getElementById(`notif-${notifId}`).style.display = 'none';
                     }
                 }
-            } catch(e) { console.error("Error marking notification read", e); }
+            } catch (e) { console.error("Error marking notification read", e); }
         }
     </script>
 
