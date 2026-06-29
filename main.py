@@ -242,8 +242,20 @@ async def custom_404_handler(request: Request, __):
 def serve_frontend(request: Request):
     conn = get_conn()
     blogs = []
+    total_members = 380
     try:
         cursor = conn.cursor()
+        
+        # Calculate real total number of users and verified hosts
+        cursor.execute("""
+            SELECT 
+                (SELECT COUNT(*) FROM users) + 
+                (SELECT COUNT(*) FROM hosts WHERE verification_status = 'VERIFIED')
+        """)
+        row = cursor.fetchone()
+        if row and row[0]:
+            total_members = row[0]
+            
         # Fetch latest 6 published blogs
         cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC LIMIT 6")
         rows = cursor.fetchall()
@@ -257,7 +269,7 @@ def serve_frontend(request: Request):
         cursor.close()
     finally:
         release_conn(conn)
-    return templates.TemplateResponse("index.html", {"request": request, "blogs": blogs})
+    return templates.TemplateResponse("index.html", {"request": request, "blogs": blogs, "total_members": total_members})
 
 
 @app.get("/admin", include_in_schema=False)
