@@ -129,9 +129,9 @@
                         <i class="fa-solid fa-percentage text-emerald-600"></i>
                         <span>Host Revenue Share</span>
                     </div>
-                    <div class="text-emerald-700 font-semibold mb-1 text-[11px]">{{ (host.revenue_share_pct * 100)|int }}% to Host • {{ (100 - host.revenue_share_pct * 100)|int }}% to DekhaHok</div>
-                    <p class="text-[10px] text-zinc-500 leading-relaxed">
-                        We split ticket revenue. DekhaHok handles checkout gateways, site listing, mapping search, sitemaps, SMS updates, and security check processes.
+                    <div class="text-emerald-700 font-semibold mb-1 text-[11px]">Your Deal: {{ (host.revenue_share_pct * 100)|int }}% to Host • {{ (100 - host.revenue_share_pct * 100)|int }}% to DekhaHok</div>
+                    <p class="text-xs text-zinc-600 leading-relaxed">
+                        DekhaHok handles checkout gateways, site listing, mapping search, sitemaps, SMS updates, and security check processes.
                     </p>
                 </div>
             </div>

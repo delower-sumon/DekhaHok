@@ -2193,12 +2193,12 @@ def admin_dashboard(x_admin_key: str = Header(...)):
                 (SELECT COUNT(*) FROM bookings WHERE booking_status = 'completed') AS completed,
                 (SELECT COUNT(*) FROM bookings WHERE payment_status = 'paid') AS paid,
                 (SELECT COUNT(*) FROM bookings WHERE payment_status = 'unpaid') AS unpaid,
-                (SELECT COALESCE(SUM(fee_amount), 0) FROM bookings WHERE payment_status = 'paid') AS revenue,
+                (SELECT COALESCE(SUM(b.fee_amount), 0) FROM bookings b JOIN events e ON b.event_id = e.id WHERE b.payment_status = 'paid' AND e.status = 'completed') AS revenue,
                 (SELECT COUNT(*) FROM meetup_groups WHERE status = 'open') AS open_groups,
                 (SELECT COUNT(*) FROM locations WHERE is_active = true) AS active_locations,
                 (SELECT COUNT(*) FROM hosts WHERE verification_status = 'VERIFIED') AS verified_hosts,
                 (SELECT COUNT(*) FROM events WHERE status = 'published') AS published_events,
-                (SELECT COALESCE(SUM(group_size), 0) FROM bookings) AS tickets_issued,
+                (SELECT COALESCE(SUM(b.group_size), 0) FROM bookings b JOIN events e ON b.event_id = e.id WHERE e.status = 'completed') AS tickets_issued,
                 (SELECT COUNT(*) FROM hosts WHERE verification_status = 'PENDING') AS pending_hosts
             """
         )
@@ -2634,18 +2634,21 @@ def admin_list_payouts(x_admin_key: str = Header(...)):
             SELECT e.id, e.title, e.event_date, e.host_payment_status,
                    u.full_name as host_name, u.phone as host_phone,
                    COALESCE(SUM(b.fee_amount), 0) as total_revenue,
-                   COUNT(b.id) as paid_bookings
+                   COUNT(b.id) as paid_bookings,
+                   h.revenue_share_pct
             FROM events e
             JOIN hosts h ON e.host_id = h.id
             JOIN users u ON h.user_id = u.id
             LEFT JOIN bookings b ON b.event_id = e.id AND b.payment_status = 'paid' AND b.booking_status = 'confirmed'
-            WHERE e.status = 'published'
-            GROUP BY e.id, u.full_name, u.phone
+            WHERE e.status IN ('published', 'completed')
+            GROUP BY e.id, u.full_name, u.phone, h.revenue_share_pct
             ORDER BY e.event_date DESC
         """)
         rows = cursor.fetchall()
         payouts = []
         for r in rows:
+            total_rev = float(r[6])
+            share = float(r[8] or 0.5)
             payouts.append({
                 "event_id": r[0],
                 "event_title": r[1],
@@ -2653,7 +2656,9 @@ def admin_list_payouts(x_admin_key: str = Header(...)):
                 "host_payment_status": r[3] or 'unpaid',
                 "host_name": r[4],
                 "host_phone": r[5],
-                "total_revenue": float(r[6]),
+                "total_revenue": total_rev,
+                "host_payout": total_rev * share,
+                "platform_profit": total_rev * (1 - share),
                 "paid_bookings": r[7]
             })
         return payouts
