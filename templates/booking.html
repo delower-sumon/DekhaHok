@@ -42,6 +42,17 @@
                 </div>
                 <!-- Event Description -->
                 <p id="b-event-desc" class="text-xs text-zinc-500 mt-2.5 leading-relaxed max-w-xl"></p>
+                <!-- Host Info -->
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-emerald-100/50">
+                    <img id="b-event-host-avatar" src="" alt="Host" class="w-8 h-8 rounded-full object-cover border border-emerald-200">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-1">
+                            <span class="text-[11px] font-bold text-zinc-700" id="b-event-host-name"></span>
+                            <span id="b-event-host-badge"></span>
+                        </div>
+                        <span id="b-event-host-profession" class="text-[9.5px] text-zinc-400 font-semibold leading-none mt-0.5"></span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="text-right hidden sm:block">
@@ -350,6 +361,18 @@
             document.getElementById('b-event-tier').textContent = selectedEvent.package_tier;
             document.getElementById('b-event-date').textContent = selectedEvent.event_date ? new Date(selectedEvent.event_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBA';
             document.getElementById('b-event-location').textContent = selectedEvent.location_name || 'TBA';
+            
+            // Populate Host Info
+            document.getElementById('b-event-host-avatar').src = selectedEvent.host_avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${selectedEvent.host_name}`;
+            document.getElementById('b-event-host-name').textContent = `By ${selectedEvent.host_name.split(' ')[0]}`;
+            if (selectedEvent.host_profession) {
+                document.getElementById('b-event-host-profession').textContent = selectedEvent.host_profession;
+            }
+            if (selectedEvent.host_verification_status === 'VERIFIED') {
+                document.getElementById('b-event-host-badge').innerHTML = `<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host">
+                    <path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" />
+                </svg>`;
+            }
             
             // Populate Included items
             const includedContainer = document.getElementById('booking-included-container');

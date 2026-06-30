@@ -1300,7 +1300,8 @@ def api_list_events(category: Optional[str] = None):
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
-                   u.avatar_url as host_avatar, u.id as user_id
+                   u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
+                   h.profession as host_profession
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1322,7 +1323,9 @@ def api_list_events(category: Optional[str] = None):
                 "booked_count": r[7], "location_name": r[8], "location_area": r[9],
                 "event_date": str(r[10]) if r[10] else None, "image_url": f"/api/events/{r[0]}/image" if r[11] else None, "included": r[12] or [],
                 "status": r[13], "host_id": r[14], "host_name": r[15] or "DekhaHok Host",
-                "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}"
+                "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
+                "host_verification_status": r[18],
+                "host_profession": r[19] or ""
             })
         cursor.close()
     finally:
@@ -1339,7 +1342,8 @@ def api_event_detail(event_id: int):
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
-                   u.avatar_url as host_avatar, h.bio as host_bio, u.id as user_id
+                   u.avatar_url as host_avatar, h.bio as host_bio, u.id as user_id, h.verification_status as host_verification_status,
+                   h.profession as host_profession
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1360,7 +1364,9 @@ def api_event_detail(event_id: int):
             "host_id": r[14], 
             "host_name": r[15] or "DekhaHok Host",
             "host_avatar": f"/api/users/{r[18]}/avatar" if r[18] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
-            "host_bio": r[17] or ""
+            "host_bio": r[17] or "",
+            "host_verification_status": r[19],
+            "host_profession": r[20] or ""
         }
         cursor.close()
     finally:

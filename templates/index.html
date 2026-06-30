@@ -15,6 +15,14 @@
         background: none;
         border: none;
     }
+
+    .premium-gradient-text {
+        background: linear-gradient(to right, #10b981, #0284c7);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
 </style>
 {% endblock %}
 
@@ -49,8 +57,10 @@
                         <div>ট্রাভেল<span class="sr-only">, Travel</span></div>
                     </div>
                 </h1>
-                <p class="text-zinc-600 text-sm sm:text-base md:text-lg leading-relaxed mb-5 max-w-lg">
-                    ভ্রমণ, শেখা ও নতুন অভিজ্ঞতার মাধ্যমে মানুষের সাথে যুক্ত হওয়ার একটি বিশ্বস্ত প্ল্যাটফর্ম।
+                <p
+                    class="bengali text-2xl sm:text-3xl lg:text-[2.5rem] font-black leading-snug mb-5 max-w-2xl tracking-tight">
+                    <span class="premium-gradient-text py-2">স্ক্রিনের বাইরে বাস্তব অভিজ্ঞতা।</span>
+                    <span class="sr-only">Real experiences beyond the screen.</span>
                 </p>
                 <div class="flex flex-wrap gap-3 sm:gap-4 mb-5">
                     <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
@@ -372,6 +382,14 @@
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Public Meetups</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Networking</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
                                 <span>Coffee & Public Tea Meetups</span>
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
@@ -401,7 +419,11 @@
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Themed walks (Photography, Cafe trails, film discussions etc.)</span>
+                                <span>Themed walks (Photography, Cafe trails etc.)</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Local hangouts (Tea, cafes, street food spots)</span>
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
@@ -430,7 +452,7 @@
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Exclusive restaurants</span>
+                                <span>Exclusive Places</span>
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
@@ -438,7 +460,16 @@
                             </li>
                             <li class="flex items-start gap-2 text-xs text-zinc-600">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span>Workshops</span>
+                                <span>Expert Guided Activities</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Exclusive Food & Drinks</span>
+                            </li>
+
+                            <li class="flex items-start gap-2 text-xs text-zinc-600">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span>Personalized Experience</span>
                             </li>
                         </ul>
                     </div>
@@ -580,7 +611,7 @@
             class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-8 py-4 rounded-full font-bold text-base shadow-md inline-flex items-center justify-center">
             হোস্ট করুন..
         </a>
-        <p class="mt-6 text-xs text-zinc-400 italic">"We build the trust layer. You create the experience."</p>
+        <p class="mt-6 text-xs text-zinc-400 italic">"Turn your passion into experiences and bring people together."</p>
     </section>
 
     <!-- FAQ Section -->
@@ -1018,8 +1049,14 @@
                         <!-- Host badge & Event Capacity -->
                         <div class="flex items-center justify-between pt-2 mt-2 border-t border-zinc-50">
                             <div class="flex items-center gap-2">
-                                <img src="${e.host_avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + e.host_name}" alt="${e.host_name}" class="w-6 h-6 rounded-full object-cover border">
-                                <span class="text-[10px] font-bold text-zinc-600 truncate max-w-[100px]">By ${e.host_name.split(' ')[0]}</span>
+                                <img src="${e.host_avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + e.host_name}" alt="${e.host_name}" class="w-7 h-7 rounded-full object-cover border border-zinc-100">
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
+                                        ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
+                                    </div>
+                                    ${e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-0.5">' + e.host_profession + '</span>' : ''}
+                                </div>
                             </div>
                             <span class="px-2.5 py-1 border text-[9px] font-black rounded-xl uppercase tracking-tight shadow-sm ${badgeClass}">
                                 ${badgeText} &bull; ${e.booked_count}/${e.capacity}

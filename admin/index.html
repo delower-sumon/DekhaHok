@@ -2186,13 +2186,6 @@
           if (h.verification_status === 'SUSPENDED') badgeColor = 'bg-red-100 text-red-800';
           if (h.verification_status === 'PENDING') badgeColor = 'bg-amber-100 text-amber-800';
 
-          const verifyBtn = h.verification_status !== 'VERIFIED'
-            ? `<button onclick="updateHostStatus(${h.id}, 'VERIFIED')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow transition mr-1">Verify</button>`
-            : '';
-          const suspendBtn = h.verification_status !== 'SUSPENDED'
-            ? `<button onclick="updateHostStatus(${h.id}, 'SUSPENDED')" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg text-[10px] font-bold shadow transition">Suspend</button>`
-            : '';
-
           return `
             <tr>
               <td class="px-6 py-4">
@@ -2211,11 +2204,13 @@
                 </div>
               </td>
               <td class="px-6 py-4 text-center">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${badgeColor}">${h.verification_status}</span>
+                <select onchange="updateHostStatus(${h.id}, this.value)" class="px-2 py-1 rounded-full text-[10px] font-bold uppercase cursor-pointer outline-none border-none ${badgeColor}">
+                  <option value="PENDING" ${h.verification_status === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                  <option value="VERIFIED" ${h.verification_status === 'VERIFIED' ? 'selected' : ''}>VERIFIED</option>
+                  <option value="SUSPENDED" ${h.verification_status === 'SUSPENDED' ? 'selected' : ''}>SUSPENDED</option>
+                </select>
               </td>
               <td class="px-6 py-4 text-right whitespace-nowrap">
-                ${verifyBtn}
-                ${suspendBtn}
               </td>
             </tr>
           `;
