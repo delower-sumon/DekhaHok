@@ -118,13 +118,13 @@
         return '/';
     }
 
-    window.onload = function() {
+    window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
         const mode = urlParams.get('mode');
         if (mode === 'signup') {
             switchAuthTab('signup');
         }
-        
+
         const nextUrl = urlParams.get('next');
         if (nextUrl) {
             const gBtn = document.getElementById('google-login-btn');
