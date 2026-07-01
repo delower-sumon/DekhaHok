@@ -85,7 +85,8 @@
     </style>
 
     {% block seo_meta %}
-    <meta name="description" content="ভ্রমণ, শেখা ও বাস্তব অভিজ্ঞতার মাধ্যমে মানুষের সাথে যুক্ত হওয়ার একটি বিশ্বস্ত প্ল্যাটফর্ম। A trusted platform to connect with people through travel, learning, and new experiences.">
+    <meta name="description"
+        content="ভ্রমণ, শেখা ও বাস্তব অভিজ্ঞতার মাধ্যমে মানুষের সাথে যুক্ত হওয়ার একটি বিশ্বস্ত প্ল্যাটফর্ম। A trusted platform to connect with people through travel, learning, and new experiences.">
     <link rel="canonical" href="https://dekhahok.com/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dekhahok.com/">
@@ -112,8 +113,52 @@
         <div class="max-w-7xl mx-auto sm:px-2">
             <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
                 <!-- Logo -->
-                <a href="/" class="flex items-center gap-x-2.5 group">
+                <a href="/" class="flex items-center gap-x-2 group">
                     <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" />
+                    <!-- Animated Connection Logo -->
+                    <svg class="h-[30px] md:h-[36px] w-[30px] md:w-[36px] flex-shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Connection Lines (Thin and Black/Dark Zinc, Highly Curved) -->
+                        <path d="M 15 20 Q 10 48 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                            <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                        </path>
+                        <path d="M 85 15 Q 75 45 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                            <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                        </path>
+                        <path d="M 70 85 Q 80 70 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                            <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                        </path>
+
+                        <!-- Converging Nodes (Highly Visible, Slide Along Curved Paths instantly) -->
+                        <!-- Brand Emerald green node -->
+                        <circle cx="0" cy="0" r="8" fill="#10B981" opacity="0">
+                            <animateMotion path="M 15 20 Q 10 48 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                        </circle>
+                        <!-- Purple node -->
+                        <circle cx="0" cy="0" r="8" fill="#A855F7" opacity="0">
+                            <animateMotion path="M 85 15 Q 75 45 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                        </circle>
+                        <!-- Red node recolored to Blue -->
+                        <circle cx="0" cy="0" r="8" fill="#3B82F6" opacity="0">
+                            <animateMotion path="M 70 85 Q 80 70 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                        </circle>
+
+                        <!-- Central Glow Core -->
+                        <circle cx="50" cy="50" r="10" fill="#10B981" opacity="0">
+                            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.75;0.9;1" dur="3s" repeatCount="indefinite" />
+                            <animate attributeName="r" values="5;10;10;5" keyTimes="0;0.65;0.75;1" dur="3s" repeatCount="indefinite" />
+                        </circle>
+                        <!-- Expanding Pulse Wave -->
+                        <circle cx="50" cy="50" r="10" fill="none" stroke="#10B981" stroke-width="1.5" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0.8;0" keyTimes="0;0.65;0.75;0.95" dur="3s" repeatCount="indefinite" />
+                            <animate attributeName="r" values="10;10;25;25" keyTimes="0;0.65;0.9;1" dur="3s" repeatCount="indefinite" />
+                        </circle>
+                    </svg>
                 </a>
 
                 <!-- Desktop Menu Links -->
@@ -303,6 +348,47 @@
                 <div class="flex justify-between items-center pb-6 border-b">
                     <div class="flex items-center gap-x-2">
                         <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto" />
+                        <!-- Animated Connection Logo (Mobile) -->
+                        <svg class="h-[28px] w-[28px] flex-shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Connection Lines (Thin and Black/Dark Zinc, Highly Curved) -->
+                            <path d="M 15 20 Q 10 48 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                                <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </path>
+                            <path d="M 85 15 Q 75 45 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                                <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </path>
+                            <path d="M 70 85 Q 80 70 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                                <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </path>
+
+                            <!-- Converging Nodes (Highly Visible, Slide Along Curved Paths instantly) -->
+                            <circle cx="0" cy="0" r="8" fill="#10B981" opacity="0">
+                                <animateMotion path="M 15 20 Q 10 48 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="0" cy="0" r="8" fill="#A855F7" opacity="0">
+                                <animateMotion path="M 85 15 Q 75 45 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="0" cy="0" r="8" fill="#3B82F6" opacity="0">
+                                <animateMotion path="M 70 85 Q 80 70 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+
+                            <!-- Central Glow Core -->
+                            <circle cx="50" cy="50" r="10" fill="#10B981" opacity="0">
+                                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.75;0.9;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="5;10;10;5" keyTimes="0;0.65;0.75;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <!-- Expanding Pulse Wave -->
+                            <circle cx="50" cy="50" r="10" fill="none" stroke="#10B981" stroke-width="1.5" opacity="0">
+                                <animate attributeName="opacity" values="0;0;0.8;0" keyTimes="0;0.65;0.75;0.95" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="10;10;25;25" keyTimes="0;0.65;0.9;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                        </svg>
                     </div>
                     <button onclick="toggleMobileMenu()"
                         class="text-zinc-400 hover:text-zinc-600 w-8 h-8 flex items-center justify-center border rounded-xl">
@@ -364,7 +450,8 @@
                         <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
                             class="h-8 w-auto brightness-0 invert" />
                     </div>
-                    <p class="text-zinc-400 text-xs sm:text-sm mb-3">Building the human connection infrastructure of Dhaka.
+                    <p class="text-zinc-400 text-xs sm:text-sm mb-3">Building the human connection infrastructure of
+                        Dhaka.
                         We offer structured, host-led activities where meeting new people happens naturally.</p>
                     <p class="bengali text-emerald-400/90 font-bold tracking-wide">
                         <span class="sr-only">Real experiences beyond the screen.</span>
@@ -416,7 +503,7 @@
                 <div class="flex items-center gap-2">
                     <span>Made with</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" class="text-rose-500 fill-current">
+                        stroke="currentColor" stroke-width="2" class="text-sky-400 fill-current">
                         <path
                             d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                     </svg>
@@ -652,7 +739,48 @@
             <div class="space-y-4">
                 <!-- Logo Header -->
                 <div class="text-center space-y-3">
-                    <div class="flex justify-center mb-2">
+                    <div class="flex flex-col items-center justify-center gap-y-2 mb-2">
+                        <!-- Animated Connection Logo -->
+                        <svg class="h-[30px] w-[30px] flex-shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Connection Lines (Thin and Black/Dark Zinc, Highly Curved) -->
+                            <path d="M 15 20 Q 10 48 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                                <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </path>
+                            <path d="M 85 15 Q 75 45 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                                <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </path>
+                            <path d="M 70 85 Q 80 70 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+                                <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </path>
+
+                            <!-- Converging Nodes (Highly Visible, Slide Along Curved Paths instantly) -->
+                            <circle cx="0" cy="0" r="8" fill="#10B981" opacity="0">
+                                <animateMotion path="M 15 20 Q 10 48 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="0" cy="0" r="8" fill="#A855F7" opacity="0">
+                                <animateMotion path="M 85 15 Q 75 45 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="0" cy="0" r="8" fill="#3B82F6" opacity="0">
+                                <animateMotion path="M 70 85 Q 80 70 50 50" dur="3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
+                                <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+
+                            <!-- Central Glow Core -->
+                            <circle cx="50" cy="50" r="10" fill="#10B981" opacity="0">
+                                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.75;0.9;1" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="5;10;10;5" keyTimes="0;0.65;0.75;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <!-- Expanding Pulse Wave -->
+                            <circle cx="50" cy="50" r="10" fill="none" stroke="#10B981" stroke-width="1.5" opacity="0">
+                                <animate attributeName="opacity" values="0;0;0.8;0" keyTimes="0;0.65;0.75;0.95" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="10;10;25;25" keyTimes="0;0.65;0.9;1" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                        </svg>
                         <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto mx-auto" />
                     </div>
                     <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">লগইন / রেজিস্ট্রেশন</h2>

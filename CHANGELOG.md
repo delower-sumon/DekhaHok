@@ -2,6 +2,21 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-01] - Animated Brand Logo, Trust Vibe Sync, Google OAuth & Onboarding Redesign
+
+### Added
+- **Animated Brand Logo SVG**: Built a self-contained inline SVG using SMIL animations that translates the hero's connection paths, glowing nodes, and outward pulse wave natively. Colors are set to brand green (#10B981), purple (#A855F7), and trust deep blue (#3B82F6).
+- **Navbar & Menu Placement**: Integrated the animated logo next to (to the right of) the static Bangla brand text logo (`dekhahok_bn.svg`) on both the desktop header navbar and the mobile menu drawer.
+- **Vertically Stacked Logo Lockup**: Designed a vertically stacked brand lockup displaying the animated SVG logo on top and the Bangla logo text centered directly below it. Applied this unified branding at the top of the Global Auth Modal and the Host Onboarding Sign-In panel.
+- **Inline Host Apply Authentication**: Replaced the default forced login barrier on the host application page (`templates/host_apply.html`) with an interactive, tabbed inline Login/Signup form panel featuring custom Bengali copy and hidden English SEO crawler synonyms.
+- **Standalone Sub-Page Sync**: Injected the blue-themed animated brand logo SVG into the navigation headers and changed the bottom row copy-pasted footer heart SVG classes from rose red to diamond blue (`text-sky-400`) on `terms.html`, `safety.html`, `privacy_policy.html`, `partnership.html`, `host_guidelines.html`, `about.html`, and `contact.html`. Removed references to the legacy bubble icon (`dekhahok_logo.svg`) in their headers.
+
+### Changed
+- **Home Page Hero Subtitle**: Updated the sub-navigation hero badge text in `templates/index.html` from "Now live in Dhaka City" to **"Beyond the digital bubble."** to align with the overarching platform mission.
+- **Hero Canvas Dots Color Sync**: Recolor the moving node dots on the home page hero animation canvas to emerald green, purple, and blue-500, aligning with the new navigation brand color system.
+- **Official Google Brand G Logo**: Upgraded the fragmented Google login SVGs to the official, color-accurate Google G logo in `base.html` (modal), `auth.html` (login page), and `host_apply.html` (onboarding).
+- **Passport Section Mobile Layout**: Centered the "Get Passport" box in the DekhaHok Passport membership section on mobile screens by applying `text-center md:text-right` to its parent wrapper.
+
 ## [2026-06-28] - After-Merge Fixes, Subpage Translation Sync & Database Startup Fix
 
 ### Added
