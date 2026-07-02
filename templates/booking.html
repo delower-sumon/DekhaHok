@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}Confirm Booking • DekhaHok{% endblock %}
+{% block title %}{{ event.title if event else 'Confirm Booking' }} • DekhaHok{% endblock %}
 
 {% block seo_meta %}
     {% if event %}
-    <meta name="description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
+    <meta name="description" content="{{ event.description or 'Meet professionals, creators and communities through real activities.' }}">
     <link rel="canonical" href="https://dekhahok.com/booking/{{ event_id }}">
-    <meta property="og:title" content="{{ event.title }} | DekhaHok • Meet, Explore, and Create Experiences">
-    <meta property="og:description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
+    <meta property="og:title" content="{{ event.title }} | DekhaHok • Professional Social Network">
+    <meta property="og:description" content="{{ event.description or 'Meet professionals, creators and communities through real activities.' }}">
     <meta property="og:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
     <meta property="og:type" content="event">
     <meta property="og:url" content="https://dekhahok.com/booking/{{ event_id }}">
     
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ event.title }} | DekhaHok • Meet, Explore, and Create Experiences">
-    <meta name="twitter:description" content="{{ event.description or 'Join this amazing event on DekhaHok!' }}">
+    <meta name="twitter:title" content="{{ event.title }} | DekhaHok • Professional Social Network">
+    <meta name="twitter:description" content="{{ event.description or 'Meet professionals, creators and communities through real activities.' }}">
     <meta name="twitter:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
     {% endif %}
 {% endblock %}
@@ -301,14 +301,17 @@
     </div>
     {% else %}
     <!-- Unauthenticated State -->
-    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 sm:p-8 text-center mt-6">
-        <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="fa-solid fa-lock text-2xl"></i>
+    <div class="bg-emerald-50/40 border border-emerald-100 rounded-[2rem] p-6 sm:p-10 text-center mt-6 shadow-sm">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+            <i class="fa-solid fa-ticket text-2xl animate-pulse"></i>
         </div>
-        <h2 class="text-xl font-bold text-zinc-900 mb-2">Login Required to Book</h2>
-        <p class="text-sm text-zinc-600 mb-6">You need to have an account to secure your spot for this event. Don't worry, it only takes a few seconds!</p>
+        <h2 class="text-xl font-bold text-zinc-900 mb-2">Ready to Join this Experience?</h2>
+        <p class="text-sm text-zinc-600 mb-6 leading-relaxed max-w-md mx-auto">Secure your ticket for this networking session and creator experience. Meet professionals and build offline connections.</p>
         <div>
-            <button onclick="openAuthModal(window.location.pathname)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow transition inline-block w-full sm:w-auto">Login / Sign Up to Continue</button>
+            <button onclick="openAuthModal(window.location.pathname)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-full font-bold text-sm shadow transition-all hover:scale-[1.02] inline-block w-full sm:w-auto">
+                <span class="sr-only">Book Now</span>
+                বুক করুন
+            </button>
         </div>
     </div>
     {% endif %}

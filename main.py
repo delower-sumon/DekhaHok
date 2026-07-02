@@ -1048,7 +1048,7 @@ def get_event_image(event_id: int):
         cursor.execute("SELECT image_url FROM events WHERE id = %s", (event_id,))
         row = cursor.fetchone()
         if not row or not row[0]:
-            return RedirectResponse(url="/static/assets/blind_adda.jpeg")
+            return RedirectResponse(url="/static/assets/dekhahok_adda.jpg")
             
         image_url = row[0]
         if image_url.startswith("data:image"):
@@ -1058,7 +1058,7 @@ def get_event_image(event_id: int):
                 decoded = base64.b64decode(encoded)
                 return Response(content=decoded, media_type=media_type)
             except Exception:
-                return RedirectResponse(url="/static/assets/blind_adda.jpeg")
+                return RedirectResponse(url="/static/assets/dekhahok_adda.jpg")
         else:
             return RedirectResponse(url=image_url)
     finally:
