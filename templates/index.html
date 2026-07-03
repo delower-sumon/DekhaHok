@@ -205,12 +205,7 @@
                 <span>🌱</span>
                 <span>Lifestyle</span>
             </button>
-            <button onclick="filterCategory('travel')"
-                class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
-                id="filter-travel">
-                <span>✈️</span>
-                <span>Travel</span>
-            </button>
+
             <button onclick="filterCategory('cafe')"
                 class="cursor-pointer flex items-center gap-x-1.5 py-1.5 px-4 rounded-full hover:text-emerald-700 transition"
                 id="filter-cafe">
@@ -273,7 +268,7 @@
             <div>
                 <span
                     class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Experiences</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900">Events & Experiences</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Events & Experiences</span>ইভেন্টস & এক্সপেরিয়েন্স</h2>
             </div>
 
             <div
@@ -319,6 +314,28 @@
             <span class="text-4xl">🧭</span>
             <h3 class="font-bold mt-4 text-zinc-800">No events found</h3>
             <p class="text-zinc-400 text-xs mt-1">Please select another category or check back later!</p>
+        </div>
+    </section>
+
+    <!-- Travel Catalog Section -->
+    <section id="travel-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50">
+        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+            <div>
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Travel</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Travels & Tourism</span>ট্রাভেল</h2>
+            </div>
+        </div>
+
+        <!-- Travel Event Cards Grid -->
+        <div id="travel-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamically injected -->
+        </div>
+
+        <div id="no-travel-events-view"
+            class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
+            <span class="text-4xl">🧭</span>
+            <h3 class="font-bold mt-4 text-zinc-800">No events found</h3>
+            <p class="text-zinc-400 text-xs mt-1">Check back later for new travel experiences!</p>
         </div>
     </section>
 
@@ -1520,13 +1537,16 @@
             });
         }
 
-        displayedEvents = filtered;
-        renderCatalogGrid(displayedEvents);
+        displayedEvents = filtered.filter(e => e.category !== 'travel');
+        let travelEvents = filtered.filter(e => e.category === 'travel');
+        
+        renderCatalogGrid(displayedEvents, 'events-grid', 'no-events-view');
+        renderCatalogGrid(travelEvents, 'travel-grid', 'no-travel-events-view');
     }
 
-    function renderCatalogGrid(events) {
-        const grid = document.getElementById('events-grid');
-        const noEvents = document.getElementById('no-events-view');
+    function renderCatalogGrid(events, gridId, noEventsId) {
+        const grid = document.getElementById(gridId);
+        const noEvents = document.getElementById(noEventsId);
         grid.innerHTML = '';
 
         if (events.length === 0) {

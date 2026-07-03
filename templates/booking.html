@@ -71,7 +71,7 @@
         </div>
         <div class="text-right hidden sm:block">
             <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mb-0.5">Ticket Price</p>
-            <p class="text-3xl font-black text-emerald-700" id="b-event-price">৳0</p>
+            <p class="text-3xl font-black text-emerald-700" id="b-event-price">৳0 <span class="text-sm font-bold text-zinc-500">/ person</span></p>
         </div>
     </div>
 
@@ -84,6 +84,17 @@
             class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-zinc-700 font-medium">
             <!-- Dynamically populated -->
         </ul>
+    </div>
+
+    <!-- Media Gallery & Video -->
+    <div id="booking-media-container" class="hidden mb-8">
+        <h3 class="text-xs font-black text-emerald-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-images"></i> Event Gallery & Video</h3>
+        <div id="booking-gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 hidden">
+            <!-- Gallery images dynamically inserted here -->
+        </div>
+        <div id="booking-video-container" class="w-full aspect-video rounded-2xl overflow-hidden hidden shadow-sm border border-zinc-100">
+            <!-- YouTube Iframe dynamically inserted here -->
+        </div>
     </div>
 
     {% if existing_booking %}
@@ -417,11 +428,10 @@
     // Load event details on page load
     async function initBookingPage() {
         try {
-            const res = await fetch('/api/events');
-            const events = await res.json();
-            selectedEvent = events.find(e => e.id === TARGET_EVENT_ID);
-
-            if (!selectedEvent) {
+            const res = await fetch('/api/events/' + TARGET_EVENT_ID);
+            selectedEvent = await res.json();
+            
+            if (!res.ok || !selectedEvent) {
                 alert("Event not found or has expired.");
                 window.location.href = "/";
                 return;
@@ -431,7 +441,7 @@
             document.getElementById('b-event-img').src = selectedEvent.image_url || 'https://picsum.photos/seed/' + selectedEvent.id + '/600/400';
             document.getElementById('b-event-title').textContent = selectedEvent.title;
             document.getElementById('b-event-desc').textContent = selectedEvent.description || '';
-            document.getElementById('b-event-price').textContent = `৳${Math.round(selectedEvent.price_per_person)}`;
+            document.getElementById('b-event-price').innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
             document.getElementById('b-event-tier').textContent = selectedEvent.package_tier;
             document.getElementById('b-event-date').textContent = selectedEvent.event_date ? new Date(selectedEvent.event_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBA';
             document.getElementById('b-event-location').textContent = selectedEvent.location_name || 'TBA';
@@ -459,6 +469,46 @@
                     </li>
                 `).join('');
                 includedContainer.classList.remove('hidden');
+            }
+
+            // Populate Media Gallery and Video
+            const mediaContainer = document.getElementById('booking-media-container');
+            const galleryGrid = document.getElementById('booking-gallery-grid');
+            const videoContainer = document.getElementById('booking-video-container');
+            let hasMedia = false;
+            
+            const extraImages = [];
+            if(selectedEvent.image_url_2) extraImages.push(selectedEvent.image_url_2);
+            if(selectedEvent.image_url_3) extraImages.push(selectedEvent.image_url_3);
+            if(selectedEvent.image_url_4) extraImages.push(selectedEvent.image_url_4);
+
+            if(extraImages.length > 0) {
+                // Adjust grid based on number of images
+                if (extraImages.length === 1) galleryGrid.className = "grid grid-cols-1 gap-4 mb-4";
+                else galleryGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4";
+                
+                galleryGrid.innerHTML = extraImages.map(img => `
+                    <div class="h-48 rounded-xl overflow-hidden shadow-sm border border-zinc-200">
+                        <img src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                `).join('');
+                galleryGrid.classList.remove('hidden');
+                hasMedia = true;
+            }
+
+            if(selectedEvent.youtube_link) {
+                let videoId = null;
+                const ytMatch = selectedEvent.youtube_link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                if(ytMatch && ytMatch[1]) {
+                    videoId = ytMatch[1];
+                    videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    videoContainer.classList.remove('hidden');
+                    hasMedia = true;
+                }
+            }
+            
+            if(hasMedia) {
+                mediaContainer.classList.remove('hidden');
             }
 
             document.getElementById('booking-event-card').classList.remove('opacity-0');

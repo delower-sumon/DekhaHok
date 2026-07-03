@@ -243,6 +243,7 @@ def init_db():
                 included JSONB DEFAULT '[]',
                 status VARCHAR(20) DEFAULT 'draft',
                 host_payment_status VARCHAR(20) DEFAULT 'unpaid',
+                is_recurring BOOLEAN DEFAULT FALSE,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )
         """)
@@ -283,6 +284,16 @@ def init_db():
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0")
         cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS profession VARCHAR(100)")
         
+        # Category renaming migration
+        cursor.execute("UPDATE events SET category = 'travel' WHERE category = 'nature-escapes'")
+        
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS is_recurring BOOLEAN DEFAULT FALSE")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_2 TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_3 TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_4 TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS youtube_link VARCHAR(255)")
+        
+
         # Marketplace foreign key fields for bookings
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_id INT REFERENCES events(id) ON DELETE SET NULL")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS host_id INT REFERENCES hosts(id) ON DELETE SET NULL")

@@ -2299,6 +2299,9 @@
             : '';
           const deleteBtn = `<button onclick="deleteEvent(${evt.id}, '${evt.status}')" class="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-[10px] font-bold shadow transition"><i class="fa-solid fa-trash"></i></button>`;
 
+          const viewBtn = `<a href="/booking/${evt.id}" target="_blank" class="inline-flex items-center justify-center w-7 h-7 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-[10px] font-bold shadow-sm transition mr-1" title="View Event"><i class="fa-solid fa-eye"></i></a>`;
+          const editBtn = `<a href="/host/events/${evt.id}/edit" target="_blank" class="inline-flex items-center justify-center w-7 h-7 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-[10px] font-bold shadow-sm transition mr-1" title="Edit Event"><i class="fa-solid fa-pen"></i></a>`;
+
           return `
             <tr>
               <td class="px-6 py-4">
@@ -2315,6 +2318,8 @@
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${badgeColor}">${evt.status}</span>
               </td>
               <td class="px-6 py-4 text-right whitespace-nowrap">
+                ${viewBtn}
+                ${editBtn}
                 ${publishBtn}
                 ${completeBtn}
                 ${draftBtn}
