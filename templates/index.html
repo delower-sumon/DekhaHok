@@ -168,7 +168,7 @@
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-users text-emerald-600"></i>
-                <span>সোশ্যাল মিডিয়া</span>
+                <span>সোশ্যাল কমিউনিটি</span>
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-heart text-emerald-600"></i>
@@ -268,7 +268,8 @@
             <div>
                 <span
                     class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Experiences</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Events & Experiences</span>ইভেন্টস & এক্সপেরিয়েন্স</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span
+                        class="sr-only">Events & Experiences</span>ইভেন্টস & এক্সপেরিয়েন্স</h2>
             </div>
 
             <div
@@ -321,12 +322,15 @@
     <section id="professional-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50 hidden">
         <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
             <div>
-                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Services</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Professional Services</span>প্রফেশনাল সার্ভিসেস</h2>
+                <span
+                    class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Services</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span
+                        class="sr-only">Professional Services</span>প্রফেশনাল সার্ভিসেস</h2>
             </div>
         </div>
         <div id="professional-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-        <div id="no-professional-events-view" class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
+        <div id="no-professional-events-view"
+            class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
             <span class="text-4xl">💼</span>
             <h3 class="font-bold mt-4 text-zinc-800">No services found</h3>
             <p class="text-zinc-400 text-xs mt-1">Check back later for professional services!</p>
@@ -337,12 +341,15 @@
     <section id="sports-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50 hidden">
         <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
             <div>
-                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Sports</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Sports</span>স্পোর্টস</h2>
+                <span
+                    class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Sports</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span
+                        class="sr-only">Sports</span>স্পোর্টস</h2>
             </div>
         </div>
         <div id="sports-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-        <div id="no-sports-events-view" class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
+        <div id="no-sports-events-view"
+            class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
             <span class="text-4xl">⚽</span>
             <h3 class="font-bold mt-4 text-zinc-800">No sports found</h3>
             <p class="text-zinc-400 text-xs mt-1">Check back later for exciting sports activities!</p>
@@ -353,8 +360,10 @@
     <section id="travel-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50">
         <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
             <div>
-                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Travel</span>
-                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Travels & Tourism</span>ট্রাভেল</h2>
+                <span
+                    class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Travel</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span
+                        class="sr-only">Travels & Tourism</span>ট্রাভেল</h2>
             </div>
         </div>
 
@@ -1573,7 +1582,7 @@
         let travelEvents = filtered.filter(e => e.category === 'travel');
         let professionalEvents = filtered.filter(e => e.category === 'professional');
         let sportsEvents = filtered.filter(e => e.category === 'sports');
-        
+
         renderCatalogGrid(displayedEvents, 'events-grid', 'no-events-view', null);
         renderCatalogGrid(travelEvents, 'travel-grid', 'no-travel-events-view', 'travel-section');
         renderCatalogGrid(professionalEvents, 'professional-grid', 'no-professional-events-view', 'professional-section');
@@ -1584,7 +1593,7 @@
         const grid = document.getElementById(gridId);
         const noEvents = document.getElementById(noEventsId);
         const sectionEl = sectionId ? document.getElementById(sectionId) : null;
-        
+
         grid.innerHTML = '';
 
         if (events.length === 0) {
@@ -1592,7 +1601,7 @@
             if (sectionEl) sectionEl.classList.add('hidden');
             return;
         }
-        
+
         noEvents.classList.add('hidden');
         if (sectionEl) sectionEl.classList.remove('hidden');
 
@@ -1640,7 +1649,11 @@
                                         <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
                                         ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
                                     </div>
-                                    ${e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-0.5">' + e.host_profession + '</span>' : ''}
+                                    ${e.host_profession ? 
+                                        (e.host_is_founding 
+                                            ? '<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2.5 -right-2.5 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[6.5px] font-black px-1 py-[1px] rounded-[3px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">' + e.host_profession + '</span></div>'
+                                            : '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-2 block">' + e.host_profession + '</span>') 
+                                        : ''}
                                 </div>
                             </div>
                             <span class="px-2.5 py-1 border text-[9px] font-black rounded-xl uppercase tracking-tight shadow-sm ${badgeClass}">

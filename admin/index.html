@@ -460,6 +460,7 @@
                   <th class="px-6 py-3">Category</th>
                   <th class="px-6 py-3 text-center">Rev Share</th>
                   <th class="px-6 py-3 text-center">Status</th>
+                  <th class="px-6 py-3 text-center">Founding 100</th>
                   <th class="px-6 py-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -2177,7 +2178,7 @@
 
         const tbody = document.getElementById('hostsTableBody');
         if (!hosts.length) {
-          tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-400">No host profiles registered yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-10 text-center text-gray-400">No host profiles registered yet.</td></tr>';
           return;
         }
         tbody.innerHTML = hosts.map(h => {
@@ -2185,6 +2186,10 @@
           if (h.verification_status === 'VERIFIED') badgeColor = 'bg-emerald-100 text-emerald-800';
           if (h.verification_status === 'SUSPENDED') badgeColor = 'bg-red-100 text-red-800';
           if (h.verification_status === 'PENDING') badgeColor = 'bg-amber-100 text-amber-800';
+
+          const foundingBadge = h.is_founding 
+            ? `<span class="px-2 py-1 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-[9px] font-black cursor-pointer shadow-sm select-none" onclick="toggleHostFounding(${h.id}, false)">Founding</span>`
+            : `<span class="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-400 text-[9px] font-bold cursor-pointer select-none" onclick="toggleHostFounding(${h.id}, true)">Add Badge</span>`;
 
           return `
             <tr>
@@ -2209,6 +2214,9 @@
                   <option value="VERIFIED" ${h.verification_status === 'VERIFIED' ? 'selected' : ''}>VERIFIED</option>
                   <option value="SUSPENDED" ${h.verification_status === 'SUSPENDED' ? 'selected' : ''}>SUSPENDED</option>
                 </select>
+              </td>
+              <td class="px-6 py-4 text-center">
+                ${foundingBadge}
               </td>
               <td class="px-6 py-4 text-right whitespace-nowrap">
               </td>
@@ -2237,6 +2245,23 @@
           loadHosts();
         } else {
           toast("Failed to update status", true);
+        }
+      } catch (e) { toast("Error updating host", true); }
+    }
+
+    async function toggleHostFounding(hostId, isFounding) {
+      const confirmed = await customConfirm(isFounding ? "Mark this host as a Founding 100 Host?" : "Remove Founding 100 badge from this host?");
+      if (!confirmed) return;
+      try {
+        const res = await adminFetch(`/api/admin/hosts/${hostId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ is_founding: isFounding })
+        });
+        if (res.ok) {
+          toast(isFounding ? "Added Founding 100 badge! ✓" : "Removed Founding 100 badge! ✓");
+          loadHosts();
+        } else {
+          toast("Failed to update Founding status", true);
         }
       } catch (e) { toast("Error updating host", true); }
     }

@@ -1378,7 +1378,7 @@ def api_list_events(category: Optional[str] = None):
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession
+                   h.profession as host_profession, h.is_founding as host_is_founding
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1402,7 +1402,8 @@ def api_list_events(category: Optional[str] = None):
                 "status": r[13], "host_id": r[14], "host_name": r[15] or "DekhaHok Host",
                 "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
                 "host_verification_status": r[18],
-                "host_profession": r[19] or ""
+                "host_profession": r[19] or "",
+                "host_is_founding": bool(r[20])
             })
         cursor.close()
     finally:
@@ -1424,7 +1425,7 @@ def api_event_detail(event_id: int):
                    CASE WHEN e.image_url_2 IS NOT NULL AND e.image_url_2 != '' THEN 1 ELSE 0 END as has_image_2,
                    CASE WHEN e.image_url_3 IS NOT NULL AND e.image_url_3 != '' THEN 1 ELSE 0 END as has_image_3,
                    CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
-                   e.youtube_link
+                   e.youtube_link, h.is_founding as host_is_founding
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1452,7 +1453,8 @@ def api_event_detail(event_id: int):
             "image_url_2": f"/api/events/{r[0]}/image/2" if len(r) > 22 and r[22] else None,
             "image_url_3": f"/api/events/{r[0]}/image/3" if len(r) > 23 and r[23] else None,
             "image_url_4": f"/api/events/{r[0]}/image/4" if len(r) > 24 and r[24] else None,
-            "youtube_link": r[25] if len(r) > 25 else None
+            "youtube_link": r[25] if len(r) > 25 else None,
+            "host_is_founding": bool(r[26]) if len(r) > 26 else False
         }
         cursor.close()
     finally:
@@ -3112,7 +3114,7 @@ def get_admin_hosts(x_admin_key: str = Header(...)):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT h.id, u.full_name, u.email, h.nid_number, h.category, h.operating_area, h.bio, h.verification_status, h.revenue_share_pct, h.created_at 
+            SELECT h.id, u.full_name, u.email, h.nid_number, h.category, h.operating_area, h.bio, h.verification_status, h.revenue_share_pct, h.created_at, h.is_founding 
             FROM hosts h 
             JOIN users u ON h.user_id = u.id
             ORDER BY h.created_at DESC
@@ -3130,7 +3132,8 @@ def get_admin_hosts(x_admin_key: str = Header(...)):
                 "bio": r[6],
                 "verification_status": r[7],
                 "revenue_share_pct": float(r[8] or 0.5),
-                "created_at": str(r[9])
+                "created_at": str(r[9]),
+                "is_founding": bool(r[10])
             })
         cursor.close()
     finally:
@@ -3160,6 +3163,10 @@ def update_admin_host(host_id: int, payload: dict = Body(...), x_admin_key: str 
         if "revenue_share_pct" in payload:
             cols.append("revenue_share_pct = %s")
             vals.append(payload["revenue_share_pct"])
+            
+        if "is_founding" in payload:
+            cols.append("is_founding = %s")
+            vals.append(payload["is_founding"])
             
         if not cols:
             cursor.close()

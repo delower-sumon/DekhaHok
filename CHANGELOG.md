@@ -2,6 +2,19 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-03] - Community Safety, Founding 100 & Admin Badge System
+
+### Added
+- **Community Safety Acknowledgements**: Injected mandatory Bengali safety checkboxes (with `sr-only` English for SEO) into the participant booking flow (`booking.html`) and the host application flow (`host_apply.html`). Users and hosts cannot proceed without explicitly agreeing to community guidelines.
+- **Founding 100 Badge System**: Introduced a dynamic "Founding 100" badge on host profession tags featuring an emerald outer glow (`shadow-[0_0_8px_rgba(16,185,129,0.5)]`) and a gradient overlay label. The badge renders on both homepage event cards (`index.html`) and booking detail views (`booking.html`).
+- **Admin-Controlled Badge Assignment**: Added `is_founding BOOLEAN DEFAULT FALSE` column to the `hosts` table with automatic migration on startup. The admin can now toggle the Founding 100 badge per host from the Host Verification Pipeline in `admin/index.html`, using the existing PATCH `/api/admin/hosts/{host_id}` endpoint.
+- **Backfill Migration**: One-time automatic backfill sets `is_founding = TRUE` for all hosts with `id <= 100` on first server startup after migration.
+
+### Changed
+- **Mobile Booking Layout Fix**: Refactored the booking event card layout from a rigid horizontal `flex` to a responsive `flex-col sm:flex-row` stack. The Ticket Price section now displays on mobile (previously `hidden sm:block`), separated by a subtle border line.
+- **Backend Event APIs**: Updated `/api/events` and `/api/events/{id}` SQL queries to join and return `host_is_founding` from the hosts table. Updated `/api/admin/hosts` to return `is_founding` per host.
+
+
 ## [2026-07-03] - Professional Services & Sports Expansion
 
 ### Added
