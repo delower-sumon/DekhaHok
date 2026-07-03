@@ -2,6 +2,16 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-03] - Global Footer Update & Brand Polish
+
+### Changed
+- **Global Footer Links**: Refactored the footer across the entire platform. Removed the outdated "Language / ভাষা" column and hidden Google Translate widget. Replaced it with a new **"Company"** column featuring the "About DekhaHok" and "Contact Support" links.
+- **Standalone Pages Synchronization**: Synchronized the new footer structure directly into the 7 standalone pages (`about.html`, `contact.html`, `host_guidelines.html`, `partnership.html`, `privacy_policy.html`, `safety.html`, `terms.html`) that don't natively inherit the `base.html` layout.
+- **Brand Positioning Copy**: Updated browser tab titles (`<title>`) in `DekhaHok.html` and `index.html` to reflect the new platform positioning: **"DekhaHok • Social Community & Services"**.
+- **Hero Text Upgrade**: Replaced the previous hero headline gradient text in `index.html` from "সোশাল মিডিয়া..." to **"সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।"**.
+- **Partnership Copy Shift**: Updated the partnership form description in `partnership.html` to target a broader audience ("বাস্তব অভিজ্ঞতা ও প্রফেশনাল সার্ভিসেসের ভেন্যু পার্টনার হতে...") instead of limiting it just to restaurants and cafes.
+- **Support CTA Module**: Retouched the support section in the homepage `index.html` with updated Bengali badges, headings, and a refined tagline.
+
 ## [2026-07-01] - Animated Brand Logo, Trust Vibe Sync, Google OAuth & Onboarding Redesign
 
 ### Added
