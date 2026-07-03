@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ blog.title }} | DekhaHok • Meet, Explore, and Create Experiences{% endblock %}
+{% block title %}{{ blog.title }} | DekhaHok • Social Community & Professional Services{% endblock %}
 
 {% block seo_meta %}
     <meta name="description" content="{{ blog.seo_description or 'দেখা হোকের ব্লগ - ঢাকার সামাজিক জীবন, নিরাপদ মিটআপ ও কমিউনিটি গল্প।' }}">
@@ -9,7 +9,7 @@
     <link rel="canonical" href="https://dekhahok.com/blog/{{ blog.slug }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{{ blog.title }} | DekhaHok • Meet, Explore, and Create Experiences">
+    <meta property="og:title" content="{{ blog.title }} | DekhaHok • Social Community & Professional Services">
     <meta property="og:description" content="{{ blog.seo_description or 'দেখা হোকের ব্লগ থেকে পড়ুন।' }}">
     <meta property="og:image" content="{{ blog.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
     <meta property="og:type" content="article">
