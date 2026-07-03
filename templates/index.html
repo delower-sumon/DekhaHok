@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}DekhaHok • Meet, Explore, and Create Experiences{% endblock %}
+{% block title %}DekhaHok • Social Community & Services{% endblock %}
 
 {% block extra_head %}
 <!-- Leaflet Maps CSS -->
@@ -52,15 +52,17 @@
                     দেখা হোক,
                     <div class="dropping-texts text-emerald-700">
                         <div>নেটওয়ার্কিং<span class="sr-only">, Networking</span></div>
+                        <div>প্রফেশনাল সার্ভিসেস<span class="sr-only">, Professional Services</span></div>
                         <div>ইভেন্টস<span class="sr-only">, Events</span></div>
-                        <div>এক্সপেরিয়েন্স<span class="sr-only">, Experiences</span></div>
+                        <div>কমিউনিটি<span class="sr-only">, Community</span></div>
+                        <div>হবি ও টিমওয়ার্ক<span class="sr-only">, Hobby & Teamwork</span></div>
                         <div>ট্রাভেল<span class="sr-only">, Travel</span></div>
                     </div>
                 </h1>
                 <p
                     class="bengali text-2xl sm:text-3xl lg:text-[2.5rem] font-black leading-snug mb-5 max-w-2xl tracking-tight">
-                    <span class="premium-gradient-text py-2">স্ক্রিনের বাইরে বাস্তব অভিজ্ঞতা।</span>
-                    <span class="sr-only">Real experiences beyond the screen.</span>
+                    <span class="premium-gradient-text py-2">সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।</span>
+                    <span class="sr-only">Real connections and professional services beyond the screen.</span>
                 </p>
                 <div class="flex flex-wrap gap-3 sm:gap-4 mb-5">
                     <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })"
@@ -162,15 +164,15 @@
             class="mt-6 bg-white/60 border border-zinc-200/50 rounded-2xl py-4 px-4 text-center text-xs text-zinc-500 flex items-center justify-center gap-x-6 sm:gap-x-8 flex-wrap gap-y-2.5">
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-shield-halved text-emerald-600"></i>
-                <span>Verified Community Hosts</span>
+                <span>প্রাইভেসি গ্যারান্টিড</span>
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-users text-emerald-600"></i>
-                <span>Small Curated Groups</span>
+                <span>সোশ্যাল মিডিয়া</span>
             </div>
             <div class="flex items-center gap-x-2">
                 <i class="fa-solid fa-heart text-emerald-600"></i>
-                <span>Taas (Trust as a Service)</span>
+                <span>প্রফেশনাল সার্ভিসেস</span>
             </div>
         </div>
     </section>
@@ -355,7 +357,7 @@
     <!-- Pricing Packages Section -->
     <section id="packages" class="bg-emerald-50/30 pt-8 pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-8">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 hidden">
                 <span
                     class="px-3.5 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full uppercase">Packages</span>
                 <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-zinc-900 mt-3">ক্যাটাগরি ভিত্তিক
@@ -365,7 +367,7 @@
                     হোস্টের নিশ্চয়তা।</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto hidden">
                 <!-- Package 1 -->
                 <div
                     class="card-hover bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/60 flex flex-col justify-between">
@@ -503,7 +505,7 @@
                             class="inline-block bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-left">
                             <p class="text-emerald-100 text-[10px] uppercase tracking-wider font-semibold">Monthly
                                 Membership</p>
-                            <p class="text-4xl font-bold my-2 text-white">৳499</p>
+                            <p class="text-4xl font-bold my-2 text-white">Price TBA</p>
                             <button onclick="showToast('Passport Membership registration coming soon!', 'info')"
                                 class="w-full bg-white text-emerald-700 hover:bg-zinc-100 transition-all py-2.5 rounded-full font-bold mt-3 text-xs shadow">Get
                                 Passport</button>
@@ -599,17 +601,15 @@
     <!-- Support CTA -->
     <section class="max-w-5xl mx-auto px-4 sm:px-8 py-10 text-center">
         <span
-            class="text-xs uppercase tracking-widest font-black bg-zinc-100 text-zinc-500 px-4 py-2 rounded-full">Build
-            Connection</span>
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-zinc-900 mt-6">হোস্ট হয়ে আয় করুন
+            class="text-xs uppercase tracking-widest font-black bg-zinc-100 text-zinc-500 px-4 py-2 rounded-full bengali">পেশাদারিত্ব</span>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-zinc-900 mt-6 bengali">নেটওয়ার্কিং এবং
+            সার্ভিস
         </h2>
-        <p class="text-zinc-500 text-sm max-w-2xl mx-auto mb-8">আপনার অভিজ্ঞতা শেয়ার করুন, আপনার ইভেন্ট আপনি আয়োজন করুন।
-            আপনি নিজের ইচ্ছেমতো ইভেন্ট সাজাতে পারবেন,আমরা আকর্ষণীয় রেভিনিউ শেয়ার করে থাকি। আমরা পেমেন্ট হিসাব রাখা,
-            অংশগ্রহণকারী
-            তালিকা তৈরি করে সমন্বয় এবং নিরাপত্তা ব্যবস্থাপনার নিশ্চিত করে থাকি।</p>
+        <p class="text-zinc-500 text-sm max-w-2xl mx-auto mb-8 bengali">বাস্তব যোগাযোগ ও প্রফেশনাল সার্ভিসেসের মাধ্যমে
+            গড়ে তুলুন আপনার নিজস্ব নেটওয়ার্কিং সার্কেল।</p>
         <a href="/host/apply"
             class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-8 py-4 rounded-full font-bold text-base shadow-md inline-flex items-center justify-center">
-            হোস্ট করুন..
+            আবেদন করুন..
         </a>
         <p class="mt-6 text-xs text-zinc-400 italic">"Turn your passion into experiences and bring people together."</p>
     </section>
@@ -634,7 +634,7 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-users w-5 h-5 flex justify-center items-center"></i>
+                                <i class="fa-solid fa-shield w-5 h-5 flex justify-center items-center"></i>
                             </div>
                             <span class="text-lg font-bold text-zinc-900">"দেখা হোক" আসলে কী?</span>
                         </div>
@@ -642,11 +642,20 @@
                             class="faq-icon fa-solid fa-chevron-up w-5 h-5 text-zinc-400 transform transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content transition-all duration-500" style="max-height: 1000px; opacity: 1;">
-                        <div class="px-6 pb-6 space-y-4">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-4">
                             <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
-                                <p class="text-sm text-emerald-800 leading-relaxed">"দেখা হোক" হলো একটি মার্কেটপ্লেস
-                                    যেখানে আপনি যাচাইকৃত লোকাল হোস্টদের দ্বারা আয়োজিত চমৎকার সব এক্সপেরিয়েন্স এবং মিটআপ
-                                    খুঁজে পেতে ও বুক করতে পারবেন।</p>
+                                <p class="text-sm text-emerald-800 leading-relaxed">"দেখা হোক" হলো স্ক্রিনের বাইরের
+                                    বাস্তব অভিজ্ঞতা এবং প্রফেশনাল সার্ভিসেসের কমিউনিটি-ভিত্তিক প্ল্যাটফর্ম।</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="flex items-center gap-3 p-3.5 bg-zinc-50 rounded-xl border border-zinc-100">
+                                    <i class="fa-solid fa-users text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-zinc-700">সোশ্যাল কমিউনিটি</span>
+                                </div>
+                                <div class="flex items-center gap-3 p-3.5 bg-zinc-50 rounded-xl border border-zinc-100">
+                                    <i class="fa-solid fa-network-wired text-emerald-600"></i>
+                                    <span class="text-xs font-bold text-zinc-700">প্রফেশনাল সার্ভিসেস</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -660,19 +669,23 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
-                                <i class="fa-solid fa-user-check w-5 h-5 flex justify-center items-center"></i>
+                                <i class="fa-solid fa-user-plus w-5 h-5 flex justify-center items-center"></i>
                             </div>
-                            <span class="text-base font-bold text-zinc-700">আমি কার সাথে দেখা করছি তা কীভাবে নিশ্চিত
-                                হবো?</span>
+                            <span class="text-base font-bold text-zinc-700 bengali">২. কারা Host হতে পারবেন?</span>
+                            <span class="sr-only">Who can apply to become a Host on DekhaHok?</span>
                         </div>
                         <i
                             class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
-                        <div class="px-6 pb-6 space-y-4">
-                            <p class="text-sm text-zinc-500 leading-relaxed">প্রতিটি হোস্টকে একটি কঠোর NID ভেরিফিকেশন
-                                প্রক্রিয়ার মধ্য দিয়ে যেতে হয়। যাচাইকরণ সম্পন্ন হলেই তারা "Verified Host" ব্যাজ পান।
-                                এছাড়াও, আমরা তাদের প্রোফাইলে অন্যান্য ইউজারদের আসল রেটিং ও রিভিউ প্রকাশ করি।</p>
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">যে কেউ নিজের দক্ষতা, অভিজ্ঞতা বা
+                                আগ্রহের ভিত্তিতে meaningful activity পরিচালনা করতে চান, তিনি Host হিসেবে আবেদন করতে
+                                পারবেন। আবেদন: <a href="/host/apply"
+                                    class="text-emerald-600 hover:underline">dekhahok.com/host/apply</a></p>
+                            <p class="sr-only">Anyone who wants to lead meaningful activities based on their skills,
+                                experience, or passions can apply to become a verified host. Onboarding link:
+                                dekhahok.com/host/apply</p>
                         </div>
                     </div>
                 </div>
@@ -685,18 +698,23 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
-                                <i class="fa-solid fa-location-dot w-5 h-5 flex justify-center items-center"></i>
+                                <i class="fa-solid fa-bolt w-5 h-5 flex justify-center items-center"></i>
                             </div>
-                            <span class="text-base font-bold text-zinc-700">ভেন্যুগুলো কি নিরাপদ?</span>
+                            <span class="text-base font-bold text-zinc-700 bengali">৩. দেখা হোক কী ধরনের activity আয়োজন
+                                করে থাকে?</span>
+                            <span class="sr-only">What types of activities and meetups does DekhaHok organize?</span>
                         </div>
                         <i
                             class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
-                        <div class="px-6 pb-6">
-                            <p class="text-sm text-zinc-500 leading-relaxed">হ্যাঁ। সকল এক্সপেরিয়েন্স অত্যন্ত সতর্কতার
-                                সাথে নির্বাচিত পাবলিক স্পেস বা স্বনামধন্য ভেন্যুতে অনুষ্ঠিত হয় যাতে অংশগ্রহণকারীদের
-                                সর্বোচ্চ নিরাপত্তা নিশ্চিত করা যায়।</p>
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">Photography Walk, Yoga, Networking
+                                Circle, Chess Meetup, Coffee Meetup, Travel, Workshop, Creative Session, Business
+                                Discussion, Language Exchange সহ আরও বিভিন্ন social ও professional experiences.</p>
+                            <p class="sr-only">We host a diverse range of social and professional meetups, including
+                                Photography Walks, Yoga, Networking Circles, Chess, Coffee meetups, Travel, Workshops,
+                                Creative sessions, Business discussions, and Language exchanges.</p>
                         </div>
                     </div>
                 </div>
@@ -709,24 +727,26 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
-                                <i class="fa-solid fa-ticket w-5 h-5 flex justify-center items-center"></i>
+                                <i class="fa-solid fa-pen-to-square w-5 h-5 flex justify-center items-center"></i>
                             </div>
-                            <span class="text-base font-bold text-zinc-700">বুকিং করার পর স্ট্যাটাস কীভাবে চেক
-                                করবো?</span>
+                            <span class="text-base font-bold text-zinc-700 bengali">৪. আমি কি নিজের event প্রকাশ করতে
+                                পারব?</span>
+                            <span class="sr-only">Can I host and publish my own events or activities?</span>
                         </div>
                         <i
                             class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
-                        <div class="px-6 pb-6">
-                            <p class="text-sm text-zinc-500 leading-relaxed">বুকিং সম্পন্ন হওয়ার সাথে সাথে আপনি একটি
-                                ইউনিক Tracking ID পাবেন। হোমপেজে এই আইডি প্রবেশ করলেই আপনার বুকিংটি কোন পর্যায়ে আছে তা
-                                রিয়েল-টাইমে দেখতে পারবেন।</p>
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">জি। Host হিসেবে ভেরিফাড হলে আপনি
+                                নিজের Activity, Event বা Service প্রকাশ করতে পারবেন এবং বুকিং গ্রহণ করতে পারবেন।</p>
+                            <p class="sr-only">Yes. Once verified as a host, you can publish your own activities,
+                                events, and professional services to accept online bookings.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- FAQ Item 5 (Refund) -->
+                <!-- FAQ Item 5 -->
                 <div
                     class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
                     <button onclick="toggleFaq(this)"
@@ -734,19 +754,522 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
-                                <i class="fa-solid fa-rotate-left w-5 h-5 flex justify-center items-center"></i>
+                                <i class="fa-solid fa-hand-holding-dollar w-5 h-5 flex justify-center items-center"></i>
                             </div>
-                            <span class="text-base font-bold text-zinc-700">আমি কি টাকা ফেরত নিতে পারবো? (Refund
-                                Policy)</span>
+                            <span class="text-base font-bold text-zinc-700 bengali">৫. Host হওয়ার জন্য কি কোনো ফি
+                                আছে?</span>
+                            <span class="sr-only">Are there any registration fees or costs to become a host?</span>
                         </div>
                         <i
                             class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
-                        <div class="px-6 pb-6">
-                            <p class="text-sm text-zinc-500 leading-relaxed">হ্যাঁ, যদি হোস্ট ইভেন্টটি বাতিল করেন বা
-                                কোনো কারণে আপনার বুকিং বাতিল হয়ে যায়, তবে আপনি ৩ কার্যদিবসের মধ্যে ১০০% সম্পূর্ণ
-                                রিফান্ড পাবেন।</p>
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">বর্তমানে আমাদের Founding Host
+                                Program-এর আওতায় নির্বাচিত Host-দের জন্য onboarding সম্পূর্ণ বিনামূল্যে করা হচ্ছে।</p>
+                            <p class="sr-only">Onboarding is currently free of cost under our Founding Host Program for
+                                selected leaders.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-wallet w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">৬. দেখা হোক কীভাবে আয় করে?</span>
+                            <span class="sr-only">How does DekhaHok make money or generate revenue?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">নির্দিষ্ট activity বা booking-এর
+                                উপর service fee বা revenue sharing-এর মাধ্যমে।</p>
+                            <p class="sr-only">We charge a standard service fee or revenue-sharing percentage per ticket
+                                booking.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-user-shield w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">৭. অংশগ্রহণকারীদের কীভাবে নির্বাচন
+                                করা হয়?</span>
+                            <span class="sr-only">How are event attendees selected or approved?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">প্রতিটি activity-এর ধরণ ও Host-এর
+                                নির্ধারিত শর্ত অনুযায়ী অংশগ্রহণ নিশ্চিত করা হয়।</p>
+                            <p class="sr-only">Attendees are selected based on the requirements set by the host and the
+                                nature of each experience.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 8 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-layer-group w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">৮. আমি কি একাধিক activity-তে অংশ
+                                নিতে পারি?</span>
+                            <span class="sr-only">Can I join multiple events or activities?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">অবশ্যই। আপনার আগ্রহ অনুযায়ী যত খুশি
+                                activity-তে অংশ নিতে পারবেন।</p>
+                            <p class="sr-only">Absolutely. You are welcome to book and participate in as many activities
+                                as you like based on your personal and professional interests.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 9 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-passport w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">৯. Host-দের কি যাচাই করা হয়?</span>
+                            <span class="sr-only">Are hosts verified and background checked on DekhaHok?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">হ্যাঁ। আমরা Host-এর পরিচয়,
+                                যোগাযোগের তথ্য এবং প্রয়োজন অনুযায়ী অভিজ্ঞতা যাচাই করি, যাতে অংশগ্রহণকারীরা একটি নিরাপদ ও
+                                ভালো অভিজ্ঞতা পান।</p>
+                            <p class="sr-only">Yes. We verify identification details, contact info, and professional
+                                portfolios of our hosts to guarantee safety and premium experience quality.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 10 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i
+                                    class="fa-solid fa-triangle-exclamation w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১০. ইভেন্ট বাতিল হলে কী হবে?</span>
+                            <span class="sr-only">What happens if an event or activity is cancelled?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">Host বা দেখা হোক-এর কারণে কোন
+                                ইভেন্ট বাতিল হলে প্রয়োজন অনুযায়ী reschedule বা refund-এর ব্যবস্থা করা হবে।</p>
+                            <p class="sr-only">If an event is cancelled by the host or DekhaHok, we arrange for
+                                rescheduling or a full refund.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 11 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-briefcase w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১১. আমি কী ধরনের service দিতে
+                                পারি?</span>
+                            <span class="sr-only">What kind of professional services can I list and offer?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">আপনি Yoga, Fitness, Photography,
+                                Travel, Career, Business, Art, Music, Learning, Language, Wellness অথবা অন্য যেকোনো
+                                community-based professional experience পরিচালনা করতে পারেন।</p>
+                            <p class="sr-only">You can offer Yoga, Fitness classes, Photography tours, Travel services,
+                                Career counseling, Business mentoring, Art & Music lessons, Language courses, Wellness
+                                workshops, and other community experiences.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 12 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-map-location-dot w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১২. দেখা হোক কি শুধুই ঢাকায়?</span>
+                            <span class="sr-only">Is DekhaHok only active in Dhaka City?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">বর্তমানে আমাদের কার্যক্রম ঢাকা থেকে
+                                শুরু হয়েছে। ধীরে ধীরে বাংলাদেশের অন্যান্য শহরেও সম্প্রসারণ করা হবে।</p>
+                            <p class="sr-only">We are starting operations in Dhaka City, and planning to expand to other
+                                major cities across Bangladesh soon.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 13 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-right-to-bracket w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৩. Event-এ অংশ নিতে কি অ্যাকাউন্ট
+                                লাগবে?</span>
+                            <span class="sr-only">Do I need to register an account to book and attend events?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">হ্যাঁ। বুকিং ও অংশগ্রহণ নিশ্চিত
+                                করার জন্য একটি দেখা হোক অ্যাকাউন্ট প্রয়োজন।</p>
+                            <p class="sr-only">Yes, you need to create a DekhaHok account to purchase tickets and keep
+                                track of your active bookings.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 14 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-circle-question w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৪. কোনো সমস্যার সম্মুখীন হলে কী
+                                করব?</span>
+                            <span class="sr-only">How can I get support or report any issues?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">আমাদের Support Team-এর সাথে যোগাযোগ
+                                করুন। আমরা যত দ্রুত সম্ভব সাহায্য করার চেষ্টা করব।</p>
+                            <p class="sr-only">Please contact our dedicated support team, and we will resolve your
+                                issues as quickly as possible.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 15 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-heart-crack w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৫. দেখা হোক কি কোনো ডেটিং
+                                প্ল্যাটফর্ম ?</span>
+                            <span class="sr-only">Is DekhaHok a dating site or dating platform?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">না। দেখা হোক একটি Social &
+                                Professional Experiences Platform, যেখানে মানুষ activity, learning, networking, travel
+                                এবং community experience-এর মাধ্যমে যুক্ত হয়ে থাকেন।</p>
+                            <p class="sr-only">No. DekhaHok is a professional social network and experience platform for
+                                networking, workshops, community travel, and skills training.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 16 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-star w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৬. কেন দেখা হোক ব্যবহার করব?</span>
+                            <span class="sr-only">Why should I use DekhaHok instead of other networks?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">এক জায়গায় verified host, curated
+                                experiences এবং বাংলাদেশের growing community যেখানে নতুন কিছু শেখা, ঘোরা, networking করা
+                                এবং meaningful অভিজ্ঞতা অর্জন আরও সহজ।</p>
+                            <p class="sr-only">We offer verified hosts, curated group dynamics, and a premium
+                                professional community in Bangladesh to learn, network, travel, and share experiences
+                                offline.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 17 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-graduation-cap w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৭. Professional Service কী?</span>
+                            <span class="sr-only">What constitutes a Professional Service on DekhaHok?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">Professional Service হলো এমন কোনো
+                                দক্ষতা বা সেবা যা একজন Professional বা Verified Host-এর মাধ্যমে প্রদান করে থাকেন।
+                                যেমন—Photography, Yoga, Tour Guide, Career Mentoring, Graphic Design, Business
+                                Consultation, Language Coaching ইত্যাদি।</p>
+                            <p class="sr-only">A professional service refers to standard services provided by verified
+                                hosts, such as professional photography, yoga classes, local guiding, career mentorship,
+                                graphic design, business advice, or language tutoring.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 18 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-cart-shopping w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৮. আমি কি Professional Service বুক
+                                করতে পারব?</span>
+                            <span class="sr-only">Can I directly book or query professional services?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">জি। আপনি আপনার প্রয়োজন অনুযায়ী
+                                বিভিন্ন verified professional-এর service profile দেখতে পারবেন এবং সরাসরি booking বা
+                                inquiry করতে পারবেন।</p>
+                            <p class="sr-only">Yes. You can browse verified professional profiles, read user reviews,
+                                and place direct bookings or service inquiries.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 19 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-fingerprint w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">১৯. Professional-দের কীভাবে যাচাই
+                                করা হয়?</span>
+                            <span class="sr-only">How do you verify professional service providers?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">আমরা পরিচয়, যোগাযোগের তথ্য এবং
+                                প্রয়োজন অনুযায়ী অভিজ্ঞতা বা portfolio যাচাই করার চেষ্টা করি। এছাড়া user review ও
+                                rating-এর মাধ্যমে ভালো service provider-দের অগ্রাধিকার দেওয়া হয়।</p>
+                            <p class="sr-only">We verify user identity, credentials, and work portfolios. User ratings
+                                and client reviews determine their search ranking and trust badge status.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 20 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-square-plus w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">২০. আমি কি আমার Professional Service
+                                তালিকাভুক্ত করতে পারি?</span>
+                            <span class="sr-only">Can I list my own professional services?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">অবশ্যই। আপনি Host হিসেবে আবেদন করে
+                                আপনার service, experience বা workshop প্রকাশ করতে পারবেন। অনুমোদনের পর আপনার profile -এ
+                                প্রদর্শিত হবে।</p>
+                            <p class="sr-only">Absolutely. Apply as a host to list and sell your professional services,
+                                classes, and corporate workshops after profile review and approval.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 21 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-globe w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">২১. DekhaHok কি শুধু Event
+                                Platform?</span>
+                            <span class="sr-only">Is DekhaHok exclusively an event ticketing website?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">না। DekhaHok একটি Social &
+                                Professional Work Connection Platform। এখানে আপনি activity, workshop, networking
+                                session-এর পাশাপাশি বিভিন্ন verified professional-এর service-ও খুঁজে পাবেন।</p>
+                            <p class="sr-only">No. DekhaHok is a social community and professional work network where
+                                users find offline activities alongside verified professional hire services.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 22 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-list w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">২২. কী ধরনের Professional Service
+                                যুক্ত করা যাবে?</span>
+                            <span class="sr-only">What categories of professional services are supported?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">বর্তমানে আমরা ধাপে ধাপে বিভিন্ন
+                                category যুক্ত করছি। যেমন— 📸 Photography & Videography, 🧘 Yoga & Fitness, 🎨 Creative
+                                Arts, 🌍 Travel & Tour Guide, 💼 Career & Business, 💻 Technology, 🎤 Public Speaking,
+                                📚 Learning & Coaching, 🎵 Music & Performance, ☕ Community Experience এবং অন্যান্য
+                                quality professional services</p>
+                            <p class="sr-only">We support categories including Photography & Videography, Yoga &
+                                Fitness, Creative Arts, Travel Guides, Business Consulting, Coding & Tech, Public
+                                Speaking, Tutoring, Music lessons, and various other premium services.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 23 -->
+                <div
+                    class="faq-card bg-white rounded-[1.5rem] border border-zinc-100 shadow-sm overflow-hidden transition-all duration-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                                <i class="fa-solid fa-arrow-trend-up w-5 h-5 flex justify-center items-center"></i>
+                            </div>
+                            <span class="text-base font-bold text-zinc-700 bengali">২৩. DekhaHok কেন Professional
+                                Service যুক্ত করছে?</span>
+                            <span class="sr-only">Why is DekhaHok introducing professional hire services?</span>
+                        </div>
+                        <i
+                            class="faq-icon fa-solid fa-chevron-down w-5 h-5 text-zinc-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 overflow-hidden transition-all duration-500">
+                        <div class="pl-[76px] pr-5 pb-5 space-y-3">
+                            <p class="text-sm text-zinc-500 leading-relaxed bengali">আমাদের বিশ্বাস, একজন মানুষের দক্ষতা
+                                তখনই সবচেয়ে বেশি মূল্য তৈরি করে যখন সেটি অন্য মানুষের কাছে সহজে পৌঁছাতে পারে। তাই
+                                DekhaHok শুধু মানুষকে activity-এর মাধ্যমে যুক্ত করে না, বরং বাংলাদেশের দক্ষ মানুষদের
+                                কাজ, সেবা ও অভিজ্ঞতাকেও মানুষের কাছে পৌঁছে দেয়।</p>
+                            <p class="sr-only">We believe human skills drive the highest value when made easily
+                                accessible. DekhaHok goes beyond basic meetups to connect talented professionals
+                                directly with clients and local communities.</p>
                         </div>
                     </div>
                 </div>
@@ -1067,8 +1590,8 @@
 
                 <!-- Footer Checkout CTA -->
                 <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
-                    <span class="font-black text-emerald-800 text-base">৳${Math.round(e.price_per_person)}</span>
-                    <button onclick="event.stopPropagation(); openBooking(${e.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow active:scale-95 uppercase">
+                    <span class="font-black text-emerald-800 text-base hidden">৳${Math.round(e.price_per_person)}</span>
+                    <button onclick="event.stopPropagation(); openBooking(${e.id})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
                         ${isSoldOut ? 'Join Waitlist' : 'Book Now'}
                     </button>
                 </div>
@@ -1079,11 +1602,7 @@
 
     // ── Interactive Booking Checkout Flow ──────────────────────────────────────────
     function openBooking(eventId) {
-        if (IS_LOGGED_IN) {
-            window.location.href = "/booking/" + eventId;
-        } else {
-            openAuthModal("/booking/" + eventId);
-        }
+        window.location.href = "/booking/" + eventId;
     }
 
     // ── Ticket Status Tracking ─────────────────────────────────────────────────────
@@ -1426,6 +1945,26 @@
         await loadEvents();    // populate allEvents first
         startMotion();         // then start hero animation with real event images
         initMap();
+
+        // Expand the first FAQ card by default
+        const firstCard = document.querySelector('.faq-card');
+        if (firstCard) {
+            const content = firstCard.querySelector('.faq-content');
+            const icon = firstCard.querySelector('.faq-icon');
+            const iconWrapper = firstCard.querySelector('div > div:first-child');
+            if (content && icon) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                content.style.opacity = '1';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                firstCard.classList.add('rounded-[2rem]', 'border-emerald-100', 'shadow-xl', 'shadow-emerald-50/30');
+                firstCard.classList.remove('rounded-[1.5rem]', 'border-zinc-100', 'shadow-sm');
+                if (iconWrapper) {
+                    iconWrapper.classList.add('bg-emerald-50', 'text-emerald-600');
+                    iconWrapper.classList.remove('bg-zinc-50', 'text-zinc-400');
+                }
+            }
+        }
     };
 </script>
 {% endblock %}
