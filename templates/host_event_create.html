@@ -52,9 +52,10 @@
                         <option value="wellness">🧘 Wellness & Health</option>
                         <option value="cafe-conversations">☕ Cafe Conversations</option>
                         <option value="learn-play">♟️ Learn & Play</option>
-                        <option value="nature-escapes">🌿 Nature Escapes</option>
+                        <option value="travel">🌿 Travel & Nature Escapes</option>
                         <option value="creative-workshops">🎨 Creative Workshops</option>
                         <option value="city-exploration">🚶 City Exploration</option>
+                        <option value="professional">💼 Professional Services</option>
                         <option value="other">✨ Other</option>
                     </select>
                 </div>
@@ -90,7 +91,7 @@
                         <input type="number" id="ev-capacity" required min="2" max="100" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="12">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Price (BDT) *</label>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Price (BDT) / person *</label>
                         <input type="number" id="ev-price" required min="0" step="0.01" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="500">
                     </div>
                 </div>
@@ -145,9 +146,13 @@
             </div>
 
             <form onsubmit="submitFinalEvent(event)" class="space-y-5">
-                <div>
+                <div id="date-time-container">
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Date & Time *</label>
                     <input type="datetime-local" id="ev-date" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white shadow-inner">
+                    <label class="flex items-center gap-2 mt-3 cursor-pointer">
+                        <input type="checkbox" id="ev-recurring" class="w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500">
+                        <span class="text-sm font-semibold text-zinc-700">Weekly Recurring Event (Auto-renews)</span>
+                    </label>
                 </div>
 
                 <div>
@@ -178,6 +183,76 @@
                     </div>
                 </div>
 
+                <!-- Extra Media Section -->
+                <div class="mt-8 border-t border-zinc-200 pt-6">
+                    <h3 class="text-sm font-bold text-zinc-800 mb-4"><i class="fa-solid fa-images text-emerald-600 mr-2"></i>Additional Media (Optional)</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <!-- Image 2 -->
+                        <div>
+                            <label class="block text-[10px] font-bold mb-1.5 text-zinc-500 uppercase">Gallery Image 1</label>
+                            <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-xl p-4 text-center hover:bg-zinc-50 transition-colors h-32 flex flex-col justify-center items-center" onclick="document.getElementById('ev-image-2').click()">
+                                <input type="file" id="ev-image-2" accept="image/*" class="hidden" onchange="previewGalleryImage(event, 2)">
+                                <div id="prompt-2" class="pointer-events-none">
+                                    <i class="fa-solid fa-plus text-zinc-400 text-xl mb-1"></i>
+                                    <p class="text-[10px] font-bold text-zinc-500">Add Photo</p>
+                                    <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
+                                </div>
+                                <div id="preview-container-2" class="hidden absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
+                                    <img id="preview-2" src="" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <i class="fa-solid fa-pen text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image 3 -->
+                        <div>
+                            <label class="block text-[10px] font-bold mb-1.5 text-zinc-500 uppercase">Gallery Image 2</label>
+                            <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-xl p-4 text-center hover:bg-zinc-50 transition-colors h-32 flex flex-col justify-center items-center" onclick="document.getElementById('ev-image-3').click()">
+                                <input type="file" id="ev-image-3" accept="image/*" class="hidden" onchange="previewGalleryImage(event, 3)">
+                                <div id="prompt-3" class="pointer-events-none">
+                                    <i class="fa-solid fa-plus text-zinc-400 text-xl mb-1"></i>
+                                    <p class="text-[10px] font-bold text-zinc-500">Add Photo</p>
+                                    <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
+                                </div>
+                                <div id="preview-container-3" class="hidden absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
+                                    <img id="preview-3" src="" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <i class="fa-solid fa-pen text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image 4 -->
+                        <div>
+                            <label class="block text-[10px] font-bold mb-1.5 text-zinc-500 uppercase">Gallery Image 3</label>
+                            <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-xl p-4 text-center hover:bg-zinc-50 transition-colors h-32 flex flex-col justify-center items-center" onclick="document.getElementById('ev-image-4').click()">
+                                <input type="file" id="ev-image-4" accept="image/*" class="hidden" onchange="previewGalleryImage(event, 4)">
+                                <div id="prompt-4" class="pointer-events-none">
+                                    <i class="fa-solid fa-plus text-zinc-400 text-xl mb-1"></i>
+                                    <p class="text-[10px] font-bold text-zinc-500">Add Photo</p>
+                                    <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
+                                </div>
+                                <div id="preview-container-4" class="hidden absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
+                                    <img id="preview-4" src="" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <i class="fa-solid fa-pen text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">YouTube Video Link</label>
+                        <input type="url" id="ev-youtube" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="https://www.youtube.com/watch?v=...">
+                        <span class="text-[10px] text-zinc-400 mt-1 block">Paste a link to a YouTube video showcasing your event or experience.</span>
+                    </div>
+                </div>
+
                 <div id="submit-error" class="hidden bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold p-3 rounded-xl text-center"></div>
 
                 <div class="flex justify-between pt-4">
@@ -199,6 +274,7 @@
 
 <script>
     let eventImageBase64 = null;
+    let extraImages = { 2: null, 3: null, 4: null };
 
     function showToast(msg, isError=false) {
         const toast = document.getElementById('toast');
@@ -221,12 +297,25 @@
         const cat = document.getElementById('ev-category').value;
         const otherContainer = document.getElementById('ev-category-other-container');
         const otherInput = document.getElementById('ev-category-other');
+        const dateContainer = document.getElementById('date-time-container');
+        const dateInput = document.getElementById('ev-date');
+
+        // Professional services do not require a fixed date
+        if (cat === 'professional') {
+            dateContainer.classList.add('hidden');
+            dateInput.removeAttribute('required');
+            dateInput.value = ''; // clear date
+        } else {
+            dateContainer.classList.remove('hidden');
+            dateInput.setAttribute('required', 'required');
+        }
+
         if (cat === 'other') {
             otherContainer.classList.remove('hidden');
-            otherInput.required = true;
+            otherInput.setAttribute('required', 'required');
         } else {
             otherContainer.classList.add('hidden');
-            otherInput.required = false;
+            otherInput.removeAttribute('required');
         }
     }
 
@@ -296,6 +385,26 @@
         reader.readAsDataURL(file);
     }
 
+    function previewGalleryImage(event, index) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (file.size > 2 * 1024 * 1024) {
+            showToast("File size must be under 2MB", true);
+            event.target.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            extraImages[index] = e.target.result;
+            document.getElementById(`prompt-${index}`).classList.add('hidden');
+            document.getElementById(`preview-container-${index}`).classList.remove('hidden');
+            document.getElementById(`preview-${index}`).src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+
     async function submitFinalEvent(e) {
         e.preventDefault();
         
@@ -347,8 +456,13 @@
             location_name: locationName,
             location_area: area,
             event_date: date,
+            is_recurring: document.getElementById('ev-recurring').checked,
             included: included,
-            image_base64: eventImageBase64
+            image_base64: eventImageBase64,
+            image_base64_2: extraImages[2],
+            image_base64_3: extraImages[3],
+            image_base64_4: extraImages[4],
+            youtube_link: document.getElementById('ev-youtube').value.trim()
         };
 
         try {

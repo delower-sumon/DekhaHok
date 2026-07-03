@@ -1,4 +1,5 @@
 import os
+import asyncio
 import secrets
 import string
 import hashlib
@@ -460,13 +461,13 @@ def serve_host_event_edit(event_id: int, request: Request):
         if host_id:
             cursor.execute("""
                 SELECT id, title, description, category, package_tier, price_per_person, capacity, 
-                       location_name, location_area, event_date, included, image_url
+                       location_name, location_area, event_date, included, image_url, is_recurring
                 FROM events WHERE id = %s AND host_id = %s
             """, (event_id, host_id))
         else:
             cursor.execute("""
                 SELECT id, title, description, category, package_tier, price_per_person, capacity, 
-                       location_name, location_area, event_date, included, image_url
+                       location_name, location_area, event_date, included, image_url, is_recurring
                 FROM events WHERE id = %s
             """, (event_id,))
             
@@ -733,9 +734,58 @@ def sitemap():
     return Response(content=xml_content, media_type="application/xml")
 
 
+async def run_daily_rollover():
+    while True:
+        utc_now = datetime.utcnow()
+        dhaka_time = utc_now + timedelta(hours=6)
+        target_time = dhaka_time.replace(hour=23, minute=0, second=0, microsecond=0)
+        
+        if dhaka_time >= target_time:
+            target_time += timedelta(days=1)
+            
+        wait_seconds = (target_time - dhaka_time).total_seconds()
+        print(f"Next rollover scheduled in {wait_seconds} seconds (at 11 PM Dhaka time)")
+        await asyncio.sleep(wait_seconds)
+        
+        conn = get_conn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT e.id, e.title, e.event_date, h.user_id 
+                FROM events e
+                JOIN hosts h ON e.host_id = h.id
+                WHERE e.status = 'published' 
+                  AND e.is_recurring = TRUE 
+                  AND e.event_date < NOW()
+            """)
+            expired_events = cursor.fetchall()
+            
+            for event_id, title, old_date, host_user_id in expired_events:
+                new_date = old_date + timedelta(days=7)
+                cursor.execute("UPDATE events SET event_date = %s WHERE id = %s", (new_date, event_id))
+                
+                # Notify Host
+                msg = f"Your weekly recurring event '{title}' has been auto-renewed for {new_date.strftime('%B %d, %I:%M %p')}. If you cannot host, please edit the event."
+                cursor.execute("""
+                    INSERT INTO notifications (user_id, type, title, message, action_url) 
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (host_user_id, "SYSTEM", "Event Auto-Renewed", msg, f"/host/events/{event_id}/edit"))
+                
+                # Optional: Find admin user and notify them too (assuming user 1 is admin, or we can skip admin notification for now since they can just check the feeds). Let's skip admin spam for now.
+                print(f"[Rollover] Event {event_id} ({title}) rolled over to {new_date}")
+                
+            conn.commit()
+            cursor.close()
+        except Exception as e:
+            print(f"[Rollover Error] {e}")
+        finally:
+            release_conn(conn)
+
+
 @app.on_event("startup")
 def on_startup():
     init_db()
+    asyncio.create_task(run_daily_rollover())
 
 
 # ---------------------------------------------------------------------------
@@ -1064,6 +1114,33 @@ def get_event_image(event_id: int):
     finally:
         release_conn(conn)
 
+@app.get("/api/events/{event_id}/image/{index}")
+def get_event_extra_image(event_id: int, index: int):
+    if index not in [2, 3, 4]:
+        raise HTTPException(status_code=400, detail="Invalid image index")
+    
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        col = f"image_url_{index}"
+        cursor.execute(f"SELECT {col} FROM events WHERE id = %s", (event_id,))
+        row = cursor.fetchone()
+        if not row or not row[0]:
+            raise HTTPException(status_code=404, detail="Image not found")
+            
+        image_url = row[0]
+        if image_url.startswith("data:image"):
+            try:
+                header, encoded = image_url.split(",", 1)
+                media_type = header.split(":")[1].split(";")[0]
+                decoded = base64.b64decode(encoded)
+                return Response(content=decoded, media_type=media_type)
+            except:
+                raise HTTPException(status_code=404, detail="Image error")
+        return RedirectResponse(url=image_url)
+    finally:
+        release_conn(conn)
+
 @app.post("/api/bookings", response_model=BookingResponse, status_code=201)
 def create_booking(payload: BookingCreate, current_user = Depends(get_current_user)):
     """
@@ -1301,7 +1378,7 @@ def api_list_events(category: Optional[str] = None):
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession
+                   h.profession as host_profession, h.is_founding as host_is_founding
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1325,7 +1402,8 @@ def api_list_events(category: Optional[str] = None):
                 "status": r[13], "host_id": r[14], "host_name": r[15] or "DekhaHok Host",
                 "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
                 "host_verification_status": r[18],
-                "host_profession": r[19] or ""
+                "host_profession": r[19] or "",
+                "host_is_founding": bool(r[20])
             })
         cursor.close()
     finally:
@@ -1343,7 +1421,11 @@ def api_event_detail(event_id: int):
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, h.bio as host_bio, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession
+                   h.profession as host_profession, e.is_recurring,
+                   CASE WHEN e.image_url_2 IS NOT NULL AND e.image_url_2 != '' THEN 1 ELSE 0 END as has_image_2,
+                   CASE WHEN e.image_url_3 IS NOT NULL AND e.image_url_3 != '' THEN 1 ELSE 0 END as has_image_3,
+                   CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
+                   e.youtube_link, h.is_founding as host_is_founding
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1366,7 +1448,13 @@ def api_event_detail(event_id: int):
             "host_avatar": f"/api/users/{r[18]}/avatar" if r[18] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
             "host_bio": r[17] or "",
             "host_verification_status": r[19],
-            "host_profession": r[20] or ""
+            "host_profession": r[20] or "",
+            "is_recurring": r[21] if len(r) > 21 else False,
+            "image_url_2": f"/api/events/{r[0]}/image/2" if len(r) > 22 and r[22] else None,
+            "image_url_3": f"/api/events/{r[0]}/image/3" if len(r) > 23 and r[23] else None,
+            "image_url_4": f"/api/events/{r[0]}/image/4" if len(r) > 24 and r[24] else None,
+            "youtube_link": r[25] if len(r) > 25 else None,
+            "host_is_founding": bool(r[26]) if len(r) > 26 else False
         }
         cursor.close()
     finally:
@@ -1414,18 +1502,20 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
         slug = re.sub(r'[^a-z0-9]+', '-', payload.title.lower()).strip('-')
         slug += f"-{int(datetime.now().timestamp())}"
         
-        try:
-            event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
-        except Exception:
-            event_dt = datetime.now() + timedelta(days=7) # fallback
+        event_dt = None
+        if payload.event_date:
+            try:
+                event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
+            except Exception:
+                pass
             
         status = 'published' if user["role"] == 'admin' else 'draft'
         
         cursor.execute("""
-            INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, location_name, location_area, event_date, included, status, image_url)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, location_name, location_area, event_date, included, status, image_url, image_url_2, image_url_3, image_url_4, youtube_link, is_recurring)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
-        """, (host_id, slug, payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status, payload.image_base64))
+        """, (host_id, slug, payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status, payload.image_base64, payload.image_base64_2, payload.image_base64_3, payload.image_base64_4, payload.youtube_link, payload.is_recurring))
         event_id = cursor.fetchone()[0]
         conn.commit()
         cursor.close()
@@ -1449,25 +1539,46 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             if not cursor.fetchone():
                 raise HTTPException(status_code=403, detail="Not your event.")
                 
-        try:
-            event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
-        except Exception:
-            event_dt = datetime.now() + timedelta(days=7)
+        event_dt = None
+        if payload.event_date:
+            try:
+                event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
+            except Exception:
+                pass
             
+        # Construct update fields dynamically based on whether images were provided or not
+        update_fields = [
+            "title=%s", "description=%s", "category=%s", "package_tier=%s", "price_per_person=%s", "capacity=%s",
+            "location_name=%s", "location_area=%s", "event_date=%s", "included=%s", "is_recurring=%s", "youtube_link=%s"
+        ]
+        update_values = [
+            payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity,
+            payload.location_name, payload.location_area, event_dt, payload.included or '[]', payload.is_recurring, payload.youtube_link
+        ]
+        
         if payload.image_base64:
-            cursor.execute("""
-                UPDATE events 
-                SET title=%s, description=%s, category=%s, package_tier=%s, price_per_person=%s, capacity=%s, 
-                    location_name=%s, location_area=%s, event_date=%s, included=%s, image_url=%s
-                WHERE id = %s
-            """, (payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', payload.image_base64, event_id))
-        else:
-            cursor.execute("""
-                UPDATE events 
-                SET title=%s, description=%s, category=%s, package_tier=%s, price_per_person=%s, capacity=%s, 
-                    location_name=%s, location_area=%s, event_date=%s, included=%s
-                WHERE id = %s
-            """, (payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', event_id))
+            update_fields.append("image_url=%s")
+            update_values.append(payload.image_base64)
+            
+        if payload.image_base64_2:
+            update_fields.append("image_url_2=%s")
+            update_values.append(payload.image_base64_2)
+            
+        if payload.image_base64_3:
+            update_fields.append("image_url_3=%s")
+            update_values.append(payload.image_base64_3)
+            
+        if payload.image_base64_4:
+            update_fields.append("image_url_4=%s")
+            update_values.append(payload.image_base64_4)
+            
+        update_values.append(event_id)
+        
+        cursor.execute(f"""
+            UPDATE events 
+            SET {", ".join(update_fields)}
+            WHERE id = %s
+        """, tuple(update_values))
             
         conn.commit()
     finally:
@@ -3003,7 +3114,7 @@ def get_admin_hosts(x_admin_key: str = Header(...)):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT h.id, u.full_name, u.email, h.nid_number, h.category, h.operating_area, h.bio, h.verification_status, h.revenue_share_pct, h.created_at 
+            SELECT h.id, u.full_name, u.email, h.nid_number, h.category, h.operating_area, h.bio, h.verification_status, h.revenue_share_pct, h.created_at, h.is_founding 
             FROM hosts h 
             JOIN users u ON h.user_id = u.id
             ORDER BY h.created_at DESC
@@ -3021,7 +3132,8 @@ def get_admin_hosts(x_admin_key: str = Header(...)):
                 "bio": r[6],
                 "verification_status": r[7],
                 "revenue_share_pct": float(r[8] or 0.5),
-                "created_at": str(r[9])
+                "created_at": str(r[9]),
+                "is_founding": bool(r[10])
             })
         cursor.close()
     finally:
@@ -3051,6 +3163,10 @@ def update_admin_host(host_id: int, payload: dict = Body(...), x_admin_key: str 
         if "revenue_share_pct" in payload:
             cols.append("revenue_share_pct = %s")
             vals.append(payload["revenue_share_pct"])
+            
+        if "is_founding" in payload:
+            cols.append("is_founding = %s")
+            vals.append(payload["is_founding"])
             
         if not cols:
             cursor.close()

@@ -2,6 +2,31 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-03] - Community Safety, Founding 100 & Admin Badge System
+
+### Added
+- **Community Safety Acknowledgements**: Injected mandatory Bengali safety checkboxes (with `sr-only` English for SEO) into the participant booking flow (`booking.html`) and the host application flow (`host_apply.html`). Users and hosts cannot proceed without explicitly agreeing to community guidelines.
+- **Founding 100 Badge System**: Introduced a dynamic "Founding 100" badge on host profession tags featuring an emerald outer glow (`shadow-[0_0_8px_rgba(16,185,129,0.5)]`) and a gradient overlay label. The badge renders on both homepage event cards (`index.html`) and booking detail views (`booking.html`).
+- **Admin-Controlled Badge Assignment**: Added `is_founding BOOLEAN DEFAULT FALSE` column to the `hosts` table with automatic migration on startup. The admin can now toggle the Founding 100 badge per host from the Host Verification Pipeline in `admin/index.html`, using the existing PATCH `/api/admin/hosts/{host_id}` endpoint.
+- **Backfill Migration**: One-time automatic backfill sets `is_founding = TRUE` for all hosts with `id <= 100` on first server startup after migration.
+
+### Changed
+- **Mobile Booking Layout Fix**: Refactored the booking event card layout from a rigid horizontal `flex` to a responsive `flex-col sm:flex-row` stack. The Ticket Price section now displays on mobile (previously `hidden sm:block`), separated by a subtle border line.
+- **Backend Event APIs**: Updated `/api/events` and `/api/events/{id}` SQL queries to join and return `host_is_founding` from the hosts table. Updated `/api/admin/hosts` to return `is_founding` per host.
+
+
+## [2026-07-03] - Professional Services & Sports Expansion
+
+### Added
+- **Homepage Containers**: Added two premium-styled product containers for **Professional Services** (`প্রফেশনাল সার্ভিসেস`) and **Sports** (`স্পোর্টস`) directly above the Travel section in `index.html`. 
+- **Smart Hiding Logic**: Implemented dynamic Javascript hiding logic in `renderCatalogGrid()` so that if the server returns 0 active events for Travel, Sports, or Professional Services, their entire HTML section wrappers cleanly hide from the DOM, maintaining a polished UI.
+
+### Changed
+- **Host Forms Category Injection**: Added `Professional Services` to the category dropdowns in `host_event_create.html` and `host_event_edit.html`.
+- **Dateless Forms UI**: Injected a JS listener into both host forms that dynamically hides the "Date & Time" input and strips its required validation whenever "Professional Services" is selected.
+- **Dateless Booking UI**: Upgraded `index.html` event cards and the `booking.html` details view to explicitly hide the calendar/date badges for the `professional` category, avoiding confusing "TBA" strings for one-off service purchases.
+- **Backend Schema Patch**: Decoupled `event_date` as a required string in `models.py` (`EventCreate` schema is now `Optional[str]`), and updated `main.py` event processing to safely store `NULL` in the Postgres database if the frontend omits a date, overriding the old +7 day fallback logic.
+
 ## [2026-07-03] - Global Footer Update & Brand Polish
 
 ### Changed

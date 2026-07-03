@@ -218,6 +218,7 @@ def init_db():
                 bio TEXT,
                 social_links JSONB DEFAULT '{}',
                 verification_status VARCHAR(20) DEFAULT 'PENDING',
+                is_founding BOOLEAN DEFAULT FALSE,
                 revenue_share_pct DECIMAL(4,2) DEFAULT 0.50,
                 verified_at TIMESTAMPTZ,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -243,6 +244,7 @@ def init_db():
                 included JSONB DEFAULT '[]',
                 status VARCHAR(20) DEFAULT 'draft',
                 host_payment_status VARCHAR(20) DEFAULT 'unpaid',
+                is_recurring BOOLEAN DEFAULT FALSE,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )
         """)
@@ -283,6 +285,16 @@ def init_db():
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0")
         cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS profession VARCHAR(100)")
         
+        # Category renaming migration
+        cursor.execute("UPDATE events SET category = 'travel' WHERE category = 'nature-escapes'")
+        
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS is_recurring BOOLEAN DEFAULT FALSE")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_2 TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_3 TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_4 TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS youtube_link VARCHAR(255)")
+        
+
         # Marketplace foreign key fields for bookings
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_id INT REFERENCES events(id) ON DELETE SET NULL")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS host_id INT REFERENCES hosts(id) ON DELETE SET NULL")
@@ -403,6 +415,16 @@ def init_db():
                 cursor.execute("UPDATE events SET booked_count = %s WHERE id = %s", (event_bookings_count, circle_event_id))
             
             cursor.execute("INSERT INTO site_settings (key, value) VALUES ('legacy_bookings_migrated', 'true') ON CONFLICT DO NOTHING")
+        
+        # Ensure is_founding column exists in hosts table for backward compatibility
+        cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS is_founding BOOLEAN DEFAULT FALSE")
+
+        # Backfill existing hosts with id <= 100 as Founding 100
+        cursor.execute("SELECT COUNT(*) FROM site_settings WHERE key = 'founding_hosts_backfilled'")
+        already_backfilled = cursor.fetchone()[0] > 0
+        if not already_backfilled:
+            cursor.execute("UPDATE hosts SET is_founding = TRUE WHERE id <= 100")
+            cursor.execute("INSERT INTO site_settings (key, value) VALUES ('founding_hosts_backfilled', 'true') ON CONFLICT DO NOTHING")
         
         conn.commit()
         cursor.close()

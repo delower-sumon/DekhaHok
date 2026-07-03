@@ -364,9 +364,14 @@ class EventCreate(BaseModel):
     capacity: int = 10
     location_name: Optional[str] = None
     location_area: Optional[str] = None
-    event_date: str
+    event_date: Optional[str] = None
+    is_recurring: bool = False
     included: Optional[str] = None
     image_base64: Optional[str] = None
+    image_base64_2: Optional[str] = None
+    image_base64_3: Optional[str] = None
+    image_base64_4: Optional[str] = None
+    youtube_link: Optional[str] = None
 
     @field_validator("package_tier")
     @classmethod
