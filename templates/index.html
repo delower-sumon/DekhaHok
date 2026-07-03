@@ -317,6 +317,38 @@
         </div>
     </section>
 
+    <!-- Professional Services Section -->
+    <section id="professional-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50 hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+            <div>
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Services</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Professional Services</span>প্রফেশনাল সার্ভিসেস</h2>
+            </div>
+        </div>
+        <div id="professional-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        <div id="no-professional-events-view" class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
+            <span class="text-4xl">💼</span>
+            <h3 class="font-bold mt-4 text-zinc-800">No services found</h3>
+            <p class="text-zinc-400 text-xs mt-1">Check back later for professional services!</p>
+        </div>
+    </section>
+
+    <!-- Sports Section -->
+    <section id="sports-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50 hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+            <div>
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Sports</span>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2 text-zinc-900"><span class="sr-only">Sports</span>স্পোর্টস</h2>
+            </div>
+        </div>
+        <div id="sports-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        <div id="no-sports-events-view" class="hidden text-center py-16 bg-white border border-dashed rounded-3xl p-8 max-w-md mx-auto mt-6">
+            <span class="text-4xl">⚽</span>
+            <h3 class="font-bold mt-4 text-zinc-800">No sports found</h3>
+            <p class="text-zinc-400 text-xs mt-1">Check back later for exciting sports activities!</p>
+        </div>
+    </section>
+
     <!-- Travel Catalog Section -->
     <section id="travel-section" class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50">
         <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
@@ -1537,23 +1569,32 @@
             });
         }
 
-        displayedEvents = filtered.filter(e => e.category !== 'travel');
+        displayedEvents = filtered.filter(e => e.category !== 'travel' && e.category !== 'professional' && e.category !== 'sports');
         let travelEvents = filtered.filter(e => e.category === 'travel');
+        let professionalEvents = filtered.filter(e => e.category === 'professional');
+        let sportsEvents = filtered.filter(e => e.category === 'sports');
         
-        renderCatalogGrid(displayedEvents, 'events-grid', 'no-events-view');
-        renderCatalogGrid(travelEvents, 'travel-grid', 'no-travel-events-view');
+        renderCatalogGrid(displayedEvents, 'events-grid', 'no-events-view', null);
+        renderCatalogGrid(travelEvents, 'travel-grid', 'no-travel-events-view', 'travel-section');
+        renderCatalogGrid(professionalEvents, 'professional-grid', 'no-professional-events-view', 'professional-section');
+        renderCatalogGrid(sportsEvents, 'sports-grid', 'no-sports-events-view', 'sports-section');
     }
 
-    function renderCatalogGrid(events, gridId, noEventsId) {
+    function renderCatalogGrid(events, gridId, noEventsId, sectionId = null) {
         const grid = document.getElementById(gridId);
         const noEvents = document.getElementById(noEventsId);
+        const sectionEl = sectionId ? document.getElementById(sectionId) : null;
+        
         grid.innerHTML = '';
 
         if (events.length === 0) {
             noEvents.classList.remove('hidden');
+            if (sectionEl) sectionEl.classList.add('hidden');
             return;
         }
+        
         noEvents.classList.add('hidden');
+        if (sectionEl) sectionEl.classList.remove('hidden');
 
         events.forEach(e => {
             const spotsLeft = e.capacity - e.booked_count;
@@ -1583,9 +1624,10 @@
 
                     <!-- Details -->
                     <div class="p-5 space-y-3">
+                        ${e.category === 'professional' ? '' : `
                         <div class="flex items-center justify-end mb-1">
                             <span class="text-[10px] text-zinc-400 font-bold font-mono">${dateStr}</span>
-                        </div>
+                        </div>`}
                         <h3 class="font-bold text-zinc-800 text-base leading-tight line-clamp-2">${e.title}</h3>
                         <p class="text-zinc-500 text-xs line-clamp-2 leading-relaxed">${e.description || ''}</p>
                         

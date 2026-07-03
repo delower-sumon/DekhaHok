@@ -1500,10 +1500,12 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
         slug = re.sub(r'[^a-z0-9]+', '-', payload.title.lower()).strip('-')
         slug += f"-{int(datetime.now().timestamp())}"
         
-        try:
-            event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
-        except Exception:
-            event_dt = datetime.now() + timedelta(days=7) # fallback
+        event_dt = None
+        if payload.event_date:
+            try:
+                event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
+            except Exception:
+                pass
             
         status = 'published' if user["role"] == 'admin' else 'draft'
         
@@ -1535,10 +1537,12 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             if not cursor.fetchone():
                 raise HTTPException(status_code=403, detail="Not your event.")
                 
-        try:
-            event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
-        except Exception:
-            event_dt = datetime.now() + timedelta(days=7)
+        event_dt = None
+        if payload.event_date:
+            try:
+                event_dt = datetime.fromisoformat(payload.event_date.replace("Z", "+00:00"))
+            except Exception:
+                pass
             
         # Construct update fields dynamically based on whether images were provided or not
         update_fields = [

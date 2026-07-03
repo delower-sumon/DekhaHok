@@ -2,6 +2,18 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-03] - Professional Services & Sports Expansion
+
+### Added
+- **Homepage Containers**: Added two premium-styled product containers for **Professional Services** (`প্রফেশনাল সার্ভিসেস`) and **Sports** (`স্পোর্টস`) directly above the Travel section in `index.html`. 
+- **Smart Hiding Logic**: Implemented dynamic Javascript hiding logic in `renderCatalogGrid()` so that if the server returns 0 active events for Travel, Sports, or Professional Services, their entire HTML section wrappers cleanly hide from the DOM, maintaining a polished UI.
+
+### Changed
+- **Host Forms Category Injection**: Added `Professional Services` to the category dropdowns in `host_event_create.html` and `host_event_edit.html`.
+- **Dateless Forms UI**: Injected a JS listener into both host forms that dynamically hides the "Date & Time" input and strips its required validation whenever "Professional Services" is selected.
+- **Dateless Booking UI**: Upgraded `index.html` event cards and the `booking.html` details view to explicitly hide the calendar/date badges for the `professional` category, avoiding confusing "TBA" strings for one-off service purchases.
+- **Backend Schema Patch**: Decoupled `event_date` as a required string in `models.py` (`EventCreate` schema is now `Optional[str]`), and updated `main.py` event processing to safely store `NULL` in the Postgres database if the frontend omits a date, overriding the old +7 day fallback logic.
+
 ## [2026-07-03] - Global Footer Update & Brand Polish
 
 ### Changed

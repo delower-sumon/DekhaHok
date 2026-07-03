@@ -443,7 +443,14 @@
             document.getElementById('b-event-desc').textContent = selectedEvent.description || '';
             document.getElementById('b-event-price').innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
             document.getElementById('b-event-tier').textContent = selectedEvent.package_tier;
-            document.getElementById('b-event-date').textContent = selectedEvent.event_date ? new Date(selectedEvent.event_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBA';
+            
+            if (selectedEvent.category === 'professional') {
+                document.getElementById('b-event-date').parentElement.classList.add('hidden');
+            } else {
+                document.getElementById('b-event-date').textContent = selectedEvent.event_date ? new Date(selectedEvent.event_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBA';
+                document.getElementById('b-event-date').parentElement.classList.remove('hidden');
+            }
+            
             document.getElementById('b-event-location').textContent = selectedEvent.location_name || 'TBA';
 
             // Populate Host Info

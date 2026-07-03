@@ -55,6 +55,7 @@
                         <option value="travel">🌿 Travel & Nature Escapes</option>
                         <option value="creative-workshops">🎨 Creative Workshops</option>
                         <option value="city-exploration">🚶 City Exploration</option>
+                        <option value="professional">💼 Professional Services</option>
                         <option value="other">✨ Other</option>
                     </select>
                 </div>
@@ -145,9 +146,9 @@
             </div>
 
             <form onsubmit="submitFinalEvent(event)" class="space-y-5">
-                <div>
+                <div id="date-time-container" class="{% if event.category == 'professional' %}hidden{% endif %}">
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Date & Time *</label>
-                    <input type="datetime-local" id="ev-date" required value="{{ event.event_date_iso }}" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white shadow-inner">
+                    <input type="datetime-local" id="ev-date" {% if event.category != 'professional' %}required{% endif %} value="{{ event.event_date_iso }}" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white shadow-inner">
                     <label class="flex items-center gap-2 mt-3 cursor-pointer">
                         <input type="checkbox" id="ev-recurring" class="w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500" {% if event.is_recurring %}checked{% endif %}>
                         <span class="text-sm font-semibold text-zinc-700">Weekly Recurring Event (Auto-renews)</span>
@@ -294,7 +295,7 @@
             
             if(existingData.category) {
                 const catSelect = document.getElementById('ev-category');
-                const validCategories = ['art', 'photography', 'food', 'music', 'tech', 'sports', 'workshop', 'networking', 'wellness'];
+                const validCategories = ['art', 'photography', 'food', 'music', 'tech', 'sports', 'workshop', 'networking', 'wellness', 'cafe-conversations', 'learn-play', 'travel', 'creative-workshops', 'city-exploration', 'professional'];
                 const normalizedCategory = existingData.category.toLowerCase();
                 if(validCategories.includes(normalizedCategory)) {
                     catSelect.value = normalizedCategory;
@@ -345,12 +346,24 @@
         const cat = document.getElementById('ev-category').value;
         const otherContainer = document.getElementById('ev-category-other-container');
         const otherInput = document.getElementById('ev-category-other');
+        const dateContainer = document.getElementById('date-time-container');
+        const dateInput = document.getElementById('ev-date');
+
+        if (cat === 'professional') {
+            dateContainer.classList.add('hidden');
+            dateInput.removeAttribute('required');
+            dateInput.value = '';
+        } else {
+            dateContainer.classList.remove('hidden');
+            dateInput.setAttribute('required', 'required');
+        }
+
         if (cat === 'other') {
             otherContainer.classList.remove('hidden');
-            otherInput.required = true;
+            otherInput.setAttribute('required', 'required');
         } else {
             otherContainer.classList.add('hidden');
-            otherInput.required = false;
+            otherInput.removeAttribute('required');
         }
     }
 

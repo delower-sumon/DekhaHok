@@ -55,6 +55,7 @@
                         <option value="travel">🌿 Travel & Nature Escapes</option>
                         <option value="creative-workshops">🎨 Creative Workshops</option>
                         <option value="city-exploration">🚶 City Exploration</option>
+                        <option value="professional">💼 Professional Services</option>
                         <option value="other">✨ Other</option>
                     </select>
                 </div>
@@ -145,7 +146,7 @@
             </div>
 
             <form onsubmit="submitFinalEvent(event)" class="space-y-5">
-                <div>
+                <div id="date-time-container">
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Date & Time *</label>
                     <input type="datetime-local" id="ev-date" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white shadow-inner">
                     <label class="flex items-center gap-2 mt-3 cursor-pointer">
@@ -296,12 +297,25 @@
         const cat = document.getElementById('ev-category').value;
         const otherContainer = document.getElementById('ev-category-other-container');
         const otherInput = document.getElementById('ev-category-other');
+        const dateContainer = document.getElementById('date-time-container');
+        const dateInput = document.getElementById('ev-date');
+
+        // Professional services do not require a fixed date
+        if (cat === 'professional') {
+            dateContainer.classList.add('hidden');
+            dateInput.removeAttribute('required');
+            dateInput.value = ''; // clear date
+        } else {
+            dateContainer.classList.remove('hidden');
+            dateInput.setAttribute('required', 'required');
+        }
+
         if (cat === 'other') {
             otherContainer.classList.remove('hidden');
-            otherInput.required = true;
+            otherInput.setAttribute('required', 'required');
         } else {
             otherContainer.classList.add('hidden');
-            otherInput.required = false;
+            otherInput.removeAttribute('required');
         }
     }
 
