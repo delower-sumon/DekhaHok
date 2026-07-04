@@ -11,7 +11,7 @@
     <meta property="og:description" content="সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।">
     <meta property="og:url" content="https://dekhahok.com/blog">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
 {% endblock %}
 
 {% block extra_head %}
@@ -37,7 +37,7 @@
                 <div class="bg-white rounded-[2.5rem] border {{ 'border-amber-200 shadow-xl shadow-amber-50' if b.is_pivoted else 'border-zinc-200/50' }} overflow-hidden blog-card flex flex-col justify-between">
                     <div>
                         <div class="h-60 overflow-hidden relative">
-                            <img src="{{ b.image or 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500&auto=format&fit=crop&q=60' }}" 
+                            <img loading="lazy" src="{{ b.image or 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500&auto=format&fit=crop&q=60' }}" 
                                  alt="{{ b.title }}" 
                                  class="w-full h-full object-cover">
                             {% if b.is_pivoted %}

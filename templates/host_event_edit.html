@@ -176,7 +176,7 @@
                         </div>
 
                         <div id="image-preview-container" class="w-full h-48 rounded-xl overflow-hidden relative pointer-events-none">
-                            <img id="image-preview" src="{{ event.image_url or '/api/events/' ~ event.id ~ '/image' }}" class="w-full h-full object-cover">
+                            <img loading="lazy" id="image-preview" src="{{ event.image_url or '/api/events/' ~ event.id ~ '/image' }}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <span class="text-white font-bold text-sm bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm"><i class="fa-solid fa-pen mr-2"></i>Change Image</span>
                                 <span class="text-white/80 text-[10px] mt-2 font-bold uppercase tracking-wider">Leave empty to keep current</span>
@@ -201,7 +201,7 @@
                                     <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
                                 </div>
                                 <div id="preview-container-2" class="{% if not event.image_url_2 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
-                                    <img id="preview-2" src="{{ event.image_url_2 or '' }}" class="w-full h-full object-cover">
+                                    <img loading="lazy" id="preview-2" src="{{ event.image_url_2 or '' }}" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <i class="fa-solid fa-pen text-white"></i>
                                     </div>
@@ -220,7 +220,7 @@
                                     <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
                                 </div>
                                 <div id="preview-container-3" class="{% if not event.image_url_3 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
-                                    <img id="preview-3" src="{{ event.image_url_3 or '' }}" class="w-full h-full object-cover">
+                                    <img loading="lazy" id="preview-3" src="{{ event.image_url_3 or '' }}" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <i class="fa-solid fa-pen text-white"></i>
                                     </div>
@@ -239,7 +239,7 @@
                                     <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
                                 </div>
                                 <div id="preview-container-4" class="{% if not event.image_url_4 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
-                                    <img id="preview-4" src="{{ event.image_url_4 or '' }}" class="w-full h-full object-cover">
+                                    <img loading="lazy" id="preview-4" src="{{ event.image_url_4 or '' }}" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <i class="fa-solid fa-pen text-white"></i>
                                     </div>
@@ -321,6 +321,21 @@
                 document.getElementById('image-upload-prompt').classList.add('hidden');
                 document.getElementById('image-preview-container').classList.remove('hidden');
                 document.getElementById('image-preview').src = existingData.image_url.startsWith('data:') ? existingData.image_url : `/api/events/${existingData.id}/image`;
+            }
+            if(existingData.image_url_2) {
+                document.getElementById('prompt-2').classList.add('hidden');
+                document.getElementById('preview-container-2').classList.remove('hidden');
+                document.getElementById('preview-2').src = existingData.image_url_2.startsWith('data:') ? existingData.image_url_2 : `/api/events/${existingData.id}/image_2`;
+            }
+            if(existingData.image_url_3) {
+                document.getElementById('prompt-3').classList.add('hidden');
+                document.getElementById('preview-container-3').classList.remove('hidden');
+                document.getElementById('preview-3').src = existingData.image_url_3.startsWith('data:') ? existingData.image_url_3 : `/api/events/${existingData.id}/image_3`;
+            }
+            if(existingData.image_url_4) {
+                document.getElementById('prompt-4').classList.add('hidden');
+                document.getElementById('preview-container-4').classList.remove('hidden');
+                document.getElementById('preview-4').src = existingData.image_url_4.startsWith('data:') ? existingData.image_url_4 : `/api/events/${existingData.id}/image_4`;
             }
         }
     };

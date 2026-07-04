@@ -19,6 +19,40 @@
 <meta name="twitter:description"
     content="{{ event.description or 'Meet professionals, creators and communities through real activities.' }}">
 <meta name="twitter:image" content="{{ event.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "{{ event.title }}",
+  "startDate": "{{ event.event_date }}",
+  "location": {
+    "@type": "Place",
+    "name": "{{ event.location }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Dhaka",
+      "addressCountry": "BD"
+    }
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "DekhaHok",
+    "url": "https://dekhahok.com"
+  },
+  "performer": {
+    "@type": "Person",
+    "name": "{{ event.host_name }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ event.ticket_price }}",
+    "priceCurrency": "BDT",
+    "availability": "https://schema.org/InStock",
+    "url": "https://dekhahok.com/booking/{{ event.id }}"
+  }
+}
+</script>
 {% endif %}
 {% endblock %}
 
@@ -35,7 +69,7 @@
         class="bg-emerald-50/40 border border-emerald-100 rounded-[2rem] p-4 sm:p-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm opacity-0 transition-opacity duration-300">
         <div class="flex items-start sm:items-center gap-4">
             <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-zinc-200 shadow-inner flex-shrink-0">
-                <img id="b-event-img" src="" alt="Event" class="w-full h-full object-cover">
+                <img loading="lazy" id="b-event-img" src="" alt="Event" class="w-full h-full object-cover">
             </div>
             <div>
                 <span
@@ -56,7 +90,7 @@
                 <p id="b-event-desc" class="text-xs text-zinc-500 mt-2.5 leading-relaxed max-w-xl"></p>
                 <!-- Host Info -->
                 <div class="flex items-center gap-2 mt-4 pt-4 border-t border-emerald-100/50">
-                    <img id="b-event-host-avatar" src="" alt="Host"
+                    <img loading="lazy" id="b-event-host-avatar" src="" alt="Host"
                         class="w-8 h-8 rounded-full object-cover border border-emerald-200">
                     <div class="flex flex-col">
                         <div class="flex items-center gap-1">
@@ -468,7 +502,7 @@
             document.getElementById('b-event-host-name').textContent = `By ${selectedEvent.host_name.split(' ')[0]}`;
             if (selectedEvent.host_profession) {
                 if (selectedEvent.host_is_founding) {
-                    document.getElementById('b-event-host-profession-container').innerHTML = `<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2.5 left-1.5 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[6.5px] font-black px-1 py-[1px] rounded-[3px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">${selectedEvent.host_profession}</span></div>`;
+                    document.getElementById('b-event-host-profession-container').innerHTML = `<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">${selectedEvent.host_profession}</span></div>`;
                 } else {
                     document.getElementById('b-event-host-profession').textContent = selectedEvent.host_profession;
                 }
@@ -510,7 +544,7 @@
                 
                 galleryGrid.innerHTML = extraImages.map(img => `
                     <div class="h-48 rounded-xl overflow-hidden shadow-sm border border-zinc-200">
-                        <img src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                        <img loading="lazy" src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                 `).join('');
                 galleryGrid.classList.remove('hidden');

@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}DekhaHok • Social Community & Professional Services{% endblock %}</title>
+    <title>{% block title %}দেখা হোক | ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস।{% endblock %}</title>
     <link rel="icon" type="image/png" href="/static/favicon.png">
+
+    <!-- Preconnect to CDNs for faster DNS lookup -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://unpkg.com">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,22 +19,15 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <!-- Google Fonts (Optimized) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"></noscript>
 
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Leaflet Maps CSS (for host events mapping) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
 
     <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/style.css?v=2.0">
@@ -86,19 +85,45 @@
 
     {% block seo_meta %}
     <meta name="description"
-        content="সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস। Meet professionals, creators and communities through real activities. Connect and network offline.">
-    <link rel="canonical" href="https://dekhahok.com/">
+        content="লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।">
+    <link rel="canonical" href="{% block canonical_url %}https://dekhahok.com/{% endblock %}">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://dekhahok.com/">
-    <meta property="og:title" content="DekhaHok • Social Community & Professional Services">
-    <meta property="og:description" content="সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।">
-    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+    <meta property="og:url" content="{% block og_url %}https://dekhahok.com/{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}দেখা হোক | ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস।{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।{% endblock %}">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://dekhahok.com/">
-    <meta name="twitter:title" content="DekhaHok • Social Community & Professional Services">
-    <meta name="twitter:description" content="সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।">
-    <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
+    <meta name="twitter:title" content="দেখা হোক | ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস।">
+    <meta name="twitter:description" content="লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।">
+    <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "DekhaHok",
+      "alternateName": "দেখা হোক",
+      "url": "https://dekhahok.com",
+      "logo": "https://dekhahok.com/static/assets/dekhahok_bn.svg",
+      "description": "লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।",
+      "foundingDate": "2026",
+      "areaServed": "BD",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+8801325900906",
+        "contactType": "customer service"
+      },
+      "sameAs": [
+        "https://www.facebook.com/dekhahok",
+        "https://www.instagram.com/dekha_hok",
+        "https://www.linkedin.com/company/dekhahok",
+        "https://www.youtube.com/@DekhaHokbd",
+        "https://x.com/dekhahok"
+      ]
+    }
+    </script>
     {% endblock %}
     {% block extra_head %}{% endblock %}
 </head>
@@ -114,7 +139,7 @@
             <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-x-2 group">
-                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" />
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" width="140" height="34" class="h-[28px] md:h-[34px] w-auto" />
                     <!-- Animated Connection Logo -->
                     <svg class="h-[30px] md:h-[36px] w-[30px] md:w-[36px] flex-shrink-0" viewBox="0 0 100 100"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,8 +246,8 @@
 
                     <!-- Notification Bell (All Authenticated Users) -->
                     <div class="relative group mr-1 sm:mr-2">
-                        <button
-                            class="w-8 sm:w-9 h-8 sm:h-9 rounded-2xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus:outline-none">
+                        <button aria-label="Notifications"
+                            class="w-11 h-11 rounded-full flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus:outline-none">
                             <i class="fa-regular fa-bell text-[15px]"></i>
                             {% if unread_notifications|length > 0 %}
                             <div
@@ -310,10 +335,10 @@
 
                     <!-- Authenticated User Avatar -->
                     <div class="relative group">
-                        <button
-                            class="w-8 sm:w-9 h-8 sm:h-9 rounded-2xl flex items-center justify-center overflow-hidden border border-emerald-100 focus:outline-none"
+                        <button aria-label="User Menu"
+                            class="w-11 h-11 rounded-full flex items-center justify-center overflow-hidden border border-emerald-100 focus:outline-none"
                             title="Profile Details">
-                            <img src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}"
+                            <img loading="lazy" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}"
                                 alt="{{ user.name }}" class="w-full h-full object-cover" referrerpolicy="no-referrer">
                         </button>
                         <!-- User Dropdown Menu Wrapper (Bridges hover gap) -->
@@ -343,15 +368,15 @@
                     {% else %}
                     <!-- Anonymous User Login Link -->
                     <button onclick="openAuthModal(window.location.pathname)"
-                        class="w-8 sm:w-9 h-8 sm:h-9 bg-zinc-100 hover:bg-zinc-200 transition-colors rounded-2xl flex items-center justify-center flex-shrink-0"
-                        title="Login Profile">
+                        class="w-11 h-11 bg-zinc-100 hover:bg-zinc-200 transition-colors rounded-full flex items-center justify-center flex-shrink-0"
+                        title="Login Profile" aria-label="Login Profile">
                         <i class="fa-solid fa-user text-zinc-600 text-sm"></i>
                     </button>
                     {% endif %}
 
                     <!-- Mobile Hamburger Button -->
                     <button onclick="toggleMobileMenu()"
-                        class="md:hidden w-8 sm:w-9 h-8 sm:h-9 flex items-center justify-center text-zinc-600 hover:text-emerald-700 focus:outline-none border rounded-2xl hover:bg-zinc-50"
+                        class="md:hidden w-11 h-11 flex items-center justify-center text-zinc-600 hover:text-emerald-700 focus:outline-none border rounded-full hover:bg-zinc-50"
                         aria-label="Toggle Menu">
                         <i class="fa-solid fa-bars text-lg"></i>
                     </button>
@@ -490,7 +515,7 @@
                         <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
                             class="h-8 w-auto brightness-0 invert" />
                     </div>
-                    <p class="text-zinc-500 text-[10px] tracking-wide mt-1">Beyond the digital bubble.</p>
+                    <p class="text-emerald-400 text-[10px] tracking-wide mt-1">Beyond the digital bubble.</p>
                     <p class="text-zinc-400 text-xs sm:text-sm mt-3 mb-2">
                         <span class="sr-only">Meet professionals, creators and communities through real
                             activities.</span>
@@ -530,19 +555,19 @@
                         <li><a href="/contact" class="hover:text-emerald-400 transition">Contact Support</a></li>
                     </ul>
                     <div class="flex items-center gap-3.5 mt-5">
-                        <a href="https://facebook.com/dekhahok" target="_blank" title="Facebook" aria-label="Facebook">
+                        <a href="https://facebook.com/dekhahok" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="DekhaHok Facebook Page" class="p-3 -m-3 flex items-center justify-center">
                             <i class="fa-brands fa-facebook text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://www.instagram.com/dekha_hok" target="_blank" title="Instagram" aria-label="Instagram">
+                        <a href="https://www.instagram.com/dekha_hok" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="DekhaHok Instagram Page" class="p-3 -m-3 flex items-center justify-center">
                             <i class="fa-brands fa-instagram text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://linkedin.com/company/dekhahok" target="_blank" title="LinkedIn" aria-label="LinkedIn">
+                        <a href="https://linkedin.com/company/dekhahok" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="DekhaHok LinkedIn Page" class="p-3 -m-3 flex items-center justify-center">
                             <i class="fa-brands fa-linkedin text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://youtube.com/@DekhaHokbd" target="_blank" title="YouTube" aria-label="YouTube">
+                        <a href="https://youtube.com/@DekhaHokbd" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="DekhaHok YouTube Channel" class="p-3 -m-3 flex items-center justify-center">
                             <i class="fa-brands fa-youtube text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="#" title="X (Twitter)" aria-label="X" class="flex items-center">
+                        <a href="https://x.com/dekhahok" target="_blank" rel="noopener noreferrer" title="X (Twitter)" aria-label="DekhaHok on X" class="p-3 -m-3 flex items-center justify-center">
                             <svg class="w-3.5 h-3.5 text-zinc-400 hover:text-emerald-400 transition-colors fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
                             </svg>
@@ -755,7 +780,7 @@
 
                 <div
                     class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-emerald-500 relative group bg-zinc-50">
-                    <img id="avatar-preview-img"
+                    <img loading="lazy" id="avatar-preview-img"
                         src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name if user else '' }}"
                         class="w-full h-full object-cover" referrerpolicy="no-referrer">
                 </div>

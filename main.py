@@ -461,13 +461,15 @@ def serve_host_event_edit(event_id: int, request: Request):
         if host_id:
             cursor.execute("""
                 SELECT id, title, description, category, package_tier, price_per_person, capacity, 
-                       location_name, location_area, event_date, included, image_url, is_recurring
+                       location_name, location_area, event_date, included, image_url, is_recurring,
+                       image_url_2, image_url_3, image_url_4
                 FROM events WHERE id = %s AND host_id = %s
             """, (event_id, host_id))
         else:
             cursor.execute("""
                 SELECT id, title, description, category, package_tier, price_per_person, capacity, 
-                       location_name, location_area, event_date, included, image_url, is_recurring
+                       location_name, location_area, event_date, included, image_url, is_recurring,
+                       image_url_2, image_url_3, image_url_4
                 FROM events WHERE id = %s
             """, (event_id,))
             
@@ -498,7 +500,10 @@ def serve_host_event_edit(event_id: int, request: Request):
             "event_date_iso": event_row[9].strftime('%Y-%m-%dT%H:%M') if event_row[9] else "",
             "included": included_list if isinstance(included_list, list) else [],
             "included_str": "\n".join(included_list) if isinstance(included_list, list) else "",
-            "image_url": event_row[11] or ""
+            "image_url": event_row[11] or "",
+            "image_url_2": event_row[13] or "",
+            "image_url_3": event_row[14] or "",
+            "image_url_4": event_row[15] or ""
         }
     finally:
         release_conn(conn)

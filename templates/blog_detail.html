@@ -110,7 +110,7 @@
             <div class="flex items-center gap-4 text-zinc-500 text-sm">
                 <div class="w-10 h-10 rounded-full bg-emerald-100 overflow-hidden flex items-center justify-center text-emerald-600 border-2 border-white shadow-md">
                     {% if blog.author_image_url %}
-                    <img src="{{ blog.author_image_url }}" alt="{{ blog.author or 'Author' }}" class="w-full h-full object-cover">
+                    <img loading="lazy" src="{{ blog.author_image_url }}" alt="{{ blog.author or 'Author' }}" class="w-full h-full object-cover">
                     {% else %}
                     <i data-lucide="user" class="w-5 h-5"></i>
                     {% endif %}
@@ -132,7 +132,7 @@
         {% if blog.image %}
         <div class="mb-8">
             <div class="relative rounded-[2rem] overflow-hidden shadow-xl h-[350px]">
-                <img src="{{ blog.image }}" alt="{{ blog.image_alt or blog.title }}" class="w-full h-full object-cover">
+                <img loading="lazy" src="{{ blog.image }}" alt="{{ blog.image_alt or blog.title }}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
             </div>
             {% if blog.image_alt %}
@@ -203,7 +203,7 @@
             {% for ob in other_blogs %}
             <a href="/blog/{{ ob.slug }}" class="group bg-white rounded-3xl border border-zinc-100 overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col">
                 <div class="h-40 overflow-hidden relative">
-                    <img src="{{ ob.image or 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80' }}" alt="{{ ob.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <img loading="lazy" src="{{ ob.image or 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80' }}" alt="{{ ob.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
                 </div>
                 <div class="p-5 flex-1 flex flex-col">
@@ -238,9 +238,9 @@
             <div class="mt-16 text-center">
                 <div class="inline-flex flex-col sm:flex-row items-center gap-6 p-4 bg-[#F0FDF4] rounded-full border border-emerald-100 shadow-sm">
                     <div class="flex -space-x-3 px-4">
-                        <img src="/static/assets/rita.png" alt="Rita" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
-                        <img src="/static/assets/rubel.png?v=2" alt="Rubel" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
-                        <img src="/static/assets/lisa.png" alt="Lisa" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                        <img loading="lazy" src="/api/users/1/avatar" alt="User" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
+                        <img loading="lazy" src="/api/users/2/avatar" alt="User" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
+                        <img loading="lazy" src="/api/users/3/avatar" alt="User" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
                         <div class="w-10 h-10 rounded-full border-2 border-white bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black shadow-sm">+99</div>
                     </div>
                     <p class="text-sm font-bold text-zinc-700 leading-tight">
