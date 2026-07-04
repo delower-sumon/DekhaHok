@@ -10,6 +10,8 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **X (Twitter) Logo SVG**: Injected a clean inline SVG for the X logo to bypass FontAwesome version limitations on older loaded CDNs, ensuring full cross-platform icon rendering.
 
 ### Changed
+- **Footer Social Link Update**: Updated X (Twitter) social redirect link to `https://x.com/dekhahok` with `target="_blank"` across all platform footers.
+- **Footer Tagline Recolor**: Changed the CSS text color of the `"Beyond the digital bubble."` tagline from `text-zinc-500` to `text-sky-400` in the footer of all standard pages to match the diamond blue heart icon's color.
 - **Founding 100 Badge Position**: Realigned the "Founding 100" tag to sit on the top-left corner (`left-1.5`) of the host's profession badge, matching the vertical text baseline and preventing left-border avatar overlap.
 - **Cover Image Hidden Input Validation Fix**: Removed the HTML5 `required` attribute from the hidden file upload element (`#ev-image`) in `host_event_create.html`. This allows JavaScript to capture form validation errors gracefully, showing the user-facing warning text rather than throwing browser focus exceptions.
 - **Updated Bengali Safety Copy**: Refined the Bengali terminology in participant booking (`booking.html`) and host onboarding application (`host_apply.html`) terms.
