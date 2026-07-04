@@ -164,7 +164,7 @@
                 <div>
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Event Cover Image *</label>
                     <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-2xl p-6 text-center hover:bg-zinc-50 transition-colors" onclick="document.getElementById('ev-image').click()">
-                        <input type="file" id="ev-image" accept="image/*" required class="hidden" onchange="previewImage(event)">
+                        <input type="file" id="ev-image" accept="image/*" class="hidden" onchange="previewImage(event)">
                         
                         <div id="image-upload-prompt" class="space-y-2 pointer-events-none">
                             <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl">
@@ -252,6 +252,14 @@
                         <span class="text-[10px] text-zinc-400 mt-1 block">Paste a link to a YouTube video showcasing your event or experience.</span>
                     </div>
                 </div>
+
+                <label class="flex items-start gap-3 mt-6 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100/50 cursor-pointer group">
+                    <input type="checkbox" id="event-safety-ack" class="mt-1 w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500 flex-shrink-0 cursor-pointer">
+                    <span class="text-[11px] text-zinc-600 leading-relaxed font-medium group-hover:text-zinc-800 transition-colors">
+                        <span class="sr-only">I verify that all details of this event are accurate and I am committed to providing an exceptional and safe experience for participants. I agree to comply with DekhaHok's guidelines and Host Code of Conduct.</span>
+                        আমি নিশ্চিত করছি যে এই ইভেন্টের সমস্ত বিবরণ সঠিক এবং আমি অংশগ্রহণকারীদের জন্য একটি নিরাপদ ও চমৎকার অভিজ্ঞতা নিশ্চিত করতে প্রতিজ্ঞাবদ্ধ। আমি দেখা হোক-এর নীতিসমূহ এবং হোস্ট কোড অফ কন্ডাক্ট মেনে চলব। <span class="text-rose-500 font-bold">*</span>
+                    </span>
+                </label>
 
                 <div id="submit-error" class="hidden bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold p-3 rounded-xl text-center"></div>
 
@@ -440,6 +448,15 @@
 
         if (!eventImageBase64) {
             errorEl.innerText = "Please upload an event cover image.";
+            errorEl.classList.remove('hidden');
+            btn.disabled = false;
+            btn.innerHTML = "Submit for Review";
+            return;
+        }
+
+        const safetyAck = document.getElementById('event-safety-ack').checked;
+        if (!safetyAck) {
+            errorEl.innerText = "You must agree to the hosting guidelines and verify event details to proceed.";
             errorEl.classList.remove('hidden');
             btn.disabled = false;
             btn.innerHTML = "Submit for Review";

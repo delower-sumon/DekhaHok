@@ -241,8 +241,8 @@
             <div
                 class="bg-amber-50 text-amber-800 p-4 rounded-xl text-xs flex items-start gap-3 border border-amber-100 mb-6">
                 <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-600"></i>
-                <p><strong>Anti-Flake Policy:</strong> Tickets are non-refundable within 48 hours of the event to ensure
-                    group sizing and host preparation.</p>
+                <p><span class="sr-only">Anti-Flake Policy: Tickets are non-refundable within 48 hours of the event to ensure
+                    group sizing and host preparation.</span>গ্রুপ সাইজ ও হোস্টের প্রস্তুতি নিশ্চিত করতে ইভেন্টের ৪৮ ঘণ্টার মধ্যে টিকিট অফেরতযোগ্য।</p>
             </div>
 
             <!-- Qty Selector -->
@@ -340,7 +340,7 @@
                 <input type="checkbox" id="safety-ack" class="mt-1 w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500 flex-shrink-0 cursor-pointer">
                 <span class="text-[11px] text-zinc-600 leading-relaxed font-medium group-hover:text-zinc-800 transition-colors">
                     <span class="sr-only">I understand that DekhaHok is a community platform. I will respect other participants, follow the host's guidelines, and help maintain a safe and welcoming environment. I understand that abusive behavior may result in suspension of my account.</span>
-                    আমি বুঝতে পারছি যে দেখা হোক একটি কমিউনিটি প্ল্যাটফর্ম। আমি অন্যান্য অংশগ্রহণকারীদের সম্মান করব, হোস্টের নির্দেশিকা মেনে চলব এবং একটি নিরাপদ ও স্বাগত পরিবেশ বজায় রাখতে সাহায্য করব। আমি বুঝতে পারছি যে আপত্তিকর আচরণের ফলে আমার অ্যাকাউন্ট স্থগিত হতে পারে। <span class="text-rose-500 font-bold">*</span>
+                    আমি বুঝতে পারছি যে দেখা হোক একটি কমিউনিটি প্ল্যাটফর্ম। আমি অংশগ্রহণকারীদের সম্মান করব, হোস্টের নির্দেশিকা মেনে চলব এবং একটি সৌহার্দ্যপূর্ণ পরিবেশ বজায় রাখতে সাহায্য করব। আমি বুঝতে পারছি যে আপত্তিকর আচরণের ফলে আমার অ্যাকাউন্ট স্থগিত হতে পারে। <span class="text-rose-500 font-bold">*</span>
                 </span>
             </label>
 
@@ -468,7 +468,7 @@
             document.getElementById('b-event-host-name').textContent = `By ${selectedEvent.host_name.split(' ')[0]}`;
             if (selectedEvent.host_profession) {
                 if (selectedEvent.host_is_founding) {
-                    document.getElementById('b-event-host-profession-container').innerHTML = `<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2.5 -right-2.5 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[6.5px] font-black px-1 py-[1px] rounded-[3px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">${selectedEvent.host_profession}</span></div>`;
+                    document.getElementById('b-event-host-profession-container').innerHTML = `<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2.5 left-1.5 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[6.5px] font-black px-1 py-[1px] rounded-[3px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">${selectedEvent.host_profession}</span></div>`;
                 } else {
                     document.getElementById('b-event-host-profession').textContent = selectedEvent.host_profession;
                 }
