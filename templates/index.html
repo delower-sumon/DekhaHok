@@ -3,8 +3,6 @@
 {% block title %}DekhaHok • Social Community & Services{% endblock %}
 
 {% block extra_head %}
-<!-- Leaflet Maps CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     /* Styling for the hero stage nodes and paths */
     #connection-svg {
@@ -47,7 +45,10 @@
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     Beyond the digital bubble.
                 </div>
-                <h1
+                <!-- SEO: Clean concise H1 for search engines -->
+                <h1 class="sr-only">দেখা হোক — ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস</h1>
+                <!-- Visual hero heading (animated, purely presentational) -->
+                <div aria-hidden="true"
                     class="bengali text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-4 text-zinc-900">
                     দেখা হোক,
                     <div class="dropping-texts text-emerald-700">
@@ -58,7 +59,7 @@
                         <div>হবি ও টিমওয়ার্ক<span class="sr-only">, Hobby & Teamwork</span></div>
                         <div>ট্রাভেল<span class="sr-only">, Travel</span></div>
                     </div>
-                </h1>
+                </div>
                 <p
                     class="bengali text-2xl sm:text-3xl lg:text-[2.5rem] font-black leading-snug mb-5 max-w-2xl tracking-tight">
                     <span class="premium-gradient-text py-2">সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।</span>
@@ -134,7 +135,7 @@
                         <div class="bg-white p-6 rounded-3xl shadow-2xl border-2 border-emerald-100 text-center w-56">
                             <div
                                 class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3 overflow-hidden">
-                                <img id="venue-event-img" src="" alt=""
+                                <img loading="lazy" id="venue-event-img" src="" alt=""
                                     class="w-full h-full object-cover rounded-full hidden">
                                 <i id="venue-map-pin" data-lucide="map-pin" class="w-6 h-6 text-emerald-700"></i>
                             </div>
@@ -574,33 +575,7 @@
         </div>
     </section>
 
-    <!-- Leaflet Map Integration -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-8 py-16 bg-white border-t border-zinc-100">
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-zinc-900 tracking-tight">Active Connection Hubs</h2>
-            <p class="text-zinc-500 text-sm mt-1">Explore verified cafes and meeting spaces across Dhaka.</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            <div id="map" class="lg:col-span-8 h-[400px] rounded-3xl border border-zinc-100 shadow-sm z-10"></div>
-            <div class="lg:col-span-4 bg-zinc-50 rounded-3xl p-6 flex flex-col justify-between">
-                <div class="space-y-4">
-                    <h3 class="font-bold text-zinc-800 text-lg">Network Coverage</h3>
-                    <div class="flex justify-between items-center py-2 border-b">
-                        <span class="text-zinc-500 text-sm">Meeting Areas</span>
-                        <span id="stat-areas" class="font-black text-emerald-700 text-base">8+</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b">
-                        <span class="text-zinc-500 text-sm">Active Cafes / Places</span>
-                        <span id="stat-points" class="font-black text-emerald-700 text-base">Loading...</span>
-                    </div>
-                </div>
-                <div class="mt-6 border-t border-zinc-200 pt-6">
-                    <p class="text-xs text-zinc-400 italic">Select any map pin to find location coordinates on Google
-                        Maps.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    
 
     <!-- Latest Blogs Section (Separate layout but previews) -->
     <section class="bg-zinc-50 py-10 border-t border-zinc-100">
@@ -623,7 +598,7 @@
                     <div>
                         <div class="h-44 overflow-hidden relative bg-zinc-100">
                             {% if b.image %}
-                            <img src="{{ b.image }}" alt="{{ b.image_alt or b.title }}"
+                            <img loading="lazy" src="{{ b.image }}" alt="{{ b.image_alt or b.title }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             {% else %}
                             <div
@@ -1627,7 +1602,7 @@
                 <div>
                     <!-- Image -->
                     <div class="h-48 relative bg-zinc-100 overflow-hidden">
-                        <img src="${e.image_url || 'https://picsum.photos/seed/' + e.id + '/600/400'}" alt="${e.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <img loading="lazy" src="${e.image_url || 'https://picsum.photos/seed/' + e.id + '/600/400'}" alt="${e.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">${e.package_tier}</span>
                     </div>
 
@@ -1643,7 +1618,7 @@
                         <!-- Host badge & Event Capacity -->
                         <div class="flex items-center justify-between pt-2 mt-2 border-t border-zinc-50">
                             <div class="flex items-center gap-2">
-                                <img src="${e.host_avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + e.host_name}" alt="${e.host_name}" class="w-7 h-7 rounded-full object-cover border border-zinc-100">
+                                <img loading="lazy" src="${e.host_avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + e.host_name}" alt="${e.host_name}" class="w-7 h-7 rounded-full object-cover border border-zinc-100">
                                 <div class="flex flex-col">
                                     <div class="flex items-center gap-1">
                                         <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
@@ -1909,59 +1884,6 @@
         } catch (err) { }
     }
 
-    // ── Map Points Loading ──────────────────────────────────────────────────────────
-    async function initMap() {
-        const map = L.map('map', {
-            zoomControl: false,
-            attributionControl: false
-        }).setView([23.8103, 90.4125], 12);
-
-        L.control.zoom({ position: 'topright' }).addTo(map);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        try {
-            const res = await fetch('/api/all-points');
-            const points = await res.json();
-
-            // Stats
-            document.getElementById('stat-points').textContent = points.length + ' Cafes';
-            const areaCount = [...new Set(points.map(p => p.location_id))].length;
-            document.getElementById('stat-areas').textContent = areaCount + '+ Areas';
-
-            points.forEach(p => {
-                if (p.latitude && p.longitude) {
-                    const isRestaurant = p.point_type === 'restaurant';
-                    const bgColor = isRestaurant ? '#10b981' : '#235540';
-
-                    const customIcon = L.divIcon({
-                        html: `
-                            <div class="relative group">
-                                <div class="flex items-center">
-                                   <div class="relative w-8 h-8 flex items-center justify-center">
-                                        <div class="absolute inset-0 bg-[${bgColor}] rounded-full rounded-bl-none rotate-[45deg] translate-y-[-2px] shadow-lg border-2 border-white"></div>
-                                        <div class="absolute w-2.5 h-2.5 bg-white rounded-full z-10 translate-y-[-2px]"></div>
-                                   </div>
-                                   <div class="ml-2 bg-white/95 backdrop-blur-sm border border-emerald-100 px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap transform transition-all group-hover:scale-105">
-                                        <p class="text-[10px] font-black text-gray-900 leading-none">${p.name}</p>
-                                   </div>
-                                </div>
-                            </div>
-                        `,
-                        className: 'custom-map-marker',
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 32]
-                    });
-
-                    const marker = L.marker([p.latitude, p.longitude], { icon: customIcon }).addTo(map);
-                    marker.on('click', () => {
-                        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + (p.area_name || '') + ', Dhaka')}`, '_blank');
-                    });
-                }
-            });
-        } catch (err) {
-            console.error('Map loading failed:', err);
-        }
-    }
 
 
 
@@ -2019,7 +1941,7 @@
     window.onload = async function () {
         await loadEvents();    // populate allEvents first
         startMotion();         // then start hero animation with real event images
-        initMap();
+        
 
         // Expand the first FAQ card by default
         const firstCard = document.querySelector('.faq-card');

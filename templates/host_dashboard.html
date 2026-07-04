@@ -32,7 +32,7 @@
             <!-- Sidebar Profile -->
             <div class="flex items-center gap-x-3 mb-8 pb-6 border-b">
                 <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg overflow-hidden border">
-                    <img id="dash-sidebar-profile-img" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}" class="w-full h-full object-cover">
+                    <img loading="lazy" id="dash-sidebar-profile-img" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <p class="font-bold text-sm text-zinc-800" id="dash-host-name">{{ user.name }}</p>
@@ -154,7 +154,7 @@
                 </a>
 
                 <div class="flex items-center gap-x-3 bg-white border border-zinc-200/60 rounded-full pl-2 pr-5 h-12 shadow-sm">
-                    <img id="dash-header-avatar" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}" alt="Host Profile"
+                    <img loading="lazy" id="dash-header-avatar" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}" alt="Host Profile"
                         class="w-8 h-8 rounded-full border border-emerald-500 object-cover flex-shrink-0">
                     <div class="text-left leading-tight">
                         <div id="dash-header-name" class="text-xs font-bold text-zinc-800">{{ user.name }}</div>

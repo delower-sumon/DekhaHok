@@ -2,6 +2,23 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-05] - SEO, Core Web Vitals & Accessibility Optimizations
+
+### Added
+- **Schema.org Structured Data**: Injected `Organization` schema directly into `base.html` for native Google Knowledge Graph rendering (including founding date, correct phone number, and synchronized social links). Added dynamic `Event` schema logic into `booking.html` for rich search results.
+- **Explicit Image Dimensions**: Added `width="140"` and `height="34"` to the main navbar branding logo in `base.html` to eliminate Cumulative Layout Shift (CLS).
+
+### Changed
+- **SEO Metadata**: Standardized the HTML `lang="bn"` attribute across all templates. Reformatted `<h1>` structures for optimal search engine crawling while retaining UI consistency.
+- **Resource Deferral & Script Loading**: Improved Time to First Byte (TTFB) by deferring non-critical scripts (`lucide.js`, `canvas-confetti.js`). Confined heavyweight `leaflet` mapping libraries exclusively to `index.html`.
+- **Accessibility (Touch Targets)**: Expanded all interactive icon-only button touch targets (Navbar Notifications, Profile, Mobile Menu, Footer Socials) to a minimum of `44x44px` to meet WCAG 2.1 mobile tap target standards. Enforced descriptive `aria-label` tags for screen readers across the application.
+- **Image Formats & Lazy Loading**: Converted heavy static assets (like `dekhahok_ui.png`) to lightweight `.webp` equivalents. Systematically applied `loading="lazy"` to all below-the-fold images across all templates.
+
+### Removed
+- **Unused Assets**: Permanently deleted unreferenced and oversized images (`blind_adda.jpeg`, `thelocal.jpg`, `sumon.png`, `dekhahok_ui.png`) from `static/assets/`.
+- **Demo Avatars**: Stripped static mockup user avatars (`rita`, `rubel`, `lisa`) and wired the affected components (`DekhaHok.html`, `blog_detail.html`) to live backend user profile API endpoints (`/api/users/X/avatar`).
+- **Homepage Map Section**: Removed the deprecated map visualization elements and initialization scripts from `index.html` per product requirements.
+
 ## [2026-07-04] - Safety Enhancements, Form Fixes & Footer Social Integration
 
 ### Added
