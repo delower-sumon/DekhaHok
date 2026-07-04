@@ -322,6 +322,21 @@
                 document.getElementById('image-preview-container').classList.remove('hidden');
                 document.getElementById('image-preview').src = existingData.image_url.startsWith('data:') ? existingData.image_url : `/api/events/${existingData.id}/image`;
             }
+            if(existingData.image_url_2) {
+                document.getElementById('prompt-2').classList.add('hidden');
+                document.getElementById('preview-container-2').classList.remove('hidden');
+                document.getElementById('preview-2').src = existingData.image_url_2.startsWith('data:') ? existingData.image_url_2 : `/api/events/${existingData.id}/image_2`;
+            }
+            if(existingData.image_url_3) {
+                document.getElementById('prompt-3').classList.add('hidden');
+                document.getElementById('preview-container-3').classList.remove('hidden');
+                document.getElementById('preview-3').src = existingData.image_url_3.startsWith('data:') ? existingData.image_url_3 : `/api/events/${existingData.id}/image_3`;
+            }
+            if(existingData.image_url_4) {
+                document.getElementById('prompt-4').classList.add('hidden');
+                document.getElementById('preview-container-4').classList.remove('hidden');
+                document.getElementById('preview-4').src = existingData.image_url_4.startsWith('data:') ? existingData.image_url_4 : `/api/events/${existingData.id}/image_4`;
+            }
         }
     };
 
