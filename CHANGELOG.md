@@ -2,6 +2,21 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-04] - Safety Enhancements, Form Fixes & Footer Social Integration
+
+### Added
+- **Event Creation Safety Terms**: Introduced a mandatory Bengali guidelines & safety checkbox to Step 3 of the Event Creation form (`host_event_create.html`). Hosts must acknowledge the terms to submit an event for review.
+- **Social Media Links in Footer**: Integrated a social links row with Facebook, Instagram, LinkedIn, YouTube, and X (Twitter) into the "Company" column of all standard platform footers (`base.html` and other standalone files).
+- **X (Twitter) Logo SVG**: Injected a clean inline SVG for the X logo to bypass FontAwesome version limitations on older loaded CDNs, ensuring full cross-platform icon rendering.
+
+### Changed
+- **Founding 100 Badge Position**: Realigned the "Founding 100" tag to sit on the top-left corner (`left-1.5`) of the host's profession badge, matching the vertical text baseline and preventing left-border avatar overlap.
+- **Cover Image Hidden Input Validation Fix**: Removed the HTML5 `required` attribute from the hidden file upload element (`#ev-image`) in `host_event_create.html`. This allows JavaScript to capture form validation errors gracefully, showing the user-facing warning text rather than throwing browser focus exceptions.
+- **Updated Bengali Safety Copy**: Refined the Bengali terminology in participant booking (`booking.html`) and host onboarding application (`host_apply.html`) terms.
+- **Payment Anti-Flake Bengali Notice**: Translated the anti-flake banner copy inside the booking checkout modal to Bengali, keeping the English text as `sr-only` for SEO and screen-reader accessibility.
+- **Official Handle Correction**: Fixed the official Instagram redirect URLs to `https://www.instagram.com/dekha_hok` across all templates.
+
+
 ## [2026-07-03] - Community Safety, Founding 100 & Admin Badge System
 
 ### Added
