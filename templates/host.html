@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block title %}কমিউনিটি হোস্ট হোন • DekhaHok{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content="দেখা হোক-এর ভেরিফাইড হোস্ট হোন। লোকাল ট্র্যাভেল, নেটওয়ার্কিং ও কমিউনিটি ইভেন্ট আয়োজন করে ৭০%-৯০% পর্যন্ত রেভিনিউ আয় করুন।">
+    <link rel="canonical" href="https://dekhahok.com/host">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dekhahok.com/host">
+    <meta property="og:title" content="কমিউনিটি হোস্ট হোন • DekhaHok">
+    <meta property="og:description" content="দেখা হোক-এর ভেরিফাইড হোস্ট হোন। লোকাল ট্র্যাভেল, নেটওয়ার্কিং ও কমিউনিটি ইভেন্ট আয়োজন করে ৭০%-৯০% পর্যন্ত রেভিনিউ আয় করুন।">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
+{% endblock %}
+
+{% block content %}
+<!-- Host Showcase Hero (Light Theme with Soft Gradients) -->
+<section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/40 via-white to-zinc-50/50 pt-32 pb-20">
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-100/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-100/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 relative z-10 text-center space-y-6 md:space-y-8">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-black text-emerald-700 uppercase tracking-widest">
+            🌟 Join the Trust Layer
+        </div>
+        
+        <h1 class="bengali text-3xl sm:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-zinc-900 max-w-4xl mx-auto">
+            আপনার অভিজ্ঞতা শেয়ার করুন,<br>
+            <span class="bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">গড়ে তুলুন নিজস্ব কমিউনিটি!</span>
+        </h1>
+        
+        <p class="bengali text-zinc-600 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed font-medium">
+            দেখা হোক-এর ভেরিফাইড হোস্ট হিসেবে লোকাল আড্ডা, ক্রিয়েটিভ মিটআপ ও ট্র্যাভেল ইভেন্ট পরিচালনা করুন। কোনো মাসিক সাবস্ক্রিপশন ফি ছাড়াই আয় করুন আপনার প্রতিটি টিকিট বিক্রি থেকে।
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 pt-4 max-w-md mx-auto sm:max-w-none">
+            <a href="/host/apply" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-sm px-8 py-4 rounded-full shadow-md shadow-emerald-600/10 flex items-center justify-center gap-2">
+                আবেদন করুন <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+            <button onclick="document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' })" 
+                    class="w-full sm:w-auto bg-white border border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-zinc-700 font-bold text-sm px-8 py-4 rounded-full flex items-center justify-center gap-2 shadow-sm">
+                রেভিনিউ হিসাব করুন
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Grid (Light Theme & Soothing Layout) -->
+<section class="py-12 bg-white border-y border-zinc-100 text-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
+        <div class="space-y-1">
+            <p class="text-2xl sm:text-4xl font-black text-emerald-600">৭০% - ৯০%</p>
+            <p class="bengali text-[11px] font-bold text-zinc-500 uppercase tracking-wider mt-1">হোস্ট রেভিনিউ শেয়ার</p>
+        </div>
+        <div class="space-y-1">
+            <p class="text-2xl sm:text-4xl font-black text-emerald-700">১০০%</p>
+            <p class="bengali text-[11px] font-bold text-zinc-500 uppercase tracking-wider mt-1">ভেরিফাইড ওটিপি অডিয়েন্স</p>
+        </div>
+        <div class="space-y-1">
+            <p class="text-2xl sm:text-4xl font-black text-emerald-600">৳০</p>
+            <p class="bengali text-[11px] font-bold text-zinc-500 uppercase tracking-wider mt-1">মাসিক সেটআপ বা লিস্টিং ফি</p>
+        </div>
+        <div class="space-y-1">
+            <p class="text-2xl sm:text-4xl font-black text-emerald-700">১টি</p>
+            <p class="bengali text-[11px] font-bold text-zinc-500 uppercase tracking-wider mt-1">সেন্ট্রাল হোস্ট ড্যাশবোর্ড</p>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Income Calculator (Light Glass Theme) -->
+<section id="calculator-section" class="py-20 bg-zinc-50/50 border-b border-zinc-100 text-zinc-800 relative">
+    <div class="max-w-4xl mx-auto px-6 sm:px-8 relative z-10">
+        <div class="text-center mb-12">
+            <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Earnings Calculator</span>
+            <h2 class="bengali text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 mb-2">আপনি কত আয় করতে পারবেন?</h2>
+            <p class="bengali text-zinc-500 text-xs sm:text-sm">স্লাইডারগুলো পরিবর্তন করে আপনার সম্ভাব্য আয় প্রাক্কলন করুন।</p>
+        </div>
+
+        <!-- Calculator Card -->
+        <div class="bg-white border border-zinc-200/60 rounded-[2.5rem] p-6 sm:p-10 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-6">
+                <!-- Slider 1 -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="bengali text-xs font-bold text-zinc-700">টিকিটের মূল্য (৳)</label>
+                        <span id="calc-price-val" class="font-mono text-emerald-600 font-bold text-sm">৳ ৫০০</span>
+                    </div>
+                    <input type="range" id="calc-price" min="200" max="3000" step="50" value="500"
+                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                           oninput="calculateEarnings()">
+                    <div class="flex justify-between text-[10px] text-zinc-400 font-mono">
+                        <span>৳ ২০০</span>
+                        <span>৳ ৩,০০০</span>
+                    </div>
+                </div>
+
+                <!-- Slider 2 -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="bengali text-xs font-bold text-zinc-700">অংশগ্রহণকারীর সংখ্যা</label>
+                        <span id="calc-guests-val" class="font-mono text-emerald-600 font-bold text-sm">১৫ জন</span>
+                    </div>
+                    <input type="range" id="calc-guests" min="5" max="60" step="1" value="15"
+                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                           oninput="calculateEarnings()">
+                    <div class="flex justify-between text-[10px] text-zinc-400 font-mono">
+                        <span>৫ জন</span>
+                        <span>৬০ জন</span>
+                    </div>
+                </div>
+
+                <!-- Payout Percentage -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="bengali text-xs font-bold text-zinc-700">হোস্ট রেভিনিউ শেয়ারের হার</label>
+                        <span id="calc-share-val" class="font-mono text-emerald-600 font-bold text-sm">৮০%</span>
+                    </div>
+                    <input type="range" id="calc-share" min="70" max="90" step="5" value="80"
+                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                           oninput="calculateEarnings()">
+                    <div class="flex justify-between text-[10px] text-zinc-400 font-mono">
+                        <span>৭০%</span>
+                        <span>৯০%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Box -->
+            <div class="bg-gradient-to-br from-zinc-50 to-emerald-50/20 border border-zinc-150 rounded-3xl p-6 flex flex-col justify-between text-center space-y-4 shadow-inner">
+                <div class="space-y-1">
+                    <p class="bengali text-[10px] text-zinc-500 uppercase tracking-widest font-bold">আপনার সম্ভাব্য আয়</p>
+                    <p id="calc-earnings" class="font-mono text-4xl sm:text-5xl font-black text-emerald-600 tracking-tight">৳ ৬,০০০</p>
+                    <p class="bengali text-[10px] text-zinc-400 mt-1">প্রতি ইভেন্টে (ট্যাক্স ও পেমেন্ট গেটওয়ে চার্জ প্রযোজ্য)</p>
+                </div>
+                
+                <div class="border-t border-zinc-200/80 pt-4 space-y-3">
+                    <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                        বুকিং লজিস্টিকস, গেটওয়ে ম্যানেজমেন্ট ও গ্রাহক সেবা পরিচালনা করবে দেখা হোক টিম।
+                    </p>
+                    <a href="/host/apply" class="inline-block w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-xs py-3.5 rounded-2xl shadow shadow-emerald-600/10">
+                        হোস্ট আবেদন ফর্ম খুলুন
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Host Benefits Section (Visual Soothing Cards) -->
+<section class="py-20 bg-white text-zinc-800 relative">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+        <div class="text-center mb-16">
+            <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Host Benefits</span>
+            <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">কেন দেখা হোক-এর হোস্ট হবেন?</h2>
+            <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto mt-2 font-medium">আপনার ইভেন্ট ও অভিজ্ঞতা সহজে পরিচালনা করার জন্য প্রয়োজনীয় সকল প্রযুক্তিগত সাপোর্ট ও ফিচার নিয়ে এসেছি আমরা।</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <!-- Benefit 1 -->
+            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
+                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-user-check text-lg"></i>
+                </div>
+                <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">ভেরিফাইড মেম্বারস</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    অংশগ্রহণকারীদের এনআইডি (NID) এবং মোবাইল ওটিপি যাচাই নিশ্চিত করে আমরা ঢাকার সবচেয়ে বিশ্বস্ত মিটআপ নেটওয়ার্ক বজায় রাখি।
+                </p>
+            </div>
+
+            <!-- Benefit 2 -->
+            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
+                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-comments text-lg"></i>
+                </div>
+                <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">ইনস্ট্যান্ট গ্রুপ চ্যাট</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    টিকিট বিক্রির সাথে সাথে ভেরিফাইড টিকিট হোল্ডারদের জন্য চ্যাট রুম অ্যাক্টিভেট হয়। হোস্টের সাথে আলোচনা ও কোঅর্ডিনেশন অত্যন্ত সহজ।
+                </p>
+            </div>
+
+            <!-- Benefit 3 -->
+            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
+                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                </div>
+                <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">স্মার্ট হোস্ট ড্যাশবোর্ড</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    ইভেন্ট ভিউজ কাউন্টার, পেমেন্ট ট্র্যাকিং ও বুকিং লিস্ট সব দেখতে পাবেন একটি সহজ সেন্ট্রাল ড্যাশবোর্ড থেকে।
+                </p>
+            </div>
+
+            <!-- Benefit 4 -->
+            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
+                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-bolt text-lg"></i>
+                </div>
+                <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">উইকলি পে-আউট</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    আপনার উপার্জিত রেভিনিউ সাপ্তাহিক ভিত্তিতে সরাসরি ব্যাংক অ্যাকাউন্ট অথবা মোবাইল ব্যাংক (বিকাশ/রকেট) অ্যাকাউন্টে ট্র্যান্সফার করা হয়।
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Verified Hosts Section (Light Grid Layout) -->
+<section class="py-20 bg-zinc-50/50 text-zinc-800 relative">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
+        <div class="text-center mb-16">
+            <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Our Hosts</span>
+            <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">আমাদের ভেরিফাইড হোস্টদের সাথে পরিচিত হোন</h2>
+            <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto mt-2 font-medium">দেখা হোক-এ ইতিমধ্যে সক্রিয় এবং ভেরিফাইড কয়েকজন চমৎকার কমিউনিটি হোস্ট।</p>
+        </div>
+
+        {% if featured_hosts %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {% for h in featured_hosts %}
+            <div class="bg-white border border-zinc-200/70 rounded-[2.5rem] p-6 space-y-5 hover:shadow-lg transition-all flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <img src="{{ h.avatar_url }}" alt="{{ h.full_name }}" class="w-14 h-14 rounded-2xl object-cover border border-zinc-100 shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <h3 class="font-bold text-zinc-850 text-base leading-tight">{{ h.full_name }}</h3>
+                                {% if h.is_founding %}
+                                <span class="bg-emerald-50 text-emerald-700 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-emerald-200">Founding 100</span>
+                                {% endif %}
+                            </div>
+                            <p class="bengali text-[11px] font-bold text-zinc-400 mt-1">{{ h.profession or 'কমিউনিটি হোস্ট' }} • {{ h.operating_area or 'ঢাকা' }}</p>
+                        </div>
+                    </div>
+                    
+                    <p class="bengali text-xs text-zinc-600 leading-relaxed line-clamp-3 font-medium">
+                        {{ h.bio or 'দেখা হোক-এ বাস্তব আড্ডা ও ভ্রমণ পরিচালনার মাধ্যমে সক্রিয় একটি ভেরিফাইড অ্যাকাউন্ট।' }}
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-zinc-100 flex justify-between items-center mt-4">
+                    <span class="bg-zinc-50 text-zinc-500 text-[9px] font-black uppercase tracking-wider px-2.5 py-1.5 rounded-lg border">
+                        📂 {{ h.category or 'Community' }}
+                    </span>
+                    <span class="text-[10px] text-emerald-600 font-black flex items-center gap-1">
+                        <i class="fa-solid fa-circle-check"></i> Verified Host
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Mock Hosts fallbacks if none verified in DB -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Mock 1 -->
+            <div class="bg-white border border-zinc-200/70 rounded-[2.5rem] p-6 space-y-5 hover:shadow-lg transition-all flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center font-black text-xl border border-emerald-100">S</div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <h3 class="font-bold text-zinc-850 text-base leading-tight">সামিউল ইসলাম</h3>
+                                <span class="bg-emerald-50 text-emerald-700 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-emerald-200">Founding 100</span>
+                            </div>
+                            <p class="bengali text-[11px] font-bold text-zinc-400 mt-1">ফটোগ্রাফার • গুলশান, ঢাকা</p>
+                        </div>
+                    </div>
+                    <p class="bengali text-xs text-zinc-600 leading-relaxed font-medium">
+                        ঢাকার ভেতরে ট্র্যাভেল ফটোগ্রাফি ওয়াক এবং ক্যামেরা ক্রাফট ওয়ার্কশপ পরিচালনা করে থাকেন।
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-zinc-100 flex justify-between items-center mt-4">
+                    <span class="bg-zinc-50 text-zinc-500 text-[9px] font-black px-2.5 py-1.5 rounded-lg border">📂 Travel & Photo</span>
+                    <span class="text-[10px] text-emerald-600 font-black flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified Host</span>
+                </div>
+            </div>
+
+            <!-- Mock 2 -->
+            <div class="bg-white border border-zinc-200/70 rounded-[2.5rem] p-6 space-y-5 hover:shadow-lg transition-all flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-indigo-50 text-indigo-700 rounded-2xl flex items-center justify-center font-black text-xl border border-indigo-100">N</div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <h3 class="font-bold text-zinc-850 text-base leading-tight">নুসরাত জাহান</h3>
+                                <span class="bg-emerald-50 text-emerald-700 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-emerald-200">Founding 100</span>
+                            </div>
+                            <p class="bengali text-[11px] font-bold text-zinc-400 mt-1">যোগ প্রশিক্ষক • ধানমন্ডি, ঢাকা</p>
+                        </div>
+                    </div>
+                    <p class="bengali text-xs text-zinc-600 leading-relaxed font-medium">
+                        ওপেন-এয়ার মেডিটেশন, ইয়োগা ও মাইন্ডফুলনেস সেশন পরিচালনা করেন ধানমন্ডি লেকে।
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-zinc-100 flex justify-between items-center mt-4">
+                    <span class="bg-zinc-50 text-zinc-500 text-[9px] font-black px-2.5 py-1.5 rounded-lg border">📂 Health & Wellness</span>
+                    <span class="text-[10px] text-emerald-600 font-black flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified Host</span>
+                </div>
+            </div>
+
+            <!-- Mock 3 -->
+            <div class="bg-white border border-zinc-200/70 rounded-[2.5rem] p-6 space-y-5 hover:shadow-lg transition-all flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-amber-50 text-amber-700 rounded-2xl flex items-center justify-center font-black text-xl border border-amber-100">F</div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <h3 class="font-bold text-zinc-850 text-base leading-tight">ফারহান আহমেদ</h3>
+                                <span class="bg-emerald-50 text-emerald-700 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-emerald-200">Founding 100</span>
+                            </div>
+                            <p class="bengali text-[11px] font-bold text-zinc-400 mt-1">স্টার্টআপ মেন্টর • বনানী, ঢাকা</p>
+                        </div>
+                    </div>
+                    <p class="bengali text-xs text-zinc-600 leading-relaxed font-medium">
+                        বনানীর বিভিন্ন ক্যাফেতে স্টার্টআপ আড্ডা, আইডিয়া শেয়ারিং এবং টেক নেটওয়ার্কিং ইভেন্ট আয়োজন করে থাকেন।
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-zinc-100 flex justify-between items-center mt-4">
+                    <span class="bg-zinc-50 text-zinc-500 text-[9px] font-black px-2.5 py-1.5 rounded-lg border">📂 Business & Tech</span>
+                    <span class="text-[10px] text-emerald-600 font-black flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified Host</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Onboarding Process Section (Light Grid with Lines) -->
+<section class="py-20 bg-white text-zinc-800 relative border-t border-zinc-100">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+        <div class="text-center mb-16">
+            <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Roadmap</span>
+            <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">হোস্ট হওয়ার সহজ ধাপসমূহ</h2>
+            <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto mt-2 font-medium">আবেদন করা থেকে শুরু করে প্রথম পে-আউট পাওয়া পর্যন্ত প্রতিটি ধাপ অত্যন্ত স্বচ্ছ।</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 relative">
+            <!-- Step 1 -->
+            <div class="space-y-4 text-center md:text-left relative">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-250">
+                    ১
+                </div>
+                <h3 class="bengali text-lg font-bold text-zinc-900">আবেদন জমা দিন</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    আপনার জাতীয় পরিচয়পত্র (NID) ও প্রোফাইল তথ্য দিয়ে আবেদন ফর্মটি পূরণ করুন। আমাদের টিম ২৪ ঘণ্টার মধ্যে তা যাচাই করবে।
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="space-y-4 text-center md:text-left relative">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-250">
+                    ২
+                </div>
+                <h3 class="bengali text-lg font-bold text-zinc-900">ইভেন্ট তৈরি ও প্রকাশ করুন</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    অনুমোদন পাওয়ার পর আপনার ড্যাশবোর্ড থেকে ইভেন্টের বিস্তারিত বিবরণ, টিকিটের মূল্য এবং ছবি দিয়ে ইভেন্ট পাবলিশ করুন।
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="space-y-4 text-center md:text-left relative">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-250">
+                    ৩
+                </div>
+                <h3 class="bengali text-lg font-bold text-zinc-900">ইভেন্ট হোস্ট করুন ও আয় করুন</h3>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
+                    রেজিস্টার্ড সদস্যদের সাথে ইভেন্ট সফলভাবে সম্পন্ন করুন এবং আপনার রেভিনিউ শেয়ারের অর্থ সরাসরি বিকাশ বা ব্যাংকে বুঝে নিন।
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section (Visual Soothing Light Mode CTA) -->
+<section class="py-20 bg-zinc-50/50 text-zinc-800 relative border-t border-zinc-100">
+    <div class="max-w-4xl mx-auto px-6 sm:px-8 text-center relative z-10 space-y-6">
+        <h2 class="bengali text-2xl sm:text-4xl font-black text-zinc-900 leading-tight">বাস্তব অভিজ্ঞতার মাধ্যমে নতুন সংযোগ গড়ে তুলুন!</h2>
+        <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-medium">
+            ঢাকার সামাজিক মেলবন্ধন ও ভ্রমণ অভিজ্ঞতাকে এক নতুন উচ্চতায় নিয়ে যেতে আমাদের সাথে যোগ দিন। আজই হোস্ট হিসেবে আবেদন করুন।
+        </p>
+        <div class="pt-4">
+            <a href="/host/apply" class="inline-block bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-sm px-10 py-4 rounded-full shadow-md shadow-emerald-600/10">
+                হোস্ট আবেদন ফর্ম পূরণ করুন
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function calculateEarnings() {
+        const price = parseInt(document.getElementById('calc-price').value, 10);
+        const guests = parseInt(document.getElementById('calc-guests').value, 10);
+        const share = parseInt(document.getElementById('calc-share').value, 10) / 100;
+
+        document.getElementById('calc-price-val').textContent = `৳ ${price.toLocaleString()}`;
+        document.getElementById('calc-guests-val').textContent = `${guests} জন`;
+        document.getElementById('calc-share-val').textContent = `${Math.round(share * 100)}%`;
+
+        const totalRevenue = price * guests;
+        const hostEarnings = Math.round(totalRevenue * share);
+
+        document.getElementById('calc-earnings').textContent = `৳ ${hostEarnings.toLocaleString()}`;
+    }
+
+    // Run initial calculation
+    calculateEarnings();
+</script>
+{% endblock %}

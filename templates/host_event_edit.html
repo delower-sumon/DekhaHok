@@ -2,6 +2,11 @@
 
 {% block title %}Edit Event • DekhaHok{% endblock %}
 
+{% block seo_meta %}
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://dekhahok.com/host/events/{{ event.id }}/edit">
+{% endblock %}
+
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-12">
     <a href="/host/dashboard" class="flex items-center gap-2 text-zinc-400 hover:text-emerald-700 mb-8 transition-all font-medium text-sm">
@@ -55,7 +60,6 @@
                         <option value="travel">🌿 Travel & Nature Escapes</option>
                         <option value="creative-workshops">🎨 Creative Workshops</option>
                         <option value="city-exploration">🚶 City Exploration</option>
-                        <option value="professional">💼 Professional Services</option>
                         <option value="other">✨ Other</option>
                     </select>
                 </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}দেখা হোক | ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস।{% endblock %}</title>
+    <title>{% block title %}দেখা হোক | কমিউনিটি ইভেন্ট, নেটওয়ার্কিং ও ট্র্যাভেল{% endblock %}</title>
     <link rel="icon" type="image/png" href="/static/favicon.png">
 
     <!-- Preconnect to CDNs for faster DNS lookup -->
@@ -85,18 +85,18 @@
 
     {% block seo_meta %}
     <meta name="description"
-        content="লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।">
+        content="লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।">
     <link rel="canonical" href="{% block canonical_url %}https://dekhahok.com/{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{% block og_url %}https://dekhahok.com/{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}দেখা হোক | ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস।{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}দেখা হোক | কমিউনিটি ইভেন্ট, নেটওয়ার্কিং ও ট্র্যাভেল{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।{% endblock %}">
     <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://dekhahok.com/">
-    <meta name="twitter:title" content="দেখা হোক | ইভেন্ট, নেটওয়ার্কিং ও প্রফেশনাল সার্ভিসেস।">
-    <meta name="twitter:description" content="লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।">
+    <meta name="twitter:title" content="দেখা হোক | কমিউনিটি ইভেন্ট, নেটওয়ার্কিং ও ট্র্যাভেল">
+    <meta name="twitter:description" content="লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।">
     <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
     
     <script type="application/ld+json">
@@ -107,7 +107,7 @@
       "alternateName": "দেখা হোক",
       "url": "https://dekhahok.com",
       "logo": "https://dekhahok.com/static/assets/dekhahok_bn.svg",
-      "description": "লোকাল কমিউনিটি, প্রফেশনাল সার্ভিসেস, ক্রিয়েটিভ ইভেন্টস এবং ট্যুরের মাধ্যমে বাস্তব অভিজ্ঞতা ও নেটওয়ার্কিং। দেখা হোক।",
+      "description": "লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।",
       "foundingDate": "2026",
       "areaServed": "BD",
       "contactPoint": {
@@ -235,7 +235,7 @@
                     </div>
 
                     {% if not user or user.role == 'user' %}
-                    <a href="/host/apply"
+                    <a href="/host"
                         class="px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold bg-white border border-emerald-200 hover:border-emerald-300 transition-colors rounded-3xl flex items-center gap-x-2 shadow-sm text-zinc-700 hover:text-emerald-700">
                         <i class="fa-solid fa-leaf text-emerald-600"></i>
                         <span class="hidden sm:inline">Become a Host</span>
@@ -517,9 +517,8 @@
                     </div>
                     <p class="text-emerald-400 text-[10px] tracking-wide mt-1">Beyond the digital bubble.</p>
                     <p class="text-zinc-400 text-xs sm:text-sm mt-3 mb-2">
-                        <span class="sr-only">Meet professionals, creators and communities through real
-                            activities.</span>
-                        সোশাল কমিউনিটি ও প্রফেশনাল সার্ভিসেস।
+                        <span class="sr-only">Bangladesh's marketplace for verified hosts, community events, and travel.</span>
+                        কমিউনিটি ইভেন্ট, ভেরিফাইড হোস্ট ও ট্র্যাভেল।
                     </p>
 
                 </div>
@@ -530,7 +529,7 @@
                     <ul class="space-y-2.5 text-xs text-zinc-400">
                         <li><a href="/#catalog-section" class="hover:text-emerald-400 transition">Discover
                                 Experiences</a></li>
-                        <li><a href="/host/apply" class="hover:text-emerald-400 transition">Become a Host</a></li>
+                        <li><a href="/host" class="hover:text-emerald-400 transition">Become a Host</a></li>
                         <li><a href="/blog" class="hover:text-emerald-400 transition">Read Blog</a></li>
                         <li><a href="/partnership" class="hover:text-emerald-400 transition">Partner with Us</a></li>
                     </ul>

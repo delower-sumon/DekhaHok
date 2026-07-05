@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ blog.title }} | DekhaHok • Social Community & Professional Services{% endblock %}
+{% block title %}{{ blog.title }} | DekhaHok • কমিউনিটি ইভেন্ট ও ট্র্যাভেল{% endblock %}
 
 {% block seo_meta %}
     <meta name="description" content="{{ blog.seo_description or 'দেখা হোকের ব্লগ - ঢাকার সামাজিক জীবন, নিরাপদ মিটআপ ও কমিউনিটি গল্প।' }}">
@@ -9,7 +9,7 @@
     <link rel="canonical" href="https://dekhahok.com/blog/{{ blog.slug }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{{ blog.title }} | DekhaHok • Social Community & Professional Services">
+    <meta property="og:title" content="{{ blog.title }} | DekhaHok • কমিউনিটি ইভেন্ট ও ট্র্যাভেল">
     <meta property="og:description" content="{{ blog.seo_description or 'দেখা হোকের ব্লগ থেকে পড়ুন।' }}">
     <meta property="og:image" content="{{ blog.image_url or 'https://dekhahok.com/static/assets/og-default.jpg' }}">
     <meta property="og:type" content="article">
@@ -219,36 +219,23 @@
     </section>
     {% endif %}
 
-    <!-- Reviews Section -->
-    <section id="reviews" class="py-10 bg-white relative overflow-hidden mt-8">
+    <!-- Join Next Event CTA Section -->
+    <section class="py-10 bg-white relative overflow-hidden mt-8">
         <div class="absolute top-0 left-1/4 w-96 h-96 bg-emerald-50 rounded-full blur-[120px] opacity-60"></div>
         <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-50 rounded-full blur-[120px] opacity-60"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <span class="px-4 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-100 mb-6 inline-block">Real Experiences</span>
-                <h2 class="text-3xl md:text-4xl font-black text-zinc-900 mb-6 tracking-tight">আপনার মতো আরো অনেকের <span class="gradient-text">গল্প</span></h2>
-                <p class="text-zinc-500 max-w-2xl mx-auto font-medium text-base">দেখা হোক-এর মাধ্যমে নতুন বন্ধু খুঁজে পাওয়া এবং মজার সব আড্ডার অভিজ্ঞতা।</p>
-            </div>
-
-            <div id="reviewsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Populated by JS -->
-            </div>
-
-            <div class="mt-16 text-center">
-                <div class="inline-flex flex-col sm:flex-row items-center gap-6 p-4 bg-[#F0FDF4] rounded-full border border-emerald-100 shadow-sm">
-                    <div class="flex -space-x-3 px-4">
-                        <img loading="lazy" src="/api/users/1/avatar" alt="User" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
-                        <img loading="lazy" src="/api/users/2/avatar" alt="User" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
-                        <img loading="lazy" src="/api/users/3/avatar" alt="User" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" onerror="this.src='/static/assets/placeholder.jpg'">
-                        <div class="w-10 h-10 rounded-full border-2 border-white bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black shadow-sm">+99</div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-[2.5rem] p-8 sm:p-12 text-white shadow-xl relative overflow-hidden text-center sm:text-left">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+                <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8">
+                    <div class="space-y-4 max-w-xl">
+                        <span class="inline-block bg-white/20 text-white text-[10px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider">🌟 পরবর্তী আয়োজন</span>
+                        <h2 class="text-3xl font-black tracking-tight leading-tight">ডিজিটাল লাইফের বাইরে আমাদের পরবর্তী ইভেন্টে যোগ দিন!</h2>
+                        <p class="text-emerald-100 text-sm leading-relaxed">বাস্তব মানুষের সাথে আড্ডা, নেটওয়ার্কিং এবং অ্যাডভেঞ্চার উপভোগ করুন। কোনো সাবস্ক্রিপশন ফি ছাড়াই বুক করুন আপনার পছন্দের ইভেন্ট।</p>
                     </div>
-                    <p class="text-sm font-bold text-zinc-700 leading-tight">
-                        আমাদের ৫০০+ মেম্বারসরা কি বলছেন দেখুন...
-                    </p>
-                    <a href="https://facebook.com/dekhahok/reviews" target="_blank" class="px-8 py-3 bg-white text-emerald-600 border border-emerald-200 rounded-full font-black text-sm hover:bg-emerald-50 transition-all shadow-sm">
-                        সব রিভিউ দেখুন
-                    </a>
+                    <div class="shrink-0 w-full sm:w-auto">
+                        <a href="/#catalog-section" class="inline-block w-full sm:w-auto text-center bg-white text-emerald-800 hover:bg-zinc-100 transition-all px-8 py-4 rounded-full font-black text-sm uppercase tracking-wider shadow-lg">ইভেন্টগুলো দেখুন</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -314,7 +301,7 @@
                 
                 return `
                 <div class="comment-card bg-white rounded-2xl p-5 border border-zinc-100 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
+                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-black text-sm">
                             ${c.user_name.charAt(0).toUpperCase()}
                         </div>
@@ -322,8 +309,8 @@
                             <p class="font-bold text-zinc-900 text-sm">${c.user_name}</p>
                             <p class="text-[10px] text-zinc-400">${timeStr}</p>
                         </div>
-                    </div>
-                    <p class="text-zinc-700 text-sm leading-relaxed">${c.comment}</p>
+                     </div>
+                     <p class="text-zinc-700 text-sm leading-relaxed">${c.comment}</p>
                 </div>
                 `;
             }).join('');
@@ -356,49 +343,6 @@
         btn.disabled = false;
     }
 
-    async function fetchPublicReviews() {
-        const grid = document.getElementById('reviewsGrid');
-        if (!grid) return;
-        try {
-            const res = await fetch('/api/public/reviews');
-            const reviews = await res.json();
-            if (!reviews || reviews.length === 0) {
-                grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-zinc-400 font-bold uppercase tracking-widest">শীঘ্রই নতুন রিভিউ আসছে!</p></div>';
-                return;
-            }
-            const stars = n => '<i data-lucide="star" class="w-3.5 h-3.5 text-amber-400 fill-current"></i>'.repeat(n) + '<i data-lucide="star" class="w-3.5 h-3.5 text-zinc-200 fill-current"></i>'.repeat(5 - n);
-            grid.innerHTML = reviews.map((r, idx) => `
-                <div class="bg-white rounded-[2.5rem] p-8 border border-zinc-100 shadow-sm hover:shadow-xl hover:border-emerald-100 transition-all duration-300 relative group scroll-reveal active" style="--stagger-delay: ${idx * 0.1}s">
-                    <div class="absolute -top-3 -left-3 w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-zinc-50 transform -rotate-6 group-hover:rotate-0 transition-transform">
-                        <i data-lucide="quote" class="w-6 h-6 text-emerald-500 opacity-20"></i>
-                    </div>
-                    <div class="flex items-center gap-0.5 mb-4 text-xl">${stars(r.score)}</div>
-                    <p class="text-zinc-700 text-base leading-relaxed mb-6 font-medium italic">&ldquo;${r.comment}&rdquo;</p>
-                    <div class="flex items-center gap-3 pt-4 border-t border-dashed border-zinc-100">
-                        <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100">
-                            <span class="text-xs font-black text-emerald-700">${r.name.charAt(0).toUpperCase()}</span>
-                        </div>
-                        <div>
-                            <p class="font-bold text-zinc-900 text-sm">${r.name.split(' ')[0]}*** ${r.age ? '(' + r.age + ')' : ''}</p>
-                            <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">${r.venue || 'DekhaHok Event'}</p>
-                        </div>
-                        <div class="ml-auto">
-                            <span class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 rounded-full text-[9px] font-black text-emerald-700 uppercase tracking-widest shadow-sm border border-emerald-100">
-                                <i data-lucide="check-circle-2" class="w-2.5 h-2.5"></i>
-                                Verified
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        } catch (e) {
-            console.error('Review fetch error:', e);
-            grid.innerHTML = '<p class="col-span-full text-center text-zinc-400 py-10">রিভিউ লোড করা সম্ভব হয়নি।</p>';
-        }
-    }
-
-    fetchPublicReviews();
     loadComments();
 </script>
 {% endblock %}

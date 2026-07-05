@@ -393,6 +393,49 @@ def serve_booking_page(request: Request, event_id: int):
     })
 
 
+@app.get("/host", include_in_schema=False)
+def serve_host_landing(request: Request):
+    dh_session = request.cookies.get("dh_session")
+    user = None
+    if dh_session:
+        user = get_current_user(dh_session)
+        
+    conn = get_conn()
+    featured_hosts = []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT h.id, u.full_name, u.avatar_url, h.profession, h.operating_area, h.bio, h.is_founding, u.id
+            FROM hosts h
+            JOIN users u ON h.user_id = u.id
+            WHERE h.verification_status = 'VERIFIED'
+            ORDER BY h.id DESC
+            LIMIT 6
+        """)
+        rows = cursor.fetchall()
+        for r in rows:
+            featured_hosts.append({
+                "id": r[0],
+                "full_name": r[1],
+                "avatar_url": r[2] or f"/api/users/{r[7]}/avatar",
+                "profession": r[3],
+                "operating_area": r[4],
+                "bio": r[5],
+                "is_founding": r[6]
+            })
+        cursor.close()
+    except Exception as e:
+        print(f"Error serving host landing: {e}")
+    finally:
+        release_conn(conn)
+        
+    return templates.TemplateResponse("host.html", {
+        "request": request,
+        "user": user,
+        "featured_hosts": featured_hosts
+    })
+
+
 @app.get("/host/apply", include_in_schema=False)
 def serve_host_apply(request: Request):
     dh_session = request.cookies.get("dh_session")

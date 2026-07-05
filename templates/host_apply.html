@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Become a Host • DekhaHok{% endblock %}
+{% block title %}Host হিসেবে আবেদন করুন • DekhaHok{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content="দেখা হোকে হোস্ট হিসেবে আবেদন করুন — ভেরিফাইড হোস্ট হয়ে কমিউনিটি ইভেন্ট আয়োজন করুন এবং রেভিনিউ শেয়ার করুন।">
+    <link rel="canonical" href="https://dekhahok.com/host/apply">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dekhahok.com/host/apply">
+    <meta property="og:title" content="Host হিসেবে আবেদন করুন • DekhaHok">
+    <meta property="og:description" content="দেখা হোকে হোস্ট হিসেবে আবেদন করুন — কমিউনিটি ইভেন্ট আয়োজন করুন এবং রেভিনিউ শেয়ার করুন।">
+    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.webp">
+{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-12">
-    <a href="/"
+    <a href="/host"
         class="flex items-center gap-2 text-zinc-400 hover:text-emerald-700 mb-8 transition-all font-medium text-sm">
         <i class="fa-solid fa-arrow-left"></i>
-        <span>Back to Home</span>
+        <span>Back to Host Overview</span>
     </a>
 
     <h1 class="bengali text-3xl font-bold mb-2 text-zinc-900">
@@ -15,8 +25,8 @@
         <span class="sr-only">Become a Host</span>
     </h1>
     <p class="bengali text-zinc-500 mb-10 text-sm leading-relaxed">
-        বাস্তবমুখী ইভেন্ট আয়োজন, আপনার নিজস্ব কমিউনিটি তৈরি এবং নিয়মিত রেভিনিউ শেয়ার বুঝে নিতে দেখা হোক এ যোগ দিন।
-        <span class="sr-only">Organize real-world events, grow your community, and earn payouts.</span>
+        বাস্তবমুখী ইভেন্ট আয়োজন, আপনার নিজস্ব কমিউনিটি তৈরি এবং ইভেন্ট থেকে ৭০%-৯০% পর্যন্ত রেভিনিউ শেয়ার বুঝে নিতে আবেদন করুন।
+        <span class="sr-only">Organize real-world events, grow your community, and earn 70%-90% payouts.</span>
     </p>
 
     <!-- Progress Bar -->
@@ -29,212 +39,38 @@
             {% endif %}">
         </div>
 
-        <div
-            class="z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm">
+        <div id="progress-circle-1"
+            class="z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors">
             1</div>
-        <div
-            class="z-20 w-9 h-9 rounded-full {% if host %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm">
+        <div id="progress-circle-2"
+            class="z-20 w-9 h-9 rounded-full {% if host %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm transition-colors">
             2</div>
-        <div
-            class="z-20 w-9 h-9 rounded-full {% if host %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm">
+        <div id="progress-circle-3"
+            class="z-20 w-9 h-9 rounded-full {% if host %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm transition-colors">
             3</div>
-        <div
-            class="z-20 w-9 h-9 rounded-full {% if host and host.verification_status != 'PENDING' %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm">
+        <div id="progress-circle-4"
+            class="z-20 w-9 h-9 rounded-full {% if host and host.verification_status != 'PENDING' %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm transition-colors">
             4</div>
     </div>
 
     <!-- State Panels -->
     <div class="bg-white border border-zinc-200/80 rounded-[2rem] p-8 shadow-sm">
 
-        {% if not user %}
-        <!-- Redesigned Inline Auth Panel for Host Onboarding -->
-        <div class="max-w-md mx-auto space-y-6 py-4">
-            <!-- Logo Header -->
-            <div class="text-center space-y-4">
-                <div class="flex flex-col items-center justify-center gap-y-2 mb-2">
-                    <!-- Animated Connection Logo -->
-                    <svg class="h-[30px] md:h-[36px] w-[30px] md:w-[36px] flex-shrink-0" viewBox="0 0 100 100"
-                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Connection Lines (Thin and Black/Dark Zinc, Highly Curved) -->
-                        <path d="M 15 20 Q 10 48 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"
-                            stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
-                            <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s"
-                                repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </path>
-                        <path d="M 85 15 Q 75 45 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"
-                            stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
-                            <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s"
-                                repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </path>
-                        <path d="M 70 85 Q 80 70 50 50" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"
-                            stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
-                            <animate attributeName="stroke-dashoffset" values="100;0;0" keyTimes="0;0.7;1" dur="3s"
-                                repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </path>
-
-                        <!-- Converging Nodes (Highly Visible, Slide Along Curved Paths instantly) -->
-                        <circle cx="0" cy="0" r="8" fill="#10B981" opacity="0">
-                            <animateMotion path="M 15 20 Q 10 48 50 50" dur="3s" repeatCount="indefinite"
-                                keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
-                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </circle>
-                        <circle cx="0" cy="0" r="8" fill="#A855F7" opacity="0">
-                            <animateMotion path="M 85 15 Q 75 45 50 50" dur="3s" repeatCount="indefinite"
-                                keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
-                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </circle>
-                        <circle cx="0" cy="0" r="8" fill="#3B82F6" opacity="0">
-                            <animateMotion path="M 70 85 Q 80 70 50 50" dur="3s" repeatCount="indefinite"
-                                keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
-                            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.8;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </circle>
-
-                        <!-- Central Glow Core -->
-                        <circle cx="50" cy="50" r="10" fill="#10B981" opacity="0">
-                            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.75;0.9;1" dur="3s"
-                                repeatCount="indefinite" />
-                            <animate attributeName="r" values="5;10;10;5" keyTimes="0;0.65;0.75;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </circle>
-                        <!-- Expanding Pulse Wave -->
-                        <circle cx="50" cy="50" r="10" fill="none" stroke="#10B981" stroke-width="1.5" opacity="0">
-                            <animate attributeName="opacity" values="0;0;0.8;0" keyTimes="0;0.65;0.75;0.95" dur="3s"
-                                repeatCount="indefinite" />
-                            <animate attributeName="r" values="10;10;25;25" keyTimes="0;0.65;0.9;1" dur="3s"
-                                repeatCount="indefinite" />
-                        </circle>
-                    </svg>
-                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক"
-                        class="h-[28px] md:h-[34px] w-auto mx-auto" />
-                </div>
-                <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">
-                    লগইন বা সাইন-আপ করুন
-                    <span class="sr-only">Authentication Required</span>
-                </h2>
-                <p class="bengali text-xs text-zinc-500 leading-relaxed max-w-sm mx-auto">
-                    কমিউনিটি হোস্ট হিসেবে আবেদন করার জন্য অনুগ্রহ করে একটি অ্যাকাউন্ট তৈরি করুন অথবা আপনার অ্যাকাউন্টে
-                    সাইন-ইন করুন।
-                    <span class="sr-only">Please create an account or sign in first to submit your community host
-                        application.</span>
-                </p>
-            </div>
-
-            <!-- Google OAuth Authentication -->
-            <a href="/auth/google?next=/host/apply" id="apply-google-login-btn"
-                class="w-full flex items-center justify-center gap-3 border border-zinc-200 hover:border-emerald-500 bg-white hover:bg-emerald-50/20 py-3.5 rounded-2xl font-bold text-sm text-zinc-700 shadow-sm transition active:scale-95">
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
-                    <path fill="#4285F4"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                    <path fill="#EA4335"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                </svg>
-                <span>Continue with Google</span>
-            </a>
-
-            <!-- Separator -->
-            <div class="flex items-center gap-3 text-xs text-zinc-400 font-bold uppercase py-2">
-                <div class="h-[1px] flex-1 bg-zinc-100"></div>
-                <span>Or,</span>
-                <div class="h-[1px] flex-1 bg-zinc-100"></div>
-            </div>
-
-            <!-- Tab Controls -->
-            <div class="flex items-center gap-2 bg-zinc-100/60 border rounded-2xl p-1">
-                <button onclick="switchApplyAuthTab('login')" id="apply-btn-tab-login"
-                    class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm">
-                    Login
-                </button>
-                <button onclick="switchApplyAuthTab('signup')" id="apply-btn-tab-signup"
-                    class="flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600">
-                    Sign Up
-                </button>
-            </div>
-
-            <!-- Form Panels -->
-            <div>
-                <!-- Login Form -->
-                <form id="apply-auth-login-form" onsubmit="handleApplyLogin(event)" class="space-y-4">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Email Address</label>
-                        <input type="email" id="apply-login-email" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="name@domain.com">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Password</label>
-                        <input type="password" id="apply-login-password" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="••••••••">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-sm shadow-md transition active:scale-95">
-                        Log In
-                    </button>
-                </form>
-
-                <!-- Signup Form -->
-                <form id="apply-auth-signup-form" onsubmit="handleApplySignup(event)" class="space-y-4 hidden">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Full Name</label>
-                        <input type="text" id="apply-signup-name" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="e.g. Rahat Ahmed">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Email Address</label>
-                        <input type="email" id="apply-signup-email" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="yourmail@domain.com">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Phone Number (Optional)</label>
-                        <input type="tel" id="apply-signup-phone"
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="01XXXXXXXXX">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Password</label>
-                        <input type="password" id="apply-signup-password" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="Min 6 characters">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-sm shadow-md transition active:scale-95">
-                        Register Account
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        {% elif not host %}
-        <!-- Form Step 1: Submit Profile Details -->
+        {% if not host %}
+        <!-- Form Step 1: Submit Profile Details (Accessible to anyone) -->
         <div id="host-step-panel-1" class="space-y-6">
             <div>
                 <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 1: Tell us about yourself</h2>
                 <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">NID validation & category</p>
             </div>
 
-            <form onsubmit="goToStep2(event)" class="space-y-5">
+            <form onsubmit="handleStep1Submit(event)" class="space-y-5">
                 <div>
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">National Identity (NID) Number *</label>
                     <input type="text" id="host-nid" required pattern="^[0-9]{10,17}$"
                         class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
                         placeholder="e.g. 1999261827364536" title="NID must be between 10 and 17 digits">
-                    <span class="text-[9px] text-zinc-400 mt-1 block">Kept strictly confidential. Used only for
-                        background verification.</span>
+                    <span class="text-[9px] text-zinc-400 mt-1 block">Kept strictly confidential. Used only for background verification.</span>
                 </div>
 
                 <div>
@@ -265,8 +101,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Tell us about your community experience
-                        (optional)</label>
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Tell us about your community experience (optional)</label>
                     <textarea id="host-experience" rows="3"
                         class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none"
                         placeholder="Have you led photography walks or organized discussions before?"></textarea>
@@ -280,38 +115,136 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Official Portrait / Profile Photo
-                        *</label>
-                    <input type="file" id="host-avatar-file" accept="image/*" required
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Official Portrait / Profile Photo *</label>
+                    <input type="file" id="host-avatar-file" accept="image/*"
                         class="w-full px-4 py-2 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
-                    <span class="text-[9px] text-zinc-400 mt-1 block">A high-quality close-up profile photo is required
-                        to build trust with attendees.</span>
+                    <span class="text-[9px] text-zinc-400 mt-1 block">A high-quality close-up profile photo is required to build trust with attendees.</span>
+                    <input type="hidden" id="host-avatar-base64">
+                    <div id="avatar-preview-container" class="mt-2 hidden">
+                        <img id="avatar-preview-img" src="" class="w-16 h-16 rounded-xl object-cover border border-zinc-200">
+                    </div>
                 </div>
 
                 <div class="flex justify-end">
                     <button type="submit"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Next
-                        Step</button>
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Next Step</button>
                 </div>
             </form>
         </div>
 
-        <!-- Form Step 2: Policy & Revenue Agreement -->
+        <!-- Form Step 2: Inline Auth Panel (Only shown if user is NOT logged in when clicking next) -->
+        <div id="host-step-panel-auth" class="space-y-6 py-4 hidden">
+            <!-- Logo Header -->
+            <div class="text-center space-y-4">
+                <div class="flex flex-col items-center justify-center gap-y-2 mb-2">
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto mx-auto" />
+                </div>
+                <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">
+                    লগইন বা সাইন-আপ করুন
+                    <span class="sr-only">Authentication Required</span>
+                </h2>
+                <p class="bengali text-xs text-zinc-500 leading-relaxed max-w-sm mx-auto">
+                    হোস্ট আবেদন সংরক্ষণের জন্য একটি অ্যাকাউন্ট প্রয়োজন। অনুগ্রহ করে সাইন-ইন বা নতুন অ্যাকাউন্ট তৈরি করুন।
+                    <span class="sr-only">An account is required to save your host application. Please log in or sign up.</span>
+                </p>
+            </div>
+
+            <!-- Google OAuth Authentication -->
+            <a href="/auth/google?next=/host/apply" id="apply-google-login-btn"
+                class="w-full flex items-center justify-center gap-3 border border-zinc-200 hover:border-emerald-500 bg-white hover:bg-emerald-50/20 py-3.5 rounded-2xl font-bold text-sm text-zinc-700 shadow-sm transition active:scale-95">
+                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+                <span>Continue with Google</span>
+            </a>
+
+            <!-- Separator -->
+            <div class="flex items-center gap-3 text-xs text-zinc-400 font-bold uppercase py-2">
+                <div class="h-[1px] flex-1 bg-zinc-100"></div>
+                <span>Or,</span>
+                <div class="h-[1px] flex-1 bg-zinc-100"></div>
+            </div>
+
+            <!-- Tab Controls -->
+            <div class="flex items-center gap-2 bg-zinc-100/60 border rounded-2xl p-1">
+                <button onclick="switchApplyAuthTab('login')" id="apply-btn-tab-login"
+                    class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm">Login</button>
+                <button onclick="switchApplyAuthTab('signup')" id="apply-btn-tab-signup"
+                    class="flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600">Sign Up</button>
+            </div>
+
+            <!-- Form Panels -->
+            <div>
+                <!-- Login Form -->
+                <form id="apply-auth-login-form" onsubmit="handleApplyLogin(event)" class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-zinc-600">Email Address</label>
+                        <input type="email" id="apply-login-email" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+                            placeholder="name@domain.com">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-zinc-600">Password</label>
+                        <input type="password" id="apply-login-password" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+                            placeholder="••••••••">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-sm shadow-md transition active:scale-95">Log In</button>
+                </form>
+
+                <!-- Signup Form -->
+                <form id="apply-auth-signup-form" onsubmit="handleApplySignup(event)" class="space-y-4 hidden">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-zinc-600">Full Name</label>
+                        <input type="text" id="apply-signup-name" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+                            placeholder="e.g. Rahat Ahmed">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-zinc-600">Email Address</label>
+                        <input type="email" id="apply-signup-email" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+                            placeholder="yourmail@domain.com">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-zinc-600">Phone Number (Optional)</label>
+                        <input type="tel" id="apply-signup-phone"
+                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+                            placeholder="01XXXXXXXXX">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-zinc-600">Password</label>
+                        <input type="password" id="apply-signup-password" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
+                            placeholder="Min 6 characters">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-sm shadow-md transition active:scale-95">Register Account</button>
+                </form>
+            </div>
+            
+            <div class="flex justify-start border-t pt-5">
+                <button type="button" onclick="goToStep1()" class="px-5 py-2 border rounded-xl hover:bg-zinc-50 font-bold text-xs uppercase">Back</button>
+            </div>
+        </div>
+
+        <!-- Form Step 3: Policy & Revenue Agreement -->
         <div id="host-step-panel-2" class="space-y-6 hidden">
             <div>
-                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 2: Review Guidelines & Revenue</h2>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 3: Review Guidelines & Revenue</h2>
                 <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Taas partnership terms</p>
             </div>
 
             <div class="space-y-4 text-sm text-zinc-600">
                 <div class="bg-zinc-50 border p-5 rounded-2xl space-y-3">
-                    <h4 class="font-bold text-zinc-800 text-xs uppercase tracking-wider">🤝 Growth Partner Revenue Model
-                    </h4>
+                    <h4 class="font-bold text-zinc-800 text-xs uppercase tracking-wider">🤝 Growth Partner Revenue Model</h4>
                     <p class="text-xs text-zinc-600 leading-relaxed mt-2">
-                        Revenue share percentage will be finalized and agreed upon during the host verification process,
-                        and we also share generous revenue or profit. <br><br>
-                        <span class="font-bold">হোস্ট ভেরিফিকেশনের সময় রেভিনিউ শেয়ার বা পারিশ্রমিক মডেলটি আলোচনা করে
-                            নির্ধারণ করা হবে।</span>
+                        Revenue share percentage will be finalized and agreed upon during the host verification process. We share a generous 70% to 90% of ticket sales with our verified hosts.<br><br>
+                        <span class="font-bold">হোস্ট ভেরিফিকেশনের সময় ৭০%-৯০% রেভিনিউ শেয়ার বা পারিশ্রমিক মডেলটি আলোচনা করে নির্ধারণ করা হবে।</span>
                         <br><br>
                         • You focus on hosting amazing events.<br>
                         • We handle marketing, payment gateways, ticketing, and customer support.
@@ -319,35 +252,27 @@
                 </div>
 
                 <div class="bg-zinc-50 border p-5 rounded-2xl space-y-3">
-                    <h4 class="font-bold text-zinc-800 text-xs uppercase tracking-wider">🔒 Guidelines & Safety Rules
-                    </h4>
-                    <p class="text-xs">1. **Activity-focused, non-dating:** Meetups are built solely around shared
-                        experiences.</p>
-                    <p class="text-xs">2. **Zero tolerance for misconduct:** Verification will be suspended immediately
-                        if code of conduct is violated.</p>
+                    <h4 class="font-bold text-zinc-800 text-xs uppercase tracking-wider">🔒 Guidelines & Safety Rules</h4>
+                    <p class="text-xs">1. **Activity-focused, non-dating:** Meetups are built solely around shared experiences.</p>
+                    <p class="text-xs">2. **Zero tolerance for misconduct:** Verification will be suspended immediately if code of conduct is violated.</p>
                 </div>
 
                 <div class="flex items-center gap-2 pt-2">
-                    <input type="checkbox" id="host-agree"
-                        class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-zinc-300">
-                    <label for="host-agree" class="text-xs font-bold text-zinc-700">I agree to DekhaHok's Host Code of
-                        Conduct and Revenue Share Policy.</label>
+                    <input type="checkbox" id="host-agree" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-zinc-300">
+                    <label for="host-agree" class="text-xs font-bold text-zinc-700">I agree to DekhaHok's Host Code of Conduct and Revenue Share Policy.</label>
                 </div>
+                
                 <label class="flex items-start gap-3 mt-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100/50 cursor-pointer group">
                     <input type="checkbox" id="host-safety-ack" class="mt-1 w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500 flex-shrink-0 cursor-pointer">
                     <span class="text-[11px] text-zinc-600 leading-relaxed font-medium group-hover:text-zinc-800 transition-colors">
-                        <span class="sr-only">I understand that DekhaHok is a community platform. I will maintain professionalism, respect participant safety, and provide a welcoming environment. I understand that abusive behavior or repeated poor feedback may result in suspension of my host account.</span>
                         আমি বুঝতে পারছি যে দেখা হোক একটি কমিউনিটি প্ল্যাটফর্ম। আমি পেশাদারিত্ব বজায় রাখব, অংশগ্রহণকারীদের নিরাপত্তাকে সম্মান করব। আমি বুঝতে পারছি যে আপত্তিকর আচরণ বা খারাপ প্রতিক্রিয়ার ফলে আমার হোস্ট অ্যাকাউন্ট স্থগিত হতে পারে। <span class="text-rose-500 font-bold">*</span>
                     </span>
                 </label>
             </div>
 
             <div class="flex justify-between border-t pt-5">
-                <button onclick="goToStep1()"
-                    class="px-5 py-2 border rounded-xl hover:bg-zinc-50 font-bold text-xs uppercase">Back</button>
-                <button onclick="submitHostApplication()"
-                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Submit
-                    Application</button>
+                <button onclick="goToStep1()" class="px-5 py-2 border rounded-xl hover:bg-zinc-50 font-bold text-xs uppercase">Back</button>
+                <button onclick="submitHostApplication()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Submit Application</button>
             </div>
         </div>
 
@@ -355,12 +280,9 @@
         <!-- Verification Pending Panel -->
         <div class="text-center py-8 space-y-4">
             <span class="text-4xl animate-pulse">⏳</span>
-            <h2 class="text-xl font-bold text-zinc-800">Step 3: Verification Pending</h2>
-            <p class="text-zinc-500 text-xs max-w-sm mx-auto">We have received your host credentials. Our review desk is
-                running trust checks and validating NID details. This takes 12-24 hours. You will receive an SMS
-                confirmation.</p>
-            <div class="inline-block bg-zinc-100 px-4 py-1.5 text-[10px] font-mono font-bold text-zinc-500 rounded-lg">
-                Status: Pending Admin Auditing</div>
+            <h2 class="text-xl font-bold text-zinc-800">Step 4: Verification Pending</h2>
+            <p class="text-zinc-500 text-xs max-w-sm mx-auto">We have received your host credentials. Our review desk is running trust checks and validating NID details. This takes 12-24 hours. You will receive an SMS confirmation.</p>
+            <div class="inline-block bg-zinc-100 px-4 py-1.5 text-[10px] font-mono font-bold text-zinc-500 rounded-lg">Status: Pending Admin Auditing</div>
         </div>
 
         {% elif host.verification_status == 'VERIFIED' %}
@@ -368,11 +290,8 @@
         <div class="text-center py-8 space-y-4">
             <span class="text-4xl">🚀</span>
             <h2 class="text-xl font-bold text-emerald-700">Verification Approved!</h2>
-            <p class="text-zinc-500 text-xs max-w-sm mx-auto">Congratulations! Your DekhaHok Host verification has been
-                completed. You are now authorized to schedule activities.</p>
-            <a href="/host/dashboard"
-                class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow">Go
-                to Host Dashboard</a>
+            <p class="text-zinc-500 text-xs max-w-sm mx-auto">Congratulations! Your DekhaHok Host verification has been completed. You are now authorized to schedule activities.</p>
+            <a href="/host/dashboard" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow">Go to Host Dashboard</a>
         </div>
 
         {% elif host.verification_status == 'SUSPENDED' %}
@@ -380,11 +299,8 @@
         <div class="text-center py-8 space-y-4">
             <span class="text-4xl">🛑</span>
             <h2 class="text-xl font-bold text-rose-600">Verification Suspended</h2>
-            <p class="text-zinc-500 text-xs max-w-sm mx-auto">Your host credentials have been suspended due to policy
-                violations or incomplete trust evaluations. Please contact operations support.</p>
-            <a href="https://wa.me/8801884477720" target="_blank"
-                class="inline-block bg-zinc-100 hover:bg-zinc-200 border text-zinc-700 font-bold text-xs px-6 py-3 rounded-xl">Contact
-                Operations</a>
+            <p class="text-zinc-500 text-xs max-w-sm mx-auto">Your host credentials have been suspended due to policy violations or incomplete trust evaluations. Please contact operations support.</p>
+            <a href="https://wa.me/8801884477720" target="_blank" class="inline-block bg-zinc-100 hover:bg-zinc-200 border text-zinc-700 font-bold text-xs px-6 py-3 rounded-xl">Contact Operations</a>
         </div>
         {% endif %}
     </div>
@@ -393,6 +309,9 @@
 
 {% block extra_scripts %}
 <script>
+    const IS_LOGGED_IN = "{{ 'true' if user else 'false' }}" === "true";
+    let hostAvatarBase64 = "";
+
     function switchApplyAuthTab(tab) {
         const btnL = document.getElementById('apply-btn-tab-login');
         const btnS = document.getElementById('apply-btn-tab-signup');
@@ -412,6 +331,134 @@
         }
     }
 
+    // Save current step 1 inputs to session draft
+    function saveFormToDraft() {
+        const draft = {
+            nid_number: document.getElementById('host-nid').value.trim(),
+            profession: document.getElementById('host-profession').value.trim(),
+            category: document.getElementById('host-category').value,
+            operating_area: document.getElementById('host-area').value.trim(),
+            bio: document.getElementById('host-experience').value.trim(),
+            why_host: document.getElementById('host-why').value.trim(),
+            avatar_url: hostAvatarBase64
+        };
+        sessionStorage.setItem('host_apply_draft', JSON.stringify(draft));
+    }
+
+    // Load draft from session on load
+    function loadFormFromDraft() {
+        const draftStr = sessionStorage.getItem('host_apply_draft');
+        if (!draftStr) return false;
+        
+        try {
+            const draft = JSON.parse(draftStr);
+            document.getElementById('host-nid').value = draft.nid_number || '';
+            document.getElementById('host-profession').value = draft.profession || '';
+            document.getElementById('host-category').value = draft.category || 'creative';
+            document.getElementById('host-area').value = draft.operating_area || '';
+            document.getElementById('host-experience').value = draft.bio || '';
+            document.getElementById('host-why').value = draft.why_host || '';
+            
+            if (draft.avatar_url) {
+                hostAvatarBase64 = draft.avatar_url;
+                document.getElementById('host-avatar-base64').value = hostAvatarBase64;
+                const preview = document.getElementById('avatar-preview-img');
+                preview.src = hostAvatarBase64;
+                document.getElementById('avatar-preview-container').classList.remove('hidden');
+            }
+            return true;
+        } catch(e) {
+            console.error("Error loading draft", e);
+            return false;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Read file inputs
+        const fileInput = document.getElementById('host-avatar-file');
+        if (fileInput) {
+            fileInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast("Photo size must be less than 5MB.", "error");
+                    fileInput.value = "";
+                    hostAvatarBase64 = "";
+                    document.getElementById('avatar-preview-container').classList.add('hidden');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    hostAvatarBase64 = evt.target.result;
+                    document.getElementById('host-avatar-base64').value = hostAvatarBase64;
+                    const preview = document.getElementById('avatar-preview-img');
+                    preview.src = hostAvatarBase64;
+                    document.getElementById('avatar-preview-container').classList.remove('hidden');
+                    // auto save avatar to draft
+                    saveFormToDraft();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Restore draft if user just registered/logged in
+        const hasDraft = loadFormFromDraft();
+        if (hasDraft && IS_LOGGED_IN) {
+            // Restore wizard progress directly to Step 3 (Guidelines page)
+            document.getElementById('host-step-panel-1').classList.add('hidden');
+            document.getElementById('host-step-panel-2').classList.remove('hidden');
+            document.getElementById('host-progress-bar').style.width = '50%';
+            
+            // Highlight step indicators
+            document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
+            document.getElementById('progress-circle-3').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
+            
+            // clear session draft so it doesn't double trigger next load
+            sessionStorage.removeItem('host_apply_draft');
+        }
+    });
+
+    function handleStep1Submit(e) {
+        e.preventDefault();
+        
+        if (!hostAvatarBase64) {
+            showToast("Please upload a portrait picture first.", "error");
+            return;
+        }
+
+        // save fields
+        saveFormToDraft();
+
+        if (IS_LOGGED_IN) {
+            // Logged in: Go directly to guidelines page (Step 3)
+            document.getElementById('host-step-panel-1').classList.add('hidden');
+            document.getElementById('host-step-panel-2').classList.remove('hidden');
+            document.getElementById('host-progress-bar').style.width = '50%';
+            
+            document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
+            document.getElementById('progress-circle-3').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
+        } else {
+            // Not logged in: Show Auth Panel (Step 2)
+            document.getElementById('host-step-panel-1').classList.add('hidden');
+            document.getElementById('host-step-panel-auth').classList.remove('hidden');
+            document.getElementById('host-progress-bar').style.width = '25%';
+            
+            document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
+        }
+    }
+
+    function goToStep1() {
+        document.getElementById('host-step-panel-2').classList.add('hidden');
+        document.getElementById('host-step-panel-auth').classList.add('hidden');
+        document.getElementById('host-step-panel-1').classList.remove('hidden');
+        document.getElementById('host-progress-bar').style.width = '25%';
+        
+        document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-medium text-sm transition-colors";
+        document.getElementById('progress-circle-3').className = "z-20 w-9 h-9 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-medium text-sm transition-colors";
+    }
+
     async function handleApplyLogin(e) {
         e.preventDefault();
         const payload = {
@@ -428,6 +475,7 @@
             const data = await res.json();
 
             if (res.ok) {
+                // Draft was saved in Step 1 submit, reload to restore it on logged-in state
                 window.location.reload();
             } else {
                 showToast(`Login failed: ${data.detail || 'Check credentials'}`, 'error');
@@ -461,6 +509,7 @@
             const data = await res.json();
 
             if (res.ok) {
+                // Draft is saved in Step 1 submit, reload to restore it on logged-in state
                 window.location.reload();
             } else {
                 showToast(`Signup failed: ${data.detail || 'Email already exists'}`, 'error');
@@ -468,61 +517,6 @@
         } catch (err) {
             showToast("Network connection error. Try again.", 'error');
         }
-    }
-
-    let tempApplicationData = {};
-    let hostAvatarBase64 = "";
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const fileInput = document.getElementById('host-avatar-file');
-        if (fileInput) {
-            fileInput.addEventListener('change', function (e) {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast("Photo size must be less than 5MB.", "error");
-                    fileInput.value = "";
-                    hostAvatarBase64 = "";
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function (evt) {
-                    hostAvatarBase64 = evt.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-    });
-
-    function goToStep2(e) {
-        e.preventDefault();
-
-        if (!hostAvatarBase64) {
-            showToast("Please upload a portrait picture first.", "error");
-            return;
-        }
-
-        tempApplicationData = {
-            nid_number: document.getElementById('host-nid').value.trim(),
-            profession: document.getElementById('host-profession').value.trim(),
-            category: document.getElementById('host-category').value,
-            operating_area: document.getElementById('host-area').value.trim(),
-            bio: document.getElementById('host-experience').value.trim(),
-            why_host: document.getElementById('host-why').value.trim(),
-            avatar_url: hostAvatarBase64
-        };
-
-        document.getElementById('host-step-panel-1').classList.add('hidden');
-        document.getElementById('host-step-panel-2').classList.remove('hidden');
-        document.getElementById('host-progress-bar').style.width = '50%';
-    }
-
-    function goToStep1() {
-        document.getElementById('host-step-panel-2').classList.add('hidden');
-        document.getElementById('host-step-panel-1').classList.remove('hidden');
-        document.getElementById('host-progress-bar').style.width = '25%';
     }
 
     async function submitHostApplication() {
@@ -534,7 +528,27 @@
 
         const safetyAck = document.getElementById('host-safety-ack').checked;
         if (!safetyAck) {
-            showToast("You must acknowledge the community safety guidelines to continue.", "warning");
+            showToast("You must acknowledge the safety terms to continue.", "warning");
+            return;
+        }
+
+        const draftStr = sessionStorage.getItem('host_apply_draft');
+        let appData = {};
+        if (draftStr) {
+            appData = JSON.parse(draftStr);
+        } else if (hostAvatarBase64) {
+            appData = {
+                nid_number: document.getElementById('host-nid').value.trim(),
+                profession: document.getElementById('host-profession').value.trim(),
+                category: document.getElementById('host-category').value,
+                operating_area: document.getElementById('host-area').value.trim(),
+                bio: document.getElementById('host-experience').value.trim(),
+                why_host: document.getElementById('host-why').value.trim(),
+                avatar_url: hostAvatarBase64
+            };
+        } else {
+            showToast("Application session expired. Please fill Step 1 again.", "error");
+            goToStep1();
             return;
         }
 
@@ -542,11 +556,12 @@
             const res = await fetch('/api/host/apply', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(tempApplicationData)
+                body: JSON.stringify(appData)
             });
             const data = await res.json();
 
             if (res.ok) {
+                sessionStorage.removeItem('host_apply_draft'); // clear draft
                 window.location.reload(); // Re-render to show pending status
             } else {
                 showToast(`Application failed: ${data.detail || 'Try again.'}`, 'error');

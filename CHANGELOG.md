@@ -2,6 +2,28 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-05] - Brand Pivot, Host Showcase & Onboarding Restructuring
+
+### Added
+- **Host Showcase Landing Page (`/host`)**: Created a gorgeous, mobile-friendly public showcase landing page (`templates/host.html`) in a light-themed visual style featuring brand colors (emerald green and zinc). The page includes:
+  - Interactive Revenue Calculator (estimating host earnings dynamically at 70% to 90% payout rates).
+  - Key host benefits grid (Safety checks, Automated Group Chat access, Weekly mobile/bank payouts).
+  - Dynamically fetched list of verified hosts from the database.
+- **Dynamic Hosts Query**: Added database query inside `main.py` to retrieve verified hosts from the PostgreSQL database to populate the featured hosts section.
+- **SEO & Robots Tags**: Protected private and auth-gated routes (`/login`, `/host/dashboard`, `/host/events/new`, `/host/events/{event_id}/edit`) from crawler indexing by adding `<meta name="robots" content="noindex, nofollow">` with self-referencing canonical links.
+
+### Changed
+- **Brand Identity Pivot**: Executed a complete pivot from "Professional Services" (প্রফেশনাল সার্ভিসেস) to community events, local hosts, and travel escapes. Removed all professional service references across all HTML templates, meta descriptions, footers, JSON-LD schemas, and headers.
+- **Browser Tab Title**: Updated the homepage title tag to `"DekhaHok • Community Events, Networking & Travel"` to match the brand focus.
+- **Onboarding Flow Restructuring**: Modified `templates/host_apply.html` to display Step 1 (the profile submission form) directly to guest visitors. Shifted the authentication wall to Step 2 (only active if they are not logged in when clicking "Next Step").
+- **State Preservation**: Enabled state restoration using `sessionStorage` so that once a guest logs in or registers in Step 2 and the page reloads, their form inputs are preserved and they are taken directly to the Guidelines Agreement Checklist (Step 3).
+- **Guidelines Agreement Copy**: Updated the guidelines text to reflect the correct 70%-90% revenue share commission split.
+- **Bilingual FAQ Rewrite**: Rewrote the bilingual FAQs (items 17–23) on the homepage and administrative dashboard mockups to cover travel escapes, safety protocols, revenue sharing models, group chat tracking, and expansion plans.
+- **Navbar & Footer Redirection**: Updated all "Become a Host" links in the navbar, footer, homepage CTAs, and FAQ descriptions to point to the showcase page `/host` instead of directly to `/host/apply`.
+
+### Removed
+- **Fake Reviews**: Removed the entire "Real Experiences" placeholder review grid in `blog_detail.html` (which displayed fake social proof claims and numbers) and replaced it with a premium Call-to-Action (CTA) card to register for next events.
+
 ## [2026-07-05] - SEO, Core Web Vitals & Accessibility Optimizations
 
 ### Added
