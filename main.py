@@ -549,6 +549,7 @@ def serve_host_event_edit(event_id: int, request: Request):
             "included": included_list if isinstance(included_list, list) else [],
             "included_str": "\n".join(included_list) if isinstance(included_list, list) else "",
             "image_url": event_row[11] or "",
+            "is_recurring": bool(event_row[12]),
             "image_url_2": event_row[13] or "",
             "image_url_3": event_row[14] or "",
             "image_url_4": event_row[15] or ""

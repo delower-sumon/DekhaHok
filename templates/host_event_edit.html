@@ -316,6 +316,7 @@
             document.getElementById('ev-location').value = existingData.location_name || '';
             if(existingData.location_area) document.getElementById('ev-area').value = existingData.location_area;
             if(existingData.event_date_iso) document.getElementById('ev-date').value = existingData.event_date_iso;
+            if(existingData.is_recurring !== undefined) document.getElementById('ev-recurring').checked = existingData.is_recurring;
             
             if(existingData.included && existingData.included.length > 0) {
                 document.getElementById('ev-includes').value = existingData.included.join("\n");
