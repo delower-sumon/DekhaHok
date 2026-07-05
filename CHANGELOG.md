@@ -2,6 +2,13 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-06] - Host Showcase Visual Enhancements
+
+### Changed
+- **Host Page Visual Design**: Restructured the hero layout to a split grid layout containing a floating collage of custom people SVGs (`ppldkhk.svg`, `peopledkhk1.svg`). Distributed the remaining SVGs (`peopledkhk.svg` and `peopledkhk2.svg`) across the benefits header and final CTA section cards.
+- **Glassmorphism & Color Coding**: Recolored calculator slider accents and value labels, added translucent backdrop blur styling to benefits section cards, color-coded onboarding step badges, and styled the final CTA inside a gradient glass card.
+- **Copywriting Wording**: Updated the trust layer badge to screen-reader only "Join দেখা হোক" and completed final bilingual wording adjustments across all sections of `/host`.
+
 ## [2026-07-05] - Brand Pivot, Host Showcase & Onboarding Restructuring
 
 ### Added

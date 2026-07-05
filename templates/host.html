@@ -13,33 +13,75 @@
 {% endblock %}
 
 {% block content %}
-<!-- Host Showcase Hero (Light Theme with Soft Gradients) -->
-<section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/40 via-white to-zinc-50/50 pt-32 pb-20">
-    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-100/10 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-100/10 rounded-full blur-[120px] pointer-events-none"></div>
+<style>
+    @keyframes float-1 {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(1deg); }
+    }
+    @keyframes float-2 {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(8px) rotate(-1deg); }
+    }
+    .animate-float-1 {
+        animation: float-1 6s ease-in-out infinite;
+    }
+    .animate-float-2 {
+        animation: float-2 7s ease-in-out infinite;
+    }
+</style>
 
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 relative z-10 text-center space-y-6 md:space-y-8">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-black text-emerald-700 uppercase tracking-widest">
-            🌟 Join the Trust Layer
+<!-- Host Showcase Hero (Light Theme with Soft Gradients & Glassmorphism) -->
+<section class="relative overflow-hidden bg-gradient-to-b from-indigo-50/60 via-white to-emerald-50/40 pt-32 pb-20">
+    <!-- Dotted background pattern overlay -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.12]" style="background-image: radial-gradient(#10b981 0.75px, transparent 0.75px); background-size: 15px 15px;"></div>
+    
+    <!-- Blurred mesh gradient circles in backdrop -->
+    <div class="absolute top-10 left-10 w-72 h-72 bg-emerald-200/40 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-80 h-80 bg-indigo-200/30 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-purple-200/30 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Hero Left Column (Copy and Action) -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6 md:space-y-8 flex flex-col justify-center">
+            <div class="inline-flex self-center lg:self-start items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-sm border border-emerald-200/60 rounded-full text-xs font-bold text-emerald-700 uppercase tracking-widest shadow-sm">
+                🌟 Join <span class="sr-only">দেখা হোক</span>
+            </div>
+            
+            <h1 class="bengali text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-zinc-900">
+                আপনার অভিজ্ঞতা শেয়ার করুন,<br>
+                <span class="bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">গড়ে তুলুন নিজস্ব কমিউনিটি!</span>
+            </h1>
+            
+            <p class="bengali text-zinc-650 text-sm sm:text-base leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
+                দেখা হোক-এর ভেরিফাইড হোস্ট হিসেবে লোকাল ইভেন্ট, ক্রিয়েটিভ সেশন ও ট্র্যাভেল ইভেন্ট পরিচালনা করুন। মাসিক সাবস্ক্রিপশন ফি ছাড়াই আয় করুন আপনার প্রতি টিকিট বিক্রি থেকে।
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-4 w-full sm:w-auto">
+                <a href="/host/apply" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-sm px-8 py-4 rounded-full shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
+                    আবেদন করুন <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+                <button onclick="document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' })" 
+                        class="w-full sm:w-auto bg-white/60 backdrop-blur-sm border border-zinc-200/80 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-zinc-700 font-bold text-sm px-8 py-4 rounded-full flex items-center justify-center gap-2 shadow-sm">
+                    রেভিনিউ হিসাব করুন
+                </button>
+            </div>
         </div>
-        
-        <h1 class="bengali text-3xl sm:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-zinc-900 max-w-4xl mx-auto">
-            আপনার অভিজ্ঞতা শেয়ার করুন,<br>
-            <span class="bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">গড়ে তুলুন নিজস্ব কমিউনিটি!</span>
-        </h1>
-        
-        <p class="bengali text-zinc-600 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed font-medium">
-            দেখা হোক-এর ভেরিফাইড হোস্ট হিসেবে লোকাল আড্ডা, ক্রিয়েটিভ মিটআপ ও ট্র্যাভেল ইভেন্ট পরিচালনা করুন। কোনো মাসিক সাবস্ক্রিপশন ফি ছাড়াই আয় করুন আপনার প্রতিটি টিকিট বিক্রি থেকে।
-        </p>
 
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 pt-4 max-w-md mx-auto sm:max-w-none">
-            <a href="/host/apply" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-sm px-8 py-4 rounded-full shadow-md shadow-emerald-600/10 flex items-center justify-center gap-2">
-                আবেদন করুন <i class="fa-solid fa-arrow-right text-xs"></i>
-            </a>
-            <button onclick="document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' })" 
-                    class="w-full sm:w-auto bg-white border border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-zinc-700 font-bold text-sm px-8 py-4 rounded-full flex items-center justify-center gap-2 shadow-sm">
-                রেভিনিউ হিসাব করুন
-            </button>
+        <!-- Hero Right Column (Distributed SVG Collage with Glass Sphere Backdrop) -->
+        <div class="lg:col-span-5 relative min-h-[350px] lg:min-h-[400px] flex items-center justify-center">
+            <div class="relative w-full max-w-md mx-auto aspect-square flex items-center justify-center">
+                <!-- Glowing gradient background elements -->
+                <div class="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-emerald-250/20 to-purple-250/20 blur-2xl animate-pulse"></div>
+                <div class="absolute w-60 h-60 rounded-full bg-white/30 border border-white/50 backdrop-blur-xl shadow-2xl z-0"></div>
+                
+                <!-- Distributed People SVG 1 -->
+                <img src="/static/assets/host/ppldkhk.svg" alt="Community Interaction" 
+                     class="absolute top-4 left-4 w-40 h-40 object-contain z-10 animate-float-1 hover:scale-105 transition-transform duration-300">
+                
+                <!-- Distributed People SVG 2 -->
+                <img src="/static/assets/host/peopledkhk1.svg" alt="Social Connection" 
+                     class="absolute bottom-4 right-4 w-40 h-40 object-contain z-10 animate-float-2 hover:scale-105 transition-transform duration-300">
+            </div>
         </div>
     </div>
 </section>
@@ -53,7 +95,7 @@
         </div>
         <div class="space-y-1">
             <p class="text-2xl sm:text-4xl font-black text-emerald-700">১০০%</p>
-            <p class="bengali text-[11px] font-bold text-zinc-500 uppercase tracking-wider mt-1">ভেরিফাইড ওটিপি অডিয়েন্স</p>
+            <p class="bengali text-[11px] font-bold text-zinc-500 uppercase tracking-wider mt-1">ভেরিফাইড অডিয়েন্স</p>
         </div>
         <div class="space-y-1">
             <p class="text-2xl sm:text-4xl font-black text-emerald-600">৳০</p>
@@ -72,11 +114,11 @@
         <div class="text-center mb-12">
             <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Earnings Calculator</span>
             <h2 class="bengali text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 mb-2">আপনি কত আয় করতে পারবেন?</h2>
-            <p class="bengali text-zinc-500 text-xs sm:text-sm">স্লাইডারগুলো পরিবর্তন করে আপনার সম্ভাব্য আয় প্রাক্কলন করুন।</p>
+            <p class="bengali text-zinc-500 text-xs sm:text-sm">স্লাইডারগুলো পরিবর্তন করে আপনার সম্ভাব্য আয়ের ধারনা নিন।</p>
         </div>
 
         <!-- Calculator Card -->
-        <div class="bg-white border border-zinc-200/60 rounded-[2.5rem] p-6 sm:p-10 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div class="bg-white/60 backdrop-blur-xl border border-white/65 rounded-[2.5rem] p-6 sm:p-10 shadow-xl shadow-emerald-500/5 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div class="space-y-6">
                 <!-- Slider 1 -->
                 <div class="space-y-2">
@@ -97,10 +139,10 @@
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="bengali text-xs font-bold text-zinc-700">অংশগ্রহণকারীর সংখ্যা</label>
-                        <span id="calc-guests-val" class="font-mono text-emerald-600 font-bold text-sm">১৫ জন</span>
+                        <span id="calc-guests-val" class="font-mono text-purple-600 font-bold text-sm">১৫ জন</span>
                     </div>
                     <input type="range" id="calc-guests" min="5" max="60" step="1" value="15"
-                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-purple-500 focus:outline-none"
                            oninput="calculateEarnings()">
                     <div class="flex justify-between text-[10px] text-zinc-400 font-mono">
                         <span>৫ জন</span>
@@ -112,10 +154,10 @@
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="bengali text-xs font-bold text-zinc-700">হোস্ট রেভিনিউ শেয়ারের হার</label>
-                        <span id="calc-share-val" class="font-mono text-emerald-600 font-bold text-sm">৮০%</span>
+                        <span id="calc-share-val" class="font-mono text-blue-600 font-bold text-sm">৮০%</span>
                     </div>
                     <input type="range" id="calc-share" min="70" max="90" step="5" value="80"
-                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                           class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-blue-500 focus:outline-none"
                            oninput="calculateEarnings()">
                     <div class="flex justify-between text-[10px] text-zinc-400 font-mono">
                         <span>৭০%</span>
@@ -125,7 +167,7 @@
             </div>
 
             <!-- Result Box -->
-            <div class="bg-gradient-to-br from-zinc-50 to-emerald-50/20 border border-zinc-150 rounded-3xl p-6 flex flex-col justify-between text-center space-y-4 shadow-inner">
+            <div class="bg-white/80 border border-emerald-100 rounded-3xl p-6 flex flex-col justify-between text-center space-y-4 shadow-inner">
                 <div class="space-y-1">
                     <p class="bengali text-[10px] text-zinc-500 uppercase tracking-widest font-bold">আপনার সম্ভাব্য আয়</p>
                     <p id="calc-earnings" class="font-mono text-4xl sm:text-5xl font-black text-emerald-600 tracking-tight">৳ ৬,০০০</p>
@@ -134,7 +176,7 @@
                 
                 <div class="border-t border-zinc-200/80 pt-4 space-y-3">
                     <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
-                        বুকিং লজিস্টিকস, গেটওয়ে ম্যানেজমেন্ট ও গ্রাহক সেবা পরিচালনা করবে দেখা হোক টিম।
+                        বুকিং লজিস্টিকস, গেটওয়ে ম্যানেজমেন্ট ও গ্রাহক সেবা দেখা হোক টিম পরিচালনা করে থাকে।
                     </p>
                     <a href="/host/apply" class="inline-block w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-xs py-3.5 rounded-2xl shadow shadow-emerald-600/10">
                         হোস্ট আবেদন ফর্ম খুলুন
@@ -145,41 +187,51 @@
     </div>
 </section>
 
-<!-- Host Benefits Section (Visual Soothing Cards) -->
+<!-- Host Benefits Section (Visual Soothing Cards & Distributed Illustration) -->
 <section class="py-20 bg-white text-zinc-800 relative">
     <div class="max-w-7xl mx-auto px-6 sm:px-8">
-        <div class="text-center mb-16">
-            <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Host Benefits</span>
-            <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">কেন দেখা হোক-এর হোস্ট হবেন?</h2>
-            <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto mt-2 font-medium">আপনার ইভেন্ট ও অভিজ্ঞতা সহজে পরিচালনা করার জন্য প্রয়োজনীয় সকল প্রযুক্তিগত সাপোর্ট ও ফিচার নিয়ে এসেছি আমরা।</p>
+        <!-- Split Header with Illustration -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center mb-16">
+            <div class="md:col-span-8 space-y-3 text-center md:text-left">
+                <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full">Host Benefits</span>
+                <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">কেন দেখা হোক-এর হোস্ট হবেন?</h2>
+                <p class="bengali text-zinc-500 text-xs sm:text-sm font-medium max-w-xl md:mx-0 mx-auto">
+                    আপনার ইভেন্ট ও অভিজ্ঞতা সহজে মেনেজ করার জন্য প্রয়োজনীয় সকল প্রযুক্তিগত সাপোর্ট ও ফিচার পাবেন দেখা হোক -এ।
+                </p>
+            </div>
+            <!-- Distributed People SVG 3 -->
+            <div class="md:col-span-4 flex justify-center md:justify-end">
+                <img src="/static/assets/host/peopledkhk.svg" alt="Host Benefits Illustration" 
+                     class="w-32 h-32 object-contain animate-float-1 hover:scale-105 transition-transform duration-300">
+            </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             <!-- Benefit 1 -->
-            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
-                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div class="bg-white/50 backdrop-blur-md border border-zinc-150/80 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-350 transition-all duration-300 group">
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-user-check text-lg"></i>
                 </div>
                 <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">ভেরিফাইড মেম্বারস</h3>
                 <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
-                    অংশগ্রহণকারীদের এনআইডি (NID) এবং মোবাইল ওটিপি যাচাই নিশ্চিত করে আমরা ঢাকার সবচেয়ে বিশ্বস্ত মিটআপ নেটওয়ার্ক বজায় রাখি।
+                    অংশগ্রহণকারীদের পরিচয় যাচাই এবং যোগাযোগ নিশ্চিত করে আমরা বিশ্বস্ত নেটওয়ার্কিং প্রোটোকল ব্যবহার করে থাকি।
                 </p>
             </div>
 
             <!-- Benefit 2 -->
-            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
-                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div class="bg-white/50 backdrop-blur-md border border-zinc-150/80 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-350 transition-all duration-300 group">
+                <div class="w-12 h-12 bg-purple-50 text-purple-700 border border-purple-100 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-comments text-lg"></i>
                 </div>
                 <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">ইনস্ট্যান্ট গ্রুপ চ্যাট</h3>
                 <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
-                    টিকিট বিক্রির সাথে সাথে ভেরিফাইড টিকিট হোল্ডারদের জন্য চ্যাট রুম অ্যাক্টিভেট হয়। হোস্টের সাথে আলোচনা ও কোঅর্ডিনেশন অত্যন্ত সহজ।
+                    টিকিট বিক্রির সাথে সাথে ভেরিফাইড টিকিট হোল্ডারদের জন্য চ্যাট রুম অ্যাক্টিভেট হয়। হোস্টের সাথে আলোচনা ও কোঅর্ডিনেশন সহজ করতে আমরা প্রয়োজনে WhatsApp গ্রুপেও যোগাযোগ করে থাকি।
                 </p>
             </div>
 
             <!-- Benefit 3 -->
-            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
-                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div class="bg-white/50 backdrop-blur-md border border-zinc-150/80 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-350 transition-all duration-300 group">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 border border-blue-100 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-chart-line text-lg"></i>
                 </div>
                 <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">স্মার্ট হোস্ট ড্যাশবোর্ড</h3>
@@ -189,8 +241,8 @@
             </div>
 
             <!-- Benefit 4 -->
-            <div class="bg-zinc-50/50 border border-zinc-100 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-lg hover:border-emerald-200 transition-all group">
-                <div class="w-12 h-12 bg-emerald-100/60 text-emerald-750 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div class="bg-white/50 backdrop-blur-md border border-zinc-150/80 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-350 transition-all duration-300 group">
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-bolt text-lg"></i>
                 </div>
                 <h3 class="bengali text-base sm:text-lg font-bold text-zinc-900">উইকলি পে-আউট</h3>
@@ -326,14 +378,14 @@
     <div class="max-w-7xl mx-auto px-6 sm:px-8">
         <div class="text-center mb-16">
             <span class="inline-block text-[10px] font-black text-emerald-700 uppercase tracking-widest border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 rounded-full mb-3">Roadmap</span>
-            <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">হোস্ট হওয়ার সহজ ধাপসমূহ</h2>
+            <h2 class="bengali text-2xl sm:text-3xl font-black text-zinc-900">হোস্ট হওয়ার ধাপসমূহ</h2>
             <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto mt-2 font-medium">আবেদন করা থেকে শুরু করে প্রথম পে-আউট পাওয়া পর্যন্ত প্রতিটি ধাপ অত্যন্ত স্বচ্ছ।</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 relative">
             <!-- Step 1 -->
             <div class="space-y-4 text-center md:text-left relative">
-                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-250">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-750 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-200">
                     ১
                 </div>
                 <h3 class="bengali text-lg font-bold text-zinc-900">আবেদন জমা দিন</h3>
@@ -344,10 +396,10 @@
 
             <!-- Step 2 -->
             <div class="space-y-4 text-center md:text-left relative">
-                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-250">
+                <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-750 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-purple-200">
                     ২
                 </div>
-                <h3 class="bengali text-lg font-bold text-zinc-900">ইভেন্ট তৈরি ও প্রকাশ করুন</h3>
+                <h3 class="bengali text-lg font-bold text-zinc-900">ইভেন্ট তৈরি ও পাবলিশ করুন</h3>
                 <p class="bengali text-xs text-zinc-500 leading-relaxed font-medium">
                     অনুমোদন পাওয়ার পর আপনার ড্যাশবোর্ড থেকে ইভেন্টের বিস্তারিত বিবরণ, টিকিটের মূল্য এবং ছবি দিয়ে ইভেন্ট পাবলিশ করুন।
                 </p>
@@ -355,7 +407,7 @@
 
             <!-- Step 3 -->
             <div class="space-y-4 text-center md:text-left relative">
-                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-emerald-250">
+                <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-750 font-black flex items-center justify-center mx-auto md:mx-0 shadow-sm text-sm border border-blue-200">
                     ৩
                 </div>
                 <h3 class="bengali text-lg font-bold text-zinc-900">ইভেন্ট হোস্ট করুন ও আয় করুন</h3>
@@ -368,16 +420,27 @@
 </section>
 
 <!-- Final CTA Section (Visual Soothing Light Mode CTA) -->
-<section class="py-20 bg-zinc-50/50 text-zinc-800 relative border-t border-zinc-100">
-    <div class="max-w-4xl mx-auto px-6 sm:px-8 text-center relative z-10 space-y-6">
-        <h2 class="bengali text-2xl sm:text-4xl font-black text-zinc-900 leading-tight">বাস্তব অভিজ্ঞতার মাধ্যমে নতুন সংযোগ গড়ে তুলুন!</h2>
-        <p class="bengali text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-medium">
-            ঢাকার সামাজিক মেলবন্ধন ও ভ্রমণ অভিজ্ঞতাকে এক নতুন উচ্চতায় নিয়ে যেতে আমাদের সাথে যোগ দিন। আজই হোস্ট হিসেবে আবেদন করুন।
-        </p>
-        <div class="pt-4">
-            <a href="/host/apply" class="inline-block bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-sm px-10 py-4 rounded-full shadow-md shadow-emerald-600/10">
-                হোস্ট আবেদন ফর্ম পূরণ করুন
-            </a>
+<section class="py-20 bg-white text-zinc-800 relative border-t border-zinc-100">
+    <div class="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
+        <div class="bg-gradient-to-br from-emerald-500/10 via-purple-500/5 to-blue-500/10 backdrop-blur-md border border-emerald-100 rounded-[3rem] p-8 sm:p-12 shadow-xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-8 text-center md:text-left space-y-6">
+                <h2 class="bengali text-2xl sm:text-4xl font-black text-zinc-900 leading-tight">
+                    বাস্তব অভিজ্ঞতার মাধ্যমে আপনার কমিউনিটি গড়ে তুলুন!
+                </h2>
+                <p class="bengali text-zinc-500 text-xs sm:text-sm leading-relaxed font-medium max-w-xl md:mx-0 mx-auto">
+                    ঢাকার সামাজিক মেলবন্ধন ও ভ্রমণ অভিজ্ঞতাকে নতুন উচ্চতায় নিয়ে যেতে আমাদের সাথে যোগ দিন। আজই হোস্ট হিসেবে আবেদন করুন।
+                </p>
+                <div class="pt-2">
+                    <a href="/host/apply" class="inline-block bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white font-bold text-sm px-10 py-4 rounded-full shadow-md shadow-emerald-600/10">
+                        হোস্ট আবেদন ফর্ম পূরণ করুন
+                    </a>
+                </div>
+            </div>
+            <!-- Distributed People SVG 4 -->
+            <div class="md:col-span-4 flex justify-center md:justify-end">
+                <img src="/static/assets/host/peopledkhk2.svg" alt="Join DekhaHok Host" 
+                     class="w-44 h-44 object-contain animate-float-2 hover:scale-105 transition-transform duration-300">
+            </div>
         </div>
     </div>
 </section>
