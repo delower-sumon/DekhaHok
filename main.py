@@ -355,8 +355,12 @@ def serve_booking_page(request: Request, event_id: int):
     try:
         cursor = conn.cursor()
         
+        # Increment views
+        cursor.execute("UPDATE events SET views = COALESCE(views, 0) + 1 WHERE id = %s", (event_id,))
+        conn.commit()
+
         # 1. Fetch Event details for SEO tags and fallback
-        cursor.execute("SELECT id, title, description, image_url, price_per_person, slug FROM events WHERE id = %s", (event_id,))
+        cursor.execute("SELECT id, title, description, image_url, price_per_person, slug, COALESCE(views, 0) FROM events WHERE id = %s", (event_id,))
         evt_row = cursor.fetchone()
         if evt_row:
             event = {
@@ -365,7 +369,8 @@ def serve_booking_page(request: Request, event_id: int):
                 "description": evt_row[2],
                 "image_url": evt_row[3],
                 "price": float(evt_row[4]),
-                "slug": evt_row[5]
+                "slug": evt_row[5],
+                "views": evt_row[6]
             }
             
         # 2. Check for existing booking if user is logged in
@@ -1430,7 +1435,7 @@ def api_event_detail(event_id: int):
                    CASE WHEN e.image_url_2 IS NOT NULL AND e.image_url_2 != '' THEN 1 ELSE 0 END as has_image_2,
                    CASE WHEN e.image_url_3 IS NOT NULL AND e.image_url_3 != '' THEN 1 ELSE 0 END as has_image_3,
                    CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
-                   e.youtube_link, h.is_founding as host_is_founding
+                   e.youtube_link, h.is_founding as host_is_founding, COALESCE(e.views, 0) as views
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1459,7 +1464,8 @@ def api_event_detail(event_id: int):
             "image_url_3": f"/api/events/{r[0]}/image/3" if len(r) > 23 and r[23] else None,
             "image_url_4": f"/api/events/{r[0]}/image/4" if len(r) > 24 and r[24] else None,
             "youtube_link": r[25] if len(r) > 25 else None,
-            "host_is_founding": bool(r[26]) if len(r) > 26 else False
+            "host_is_founding": bool(r[26]) if len(r) > 26 else False,
+            "views": r[27] if len(r) > 27 else 0
         }
         cursor.close()
     finally:

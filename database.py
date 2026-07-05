@@ -245,6 +245,7 @@ def init_db():
                 status VARCHAR(20) DEFAULT 'draft',
                 host_payment_status VARCHAR(20) DEFAULT 'unpaid',
                 is_recurring BOOLEAN DEFAULT FALSE,
+                views INTEGER DEFAULT 0,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )
         """)
@@ -293,6 +294,7 @@ def init_db():
         cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_3 TEXT")
         cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS image_url_4 TEXT")
         cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS youtube_link VARCHAR(255)")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0")
         
 
         # Marketplace foreign key fields for bookings

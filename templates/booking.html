@@ -77,7 +77,7 @@
                     id="b-event-tier">EXPERIENCE</span>
                 <h1 class="text-lg sm:text-2xl font-bold text-zinc-900 mt-1 mb-1 leading-tight" id="b-event-title">
                     Loading Event...</h1>
-                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium">
+                 <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium">
                     <span class="flex items-center gap-1"><i class="fa-regular fa-calendar text-emerald-600"></i> <span
                             id="b-event-date">TBA</span></span>
                     <span class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-emerald-600"></i>
@@ -85,6 +85,9 @@
                     <span
                         class="flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md"><i
                             class="fa-solid fa-user-check"></i> <span id="b-event-top-spots">0/0 Booked</span></span>
+                    <span
+                        class="flex items-center gap-1 text-zinc-500 bg-zinc-100/60 px-2 py-0.5 rounded-md"><i
+                            class="fa-regular fa-eye text-zinc-400"></i> <span id="b-event-views">0 Views</span></span>
                 </div>
                 <!-- Event Description -->
                 <p id="b-event-desc" class="text-xs text-zinc-500 mt-2.5 leading-relaxed max-w-xl"></p>
@@ -93,7 +96,7 @@
                     <img loading="lazy" id="b-event-host-avatar" src="" alt="Host"
                         class="w-8 h-8 rounded-full object-cover border border-emerald-200">
                     <div class="flex flex-col">
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center gap-1" id="b-event-host-name-container">
                             <span class="text-[11px] font-bold text-zinc-700" id="b-event-host-name"></span>
                             <span id="b-event-host-badge"></span>
                         </div>
@@ -499,18 +502,31 @@
 
             // Populate Host Info
             document.getElementById('b-event-host-avatar').src = selectedEvent.host_avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${selectedEvent.host_name}`;
-            document.getElementById('b-event-host-name').textContent = `By ${selectedEvent.host_name.split(' ')[0]}`;
-            if (selectedEvent.host_profession) {
-                if (selectedEvent.host_is_founding) {
-                    document.getElementById('b-event-host-profession-container').innerHTML = `<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">${selectedEvent.host_profession}</span></div>`;
-                } else {
-                    document.getElementById('b-event-host-profession').textContent = selectedEvent.host_profession;
-                }
+            
+            const nameContainer = document.getElementById('b-event-host-name-container');
+            const verifiedSvg = selectedEvent.host_verification_status === 'VERIFIED' 
+                ? `<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>` 
+                : '';
+                
+            if (selectedEvent.host_is_founding) {
+                nameContainer.className = "relative inline-block w-max mt-1 mb-0.5";
+                nameContainer.innerHTML = `
+                    <span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span>
+                    <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-800 leading-none px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">
+                        <span>By ${selectedEvent.host_name.split(' ')[0]}</span>
+                        ${verifiedSvg}
+                    </div>
+                `;
+            } else {
+                nameContainer.className = "flex items-center gap-1";
+                nameContainer.innerHTML = `
+                    <span class="text-[11px] font-bold text-zinc-700" id="b-event-host-name">By ${selectedEvent.host_name.split(' ')[0]}</span>
+                    <span id="b-event-host-badge">${verifiedSvg}</span>
+                `;
             }
-            if (selectedEvent.host_verification_status === 'VERIFIED') {
-                document.getElementById('b-event-host-badge').innerHTML = `<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host">
-                    <path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" />
-                </svg>`;
+
+            if (selectedEvent.host_profession) {
+                document.getElementById('b-event-host-profession').textContent = selectedEvent.host_profession;
             }
 
             // Populate Included items
@@ -573,6 +589,7 @@
             const spotsEl = document.getElementById('checkout-event-spots');
             const topSpotsEl = document.getElementById('b-event-top-spots');
             if (topSpotsEl) topSpotsEl.textContent = `${selectedEvent.booked_count}/${selectedEvent.capacity} Booked`;
+            document.getElementById('b-event-views').textContent = `${selectedEvent.views || 0} Views`;
 
             if (spotsLeft <= 0) {
                 spotsEl.textContent = `Waitlist Mode • ${selectedEvent.capacity}/${selectedEvent.capacity} Booked`;

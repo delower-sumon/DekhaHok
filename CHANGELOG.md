@@ -7,12 +7,15 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ### Added
 - **Schema.org Structured Data**: Injected `Organization` schema directly into `base.html` for native Google Knowledge Graph rendering (including founding date, correct phone number, and synchronized social links). Added dynamic `Event` schema logic into `booking.html` for rich search results.
 - **Explicit Image Dimensions**: Added `width="140"` and `height="34"` to the main navbar branding logo in `base.html` to eliminate Cumulative Layout Shift (CLS).
+- **Event Views Tracking**: Introduced view count tracking for events. Views increment when an attendee loads the event details/booking page and are retrieved via API.
+- **Event Views UI**: Integrated a dynamic "views count" indicator with an eye icon in the booking page metadata row, keeping homepage cards clean and simple.
 
 ### Changed
 - **SEO Metadata**: Standardized the HTML `lang="bn"` attribute across all templates. Reformatted `<h1>` structures for optimal search engine crawling while retaining UI consistency.
 - **Resource Deferral & Script Loading**: Improved Time to First Byte (TTFB) by deferring non-critical scripts (`lucide.js`, `canvas-confetti.js`). Confined heavyweight `leaflet` mapping libraries exclusively to `index.html`.
 - **Accessibility (Touch Targets)**: Expanded all interactive icon-only button touch targets (Navbar Notifications, Profile, Mobile Menu, Footer Socials) to a minimum of `44x44px` to meet WCAG 2.1 mobile tap target standards. Enforced descriptive `aria-label` tags for screen readers across the application.
 - **Image Formats & Lazy Loading**: Converted heavy static assets (like `dekhahok_ui.png`) to lightweight `.webp` equivalents. Systematically applied `loading="lazy"` to all below-the-fold images across all templates.
+- **Cleaner Homepage Cards**: Removed the loud "SPOTS AVAILABLE" and "FILLING FAST" text properties from homepage event cards, retaining just the numeric booking progress indicator.
 
 ### Removed
 - **Unused Assets**: Permanently deleted unreferenced and oversized images (`blind_adda.jpeg`, `thelocal.jpg`, `sumon.png`, `dekhahok_ui.png`) from `static/assets/`.

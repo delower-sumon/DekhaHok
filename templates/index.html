@@ -1579,7 +1579,7 @@
             const spotsLeft = e.capacity - e.booked_count;
             const isSoldOut = spotsLeft <= 0;
             const badgeClass = isSoldOut ? 'bg-zinc-100 text-zinc-500 border-zinc-200' : (spotsLeft <= 3 ? 'bg-rose-50 text-rose-700 border-rose-100' : 'bg-emerald-50 text-emerald-800 border-emerald-100');
-            const badgeText = isSoldOut ? 'Waitlist' : (spotsLeft <= 3 ? 'Filling Fast' : 'Spots Available');
+            const badgeText = isSoldOut ? 'Waitlist &bull; ' : '';
 
             let dateStr = 'TBA';
             if (e.event_date) {
@@ -1615,19 +1615,24 @@
                             <div class="flex items-center gap-2">
                                 <img loading="lazy" src="${e.host_avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + e.host_name}" alt="${e.host_name}" class="w-7 h-7 rounded-full object-cover border border-zinc-100">
                                 <div class="flex flex-col">
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
-                                        ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
-                                    </div>
-                                    ${e.host_profession ? 
-                                        (e.host_is_founding 
-                                            ? '<div class="relative inline-block mt-2.5 w-max mb-1"><span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span><span class="text-[9.5px] text-emerald-800 font-bold truncate max-w-[110px] leading-none inline-block px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">' + e.host_profession + '</span></div>'
-                                            : '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-2 block">' + e.host_profession + '</span>') 
-                                        : ''}
+                                    ${e.host_is_founding 
+                                        ? `<div class="relative inline-block w-max mt-1 mb-0.5">
+                                            <span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400">Founding 100</span>
+                                            <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-800 leading-none px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">
+                                                <span class="truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
+                                                ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[11px] h-[11px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
+                                            </div>
+                                        </div>`
+                                        : `<div class="flex items-center gap-1">
+                                            <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
+                                            ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
+                                        </div>`
+                                    }
+                                    ${e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-1 block">' + e.host_profession + '</span>' : ''}
                                 </div>
                             </div>
                             <span class="px-2.5 py-1 border text-[9px] font-black rounded-xl uppercase tracking-tight shadow-sm ${badgeClass}">
-                                ${badgeText} &bull; ${e.booked_count}/${e.capacity}
+                                ${badgeText}${e.booked_count}/${e.capacity}
                             </span>
                         </div>
                     </div>
