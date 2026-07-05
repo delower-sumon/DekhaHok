@@ -20,7 +20,7 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Guidelines Agreement Copy**: Updated the guidelines text to reflect the correct 70%-90% revenue share commission split.
 - **Bilingual FAQ Rewrite**: Rewrote the bilingual FAQs (items 17–23) on the homepage and administrative dashboard mockups to cover travel escapes, safety protocols, revenue sharing models, group chat tracking, and expansion plans.
 - **Navbar & Footer Redirection**: Updated all "Become a Host" links in the navbar, footer, homepage CTAs, and FAQ descriptions to point to the showcase page `/host` instead of directly to `/host/apply`.
-- **Travel Escapes CTA Retouch**: Updated the Travel Escapes CTA copy on the homepage (`index.html`) to reflect the official "বাস্তব অভিজ্ঞতা" branding slogan, corrected the family/team typo to "আপনার পরিবার, বন্ধু কিংবা সমমনা পেশাজীবীদের দল", and updated the safety and membership parameters to emphasize "নিরাপদ ভ্রমণ পরিবেশ" and "ভেরিফাইড প্রোফাইল".
+- **Travel Escapes CTA Retouch**: Updated the Travel Escapes CTA copy on the homepage (`index.html`) to reflect the official "বাস্তব অভিজ্ঞতা" branding slogan, corrected the family/team typo to "আপনার পরিবার, বন্ধু কিংবা সমমনা পেশাজীবীদের গ্রুপ", simplified the card heading to "আসন্ন", and updated safety and membership parameters to emphasize "নিরাপদ ভ্রমণ পরিবেশ" and "ভেরিফাইড প্রোফাইল".
 
 ### Removed
 - **Fake Reviews**: Removed the entire "Real Experiences" placeholder review grid in `blog_detail.html` (which displayed fake social proof claims and numbers) and replaced it with a premium Call-to-Action (CTA) card to register for next events.
