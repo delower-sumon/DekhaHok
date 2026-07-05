@@ -2,12 +2,22 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
-## [2026-07-06] - Host Showcase Visual Enhancements
+## [2026-07-06] - Host Showcase Visual Enhancements & Polish
+
+### Added
+- **Homepage Hero Animation Integration**: Integrated the dynamic connecting lines & nodes networking animation from the homepage directly into the host page hero, fetching live event coordinates from `/api/events`.
+- **Homepage Trust Bar Alignment**: Refined the `<!-- Trust Bar -->` on the homepage (`templates/index.html`) to display the direct, relative brand pillars: **নেটওয়ার্কিং** (with connection nodes icon), **কমিউনিটি ইভেন্ট** (with social users icon), and **ট্র্যাভেল** (with plane icon).
 
 ### Changed
+- **SVG Asset Background Transparency**: Programmatically stripped bounding box background path fills (white and pink colored boxes, including the 200x154 translate offset block) from the XML content of the 4 SVG assets (`peopledkhk1.svg`, `peopledkhk.svg`, `ppldkhk.svg`, and `peopledkhk2.svg`), changing their fill to `none` to produce 100% transparent vector illustrations.
+- **Host SVG Layout Allocations**: Allocated `peopledkhk2.svg` to float around the hero animation canvas, and placed the transparent `peopledkhk.svg` inside the final CTA card.
+- **Mobile Typography Polish**: Adjusted mobile CSS typography sizing across all major host page titles (e.g., shrinking hero heading to `text-2xl` and section headings to `text-xl` on small viewports) to avoid text wrapping.
 - **Host Page Visual Design**: Restructured the hero layout to a split grid layout containing a floating collage of custom people SVGs (`ppldkhk.svg`, `peopledkhk1.svg`). Distributed the remaining SVGs (`peopledkhk.svg` and `peopledkhk2.svg`) across the benefits header and final CTA section cards.
 - **Glassmorphism & Color Coding**: Recolored calculator slider accents and value labels, added translucent backdrop blur styling to benefits section cards, color-coded onboarding step badges, and styled the final CTA inside a gradient glass card.
 - **Copywriting Wording**: Updated the trust layer badge to screen-reader only "Join দেখা হোক" and completed final bilingual wording adjustments across all sections of `/host`.
+
+### Removed
+- **Unused Assets**: Permanently deleted the two unused files `Posts for dekhahok.svg` and `background concept.png` from the `static/assets/host` folder.
 
 ## [2026-07-05] - Brand Pivot, Host Showcase & Onboarding Restructuring
 
