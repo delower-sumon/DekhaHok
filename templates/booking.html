@@ -569,7 +569,7 @@
 
             if(selectedEvent.youtube_link) {
                 let videoId = null;
-                const ytMatch = selectedEvent.youtube_link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                const ytMatch = selectedEvent.youtube_link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([\w-]{11})/i);
                 if(ytMatch && ytMatch[1]) {
                     videoId = ytMatch[1];
                     videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
