@@ -267,10 +267,57 @@ def serve_frontend(request: Request):
                 "image_alt": r[7], "badge": r[8], "likes": r[9], "shares": r[10],
                 "author": r[11], "date": local_time_filter(r[12]), "is_pivoted": r[13]
             })
+        # Fetch all published events for SSR and client JSON
+        cursor.execute("""
+            SELECT e.id, e.title, e.description, e.category, e.package_tier, e.price_per_person,
+                   e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
+                   CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
+                   e.included, e.status, h.id as host_id, u.full_name as host_name,
+                   u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
+                   h.profession as host_profession, h.is_founding as host_is_founding
+            FROM events e
+            LEFT JOIN hosts h ON e.host_id = h.id
+            LEFT JOIN users u ON h.user_id = u.id
+            WHERE e.status = 'published'
+            ORDER BY e.event_date ASC
+        """)
+        evt_rows = cursor.fetchall()
+        events = []
+        for r in evt_rows:
+            events.append({
+                "id": r[0], "title": r[1], "description": r[2], "category": r[3],
+                "package_tier": r[4], "price_per_person": float(r[5]), "capacity": r[6],
+                "booked_count": r[7], "location_name": r[8], "location_area": r[9],
+                "event_date": str(r[10]) if r[10] else None, "image_url": f"/api/events/{r[0]}/image" if r[11] else None, "included": r[12] or [],
+                "status": r[13], "host_id": r[14], "host_name": r[15] or "DekhaHok Host",
+                "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
+                "host_verification_status": r[18],
+                "host_profession": r[19] or "",
+                "host_is_founding": bool(r[20]),
+                "event_date_formatted": local_time_filter(r[10]) if r[10] else "TBA"
+            })
+            
+        displayed_events = [e for e in events if e["category"].lower() not in ("travel", "professional", "sports")]
+        travel_events = [e for e in events if e["category"].lower() == "travel"]
+        sports_events = [e for e in events if e["category"].lower() == "sports"]
+        professional_events = [e for e in events if e["category"].lower() == "professional"]
+        
+        import json
+        events_json = json.dumps(events)
+        
         cursor.close()
     finally:
         release_conn(conn)
-    return templates.TemplateResponse("index.html", {"request": request, "blogs": blogs, "total_members": total_members})
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "blogs": blogs,
+        "total_members": total_members,
+        "displayed_events": displayed_events,
+        "travel_events": travel_events,
+        "sports_events": sports_events,
+        "professional_events": professional_events,
+        "events_json": events_json
+    })
 
 
 @app.get("/admin", include_in_schema=False)
@@ -408,7 +455,7 @@ def serve_host_landing(request: Request):
             SELECT h.id, u.full_name, u.avatar_url, h.profession, h.operating_area, h.bio, h.is_founding, u.id
             FROM hosts h
             JOIN users u ON h.user_id = u.id
-            WHERE h.verification_status = 'VERIFIED'
+            WHERE h.verification_status = 'VERIFIED' AND u.id != 1
             ORDER BY h.id DESC
             LIMIT 6
         """)

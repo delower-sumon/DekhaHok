@@ -2,6 +2,23 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-06] - Re-Audit Fixes & Consistency (Phases 1-3)
+
+### Added
+- **Founding 100 Badges Tooltips**: Added descriptive title tooltips explaining early community leader benefits to the Founding 100 badge across homepage cards, dynamic catalog rendering, booking confirmations, and host profiles.
+- **Premium Homepage OG Image**: Generated a high-resolution 2.0x retina PNG (`static/assets/dekhahok_ui.png`) compositing the exact Bengali SVG logo (`dekhahok_bn.svg`) and the connection logo side-by-side with an elegant nodes grid background.
+- **English Subheading**: Appended a static subheading underneath the hero heading: *"Bangladesh's marketplace for verified hosts, community events, and travel."*
+
+### Changed
+- **Server-Side Event Rendering (Googlebot SEO)**: Converted the homepage event grids to render server-side (using a new Jinja macro `render_event_card(e)`) and injected initial data as `INITIAL_EVENTS` to prevent empty grids and layout shifts on load.
+- **Revenue Share Consistency**: Standardized all platform commission/payout references to **"70% to 95%"** (Bengali: **"৭০%-৯৫%"** / platform fee **"৫%-৩০%"**) across 11 pages (homepage, calculator ranges, policy agreements, and FAQs).
+- **Hero Cycle Simplification**: Trimmed homepage cycling texts from 6 concepts down to 3 (**ভেরিফাইড হোস্ট**, **কমিউনিটি ইভেন্টস**, **ট্র্যাভেল**) with matched CSS animation intervals (6s cycles, 2s delays).
+- **Platform Host Renaming**: Renamed the default host profile (ID 1) to **"DekhaHok Originals"** (Official Host) with an updated Bengali bio and excluded it from the host landing page featured list showcase.
+- **IDE Warnings Cleanup**: Converted raw template variable expressions inside javascript scripts and HTML attributes to escaped `data-*` attributes retrieved via `getAttribute` and `JSON.parse`.
+
+### Removed
+- **Legacy OG WebP Image**: Deleted `static/assets/dekhahok_ui.webp` in favor of the new universal PNG format.
+
 ## [2026-07-06] - Host Showcase Visual Enhancements & Polish
 
 ### Added
