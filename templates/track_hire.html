@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% block title %}Track Hire Request - {{ data.tracking_id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-12 px-4 sm:px-6">
+    <div class="bg-white border border-emerald-100 rounded-3xl shadow-sm overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-emerald-600 px-6 py-8 text-center text-white relative">
+            <h1 class="text-2xl font-black tracking-tight mb-2">Request Status</h1>
+            <p class="text-emerald-100 text-sm font-medium">Tracking ID: <span class="font-mono bg-emerald-700 px-2 py-1 rounded">{{ data.tracking_id }}</span></p>
+            
+            <div class="mt-6 inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-2 rounded-full border border-white/30">
+                {% if data.status == 'pending' %}
+                    <i class="fa-solid fa-clock"></i> <span class="text-sm font-bold uppercase tracking-wider">Pending Review</span>
+                {% elif data.status == 'accepted' %}
+                    <i class="fa-solid fa-circle-check text-emerald-300"></i> <span class="text-sm font-bold uppercase tracking-wider text-emerald-50">Accepted</span>
+                {% elif data.status == 'rejected' %}
+                    <i class="fa-solid fa-circle-xmark text-rose-300"></i> <span class="text-sm font-bold uppercase tracking-wider text-rose-50">Declined</span>
+                {% elif data.status == 'completed' %}
+                    <i class="fa-solid fa-flag-checkered text-blue-300"></i> <span class="text-sm font-bold uppercase tracking-wider text-blue-50">Completed</span>
+                {% elif data.status == 'cancelled' %}
+                    <i class="fa-solid fa-ban text-zinc-400"></i> <span class="text-sm font-bold uppercase tracking-wider text-zinc-200">Cancelled</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Details -->
+        <div class="p-6 sm:p-8 space-y-8">
+            <!-- Artist Info -->
+            <div>
+                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Artist Details</h3>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl font-bold">
+                        {{ data.artist_name[0] }}
+                    </div>
+                    <div>
+                        <p class="font-bold text-zinc-900">{{ data.artist_name }}</p>
+                        {% if data.payment_status == 'paid' %}
+                            <p class="text-sm text-zinc-500">{{ data.artist_email }} • {{ data.artist_phone }}</p>
+                        {% elif data.status == 'accepted' %}
+                            <p class="text-xs text-zinc-400 italic">Contact details revealed upon payment verification</p>
+                        {% else %}
+                            <p class="text-xs text-zinc-400 italic">Contact details revealed upon acceptance</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Occasion Info -->
+            <div>
+                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Occasion Details</h3>
+                <div class="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
+                    <div>
+                        <p class="text-zinc-500 mb-1">Occasion</p>
+                        <p class="font-bold text-zinc-900">{{ data.occasion or 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-zinc-500 mb-1">Date</p>
+                        <p class="font-bold text-zinc-900">{{ data.event_date.strftime('%B %d, %Y') if data.event_date else 'TBD' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-zinc-500 mb-1">Budget</p>
+                        <p class="font-bold text-zinc-900">{{ data.budget or 'Not specified' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-zinc-500 mb-1">Requested By</p>
+                        <p class="font-bold text-zinc-900">{{ data.client_name }}</p>
+                    </div>
+                </div>
+                
+                {% if data.message %}
+                <div class="mt-4 bg-zinc-50 rounded-xl p-4 border border-zinc-100">
+                    <p class="text-xs text-zinc-500 font-bold mb-1">Your Message:</p>
+                    <p class="text-sm text-zinc-700 italic">"{{ data.message }}"</p>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if data.status == 'accepted' %}
+            <div>
+                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Payment Details</h3>
+                <div class="bg-zinc-50 rounded-2xl p-5 border border-zinc-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-bold text-zinc-900 mb-1">Final Fee</p>
+                        <p class="text-xs text-zinc-500">Agreed upon by host</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-black text-emerald-600">৳{{ data.fee_amount }}</p>
+                        {% if data.payment_status == 'paid' %}
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 inline-block mt-1">Paid</span>
+                        {% elif data.payment_status == 'verifying' %}
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 inline-block mt-1">Verifying</span>
+                        {% else %}
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 inline-block mt-1">Unpaid</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if data.payment_status == 'unpaid' or not data.payment_status %}
+                <div class="mt-4 space-y-2">
+                    <button onclick="openPaymentModal()" id="btn-pay-now" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition shadow flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-lock text-sm"></i> <span>Pay Now</span>
+                    </button>
+                    <button onclick="openCancelModal()" class="w-full bg-white hover:bg-rose-50 border border-zinc-200 hover:border-rose-200 text-rose-600 font-bold py-3.5 rounded-xl transition flex justify-center items-center gap-2 text-sm">
+                        Cancel Request
+                    </button>
+                </div>
+                {% elif data.payment_status == 'verifying' %}
+                <div class="mt-4 space-y-2 text-center bg-blue-50 border border-blue-100 p-4 rounded-xl">
+                    <p class="text-xs font-bold text-blue-800"><i class="fa-solid fa-clock mr-1"></i> Payment Verifying</p>
+                    <p class="text-[10px] text-blue-600">Admin is verifying your payment. This usually takes a few minutes.</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="text-center pt-4">
+                <a href="/" class="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">← Back to Home</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function openCancelModal() {
+        const modal = document.getElementById('cancel-action-modal');
+        const content = document.getElementById('cancel-action-content');
+        modal.classList.remove('hidden');
+        setTimeout(() => content.classList.remove('scale-95', 'opacity-0'), 10);
+    }
+
+    function closeCancelModal() {
+        const modal = document.getElementById('cancel-action-modal');
+        const content = document.getElementById('cancel-action-content');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    async function confirmCancelAction(trackingId) {
+        const btn = document.getElementById('btn-confirm-cancel');
+        const originalText = btn.textContent;
+        btn.textContent = 'Processing...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(`/api/track/${trackingId}/cancel`, { method: 'POST' });
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const data = await res.json();
+                alert(data.detail || "Failed to cancel request");
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        } catch(e) {
+            alert("Network error");
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    }
+    function openPaymentModal() {
+        const modal = document.getElementById('payment-action-modal');
+        const content = document.getElementById('payment-action-content');
+        modal.classList.remove('hidden');
+        setTimeout(() => content.classList.remove('scale-95', 'opacity-0'), 10);
+    }
+
+    function closePaymentModal() {
+        const modal = document.getElementById('payment-action-modal');
+        const content = document.getElementById('payment-action-content');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+    
+    let selectedTrackPayment = 'bkash';
+    function selectTrackPayment(method) {
+        selectedTrackPayment = method;
+        const btns = ['bkash', 'nagad', 'rocket'];
+        btns.forEach(b => {
+            const el = document.getElementById(`track-btn-${b}`);
+            if (b === method) {
+                el.className = "flex-1 py-2 rounded-xl font-bold text-sm border-2 border-emerald-600 bg-emerald-50 text-emerald-800 transition";
+            } else {
+                el.className = "flex-1 py-2 rounded-xl font-bold text-sm border-2 border-zinc-200 text-zinc-500 hover:border-emerald-200 transition";
+            }
+        });
+        
+        let numbers = { 'bkash': '01884477720', 'nagad': '01884477721', 'rocket': '01884477722' };
+        document.getElementById('track-payment-number').textContent = numbers[method];
+    }
+
+    async function processMockPayment(trackingId) {
+        const digits = document.getElementById('payment-digits').value;
+        if (digits.length !== 2) {
+            alert("Please enter the last 2 digits of the sender number.");
+            return;
+        }
+
+        const btn = document.getElementById('btn-confirm-pay');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(`/api/track/${trackingId}/pay`, { method: 'POST' });
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const data = await res.json();
+                alert(data.detail || "Payment failed");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        } catch(e) {
+            alert("Network error processing payment");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+</script>
+
+<!-- Cancel Action Modal -->
+<div id="cancel-action-modal" class="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-95 opacity-0 transition-all duration-200" id="cancel-action-content">
+        <div class="p-6">
+            <h3 class="font-bold text-lg text-zinc-900 mb-2">Cancel Request</h3>
+            <p class="text-sm text-zinc-500 mb-4">Are you sure you want to cancel this hire request? This action cannot be undone.</p>
+            <div class="flex gap-3">
+                <button onclick="closeCancelModal()" class="flex-1 py-3 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 font-bold rounded-xl transition-colors text-sm">No, Keep It</button>
+                <button id="btn-confirm-cancel" onclick="confirmCancelAction('{{ data.tracking_id }}')" class="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors text-sm">Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Action Modal -->
+<div id="payment-action-modal" class="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-95 opacity-0 transition-all duration-200" id="payment-action-content">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-lg text-zinc-900">Complete Payment</h3>
+                <button onclick="closePaymentModal()" class="text-zinc-400 hover:text-zinc-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="flex gap-2 mb-4 justify-center">
+                <button onclick="selectTrackPayment('bkash')" id="track-btn-bkash" class="flex-1 py-2 rounded-xl font-bold text-sm border-2 border-emerald-600 bg-emerald-50 text-emerald-800 transition">bKash</button>
+                <button onclick="selectTrackPayment('nagad')" id="track-btn-nagad" class="flex-1 py-2 rounded-xl font-bold text-sm border-2 border-zinc-200 text-zinc-500 hover:border-emerald-200 transition">Nagad</button>
+                <button onclick="selectTrackPayment('rocket')" id="track-btn-rocket" class="flex-1 py-2 rounded-xl font-bold text-sm border-2 border-zinc-200 text-zinc-500 hover:border-emerald-200 transition">Rocket</button>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 mb-5 text-center">
+                <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-1">Send payment to</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-xl font-black text-emerald-800 font-mono tracking-wider" id="track-payment-number">01884477720</span>
+                </div>
+            </div>
+
+            <div class="space-y-2 mb-6">
+                <label class="text-xs font-bold text-zinc-500 uppercase tracking-widest block text-center">Sender Last 2 Digits</label>
+                <input type="text" id="payment-digits" maxlength="2" placeholder="**" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-center text-2xl font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition placeholder:text-zinc-300">
+            </div>
+
+            <button id="btn-confirm-pay" onclick="processMockPayment('{{ data.tracking_id }}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition shadow flex justify-center items-center gap-2">
+                <i class="fa-solid fa-lock text-sm"></i> Submit for Verification
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

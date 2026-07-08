@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
     .sidebar-scroll::-webkit-scrollbar {
         width: 4px;
@@ -62,6 +63,21 @@
                     <i class="fa-solid fa-chart-line w-5 text-center"></i>
                     <span class="text-sm">Analytics</span>
                 </div>
+            
+                {% if host.host_type == 'artist' %}
+                <div onclick="navigateHostTab(3)" id="host-tab-3"
+                    class="host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer text-zinc-600 transition-colors">
+                    <i class="fa-solid fa-handshake w-5 text-center"></i>
+                    <span class="text-sm">Hire Requests</span>
+                </div>
+                {% endif %}
+                {% if host.host_type == 'session' %}
+                <div onclick="navigateHostTab(4)" id="host-tab-4"
+                    class="host-tab flex items-center gap-x-3 px-4 py-3 hover:bg-zinc-50 rounded-2xl cursor-pointer text-zinc-600 transition-colors">
+                    <i class="fa-solid fa-video w-5 text-center"></i>
+                    <span class="text-sm">My Sessions</span>
+                </div>
+                {% endif %}
             </nav>
 
             <!-- Onboarding Progress -->
@@ -100,7 +116,9 @@
                             <i class="fa-solid fa-hourglass-start text-[10px]"></i>
                         </div>
                         <div>
-                            <div class="font-semibold text-xs text-zinc-800">Create Your Event</div>
+                            <div class="font-semibold text-xs text-zinc-800">
+                                {% if host.host_type == 'artist' %}Create Listing{% elif host.host_type == 'session' %}Create Session{% else %}Create Your Event{% endif %}
+                            </div>
                             <div class="text-zinc-500 text-[10px] font-semibold">Not Done Yet</div>
                         </div>
                         {% endif %}
@@ -127,17 +145,26 @@
                 </div>
             </div>
 
-            <!-- Host Revenue Share Card -->
+            <!-- Host Tips Card -->
             <div class="mt-10 border-t pt-6">
                 <div class="bg-emerald-50 border border-emerald-100/50 rounded-2xl p-5 text-xs">
                     <div class="font-bold text-emerald-800 mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-percentage text-emerald-600"></i>
-                        <span>Host Revenue Share</span>
+                        <i class="fa-solid fa-lightbulb text-emerald-600"></i>
+                        <span>Pro Tips for Success</span>
                     </div>
-                    <div class="text-emerald-700 font-semibold mb-1 text-[11px]">Your Deal: {{ (host.revenue_share_pct * 100)|int }}% to Host • {{ (100 - host.revenue_share_pct * 100)|int }}% to DekhaHok</div>
+                    {% if host.host_type == 'artist' %}
                     <p class="text-xs text-zinc-600 leading-relaxed">
-                        DekhaHok handles checkout gateways, site listing, mapping search, sitemaps, SMS updates, and security check processes.
+                        <span class="font-bold text-emerald-700">Artist Tip:</span> Keep your availability calendar updated and respond to hire requests promptly. Detailed communication about the venue and sound requirements ensures a smooth gig.
                     </p>
+                    {% elif host.host_type == 'mentor' %}
+                    <p class="text-xs text-zinc-600 leading-relaxed">
+                        <span class="font-bold text-emerald-700">Mentor Tip:</span> Prepare actionable feedback for your students. Sharing resources or notes after a 1-on-1 session increases your chances of getting repeat bookings.
+                    </p>
+                    {% else %}
+                    <p class="text-xs text-zinc-600 leading-relaxed">
+                        <span class="font-bold text-emerald-700">Host Tip:</span> Engage with your audience by adding clear descriptions and high-quality images to your events. The faster you respond to requests, the higher your ranking.
+                    </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -155,7 +182,9 @@
             <div class="flex items-center gap-4 flex-wrap">
                 <a href="/host/events/new" class="flex items-center gap-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 sm:px-6 h-12 rounded-full transition-all font-semibold text-sm shadow">
                     <i class="fa-solid fa-plus text-xs"></i>
-                    <span>Create New Event</span>
+                    <span>
+                        {% if host.host_type == 'artist' %}Create Listing{% elif host.host_type == 'session' %}Create Session{% else %}Create New Event{% endif %}
+                    </span>
                 </a>
 
                 <div class="flex items-center gap-x-3 bg-white border border-zinc-200/60 rounded-full pl-2 pr-5 h-12 shadow-sm">
@@ -264,6 +293,140 @@
             {% endif %}
         </div>
 
+        
+        {% if host.host_type == 'artist' %}
+        <h2 id="hire-requests-title" class="font-bold text-lg sm:text-xl text-zinc-800 mb-5">Hire Requests</h2>
+        <div id="hire-requests-list" class="space-y-4 mb-10">
+            {% if not hire_requests %}
+                <div class="bg-white border border-dashed rounded-3xl p-12 text-center text-zinc-400">
+                    <p class="font-bold text-zinc-600 mb-1">No hire requests yet</p>
+                    <p class="text-xs max-w-sm mx-auto mb-4 text-zinc-400">When users request to hire you, they will appear here.</p>
+                </div>
+            {% else %}
+                {% for hr in hire_requests %}
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-6 shadow-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-zinc-800 text-lg">{{ hr.client_name }} <span class="text-xs font-normal text-zinc-500 bg-zinc-100 px-2 py-1 rounded-full ml-2">{{ hr.tracking_id }}</span></h3>
+                                <p class="text-sm text-zinc-500 mt-1">{{ hr.occasion }} • {{ hr.event_date.strftime('%B %d, %Y') if hr.event_date else 'TBD' }} • {{ hr.guests or 'Unknown' }} guests</p>
+                                <p class="text-xs text-emerald-600 font-bold mt-1">Budget: {{ hr.budget }}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full 
+                                    {% if hr.status == 'pending' %}bg-yellow-100 text-yellow-700
+                                    {% elif hr.status == 'accepted' %}bg-emerald-100 text-emerald-700
+                                    {% elif hr.status == 'rejected' %}bg-rose-100 text-rose-700
+                                    {% else %}bg-blue-100 text-blue-700{% endif %}">
+                                    {{ hr.status }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="bg-zinc-50 rounded-xl p-4 text-sm text-zinc-600 italic mb-4">
+                            "{{ hr.message }}"
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            {% if hr.status == 'pending' %}
+                            <button onclick="openHireActionModal('{{ hr.id }}', 'accept')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors">Accept</button>
+                            <button onclick="openHireActionModal('{{ hr.id }}', 'decline')" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-xl transition-colors">Decline</button>
+                            {% elif hr.status == 'accepted' %}
+                                {% if hr.payment_status == 'paid' %}
+                                    <div class="px-4 py-2 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-200 flex items-center gap-2">
+                                        <i class="fa-solid fa-phone"></i> {{ hr.client_phone }}
+                                    </div>
+                                    <button onclick="requestPayout('{{ hr.id }}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors">Request Payout</button>
+                                {% elif hr.payment_status == 'payout_requested' %}
+                                    <div class="px-4 py-2 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-200 flex items-center gap-2">
+                                        <i class="fa-solid fa-phone"></i> {{ hr.client_phone }}
+                                    </div>
+                                    <div class="px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200 flex items-center gap-2">
+                                        <i class="fa-solid fa-clock"></i> Payout Requested
+                                    </div>
+                                {% elif hr.payment_status == 'verifying' %}
+                                    <div class="px-4 py-2 bg-zinc-50 text-zinc-500 text-xs font-bold rounded-xl border border-zinc-200 flex items-center gap-2">
+                                        <i class="fa-regular fa-clock"></i> Payment Verifying
+                                    </div>
+                                {% else %}
+                                    <div class="px-4 py-2 bg-zinc-50 text-zinc-500 text-xs font-bold rounded-xl border border-zinc-200 flex items-center gap-2">
+                                        <i class="fa-regular fa-clock"></i> Waiting for Payment
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if host.host_type == 'session' %}
+        <div class="flex justify-between items-center mb-5">
+            <h2 id="sessions-title" class="font-bold text-lg sm:text-xl text-zinc-800">My Sessions</h2>
+            <button onclick="document.getElementById('add-slot-modal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-emerald-700 transition">Add Time Slots</button>
+        </div>
+        
+        <div id="sessions-list" class="space-y-4 mb-10">
+            {% if not sessions %}
+                <div class="bg-white border border-dashed rounded-3xl p-12 text-center text-zinc-400">
+                    <p class="font-bold text-zinc-600 mb-1">No sessions added</p>
+                    <p class="text-xs max-w-sm mx-auto mb-4 text-zinc-400">Add available time slots for users to book 1-on-1 sessions.</p>
+                </div>
+            {% else %}
+                {% for s in sessions %}
+                    <div class="bg-white border border-zinc-100 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl {% if s.is_booked %}bg-emerald-100 text-emerald-600{% else %}bg-zinc-100 text-zinc-400{% endif %} flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-zinc-800">{{ s.slot_time.strftime('%A, %b %d') }} at {{ s.slot_time.strftime('%I:%M %p') }}</h4>
+                                <p class="text-xs text-zinc-500">{{ s.duration_mins }} minutes • {{ s.event_title }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            {% if s.is_booked %}
+                                <div class="text-xs font-bold text-emerald-600 mb-1">Booked by {{ s.client_name }}</div>
+                                <div class="text-[10px] text-zinc-400">{{ s.client_phone }}</div>
+                            {% else %}
+                                <span class="bg-zinc-100 text-zinc-600 text-[10px] px-2 py-1 rounded-full font-bold uppercase">Available</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <!-- Add Slot Modal -->
+        <div id="add-slot-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm p-4">
+            <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative border border-zinc-100">
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-zinc-900 mb-4 text-center">Add Time Slots</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-zinc-500 block mb-1 text-center">Event (Service)</label>
+                            <select id="slot-event-id" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-inner bg-white text-center">
+                                {% for evt in events %}
+                                    <option value="{{ evt.id }}">{{ evt.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-zinc-500 block mb-1 text-center">Date</label>
+                            <input type="text" id="slot-date" placeholder="Select Date" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-inner text-center bg-zinc-50 cursor-pointer">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-zinc-500 block mb-1 text-center">Time</label>
+                            <input type="text" id="slot-times" placeholder="Select Time" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-inner text-center bg-zinc-50 cursor-pointer">
+                        </div>
+                    </div>
+                    <div class="mt-6 flex gap-3">
+                        <button onclick="document.getElementById('add-slot-modal').classList.add('hidden')" class="flex-1 bg-zinc-100 text-zinc-600 font-bold py-3 rounded-xl hover:bg-zinc-200">Cancel</button>
+                        <button onclick="submitSlots()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700">Add Slots</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- REVIEWS FEED -->
         <h2 class="font-bold text-lg sm:text-xl text-zinc-800 mb-5">Latest Attendee Reviews</h2>
         {% if reviews %}
@@ -349,7 +512,7 @@
     }
 
     function navigateHostTab(tabIndex) {
-        const tabsText = ["Dashboard", "My Events", "Analytics"];
+        const tabsText = ["Dashboard", "My Events", "Analytics", "Hire Requests", "My Sessions"];
         document.getElementById('dash-mobile-active-tab').innerText = tabsText[tabIndex];
 
         document.querySelectorAll('.host-tab').forEach((tab, index) => {
@@ -367,9 +530,13 @@
 
         if (tabIndex === 1) {
             const listEl = document.getElementById('host-events-list');
-            if (listEl) {
-                listEl.scrollIntoView({ behavior: 'smooth' });
-            }
+            if (listEl) listEl.scrollIntoView({ behavior: 'smooth' });
+        } else if (tabIndex === 3) {
+            const listEl = document.getElementById('hire-requests-title');
+            if (listEl) listEl.scrollIntoView({ behavior: 'smooth' });
+        } else if (tabIndex === 4) {
+            const listEl = document.getElementById('sessions-title');
+            if (listEl) listEl.scrollIntoView({ behavior: 'smooth' });
         } else if (tabIndex === 2) {
             showToast("Analytics report dashboards are generated automatically. Detailed payouts, clicks and referrals charts will follow in the next release.", 'info');
         }
@@ -458,5 +625,155 @@
             showToast("Error promoting attendee.", 'error');
         }
     }
+
+
+
+    async function submitSlots() {
+        const date = document.getElementById('slot-date').value;
+        const times = document.getElementById('slot-times').value;
+        const eventId = document.getElementById('slot-event-id').value;
+        if(!date || !times) return alert("Date and times are required");
+        
+        try {
+            const res = await fetch(`/api/host/slots/add`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ event_id: parseInt(eventId), date: date, times: times })
+            });
+            if(res.ok) {
+                window.location.reload();
+            } else {
+                const data = await res.json();
+                alert(data.detail || "Failed to add slots");
+            }
+        } catch(e) { alert("Network error"); }
+    }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#slot-date", {
+            minDate: "today",
+            dateFormat: "Y-m-d"
+        });
+        flatpickr("#slot-times", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K",
+            time_24hr: false
+        });
+    });
+
+    let currentHireRequest = null;
+    let currentHireAction = null;
+
+    async function requestPayout(hrId) {
+        if(!confirm("Are you sure you want to request payout for this gig?")) return;
+        try {
+            const res = await fetch(`/api/hire/${hrId}/payout`, { method: 'POST' });
+            if(res.ok) {
+                window.location.reload();
+            } else {
+                const data = await res.json();
+                alert(data.detail || "Payout request failed");
+            }
+        } catch(e) {
+            alert("Network error");
+        }
+    }
+
+    function openHireActionModal(hrId, action) {
+        currentHireRequest = hrId;
+        currentHireAction = action;
+        const modal = document.getElementById('hire-action-modal');
+        const content = document.getElementById('hire-action-content');
+        const title = document.getElementById('hire-action-title');
+        const desc = document.getElementById('hire-action-desc');
+        const feeContainer = document.getElementById('hire-fee-container');
+        const btn = document.getElementById('btn-confirm-hire-action');
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+        }, 10);
+
+        if (action === 'accept') {
+            title.textContent = 'Accept Request';
+            desc.textContent = 'Set the final agreed fee for this booking.';
+            feeContainer.classList.remove('hidden');
+            btn.className = 'flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors text-sm';
+            btn.textContent = 'Accept Request';
+        } else {
+            title.textContent = 'Decline Request';
+            desc.textContent = 'Are you sure you want to decline this request?';
+            feeContainer.classList.add('hidden');
+            btn.className = 'flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors text-sm';
+            btn.textContent = 'Decline Request';
+        }
+    }
+
+    function closeHireActionModal() {
+        const modal = document.getElementById('hire-action-modal');
+        const content = document.getElementById('hire-action-content');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
+
+    async function confirmHireAction() {
+        const btn = document.getElementById('btn-confirm-hire-action');
+        const originalText = btn.textContent;
+        btn.textContent = 'Processing...';
+        btn.disabled = true;
+
+        let payload = {};
+        if (currentHireAction === 'accept') {
+            payload.fee_amount = parseFloat(document.getElementById('hire-fee-input').value) || 0;
+        }
+
+        try {
+            const res = await fetch(`/api/hire/${currentHireRequest}/${currentHireAction}`, { 
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if(res.ok) {
+                window.location.reload();
+            } else {
+                alert(data.detail || "Failed to process request");
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        } catch(e) { 
+            alert("Network error"); 
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    }
+</script>
+
+<!-- Hire Action Modal -->
+<div id="hire-action-modal" class="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-95 opacity-0 transition-all duration-200" id="hire-action-content">
+        <div class="p-6">
+            <h3 id="hire-action-title" class="font-bold text-lg text-zinc-900 mb-2">Accept Request</h3>
+            <p id="hire-action-desc" class="text-sm text-zinc-500 mb-4">Set the final agreed fee for this booking.</p>
+            
+            <div id="hire-fee-container" class="mb-5">
+                <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Final Fee Amount (BDT)</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 font-bold">৳</span>
+                    <input type="number" id="hire-fee-input" class="w-full pl-8 pr-4 py-3 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="0.00" value="0">
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeHireActionModal()" class="flex-1 py-3 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 font-bold rounded-xl transition-colors text-sm">Cancel</button>
+                <button id="btn-confirm-hire-action" onclick="confirmHireAction()" class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors text-sm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

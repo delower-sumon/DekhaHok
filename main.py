@@ -29,7 +29,8 @@ from models import (
     RatingCreate, MessageCreate, PartnershipCreate, PartnershipUpdate,
     BlogCreate, BlogResponse, BlogUpdate, PublicGroupResponse,
     BlogCommentCreate, BlogCommentResponse,
-    UserCreate, UserLogin, HostApply, EventCreate
+    UserCreate, UserLogin, HostApply, EventCreate,
+    SessionBookCreate, HireRequestCreate
 )
 
 load_dotenv()
@@ -109,7 +110,12 @@ def get_current_user(dh_session: Optional[str] = Cookie(None)):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, email, role, full_name, avatar_url FROM users WHERE id = %s", (session_data["user_id"],))
+        cursor.execute("""
+            SELECT u.id, u.email, u.role, u.full_name, u.avatar_url, h.experience_years
+            FROM users u
+            LEFT JOIN hosts h ON u.id = h.user_id
+            WHERE u.id = %s
+        """, (session_data["user_id"],))
         row = cursor.fetchone()
         cursor.close()
         if row:
@@ -118,7 +124,8 @@ def get_current_user(dh_session: Optional[str] = Cookie(None)):
                 "email": row[1],
                 "role": row[2],
                 "name": row[3],
-                "avatar": f"/api/users/{row[0]}/avatar"
+                "avatar": f"/api/users/{row[0]}/avatar",
+                "experience_years": row[5] or 0
             }
         return None
     finally:
@@ -269,12 +276,12 @@ def serve_frontend(request: Request):
             })
         # Fetch all published events for SSR and client JSON
         cursor.execute("""
-            SELECT e.id, e.title, e.description, e.category, e.package_tier, e.price_per_person,
+            SELECT e.id, e.title, e.description, e.category, NULL as package_tier, e.price_per_person,
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession, h.is_founding as host_is_founding
+                   h.profession as host_profession, h.experience_years as host_experience, h.is_founding as host_is_founding, e.booking_model
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -293,7 +300,9 @@ def serve_frontend(request: Request):
                 "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
                 "host_verification_status": r[18],
                 "host_profession": r[19] or "",
-                "host_is_founding": bool(r[20]),
+                "host_experience": r[20] or 0,
+                "host_is_founding": bool(r[21]),
+                "booking_model": r[22] or "ticketed",
                 "event_date_formatted": local_time_filter(r[10]) if r[10] else "TBA"
             })
             
@@ -407,7 +416,7 @@ def serve_booking_page(request: Request, event_id: int):
         conn.commit()
 
         # 1. Fetch Event details for SEO tags and fallback
-        cursor.execute("SELECT id, title, description, image_url, price_per_person, slug, COALESCE(views, 0) FROM events WHERE id = %s", (event_id,))
+        cursor.execute("SELECT id, title, description, image_url, price_per_person, slug, COALESCE(views, 0), booking_model FROM events WHERE id = %s", (event_id,))
         evt_row = cursor.fetchone()
         if evt_row:
             event = {
@@ -417,12 +426,13 @@ def serve_booking_page(request: Request, event_id: int):
                 "image_url": evt_row[3],
                 "price": float(evt_row[4]),
                 "slug": evt_row[5],
-                "views": evt_row[6]
+                "views": evt_row[6],
+                "booking_model": evt_row[7] or "ticketed"
             }
             
         # 2. Check for existing booking if user is logged in
         if user:
-            cursor.execute("SELECT tracking_id FROM bookings WHERE user_id = %s AND event_id = %s", (user["user_id"], event_id))
+            cursor.execute("SELECT tracking_id FROM bookings WHERE user_id = %s AND event_id = %s AND booking_status NOT IN ('cancelled', 'rejected')", (user["user_id"], event_id))
             row = cursor.fetchone()
             if row:
                 existing_booking = {"tracking_id": row[0]}
@@ -431,7 +441,13 @@ def serve_booking_page(request: Request, event_id: int):
     finally:
         release_conn(conn)
         
-    return templates.TemplateResponse("booking.html", {
+    template_name = "booking.html"
+    if event and event["booking_model"] == "session":
+        template_name = "booking_session.html"
+    elif event and event["booking_model"] == "hire":
+        template_name = "booking_hire.html"
+
+    return templates.TemplateResponse(template_name, {
         "request": request, 
         "user": user, 
         "event_id": event_id, 
@@ -518,18 +534,23 @@ def serve_host_event_create(request: Request):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, verification_status FROM hosts WHERE user_id = %s", (user["user_id"],))
+        cursor.execute("SELECT id, verification_status, host_type FROM hosts WHERE user_id = %s", (user["user_id"],))
         host_row = cursor.fetchone()
         if not host_row:
             return RedirectResponse("/host/apply")
         
-        host_id, verification_status = host_row
+        host_id, verification_status, host_type = host_row
         if verification_status != "VERIFIED" and user["role"] != "admin":
             return RedirectResponse("/host/apply")
+            
+        host_info = {
+            "id": host_id,
+            "host_type": host_type or "community"
+        }
     finally:
         release_conn(conn)
         
-    return templates.TemplateResponse("host_event_create.html", {"request": request, "user": user})
+    return templates.TemplateResponse("host_event_create.html", {"request": request, "user": user, "host": host_info})
 
 @app.get("/host/events/{event_id}/edit", include_in_schema=False)
 def serve_host_event_edit(event_id: int, request: Request):
@@ -543,26 +564,43 @@ def serve_host_event_edit(event_id: int, request: Request):
     conn = get_conn()
     try:
         cursor = conn.cursor()
+        host_dict = {}
         if user["role"] != "admin":
-            cursor.execute("SELECT id FROM hosts WHERE user_id = %s", (user["user_id"],))
+            cursor.execute("SELECT id, host_type, verification_status FROM hosts WHERE user_id = %s", (user["user_id"],))
             host_row = cursor.fetchone()
             if not host_row:
                 return RedirectResponse("/host/apply")
             host_id = host_row[0]
+            host_dict = {
+                "id": host_row[0],
+                "host_type": host_row[1],
+                "verification_status": host_row[2]
+            }
         else:
-            host_id = None # Admin bypass, handled in query logic if needed
+            host_id = None
+            cursor.execute("SELECT host_id FROM events WHERE id = %s", (event_id,))
+            ev_host_row = cursor.fetchone()
+            if ev_host_row:
+                cursor.execute("SELECT id, host_type, verification_status FROM hosts WHERE id = %s", (ev_host_row[0],))
+                h_row = cursor.fetchone()
+                if h_row:
+                    host_dict = {
+                        "id": h_row[0],
+                        "host_type": h_row[1],
+                        "verification_status": h_row[2]
+                    }
             
         # If admin, we don't strictly enforce host_id match
         if host_id:
             cursor.execute("""
-                SELECT id, title, description, category, package_tier, price_per_person, capacity, 
+                SELECT id, title, description, category, NULL as package_tier, price_per_person, capacity, 
                        location_name, location_area, event_date, included, image_url, is_recurring,
                        image_url_2, image_url_3, image_url_4
                 FROM events WHERE id = %s AND host_id = %s
             """, (event_id, host_id))
         else:
             cursor.execute("""
-                SELECT id, title, description, category, package_tier, price_per_person, capacity, 
+                SELECT id, title, description, category, NULL as package_tier, price_per_person, capacity, 
                        location_name, location_area, event_date, included, image_url, is_recurring,
                        image_url_2, image_url_3, image_url_4
                 FROM events WHERE id = %s
@@ -608,7 +646,8 @@ def serve_host_event_edit(event_id: int, request: Request):
         "request": request, 
         "user": user, 
         "event": evt_dict,
-        "event_data_json": json.dumps(evt_dict)
+        "event_data_json": json.dumps(evt_dict),
+        "host": host_dict
     })
 
 @app.get("/host/dashboard", include_in_schema=False)
@@ -623,20 +662,20 @@ def serve_host_dashboard(request: Request):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, verification_status, revenue_share_pct, profession FROM hosts WHERE user_id = %s", (user["user_id"],))
+        cursor.execute("SELECT id, verification_status, revenue_share_pct, profession, host_type FROM hosts WHERE user_id = %s", (user["user_id"],))
         host_row = cursor.fetchone()
         if not host_row:
             cursor.close()
             return RedirectResponse("/host/apply")
         
-        host_id, verification_status, revenue_share, profession = host_row
+        host_id, verification_status, revenue_share, profession, host_type = host_row
         if verification_status != "VERIFIED":
             cursor.close()
             return RedirectResponse("/host/apply")
             
         # Retrieve all events for this host
         cursor.execute("""
-            SELECT id, slug, title, description, category, package_tier, price_per_person, capacity, booked_count, location_name, location_area, event_date, status, included 
+            SELECT id, slug, title, description, category, NULL as package_tier, price_per_person, capacity, booked_count, location_name, location_area, event_date, status, included 
             FROM events 
             WHERE host_id = %s 
             ORDER BY event_date DESC
@@ -746,11 +785,62 @@ def serve_host_dashboard(request: Request):
     finally:
         release_conn(conn)
         
+    # Fetch hire requests for artists
+    hire_requests = []
+    if host_type == 'artist':
+        conn = get_conn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT h.id, h.tracking_id, h.client_name, h.occasion_type, h.event_date, h.event_location, h.guest_count, h.budget_range, h.status, h.message, h.created_at, e.title, h.client_phone, b.payment_status
+                FROM hire_requests h
+                JOIN events e ON h.event_id = e.id
+                LEFT JOIN bookings b ON b.hire_request_id = h.id
+                WHERE h.host_id = %s
+                ORDER BY h.created_at DESC
+            """, (host_id,))
+            rows = cursor.fetchall()
+            for r in rows:
+                hire_requests.append({
+                    "id": r[0], "tracking_id": r[1], "client_name": r[2], "occasion": r[3], 
+                    "event_date": r[4], "location": r[5], "guests": r[6], "budget": r[7], 
+                    "status": r[8], "message": r[9], "created_at": r[10], "event_title": r[11],
+                    "client_phone": r[12], "payment_status": r[13]
+                })
+        finally:
+            release_conn(conn)
+            
+    # Fetch session slots for session hosts
+    sessions = []
+    if host_type == 'session':
+        conn = get_conn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT s.id, s.slot_date, s.slot_time, s.duration_mins, s.is_booked, s.created_at, e.title,
+                       b.name, b.email, b.phone, b.booking_status
+                FROM host_slots s
+                JOIN events e ON s.event_id = e.id
+                LEFT JOIN bookings b ON b.slot_id = s.id
+                WHERE e.host_id = %s
+                ORDER BY s.slot_date DESC, s.slot_time DESC
+            """, (host_id,))
+            rows = cursor.fetchall()
+            for r in rows:
+                dt = datetime.combine(r[1], r[2]) if r[1] and r[2] else None
+                sessions.append({
+                    "id": r[0], "slot_time": dt, "duration_mins": r[3], "is_booked": r[4], "created_at": r[5], "event_title": r[6],
+                    "client_name": r[7], "client_email": r[8], "client_phone": r[9], "booking_status": r[10]
+                })
+        finally:
+            release_conn(conn)
+        
     host_info = {
         "id": host_id,
         "verification_status": verification_status,
         "revenue_share_pct": float(revenue_share or 0.5),
-        "profession": profession or "Community Host"
+        "profession": profession or "Community Host",
+        "host_type": host_type or "community"
     }
     
     return templates.TemplateResponse("host_dashboard.html", {
@@ -761,7 +851,9 @@ def serve_host_dashboard(request: Request):
         "total_earnings": total_earnings, 
         "people_reached": people_reached,
         "events_count": len(events),
-        "reviews": reviews
+        "reviews": reviews,
+        "hire_requests": hire_requests,
+        "sessions": sessions
     })
 
 
@@ -1133,8 +1225,9 @@ def update_user_profile(payload: dict = Body(...), current_user = Depends(get_cu
         
     avatar_base64 = payload.get("avatar_base64")
     full_name = payload.get("full_name")
+    experience_years = payload.get("experience_years")
     
-    if not avatar_base64 and not full_name:
+    if not avatar_base64 and not full_name and experience_years is None:
         raise HTTPException(status_code=400, detail="No updates provided.")
     
     conn = get_conn()
@@ -1155,6 +1248,12 @@ def update_user_profile(payload: dict = Body(...), current_user = Depends(get_cu
             cursor.execute(
                 "UPDATE users SET full_name = %s WHERE id = %s",
                 (full_name, current_user["user_id"])
+            )
+            
+        if experience_years is not None and current_user["role"] in ["host", "admin"]:
+            cursor.execute(
+                "UPDATE hosts SET experience_years = %s WHERE user_id = %s",
+                (experience_years, current_user["user_id"])
             )
             
         conn.commit()
@@ -1474,12 +1573,12 @@ def api_list_events(category: Optional[str] = None):
     try:
         cursor = conn.cursor()
         query = """
-            SELECT e.id, e.title, e.description, e.category, e.package_tier, e.price_per_person,
+            SELECT e.id, e.title, e.description, e.category, NULL as package_tier, e.price_per_person,
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession, h.is_founding as host_is_founding
+                   h.profession as host_profession, h.is_founding as host_is_founding, e.booking_model
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1504,7 +1603,9 @@ def api_list_events(category: Optional[str] = None):
                 "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
                 "host_verification_status": r[18],
                 "host_profession": r[19] or "",
-                "host_is_founding": bool(r[20])
+                "host_experience": r[20] or 0,
+                "host_is_founding": bool(r[21]),
+                "booking_model": r[22] or "ticketed"
             })
         cursor.close()
     finally:
@@ -1517,12 +1618,12 @@ def api_event_detail(event_id: int):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT e.id, e.title, e.description, e.category, e.package_tier, e.price_per_person,
+            SELECT e.id, e.title, e.description, e.category, NULL as package_tier, e.price_per_person,
                    e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, h.bio as host_bio, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession, e.is_recurring,
+                   h.profession as host_profession, h.experience_years as host_experience, e.is_recurring,
                    CASE WHEN e.image_url_2 IS NOT NULL AND e.image_url_2 != '' THEN 1 ELSE 0 END as has_image_2,
                    CASE WHEN e.image_url_3 IS NOT NULL AND e.image_url_3 != '' THEN 1 ELSE 0 END as has_image_3,
                    CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
@@ -1550,9 +1651,10 @@ def api_event_detail(event_id: int):
             "host_bio": r[17] or "",
             "host_verification_status": r[19],
             "host_profession": r[20] or "",
-            "is_recurring": r[21] if len(r) > 21 else False,
-            "image_url_2": f"/api/events/{r[0]}/image/2" if len(r) > 22 and r[22] else None,
-            "image_url_3": f"/api/events/{r[0]}/image/3" if len(r) > 23 and r[23] else None,
+            "host_experience": r[21] or 0,
+            "is_recurring": r[22] if len(r) > 22 else False,
+            "image_url_2": f"/api/events/{r[0]}/image/2" if len(r) > 23 and r[23] else None,
+            "image_url_3": f"/api/events/{r[0]}/image/3" if len(r) > 24 and r[24] else None,
             "image_url_4": f"/api/events/{r[0]}/image/4" if len(r) > 24 and r[24] else None,
             "youtube_link": r[25] if len(r) > 25 else None,
             "host_is_founding": bool(r[26]) if len(r) > 26 else False,
@@ -1562,6 +1664,32 @@ def api_event_detail(event_id: int):
     finally:
         release_conn(conn)
     return result
+
+@app.get("/api/host/{host_id}/profile")
+def get_host_profile(host_id: int):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT id, user_id, category, host_type, verification_status, bio, operating_area
+            FROM hosts
+            WHERE id = %s
+        """, (host_id,))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(404, "Host not found")
+        
+        return {
+            "id": row[0],
+            "user_id": row[1],
+            "category": row[2],
+            "host_type": row[3],
+            "verification_status": row[4],
+            "bio": row[5],
+            "operating_area": row[6]
+        }
+    finally:
+        release_conn(conn)
 
 @app.post("/api/host/apply")
 def host_apply(payload: HostApply, user = Depends(require_role(["user", "host", "admin"]))):
@@ -1575,10 +1703,10 @@ def host_apply(payload: HostApply, user = Depends(require_role(["user", "host", 
             raise HTTPException(status_code=400, detail="You have already applied to host.")
         
         cursor.execute("""
-            INSERT INTO hosts (user_id, nid_number, profession, category, operating_area, bio, social_links, verification_status)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, 'PENDING')
+            INSERT INTO hosts (user_id, nid_number, profession, category, host_type, operating_area, bio, social_links, verification_status, experience_years)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'PENDING', %s)
             RETURNING id
-        """, (user["user_id"], payload.nid_number, payload.profession, payload.category, payload.operating_area, payload.bio, payload.social_links or '{}'))
+        """, (user["user_id"], payload.nid_number, payload.profession, payload.category, payload.host_type, payload.operating_area, payload.bio, payload.social_links or '{}', payload.experience_years))
         host_id = cursor.fetchone()[0]
         
         cursor.execute("UPDATE users SET avatar_url = %s WHERE id = %s", (payload.avatar_url, user["user_id"]))
@@ -1589,6 +1717,7 @@ def host_apply(payload: HostApply, user = Depends(require_role(["user", "host", 
     return {"message": "Application submitted successfully! It is pending admin approval.", "host_id": host_id}
 
 @app.post("/api/host/events/create")
+@app.post("/api/host/listings/create")
 def host_create_event(payload: EventCreate, user = Depends(require_role(["host", "admin"]))):
     conn = get_conn()
     try:
@@ -1614,10 +1743,22 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
         status = 'published' if user["role"] == 'admin' else 'draft'
         
         cursor.execute("""
-            INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, location_name, location_area, event_date, included, status, image_url, image_url_2, image_url_3, image_url_4, youtube_link, is_recurring)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO events (
+                host_id, slug, title, description, category, listing_type, booking_model,
+                starting_rate, service_area, occasion_types, portfolio_url, availability_note,
+                session_duration_mins, max_per_session, advance_notice_hours,
+                price_per_person, capacity, location_name, location_area, event_date, included, status,
+                image_url, image_url_2, image_url_3, image_url_4, youtube_link, is_recurring
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
-        """, (host_id, slug, payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status, payload.image_base64, payload.image_base64_2, payload.image_base64_3, payload.image_base64_4, payload.youtube_link, payload.is_recurring))
+        """, (
+            host_id, slug, payload.title, payload.description, payload.category, payload.listing_type, payload.booking_model,
+            payload.starting_rate, payload.service_area, payload.occasion_types, payload.portfolio_url, payload.availability_note,
+            payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours,
+            payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status,
+            payload.image_base64, payload.image_base64_2, payload.image_base64_3, payload.image_base64_4, payload.youtube_link, payload.is_recurring
+        ))
         event_id = cursor.fetchone()[0]
         conn.commit()
         cursor.close()
@@ -1650,12 +1791,16 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             
         # Construct update fields dynamically based on whether images were provided or not
         update_fields = [
-            "title=%s", "description=%s", "category=%s", "package_tier=%s", "price_per_person=%s", "capacity=%s",
-            "location_name=%s", "location_area=%s", "event_date=%s", "included=%s", "is_recurring=%s", "youtube_link=%s"
+            "title=%s", "description=%s", "category=%s", "price_per_person=%s", "capacity=%s",
+            "location_name=%s", "location_area=%s", "event_date=%s", "included=%s", "is_recurring=%s", "youtube_link=%s",
+            "listing_type=%s", "booking_model=%s", "starting_rate=%s", "service_area=%s", "occasion_types=%s",
+            "portfolio_url=%s", "availability_note=%s", "session_duration_mins=%s", "max_per_session=%s", "advance_notice_hours=%s"
         ]
         update_values = [
-            payload.title, payload.description, payload.category, payload.package_tier, payload.price_per_person, payload.capacity,
-            payload.location_name, payload.location_area, event_dt, payload.included or '[]', payload.is_recurring, payload.youtube_link
+            payload.title, payload.description, payload.category, payload.price_per_person, payload.capacity,
+            payload.location_name, payload.location_area, event_dt, payload.included or '[]', payload.is_recurring, payload.youtube_link,
+            payload.listing_type, payload.booking_model, payload.starting_rate, payload.service_area, payload.occasion_types,
+            payload.portfolio_url, payload.availability_note, payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours
         ]
         
         if payload.image_base64:
@@ -1731,6 +1876,128 @@ def promote_attendee(event_id: int, booking_id: int, user = Depends(require_role
     finally:
         release_conn(conn)
     return {"status": "success", "message": "Attendee promoted to active registration."}
+
+@app.get("/track/{tracking_id}", include_in_schema=False)
+def track_page(request: Request, tracking_id: str):
+    prefix = tracking_id.upper()[:3]
+    if prefix == "HR-":
+        conn = get_conn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT h.client_name, h.occasion_type, h.event_date, h.status, h.message, h.budget_range, h.created_at, u.full_name as artist_name, u.email as artist_email, u.phone as artist_phone, b.payment_status, b.fee_amount
+                FROM hire_requests h
+                JOIN hosts ho ON h.host_id = ho.id
+                JOIN users u ON ho.user_id = u.id
+                LEFT JOIN bookings b ON b.hire_request_id = h.id
+                WHERE h.tracking_id = %s
+            """, (tracking_id.upper(),))
+            row = cursor.fetchone()
+            if not row:
+                return RedirectResponse(url="/?error=invalid_tracking")
+            data = {
+                "tracking_id": tracking_id.upper(),
+                "client_name": row[0],
+                "occasion": row[1],
+                "event_date": row[2],
+                "status": row[3],
+                "message": row[4],
+                "budget": row[5],
+                "created_at": row[6],
+                "artist_name": row[7],
+                "artist_email": row[8],
+                "artist_phone": row[9],
+                "payment_status": row[10],
+                "fee_amount": row[11]
+            }
+            return templates.TemplateResponse("track_hire.html", {"request": request, "data": data})
+        finally:
+            release_conn(conn)
+    elif prefix == "SB-":
+        conn = get_conn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT b.name, b.booking_status, hs.slot_time, hs.duration_mins, u.full_name as host_name, u.email as host_email, u.phone as host_phone
+                FROM bookings b
+                JOIN host_slots hs ON b.slot_id = hs.id
+                JOIN events e ON b.event_id = e.id
+                JOIN hosts h ON e.host_id = h.id
+                JOIN users u ON h.user_id = u.id
+                WHERE b.tracking_id = %s
+            """, (tracking_id.upper(),))
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(404, "Tracking ID not found")
+            data = {
+                "tracking_id": tracking_id.upper(),
+                "client_name": row[0],
+                "status": row[1],
+                "slot_time": row[2],
+                "duration_mins": row[3],
+                "host_name": row[4],
+                "host_email": row[5],
+                "host_phone": row[6]
+            }
+            return templates.TemplateResponse("track_session.html", {"request": request, "data": data})
+        finally:
+            release_conn(conn)
+    else:
+        # Fallback to homepage so user can track DH- tickets via modal
+        return RedirectResponse(url=f"/?track={tracking_id}")
+
+@app.post("/api/track/{tracking_id}/cancel")
+def cancel_hire_request(tracking_id: str):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT id, status FROM hire_requests WHERE tracking_id = %s", (tracking_id.upper(),))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(404, "Tracking ID not found")
+            
+        hr_id, status = row
+        if status in ('completed', 'rejected', 'cancelled'):
+            raise HTTPException(400, "Cannot cancel this request in its current state")
+            
+        cursor.execute("UPDATE hire_requests SET status = 'cancelled' WHERE id = %s", (hr_id,))
+        cursor.execute("UPDATE bookings SET booking_status = 'cancelled' WHERE hire_request_id = %s", (hr_id,))
+        
+        conn.commit()
+        return {"status": "success"}
+    except Exception as e:
+        conn.rollback()
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(500, str(e))
+    finally:
+        release_conn(conn)
+
+@app.post("/api/track/{tracking_id}/pay")
+def pay_hire_request(tracking_id: str):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT id FROM hire_requests WHERE tracking_id = %s", (tracking_id.upper(),))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(404, "Tracking ID not found")
+            
+        hr_id = row[0]
+        
+        cursor.execute("UPDATE bookings SET payment_status = 'verifying' WHERE hire_request_id = %s", (hr_id,))
+        
+        conn.commit()
+        return {"status": "success"}
+    except Exception as e:
+        conn.rollback()
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(500, str(e))
+    finally:
+        release_conn(conn)
 
 @app.get("/api/bookings/track/{tracking_id}", response_model=TrackingResponse)
 def track_booking(tracking_id: str):
@@ -3291,7 +3558,7 @@ def get_admin_events(x_admin_key: str = Header(...)):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT e.id, e.title, e.category, e.package_tier, e.price_per_person, e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date, e.status, u.full_name as host_name, e.host_id
+            SELECT e.id, e.title, e.category, NULL as package_tier, e.price_per_person, e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date, e.status, u.full_name as host_name, e.host_id, e.booking_model
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -3313,7 +3580,8 @@ def get_admin_events(x_admin_key: str = Header(...)):
                 "event_date": str(r[9]) if r[9] else "",
                 "status": r[10],
                 "host_name": r[11] or "DekhaHok Team",
-                "host_id": r[12]
+                "host_id": r[12],
+                "booking_model": r[13] or "ticketed"
             })
         cursor.close()
     finally:
@@ -3449,3 +3717,225 @@ def transfer_attendee_event(booking_id: int, payload: dict = Body(...), x_admin_
     finally:
         release_conn(conn)
     return {"status": "success", "message": "Booking transferred successfully"}
+
+# ---------------------------------------------------------------------------
+# Phase 4: Session & Hire API Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/api/events/{event_id}/slots")
+def get_event_slots(event_id: int):
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, slot_date, slot_time, duration_mins, is_booked FROM host_slots WHERE event_id = %s ORDER BY slot_date ASC, slot_time ASC", (event_id,))
+        slots = []
+        for r in cursor.fetchall():
+            dt = datetime.combine(r[1], r[2]) if r[1] and r[2] else None
+            slots.append({"id": r[0], "slot_time": dt.isoformat() + "+06:00" if dt else "", "duration_mins": r[3], "is_booked": r[4]})
+        return {"slots": slots}
+    finally:
+        release_conn(conn)
+
+@app.post("/api/sessions/book")
+def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(None)):
+    user = get_current_user(dh_session)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # Verify slot is not booked
+        cursor.execute("SELECT is_booked, event_id FROM host_slots WHERE id = %s", (payload.slot_id,))
+        slot_info = cursor.fetchone()
+        if not slot_info:
+            raise HTTPException(404, "Slot not found")
+        if slot_info[0]:
+            raise HTTPException(400, "Slot is already booked")
+        
+        if slot_info[1] != payload.event_id:
+            raise HTTPException(400, "Slot does not belong to this event")
+
+        # Fetch event
+        cursor.execute("SELECT host_id, price_per_person FROM events WHERE id = %s", (payload.event_id,))
+        ev_info = cursor.fetchone()
+        if not ev_info:
+            raise HTTPException(404, "Event not found")
+        
+        host_id, fee = ev_info
+        
+        # Mark slot booked
+        cursor.execute("UPDATE host_slots SET is_booked = TRUE WHERE id = %s", (payload.slot_id,))
+        
+        # Create booking entry
+        import secrets
+        tracking_id = "SB-" + secrets.token_hex(4).upper()
+        
+        user_id = user["user_id"] if user else None
+        
+        cursor.execute("""
+            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, slot_id, group_size)
+            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'paid', %s, 'session', %s, 1)
+            RETURNING id
+        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, fee, payload.slot_id))
+        
+        booking_id = cursor.fetchone()[0]
+        conn.commit()
+        
+        return {"status": "success", "tracking_id": tracking_id, "message": "Session booked successfully"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(500, f"Failed to book session: {str(e)}")
+    finally:
+        release_conn(conn)
+
+@app.post("/api/hire")
+def submit_hire_request(payload: HireRequestCreate, dh_session: Optional[str] = Cookie(None)):
+    user = get_current_user(dh_session)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # Fetch host
+        cursor.execute("SELECT id FROM hosts WHERE id = %s", (payload.host_id,))
+        if not cursor.fetchone():
+            raise HTTPException(404, "Host not found")
+            
+        import secrets
+        tracking_id = "HR-" + secrets.token_hex(4).upper()
+        
+        cursor.execute("""
+            INSERT INTO hire_requests (host_id, event_id, client_name, client_email, client_phone, occasion_type, event_date, event_location, guest_count, message, budget_range, tracking_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+        """, (payload.host_id, payload.event_id, payload.client_name, payload.client_email, payload.client_phone, payload.occasion_type, payload.event_date, payload.event_location, payload.guest_count, payload.message, payload.budget_range, tracking_id))
+        
+        hr_id = cursor.fetchone()[0]
+        
+        # Create a booking entry to unify tracking
+        user_id = user["user_id"] if user else None
+        cursor.execute("""
+            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, hire_request_id, group_size, preferred_date, venue_type)
+            VALUES (%s, %s, %s, %s, %s, %s, 'processing', 'unpaid', 0, 'hire', %s, %s, %s, 'tbd')
+        """, (tracking_id, user_id, payload.event_id, payload.client_name, payload.client_phone, payload.client_email, hr_id, payload.guest_count or 1, payload.event_date or '1970-01-01'))
+
+        conn.commit()
+        
+        return {"status": "success", "tracking_id": tracking_id, "message": "Hire request submitted successfully"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(500, f"Failed to submit hire request: {str(e)}")
+    finally:
+        release_conn(conn)
+
+class SlotCreate(BaseModel):
+    event_id: int
+    date: str
+    times: str
+
+@app.post("/api/host/slots/add")
+def host_add_slots(payload: SlotCreate, dh_session: Optional[str] = Cookie(None)):
+    user = get_current_user(dh_session)
+    if not user or user["role"] not in ("host", "admin"):
+        raise HTTPException(403, "Unauthorized")
+        
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # Verify host owns event
+        cursor.execute("SELECT e.id, 60 as session_duration_mins, h.id FROM events e JOIN hosts h ON e.host_id = h.id WHERE e.id = %s AND h.user_id = %s", (payload.event_id, user["user_id"]))
+        ev_info = cursor.fetchone()
+        if not ev_info:
+            raise HTTPException(403, "Not your event")
+            
+        duration = ev_info[1] or 60
+            
+        from datetime import datetime
+        # parse times
+        time_list = [t.strip() for t in payload.times.split(",") if t.strip()]
+        for t in time_list:
+            try:
+                dt_str = f"{payload.date} {t}"
+                dt = datetime.strptime(dt_str, "%Y-%m-%d %I:%M %p")
+                host_id = ev_info[2]
+                cursor.execute("INSERT INTO host_slots (host_id, event_id, slot_date, slot_time, duration_mins, is_booked) VALUES (%s, %s, %s, %s, %s, FALSE)", (host_id, payload.event_id, dt.date(), dt.time(), duration))
+            except Exception as ex:
+                pass
+                
+        conn.commit()
+        return {"status": "success"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(500, str(e))
+    finally:
+        release_conn(conn)
+
+class HireActionPayload(BaseModel):
+    fee_amount: Optional[float] = None
+
+@app.post("/api/hire/{hr_id}/{action}")
+def handle_hire_request(hr_id: int, action: str, payload: Optional[HireActionPayload] = None, dh_session: Optional[str] = Cookie(None)):
+    user = get_current_user(dh_session)
+    if not user or user["role"] not in ("host", "admin"):
+        raise HTTPException(403, "Unauthorized")
+        
+    if action not in ("accept", "decline"):
+        raise HTTPException(400, "Invalid action")
+        
+    status_to_set = "accepted" if action == "accept" else "rejected"
+    
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # Verify host owns request
+        cursor.execute("SELECT h.id FROM hire_requests h JOIN hosts ho ON h.host_id = ho.id WHERE h.id = %s AND ho.user_id = %s", (hr_id, user["user_id"]))
+        if not cursor.fetchone():
+            raise HTTPException(403, "Not your request")
+            
+        cursor.execute("UPDATE hire_requests SET status = %s WHERE id = %s", (status_to_set, hr_id))
+        
+        # Also update the bookings table
+        booking_status = "confirmed" if action == "accept" else "rejected"
+        fee_amount = payload.fee_amount if payload and payload.fee_amount else 0
+        
+        cursor.execute("UPDATE bookings SET booking_status = %s, fee_amount = %s WHERE hire_request_id = %s", (booking_status, fee_amount, hr_id))
+        
+        conn.commit()
+        return {"status": "success"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(500, str(e))
+    finally:
+        release_conn(conn)
+
+@app.post("/api/hire/{hr_id}/payout")
+def request_hire_payout(hr_id: int, dh_session: Optional[str] = Cookie(None)):
+    user = get_current_user(dh_session)
+    if not user or user["role"] not in ("host", "admin"):
+        raise HTTPException(403, "Unauthorized")
+        
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        
+        # Verify host owns request and it's paid
+        cursor.execute("""
+            SELECT b.id FROM bookings b 
+            JOIN hire_requests h ON b.hire_request_id = h.id
+            JOIN hosts ho ON h.host_id = ho.id 
+            WHERE h.id = %s AND ho.user_id = %s AND b.payment_status = 'paid'
+        """, (hr_id, user["user_id"]))
+        
+        if not cursor.fetchone():
+            raise HTTPException(400, "Invalid request or not paid yet")
+            
+        cursor.execute("UPDATE bookings SET payment_status = 'payout_requested' WHERE hire_request_id = %s", (hr_id,))
+        conn.commit()
+        
+        return {"status": "success"}
+    except Exception as e:
+        conn.rollback()
+        if isinstance(e, HTTPException): raise e
+        raise HTTPException(500, str(e))
+    finally:
+        release_conn(conn)

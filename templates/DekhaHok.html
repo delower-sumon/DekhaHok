@@ -964,6 +964,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
     <!-- Trust Strip -->
@@ -4263,6 +4264,17 @@
                     content.style.opacity = '1';
                     if (icon) icon.style.transform = 'rotate(180deg)';
                 }
+            }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            if(params.get('error') === 'invalid_tracking') {
+                setTimeout(() => {
+                    alert('Invalid Tracking ID. Please check your ID and try again.');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 500);
             }
         });
     </script>
