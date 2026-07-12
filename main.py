@@ -593,16 +593,20 @@ def serve_host_event_edit(event_id: int, request: Request):
         # If admin, we don't strictly enforce host_id match
         if host_id:
             cursor.execute("""
-                SELECT id, title, description, category, NULL as package_tier, price_per_person, capacity, 
+                SELECT id, title, description, category, price_per_person, capacity, 
                        location_name, location_area, event_date, included, image_url, is_recurring,
-                       image_url_2, image_url_3, image_url_4
+                       image_url_2, image_url_3, image_url_4, booking_model, youtube_link,
+                       start_time, end_time, listing_type, starting_rate, service_area,
+                       session_duration_mins, advance_notice_hours, available_days, available_times
                 FROM events WHERE id = %s AND host_id = %s
             """, (event_id, host_id))
         else:
             cursor.execute("""
-                SELECT id, title, description, category, NULL as package_tier, price_per_person, capacity, 
+                SELECT id, title, description, category, price_per_person, capacity, 
                        location_name, location_area, event_date, included, image_url, is_recurring,
-                       image_url_2, image_url_3, image_url_4
+                       image_url_2, image_url_3, image_url_4, booking_model, youtube_link,
+                       start_time, end_time, listing_type, starting_rate, service_area,
+                       session_duration_mins, advance_notice_hours, available_days, available_times
                 FROM events WHERE id = %s
             """, (event_id,))
             
@@ -613,10 +617,10 @@ def serve_host_event_edit(event_id: int, request: Request):
         import json
         included_list = []
         try:
-            if isinstance(event_row[10], list):
-                included_list = event_row[10]
+            if isinstance(event_row[9], list):
+                included_list = event_row[9]
             else:
-                included_list = json.loads(event_row[10] or "[]")
+                included_list = json.loads(event_row[9] or "[]")
         except:
             pass
             
@@ -625,19 +629,29 @@ def serve_host_event_edit(event_id: int, request: Request):
             "title": event_row[1],
             "description": event_row[2],
             "category": event_row[3],
-            "package_tier": event_row[4],
-            "price_per_person": float(event_row[5]),
-            "capacity": event_row[6],
-            "location_name": event_row[7],
-            "location_area": event_row[8],
-            "event_date_iso": event_row[9].strftime('%Y-%m-%dT%H:%M') if event_row[9] else "",
+            "price_per_person": float(event_row[4]),
+            "capacity": event_row[5],
+            "location_name": event_row[6],
+            "location_area": event_row[7],
+            "event_date_iso": event_row[8].strftime('%Y-%m-%dT%H:%M') if event_row[8] else "",
             "included": included_list if isinstance(included_list, list) else [],
             "included_str": "\n".join(included_list) if isinstance(included_list, list) else "",
-            "image_url": event_row[11] or "",
-            "is_recurring": bool(event_row[12]),
-            "image_url_2": event_row[13] or "",
-            "image_url_3": event_row[14] or "",
-            "image_url_4": event_row[15] or ""
+            "image_url": event_row[10] or "",
+            "is_recurring": bool(event_row[11]),
+            "image_url_2": event_row[12] or "",
+            "image_url_3": event_row[13] or "",
+            "image_url_4": event_row[14] or "",
+            "booking_model": event_row[15] or "ticketed",
+            "youtube_link": event_row[16] or "",
+            "start_time": str(event_row[17]) if event_row[17] else "",
+            "end_time": str(event_row[18]) if event_row[18] else "",
+            "listing_type": event_row[19] or "event",
+            "starting_rate": event_row[20] or "",
+            "service_area": event_row[21] or "",
+            "session_duration_mins": event_row[22] or "",
+            "advance_notice_hours": event_row[23] or 24,
+            "available_days": event_row[24] or "",
+            "available_times": event_row[25] or ""
         }
     finally:
         release_conn(conn)
@@ -675,7 +689,7 @@ def serve_host_dashboard(request: Request):
             
         # Retrieve all events for this host
         cursor.execute("""
-            SELECT id, slug, title, description, category, NULL as package_tier, price_per_person, capacity, booked_count, location_name, location_area, event_date, status, included 
+            SELECT id, slug, title, description, category, NULL as package_tier, price_per_person, capacity, booked_count, location_name, location_area, event_date, status, included, booking_model, starting_rate 
             FROM events 
             WHERE host_id = %s 
             ORDER BY event_date DESC
@@ -745,7 +759,6 @@ def serve_host_dashboard(request: Request):
                 "title": r[2],
                 "description": r[3],
                 "category": r[4],
-                "package_tier": r[5],
                 "price_per_person": float(r[6]),
                 "capacity": r[7],
                 "booked_count": r[8],
@@ -755,6 +768,8 @@ def serve_host_dashboard(request: Request):
                 "formatted_location": formatted_location,
                 "status": r[12],
                 "included": r[13] or [],
+                "booking_model": r[14] or "ticketed",
+                "starting_rate": r[15] or 0,
                 "attendees": bookings_list,
                 "revenue": host_event_earnings
             })
@@ -1627,7 +1642,8 @@ def api_event_detail(event_id: int):
                    CASE WHEN e.image_url_2 IS NOT NULL AND e.image_url_2 != '' THEN 1 ELSE 0 END as has_image_2,
                    CASE WHEN e.image_url_3 IS NOT NULL AND e.image_url_3 != '' THEN 1 ELSE 0 END as has_image_3,
                    CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
-                   e.youtube_link, h.is_founding as host_is_founding, COALESCE(e.views, 0) as views
+                   e.youtube_link, h.is_founding as host_is_founding, COALESCE(e.views, 0) as views,
+                   e.starting_rate, e.booking_model
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1655,10 +1671,12 @@ def api_event_detail(event_id: int):
             "is_recurring": r[22] if len(r) > 22 else False,
             "image_url_2": f"/api/events/{r[0]}/image/2" if len(r) > 23 and r[23] else None,
             "image_url_3": f"/api/events/{r[0]}/image/3" if len(r) > 24 and r[24] else None,
-            "image_url_4": f"/api/events/{r[0]}/image/4" if len(r) > 24 and r[24] else None,
-            "youtube_link": r[25] if len(r) > 25 else None,
-            "host_is_founding": bool(r[26]) if len(r) > 26 else False,
-            "views": r[27] if len(r) > 27 else 0
+            "image_url_4": f"/api/events/{r[0]}/image/4" if len(r) > 25 and r[25] else None,
+            "youtube_link": r[26] if len(r) > 26 else None,
+            "host_is_founding": bool(r[27]) if len(r) > 27 else False,
+            "views": r[28] if len(r) > 28 else 0,
+            "starting_rate": r[29] if len(r) > 29 else None,
+            "booking_model": r[30] if len(r) > 30 else "ticketed"
         }
         cursor.close()
     finally:

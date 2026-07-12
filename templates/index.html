@@ -40,8 +40,7 @@
             <img loading="lazy" src="{{ e.image_url or 'https://picsum.photos/seed/' ~ e.id ~ '/600/400' }}"
                 alt="{{ e.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             <span
-                class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">{{
-                e.package_tier }}</span>
+                class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">{% if e.booking_model == 'session' %}Session{% elif e.booking_model == 'hire' %}Hire{% else %}Event{% endif %}</span>
         </div>
 
         <!-- Details -->
@@ -1829,7 +1828,7 @@
                     <!-- Image -->
                     <div class="h-48 relative bg-zinc-100 overflow-hidden">
                         <img loading="lazy" src="${e.image_url || 'https://picsum.photos/seed/' + e.id + '/600/400'}" alt="${e.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">${e.package_tier}</span>
+                        <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">${e.booking_model === 'session' ? 'Session' : e.booking_model === 'hire' ? 'Hire' : 'Event'}</span>
                     </div>
 
                     <!-- Details -->
@@ -1871,7 +1870,7 @@
 
                 <!-- Footer Checkout CTA -->
                 <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
-                    <span class="font-black text-emerald-800 text-base hidden">৳${Math.round(e.price_per_person)}</span>
+                    <span class="font-black text-emerald-800 text-base">${e.booking_model === 'hire' ? '৳' + Math.round(e.starting_rate || e.price_per_person) + '<span class="text-xs text-zinc-500 font-bold"> hire rate</span>' : '৳' + Math.round(e.price_per_person) + '<span class="text-xs text-zinc-500 font-bold"> / person</span>'}</span>
                     <button onclick="event.stopPropagation(); openBooking(${e.id})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
                         ${isSoldOut ? 'Join Waitlist' : (e.booking_model === 'hire' ? 'Send Hire Request' : (e.booking_model === 'session' ? 'Reserve Spot' : 'Book Ticket'))}
                     </button>
