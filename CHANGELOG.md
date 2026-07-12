@@ -5,11 +5,20 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ## [2026-07-12] - Booking Engine Cleanup & Package Tier Deprecation
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Package Tier Removal (UI)**: Removed the legacy "Package Tier" dropdown and associated JavaScript logic from the `host_event_edit.html` template. The platform is now strictly adhering to the 3-model Booking Engine architecture (Event, Session, Hire). The `package_tier` database column remains intact for now and will be dropped in a future migration.
 
 ### Removed
 - **Test Accounts Wipe**: Permanently deleted the 4 safe test accounts (`test_subagent`, `safe.artist`, `safe.session`, `safe.community`) along with all their associated host profiles, mock listings, session slots, and test bookings via a cascade database cleanup script.
-- **Scratch Files Cleanup**: Deleted 10+ temporary development scripts (`create_demos.py`, `check_db_columns.py`, etc.) and the entire `temporary concept folder` from the repository to ensure a clean branch before merging.## [2026-07-06] - Re-Audit Fixes & Consistency (Phases 1-3)
+- **Scratch Files Cleanup**: Deleted 10+ temporary development scripts (`create_demos.py`, `check_db_columns.py`, etc.) and the entire `temporary concept folder` from the repository to ensure a clean branch before merging.
+
+## [2026-07-06] - Re-Audit Fixes & Consistency (Phases 1-3)
 
 ### Added
 - **Founding 100 Badges Tooltips**: Added descriptive title tooltips explaining early community leader benefits to the Founding 100 badge across homepage cards, dynamic catalog rendering, booking confirmations, and host profiles.
@@ -17,6 +26,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **English Subheading**: Appended a static subheading underneath the hero heading: *"Bangladesh's marketplace for verified hosts, community events, and travel."*
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Server-Side Event Rendering (Googlebot SEO)**: Converted the homepage event grids to render server-side (using a new Jinja macro `render_event_card(e)`) and injected initial data as `INITIAL_EVENTS` to prevent empty grids and layout shifts on load.
 - **Revenue Share Consistency**: Standardized all platform commission/payout references to **"70% to 95%"** (Bengali: **"৭০%-৯৫%"** / platform fee **"৫%-৩০%"**) across 11 pages (homepage, calculator ranges, policy agreements, and FAQs).
 - **Hero Cycle Simplification**: Trimmed homepage cycling texts from 6 concepts down to 3 (**ভেরিফাইড হোস্ট**, **কমিউনিটি ইভেন্টস**, **ট্র্যাভেল**) with matched CSS animation intervals (6s cycles, 2s delays).
@@ -33,6 +49,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Homepage Trust Bar Alignment**: Refined the `<!-- Trust Bar -->` on the homepage (`templates/index.html`) to display the direct, relative brand pillars: **নেটওয়ার্কিং** (with connection nodes icon), **কমিউনিটি ইভেন্ট** (with social users icon), and **ট্র্যাভেল** (with plane icon).
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **SVG Asset Background Transparency**: Programmatically stripped bounding box background path fills (white and pink colored boxes, including the 200x154 translate offset block) from the XML content of the 4 SVG assets (`peopledkhk1.svg`, `peopledkhk.svg`, `ppldkhk.svg`, and `peopledkhk2.svg`), changing their fill to `none` to produce 100% transparent vector illustrations.
 - **Host SVG Layout Allocations**: Allocated `peopledkhk2.svg` to float around the hero animation canvas, and placed the transparent `peopledkhk.svg` inside the final CTA card.
 - **Mobile Typography Polish**: Adjusted mobile CSS typography sizing across all major host page titles (e.g., shrinking hero heading to `text-2xl` and section headings to `text-xl` on small viewports) to avoid text wrapping.
@@ -54,6 +77,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **SEO & Robots Tags**: Protected private and auth-gated routes (`/login`, `/host/dashboard`, `/host/events/new`, `/host/events/{event_id}/edit`) from crawler indexing by adding `<meta name="robots" content="noindex, nofollow">` with self-referencing canonical links.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Brand Identity Pivot**: Executed a complete pivot from "Professional Services" (প্রফেশনাল সার্ভিসেস) to community events, local hosts, and travel escapes. Removed all professional service references across all HTML templates, meta descriptions, footers, JSON-LD schemas, and headers.
 - **Browser Tab Title**: Updated the homepage title tag to `"DekhaHok • Community Events, Networking & Travel"` to match the brand focus.
 - **Onboarding Flow Restructuring**: Modified `templates/host_apply.html` to display Step 1 (the profile submission form) directly to guest visitors. Shifted the authentication wall to Step 2 (only active if they are not logged in when clicking "Next Step").
@@ -75,6 +105,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Event Views UI**: Integrated a dynamic "views count" indicator with an eye icon in the booking page metadata row, keeping homepage cards clean and simple.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **SEO Metadata**: Standardized the HTML `lang="bn"` attribute across all templates. Reformatted `<h1>` structures for optimal search engine crawling while retaining UI consistency.
 - **Resource Deferral & Script Loading**: Improved Time to First Byte (TTFB) by deferring non-critical scripts (`lucide.js`, `canvas-confetti.js`). Confined heavyweight `leaflet` mapping libraries exclusively to `index.html`.
 - **Accessibility (Touch Targets)**: Expanded all interactive icon-only button touch targets (Navbar Notifications, Profile, Mobile Menu, Footer Socials) to a minimum of `44x44px` to meet WCAG 2.1 mobile tap target standards. Enforced descriptive `aria-label` tags for screen readers across the application.
@@ -94,6 +131,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **X (Twitter) Logo SVG**: Injected a clean inline SVG for the X logo to bypass FontAwesome version limitations on older loaded CDNs, ensuring full cross-platform icon rendering.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Footer Social Link Update**: Updated X (Twitter) social redirect link to `https://x.com/dekhahok` with `target="_blank"` across all platform footers.
 - **Footer Tagline Recolor**: Changed the CSS text color of the `"Beyond the digital bubble."` tagline from `text-zinc-500` to `text-sky-400` in the footer of all standard pages to match the diamond blue heart icon's color.
 - **Founding 100 Badge Position**: Realigned the "Founding 100" tag to sit on the top-left corner (`left-1.5`) of the host's profession badge, matching the vertical text baseline and preventing left-border avatar overlap.
@@ -112,6 +156,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Backfill Migration**: One-time automatic backfill sets `is_founding = TRUE` for all hosts with `id <= 100` on first server startup after migration.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Mobile Booking Layout Fix**: Refactored the booking event card layout from a rigid horizontal `flex` to a responsive `flex-col sm:flex-row` stack. The Ticket Price section now displays on mobile (previously `hidden sm:block`), separated by a subtle border line.
 - **Backend Event APIs**: Updated `/api/events` and `/api/events/{id}` SQL queries to join and return `host_is_founding` from the hosts table. Updated `/api/admin/hosts` to return `is_founding` per host.
 
@@ -123,6 +174,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Smart Hiding Logic**: Implemented dynamic Javascript hiding logic in `renderCatalogGrid()` so that if the server returns 0 active events for Travel, Sports, or Professional Services, their entire HTML section wrappers cleanly hide from the DOM, maintaining a polished UI.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Host Forms Category Injection**: Added `Professional Services` to the category dropdowns in `host_event_create.html` and `host_event_edit.html`.
 - **Dateless Forms UI**: Injected a JS listener into both host forms that dynamically hides the "Date & Time" input and strips its required validation whenever "Professional Services" is selected.
 - **Dateless Booking UI**: Upgraded `index.html` event cards and the `booking.html` details view to explicitly hide the calendar/date badges for the `professional` category, avoiding confusing "TBA" strings for one-off service purchases.
@@ -131,6 +189,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ## [2026-07-03] - Global Footer Update & Brand Polish
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Global Footer Links**: Refactored the footer across the entire platform. Removed the outdated "Language / ভাষা" column and hidden Google Translate widget. Replaced it with a new **"Company"** column featuring the "About DekhaHok" and "Contact Support" links.
 - **Standalone Pages Synchronization**: Synchronized the new footer structure directly into the 7 standalone pages (`about.html`, `contact.html`, `host_guidelines.html`, `partnership.html`, `privacy_policy.html`, `safety.html`, `terms.html`) that don't natively inherit the `base.html` layout.
 - **Brand Positioning Copy**: Updated browser tab titles (`<title>`) in `DekhaHok.html` and `index.html` to reflect the new platform positioning: **"DekhaHok • Social Community & Services"**.
@@ -148,6 +213,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Standalone Sub-Page Sync**: Injected the blue-themed animated brand logo SVG into the navigation headers and changed the bottom row copy-pasted footer heart SVG classes from rose red to diamond blue (`text-sky-400`) on `terms.html`, `safety.html`, `privacy_policy.html`, `partnership.html`, `host_guidelines.html`, `about.html`, and `contact.html`. Removed references to the legacy bubble icon (`dekhahok_logo.svg`) in their headers.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Home Page Hero Subtitle**: Updated the sub-navigation hero badge text in `templates/index.html` from "Now live in Dhaka City" to **"Beyond the digital bubble."** to align with the overarching platform mission.
 - **Hero Canvas Dots Color Sync**: Recolor the moving node dots on the home page hero animation canvas to emerald green, purple, and blue-500, aligning with the new navigation brand color system.
 - **Official Google Brand G Logo**: Upgraded the fragmented Google login SVGs to the official, color-accurate Google G logo in `base.html` (modal), `auth.html` (login page), and `host_apply.html` (onboarding).
@@ -160,6 +232,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Event Brief Description on Booking Details**: Appended a brief description container into the selection card of `templates/booking.html`, populated dynamically on load.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Subpage Footer Synchronization**: Replaced outdated footers on all custom sub-pages (`privacy_policy.html`, `terms.html`, `about.html`, `contact.html`, `partnership.html`, `safety.html`, `host_guidelines.html`) with the homepage's unified footer layout, complete with translation capability (En / Bn language toggle button via Google Translate widget).
 - **Newline-Separated Included Items**: Modified form parsing logic and input guidelines in both `host_event_create.html` and `host_event_edit.html` to allow hosts to input experience perks line-by-line (using newlines instead of commas). Enhanced the FastAPI edit route to populate the textarea dynamically using newline joining.
 - **Brief Description Restrained**: Set `maxlength="150"` constraint on the Brief Description textarea across the host create and edit event pages to keep descriptions concise.
@@ -177,6 +256,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **DBBL & Upay Payment Options:** Expanded the checkout page's payment method options by adding DBBL and Upay. Included support for validating `dbbl` in `models.py`.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Support WhatsApp & Phone Number Update:** Updated the platform's support contact number from `+880 1884-477720` to `+880 1325-900906` across the `base.html` float button, SEO metadata, contact page, and `README.md`.
 - **Checkout Payment Selection UI:** Redesigned the payment selection buttons on the booking page into a grid layout to cleanly support bKash, Nagad, DBBL, and Upay options.
 - **Admin Event Date Display:** Polish event date presentation in the admin dashboard events list by formatting it using `.toLocaleString()` instead of plain string slice.
@@ -214,6 +300,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Custom Favicon:** Added a custom, cropped `favicon.png` across all entry templates (`base.html`, `index.html`, `404.html`, `DekhaHok.html`, and `admin/index.html`).
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Platform FAQ Extraction:** Extracted the legacy FAQ accordion from the old `DekhaHok.html` page and transplanted it to the bottom of the new Homepage. The content was completely rewritten in Bengali to reflect the new marketplace operations (NID Verification, Tracking IDs, Refund Policy), and legacy Lucide icons were replaced with FontAwesome.
 - **Hero SVG Animation Fix:** Fixed a UI bug in the Homepage's SVG connection animation where the central "Top Experience" circle was displaying a generic map-pin instead of an event image. The animation now properly cycles through a curated set of event snapshot images as the dots connect.
 - **Host Event UI Messaging:** Updated the "Publish Event" button and wording in the Host Event Creation page to "Submit for Review" to properly convey the admin-approval workflow.
@@ -231,6 +324,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Existing Booking Detection:** Logged-in users clicking an event they've already booked are now shown their Tracking ID directly instead of the checkout form.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Forced Booking Login:** Unauthenticated users attempting to book an event are now strictly redirected to the login/signup page.
 - **Google OAuth Redirects (`?next=`):** Overhauled `auth.html` and the Google OAuth callback in `main.py`. The system now successfully parses the `?next=` URL parameter, dynamically injecting it into the Google Login button ID, allowing seamless post-login redirection back to the event checkout.
 - **Host Dashboard UI Polish:** Swapped out the old random emoji icons (🎨, 🌱, 💼) in the "Your Scheduled Activities" list for a unified brand leaf icon (`fa-leaf`).
@@ -247,6 +347,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Admin Payouts UI:** Added a new "Payouts" tab in the Admin Panel to track event revenues and toggle host payment statuses.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Booking Counts Visibility:** Displayed dynamic `booked_count/capacity` ratios on Curated Experience cards (Homepage) and the Booking Page event info section.
 - **Admin Navigation Simplification:** Merged the "Partnerships" tab into the "Areas & Locations" tab, which has been renamed to **"Operations & Data"**. Partnership requests and Area management now share a vertically stacked view.
 
@@ -268,6 +375,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Blog Admin Upload:** Built a direct file uploader in the admin panel that securely converts images into `Base64` storage inside the database.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Homepage Hero Glow:** Applied an emerald UI background glow behind the primary Bengali text block.
 - **Capacity Badge Redesign:** Transformed the top-aligned tracking numbers into an elegant right-aligned pill layout matching the host profile in the experience cards.
 - **Booking Counter UI:** Made the checkout tracker visible with a neat `0/5 Booked` pill on the sticky event summary side panel.
@@ -293,6 +407,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ## [2026-06-22] - Host-Driven Marketplace Transition (Taas)
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Homepage UI Routing Transition:** Switched the root routing in `main.py` to serve the new modernized `index.html` instead of the legacy `DekhaHok.html` template.
 
 ### Added
@@ -309,6 +430,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ## [2026-04-24] - UI Refinements & Codebase Cleanup
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Vibe Buttons Redesign:** Redesigned the Vibe (Mood) selection buttons into clean, pill-shaped utility buttons. Relocated them immediately beneath the "Preferences Note" input field, organized them into a single horizontally-scrollable row, and removed the previous confetti click animation.
 - **Promo Code Box:** Reduced the overall padding, border-radius, and max-width of the "Coupon Code" section to make it more compact and visually proportional to surrounding elements.
 - **Blog Image SEO:** Modified the blog detail template to display the `image_alt` text as a visible, italicized caption below the cover image.
@@ -326,6 +454,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 - **Time Preferences**: User's `preferred_time` is now displayed alongside the date in the admin bookings table.
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Capacity Enforcement**: Backend now strictly blocks group assignments that exceed capacity or involve mismatched ticket sizes.
 - **Toast Notifications**: Drastically reduced display duration to 500ms and added `clearTimeout` logic to prevent UI overlapping/locking during multiple rapid updates.
 - **Frontend Tracker Layout**: Relocated "Hub Buttons" (Group Chat/Emergency) to the bottom of the tracking status UI for better accessibility.
@@ -339,6 +474,13 @@ All notable changes to the DekhaHok main branch will be documented in this file.
 ## [2026-04-03] - UI/UX Refinements (Session 2)
 
 ### Changed
+- **Post-Merge Bug Fixes**:
+  - Restored dynamic price display on homepage event cards for both Server-Side Rendered (SSR) HTML and Client-Side JS template.
+  - Re-implemented dynamic category badges (e.g., Tour, Workshop, Sports) on homepage event cards to correctly map legacy categories instead of defaulting to 'Event'.
+  - Fixed booking detail pages dynamically loading category-specific models and labels.
+  - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
+  - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
+  - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
 - **Card Redesign**: Applied requested "Button 33" glassmorphic effect to Member Cards and Venue/Place Cards in the status tracker for a more tactile, premium feel.
 - **Hub Buttons**: Reverted Group Chat and Emergency Support buttons to their original `action-hub-btn` branding.
 - **Rating Stars**: Fixed a critical mobile layout bug where rating stars appeared vertically. Implemented strict inline flex styles to force horizontal alignment and tap-friendliness on mobile.

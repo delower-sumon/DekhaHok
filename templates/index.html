@@ -39,8 +39,21 @@
         <div class="h-48 relative bg-zinc-100 overflow-hidden">
             <img loading="lazy" src="{{ e.image_url or 'https://picsum.photos/seed/' ~ e.id ~ '/600/400' }}"
                 alt="{{ e.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-            <span
-                class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">{% if e.booking_model == 'session' %}Session{% elif e.booking_model == 'hire' %}Hire{% else %}Event{% endif %}</span>
+            {% if e.booking_model == 'session' %}
+                <span class="absolute top-3 left-3 bg-blue-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Session</span>
+            {% elif e.booking_model == 'hire' %}
+                <span class="absolute top-3 left-3 bg-purple-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Hire</span>
+            {% elif e.category|lower in ('travel', 'tour', 'local_exploration') %}
+                <span class="absolute top-3 left-3 bg-sky-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Tour</span>
+            {% elif e.category|lower in ('workshops_learning', 'learning_mentorship', 'career_startups', 'creative_skills_lessons', 'health_wellness_coaching') %}
+                <span class="absolute top-3 left-3 bg-amber-500 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Workshop</span>
+            {% elif e.category|lower in ('sports', 'sports_fitness') %}
+                <span class="absolute top-3 left-3 bg-orange-500 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Sports</span>
+            {% elif e.category|lower in ('musicians_bands', 'performers_stage', 'visual_live_art', 'entertainment_socials', 'entertainment') %}
+                <span class="absolute top-3 left-3 bg-pink-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Show</span>
+            {% else %}
+                <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Event</span>
+            {% endif %}
         </div>
 
         <!-- Details -->
@@ -109,9 +122,16 @@
 
     <!-- Footer Checkout CTA -->
     <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
+        <span class="font-black text-emerald-800 text-base">
+            {% if e.booking_model == 'hire' %}
+                ৳{{ (e.starting_rate or e.price_per_person)|round|int }}<span class="text-xs text-zinc-500 font-bold"> hire rate</span>
+            {% else %}
+                ৳{{ e.price_per_person|round|int }}<span class="text-xs text-zinc-500 font-bold"> / person</span>
+            {% endif %}
+        </span>
         <button onclick="event.stopPropagation(); openBooking(this.getAttribute('data-event-id'))"
             data-event-id="{{ e.id }}"
-            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
+            class="w-full max-w-[140px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
             {% if is_sold_out %}Join Waitlist{% elif e.booking_model == 'hire' %}Send Hire Request{% elif e.booking_model == 'session' %}Reserve Spot{% else %}Book Ticket{% endif %}
         </button>
     </div>
@@ -1805,6 +1825,30 @@
             noEvents.classList.add('hidden');
             if (sectionEl) sectionEl.classList.remove('hidden');
 
+            // Helper: resolve card badge label + color from booking_model + category
+            function getListingBadge(e) {
+                const cat = (e.category || '').toLowerCase();
+                const model = (e.booking_model || '').toLowerCase();
+                if (model === 'session') return { label: 'Session', cls: 'bg-blue-600' };
+                if (model === 'hire')    return { label: 'Hire', cls: 'bg-purple-600' };
+                // Tour: new & legacy category names
+                if (['travel', 'tour', 'local_exploration'].includes(cat)) return { label: 'Tour', cls: 'bg-sky-600' };
+                // Workshop
+                if (['workshops_learning', 'learning_mentorship', 'career_startups',
+                     'creative_skills_lessons', 'health_wellness_coaching'].includes(cat))
+                    return { label: 'Workshop', cls: 'bg-amber-500' };
+                // Sports
+                if (['sports', 'sports_fitness'].includes(cat)) return { label: 'Sports', cls: 'bg-orange-500' };
+                // Entertainment / Show
+                if (['musicians_bands', 'performers_stage', 'visual_live_art',
+                     'entertainment_socials', 'entertainment'].includes(cat))
+                    return { label: 'Show', cls: 'bg-pink-600' };
+                // Lifestyle / Food
+                if (['lifestyle_food', 'culinary_artists'].includes(cat)) return { label: 'Lifestyle', cls: 'bg-lime-600' };
+                // Default
+                return { label: 'Event', cls: 'bg-emerald-600' };
+            }
+
             events.forEach(e => {
                 const spotsLeft = e.capacity - e.booked_count;
                 const isSoldOut = spotsLeft <= 0;
@@ -1828,7 +1872,7 @@
                     <!-- Image -->
                     <div class="h-48 relative bg-zinc-100 overflow-hidden">
                         <img loading="lazy" src="${e.image_url || 'https://picsum.photos/seed/' + e.id + '/600/400'}" alt="${e.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">${e.booking_model === 'session' ? 'Session' : e.booking_model === 'hire' ? 'Hire' : 'Event'}</span>
+                        ${(() => { const b = getListingBadge(e); return `<span class="absolute top-3 left-3 ${b.cls} text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">${b.label}</span>`; })()}
                     </div>
 
                     <!-- Details -->

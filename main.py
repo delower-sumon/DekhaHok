@@ -1769,17 +1769,18 @@ def generate_session_slots_for_event(cursor, host_id, event_id, available_days_s
                     # Check if slot already exists
                     cursor.execute("""
                         SELECT id FROM host_slots
-                        WHERE event_id = %s AND slot_date = %s AND start_time = %s
+                        WHERE event_id = %s AND slot_date = %s AND slot_time = %s
                     """, (event_id, current_date, st_time))
                     
                     if not cursor.fetchone():
                         # Insert slot
                         cursor.execute("""
-                            INSERT INTO host_slots (host_id, event_id, slot_date, start_time, end_time, is_booked, is_blocked)
-                            VALUES (%s, %s, %s, %s, %s, false, false)
-                        """, (host_id, event_id, current_date, st_time, et_time))
+                            INSERT INTO host_slots (host_id, event_id, slot_date, slot_time, duration_mins, is_booked)
+                            VALUES (%s, %s, %s, %s, %s, false)
+                        """, (host_id, event_id, current_date, st_time, duration))
                 except Exception as e:
                     print(f"Error generating slot: {e}")
+                    raise e
 @app.post("/api/host/events/create")
 @app.post("/api/host/listings/create")
 def host_create_event(payload: EventCreate, user = Depends(require_role(["host", "admin"]))):
@@ -1836,6 +1837,9 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
             )
         conn.commit()
         cursor.close()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         release_conn(conn)
     return {"message": "Event created successfully!", "event_id": event_id, "slug": slug}
@@ -1915,6 +1919,10 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             )
             
         conn.commit()
+        cursor.close()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         release_conn(conn)
     return {"message": "Event updated successfully!"}

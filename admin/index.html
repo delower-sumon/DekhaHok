@@ -2328,7 +2328,19 @@
           const editBtn = `<a href="/host/events/${evt.id}/edit" target="_blank" class="inline-flex items-center justify-center w-7 h-7 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-[10px] font-bold shadow-sm transition mr-1" title="Edit Event"><i class="fa-solid fa-pen"></i></a>`;
 
           const modelColor = evt.booking_model === 'session' ? 'bg-blue-100 text-blue-700' : evt.booking_model === 'hire' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700';
-          const modelLabel = evt.booking_model === 'session' ? '🔁 Session' : evt.booking_model === 'hire' ? '📩 Hire' : '📅 Event';
+          const cat = (evt.category || '').toLowerCase();
+          const isTour = ['travel', 'tour', 'local_exploration'].includes(cat);
+          const isWorkshop = ['workshops_learning', 'learning_mentorship', 'career_startups', 'creative_skills_lessons', 'health_wellness_coaching'].includes(cat);
+          const isSports = ['sports', 'sports_fitness'].includes(cat);
+          const isShow = ['musicians_bands', 'performers_stage', 'visual_live_art', 'entertainment_socials', 'entertainment'].includes(cat);
+          
+          let modelLabel = '📅 Event';
+          if (evt.booking_model === 'session') modelLabel = '🔁 Session';
+          else if (evt.booking_model === 'hire') modelLabel = '📩 Hire';
+          else if (isTour) modelLabel = '🗺️ Tour';
+          else if (isWorkshop) modelLabel = '🎓 Workshop';
+          else if (isSports) modelLabel = '🏃 Sports';
+          else if (isShow) modelLabel = '🎭 Show';
           const priceDisplay = evt.booking_model === 'hire' 
             ? `<span class="text-purple-700 font-bold">৳${evt.price}</span><span class="text-zinc-400 text-[9px] ml-1">hire rate</span>`
             : `৳${evt.price}<span class="text-zinc-400 text-[9px] ml-1">/ person</span>`;

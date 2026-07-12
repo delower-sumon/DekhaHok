@@ -518,12 +518,31 @@
                 if (dateWrapper) dateWrapper.classList.add('hidden');
                 if (spotsWrapper) spotsWrapper.classList.add('hidden');
             } else {
-                // Ticketed Group Experience
-                if (priceLabel) priceLabel.textContent = "Ticket Price";
+                // Ticketed / Legacy Event
+                const cat = (selectedEvent.category || '').toLowerCase();
+                const tourCats = ['travel', 'tour', 'local_exploration'];
+                const workshopCats = ['workshops_learning', 'learning_mentorship', 'career_startups', 'creative_skills_lessons', 'health_wellness_coaching'];
+                const sportsCats = ['sports', 'sports_fitness'];
+                const showCats = ['musicians_bands', 'performers_stage', 'visual_live_art', 'entertainment_socials', 'entertainment'];
+
+                let tierLabel = '🎟️ Group Event';
+                let priceTag = 'Ticket Price';
+                let tierClass = 'bg-emerald-100 text-emerald-800';
+                if (tourCats.includes(cat)) {
+                    tierLabel = '🗺️ Tour'; priceTag = 'Tour Fee'; tierClass = 'bg-sky-100 text-sky-800';
+                } else if (workshopCats.includes(cat)) {
+                    tierLabel = '🎓 Workshop'; priceTag = 'Session Fee'; tierClass = 'bg-amber-100 text-amber-800';
+                } else if (sportsCats.includes(cat)) {
+                    tierLabel = '🏃 Sports Event'; priceTag = 'Entry Fee'; tierClass = 'bg-orange-100 text-orange-800';
+                } else if (showCats.includes(cat)) {
+                    tierLabel = '🎭 Show / Performance'; priceTag = 'Ticket Price'; tierClass = 'bg-pink-100 text-pink-800';
+                }
+
+                if (priceLabel) priceLabel.textContent = priceTag;
                 if (priceVal) priceVal.innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
                 if (tierBadge) {
-                    tierBadge.textContent = selectedEvent.package_tier || "🎟️ Group Event";
-                    tierBadge.className = "bg-emerald-100 text-emerald-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest";
+                    tierBadge.textContent = tierLabel;
+                    tierBadge.className = `${tierClass} text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest`;
                 }
                 if (dateWrapper) {
                     dateWrapper.classList.remove('hidden');
