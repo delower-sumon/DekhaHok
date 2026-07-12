@@ -2,6 +2,15 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-13] - Calendar Availability Sync & UI Fixes
+
+### Added
+- **Dynamic Calendar Cleanup**: Re-architected the `generate_session_slots_for_event` background generator to automatically detect and instantly purge unbooked event slots when a host updates their availability schedule (e.g. unchecking a day like Friday). Previously, unchecking a day only stopped future generations but left existing empty slots in the calendar.
+- **Database Synchronization**: Executed a global database cleanup script on all `session` model bookings, permanently clearing out orphaned unbooked slots for hosts whose availability had fallen out of sync with the frontend calendar UI.
+
+### Changed
+- **Booking Note Redesign**: Overhauled the frontend "Availability Note" widget on all booking templates (`booking.html`, `booking_session.html`, `booking_hire.html`). The properties ("Available Days", "Available Times", "Advance Notice Required") are now styled as uppercase headers with a clear `break-words` separation, resolving an issue where concatenated strings were breaking out of their container on smaller mobile screens.
+
 ## [2026-07-12] - Host Media UI Improvements
 
 ### Added

@@ -141,10 +141,19 @@
     <!-- Availability & Notice -->
     <div id="booking-availability-container" class="hidden mb-8 bg-sky-50 border border-sky-100 rounded-2xl p-4 sm:p-6 shadow-sm">
         <h3 class="text-xs font-black text-sky-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-clock"></i> Availability Note</h3>
-        <div class="space-y-2 text-sm text-sky-900 font-medium">
-            <p id="b-avail-days" class="hidden"><i class="fa-solid fa-calendar-day w-5 text-sky-600"></i> <span id="b-avail-days-val"></span></p>
-            <p id="b-avail-times" class="hidden"><i class="fa-solid fa-clock-rotate-left w-5 text-sky-600"></i> <span id="b-avail-times-val"></span></p>
-            <p id="b-avail-notice" class="hidden"><i class="fa-solid fa-bullhorn w-5 text-sky-600"></i> <span id="b-avail-notice-val"></span></p>
+        <div class="space-y-4 text-sm text-sky-900 font-medium">
+            <div id="b-avail-days" class="hidden break-words">
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-calendar-day w-4"></i> Available Days</span>
+                <span id="b-avail-days-val" class="block font-semibold"></span>
+            </div>
+            <div id="b-avail-times" class="hidden">
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-clock-rotate-left w-4"></i> Available Times</span>
+                <span id="b-avail-times-val" class="block font-semibold"></span>
+            </div>
+            <div id="b-avail-notice" class="hidden">
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-bullhorn w-4"></i> Advance Notice Required</span>
+                <span id="b-avail-notice-val" class="block font-semibold"></span>
+            </div>
             <div id="b-avail-custom-note" class="hidden mt-2 p-3 bg-white/60 rounded-lg text-sm text-sky-800 whitespace-pre-line italic"></div>
         </div>
     </div>
@@ -675,7 +684,8 @@
             let hasAvail = false;
             
             if (selectedEvent.available_days) {
-                document.getElementById('b-avail-days-val').textContent = `Available Days: ${selectedEvent.available_days}`;
+                const formattedDays = selectedEvent.available_days.split(',').map(d => d.trim()).join(', ');
+                document.getElementById('b-avail-days-val').textContent = formattedDays;
                 document.getElementById('b-avail-days').classList.remove('hidden');
                 hasAvail = true;
             }
@@ -685,7 +695,7 @@
                 hasAvail = true;
             }
             if (selectedEvent.advance_notice_hours) {
-                document.getElementById('b-avail-notice-val').textContent = `Advance Notice Required: ${selectedEvent.advance_notice_hours} hours`;
+                document.getElementById('b-avail-notice-val').textContent = `${selectedEvent.advance_notice_hours} hours`;
                 document.getElementById('b-avail-notice').classList.remove('hidden');
                 hasAvail = true;
             }

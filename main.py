@@ -1756,26 +1756,42 @@ def generate_session_slots_for_event(cursor, host_id, event_id, available_days_s
     if not allowed_days:
         return
         
-    start_times = [t.strip() for t in available_times_str.split(',') if t.strip()]
+    start_times = []
+    for t in available_times_str.split(','):
+        t = t.strip()
+        if t:
+            try:
+                st_time = datetime.strptime(t, "%H:%M").time()
+                start_times.append(st_time)
+            except ValueError:
+                pass
+                
     if not start_times:
         return
         
     today = datetime.now().date()
     duration = session_duration_mins or 60
     
+    # Clean up unbooked slots that no longer match the available days or times
+    cursor.execute("""
+        SELECT id, slot_date, slot_time FROM host_slots 
+        WHERE event_id = %s AND is_booked = false AND slot_date >= %s
+    """, (event_id, today))
+    
+    unbooked_slots = cursor.fetchall()
+    slots_to_delete = []
+    for slot_id, s_date, s_time in unbooked_slots:
+        if s_date.weekday() not in allowed_days or s_time not in start_times:
+            slots_to_delete.append(slot_id)
+            
+    if slots_to_delete:
+        cursor.execute("DELETE FROM host_slots WHERE id = ANY(%s)", (slots_to_delete,))
+    
     for i in range(28): # 4 weeks
         current_date = today + timedelta(days=i)
         if current_date.weekday() in allowed_days:
-            for st_str in start_times:
+            for st_time in start_times:
                 try:
-                    # Parse start time
-                    st_time = datetime.strptime(st_str, "%H:%M").time()
-                    st_dt = datetime.combine(current_date, st_time)
-                    
-                    # Calculate end time
-                    et_dt = st_dt + timedelta(minutes=duration)
-                    et_time = et_dt.time()
-                    
                     # Check if slot already exists
                     cursor.execute("""
                         SELECT id FROM host_slots
@@ -3883,10 +3899,10 @@ def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(
         user_id = user["user_id"] if user else None
         
         cursor.execute("""
-            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, slot_id, group_size)
-            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'paid', %s, 'session', %s, 1)
+            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, slot_id, group_size, interests)
+            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'paid', %s, 'session', %s, 1, %s)
             RETURNING id
-        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, fee, payload.slot_id))
+        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, fee, payload.slot_id, payload.message))
         
         booking_id = cursor.fetchone()[0]
         conn.commit()

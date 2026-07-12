@@ -141,10 +141,19 @@
     <!-- Availability & Notice -->
     <div id="booking-availability-container" class="hidden mb-8 bg-sky-50 border border-sky-100 rounded-2xl p-4 sm:p-6 shadow-sm">
         <h3 class="text-xs font-black text-sky-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-clock"></i> Availability Note</h3>
-        <div class="space-y-2 text-sm text-sky-900 font-medium">
-            <p id="b-avail-days" class="hidden"><i class="fa-solid fa-calendar-day w-5 text-sky-600"></i> <span id="b-avail-days-val"></span></p>
-            <p id="b-avail-times" class="hidden"><i class="fa-solid fa-clock-rotate-left w-5 text-sky-600"></i> <span id="b-avail-times-val"></span></p>
-            <p id="b-avail-notice" class="hidden"><i class="fa-solid fa-bullhorn w-5 text-sky-600"></i> <span id="b-avail-notice-val"></span></p>
+        <div class="space-y-4 text-sm text-sky-900 font-medium">
+            <div id="b-avail-days" class="hidden break-words">
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-calendar-day w-4"></i> Available Days</span>
+                <span id="b-avail-days-val" class="block font-semibold"></span>
+            </div>
+            <div id="b-avail-times" class="hidden">
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-clock-rotate-left w-4"></i> Available Times</span>
+                <span id="b-avail-times-val" class="block font-semibold"></span>
+            </div>
+            <div id="b-avail-notice" class="hidden">
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-bullhorn w-4"></i> Advance Notice Required</span>
+                <span id="b-avail-notice-val" class="block font-semibold"></span>
+            </div>
             <div id="b-avail-custom-note" class="hidden mt-2 p-3 bg-white/60 rounded-lg text-sm text-sky-800 whitespace-pre-line italic"></div>
         </div>
     </div>
@@ -190,6 +199,10 @@
                 <input type="text" id="session-name" placeholder="Full Name" class="border rounded-xl px-4 py-3 text-sm w-full" value="{{ user.name if user else '' }}">
                 <input type="tel" id="session-phone" placeholder="Phone (01...)" class="border rounded-xl px-4 py-3 text-sm w-full">
                 <input type="email" id="session-email" placeholder="Email" class="border rounded-xl px-4 py-3 text-sm w-full sm:col-span-2" value="{{ user.email if user else '' }}">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold mb-1.5 text-zinc-600">Notes & Preferences for Host (Optional)</label>
+                    <textarea id="session-notes" placeholder="e.g. Can we meet via Zoom? I would like to discuss..." class="border rounded-xl px-4 py-3 text-sm w-full h-20 resize-none"></textarea>
+                </div>
             </div>
             
             <h3 class="text-sm font-bold text-emerald-800 border-t pt-6 mt-4">3. Payment</h3>
@@ -276,27 +289,109 @@
             return;
         }
         
-        container.innerHTML = data.slots.map(s => {
-            if(s.is_booked) {
-                return `<div class="px-4 py-3 border rounded-xl bg-zinc-50 text-zinc-400 text-sm line-through cursor-not-allowed">
-                    ${new Date(s.slot_time).toLocaleString('en-US', {timeZone: 'Asia/Dhaka', weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit', hour12: true})}
-                </div>`;
+        const slotsByDate = {};
+        data.slots.forEach(s => {
+            const dateObj = new Date(s.slot_time);
+            const dateStr = dateObj.toLocaleDateString('en-US', {timeZone: 'Asia/Dhaka', weekday: 'short', month: 'short', day: 'numeric'});
+            if(!slotsByDate[dateStr]) slotsByDate[dateStr] = [];
+            slotsByDate[dateStr].push(s);
+        });
+
+        const dates = Object.keys(slotsByDate);
+        let selectedDate = dates[0];
+        
+        let currentMonth = new Date(slotsByDate[dates[0]][0].slot_time);
+        currentMonth.setDate(1);
+
+        window.renderSlotsUI = function() {
+            let html = '<div class="w-full bg-white border border-emerald-100 rounded-2xl p-4 mb-4 shadow-sm">';
+            html += `<div class="flex justify-between items-center mb-4">
+                <button onclick="window.changeMonth(-1)" class="p-2 text-zinc-400 hover:text-emerald-600 transition"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="font-bold text-zinc-800 text-sm">${currentMonth.toLocaleDateString('en-US', {month: 'long', year: 'numeric'})}</div>
+                <button onclick="window.changeMonth(1)" class="p-2 text-zinc-400 hover:text-emerald-600 transition"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>`;
+            
+            html += '<div class="grid grid-cols-7 gap-1 text-center mb-2">';
+            ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(day => {
+                html += `<div class="text-[10px] font-black text-zinc-400 uppercase">${day}</div>`;
+            });
+            html += '</div><div class="grid grid-cols-7 gap-1 text-center">';
+            
+            const startDay = currentMonth.getDay();
+            const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+            
+            for(let i=0; i<startDay; i++) {
+                html += `<div></div>`;
             }
-            return `<button onclick="selectSlot(${s.id}, this)" class="slot-btn px-4 py-3 border border-emerald-200 rounded-xl text-emerald-800 text-sm font-bold hover:bg-emerald-50 transition text-left">
-                ${new Date(s.slot_time).toLocaleString('en-US', {timeZone: 'Asia/Dhaka', weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit', hour12: true})}
-            </button>`;
-        }).join('');
+            
+            for(let d=1; d<=daysInMonth; d++) {
+                const iterDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
+                const dateStr = iterDate.toLocaleDateString('en-US', {timeZone: 'Asia/Dhaka', weekday: 'short', month: 'short', day: 'numeric'});
+                const hasSlots = slotsByDate[dateStr];
+                const isActive = dateStr === selectedDate;
+                
+                if (hasSlots) {
+                    html += `<button onclick="window.selectSlotDate('${dateStr}')" class="h-8 w-8 mx-auto rounded-full text-sm font-bold flex items-center justify-center transition-colors ${isActive ? 'bg-emerald-600 text-white shadow-md' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-200'}">${d}</button>`;
+                } else {
+                    html += `<div class="h-8 w-8 mx-auto rounded-full text-sm flex items-center justify-center text-zinc-300">${d}</div>`;
+                }
+            }
+            html += '</div></div>';
+            
+            if (slotsByDate[selectedDate]) {
+                html += `<div class="mb-3"><span class="text-xs font-bold text-zinc-500 uppercase tracking-wider"><i class="fa-regular fa-clock"></i> Available on ${selectedDate}</span></div>`;
+                html += '<div class="flex flex-wrap gap-2 w-full mb-3">';
+                slotsByDate[selectedDate].forEach(s => {
+                    const timeStr = new Date(s.slot_time).toLocaleString('en-US', {timeZone: 'Asia/Dhaka', hour: '2-digit', minute:'2-digit', hour12: true});
+                    if(s.is_booked) {
+                        html += `<div class="px-4 py-2.5 border rounded-xl bg-zinc-50 text-zinc-400 text-sm line-through cursor-not-allowed">${timeStr}</div>`;
+                    } else {
+                        html += `<button onclick="selectSlot(${s.id}, this)" class="slot-btn px-4 py-2.5 border border-emerald-200 rounded-xl text-emerald-800 text-sm font-bold hover:bg-emerald-50 transition text-left focus:outline-none flex items-center gap-2">${timeStr}</button>`;
+                    }
+                });
+                html += '</div>';
+                html += `<div class="text-[11px] text-zinc-400 flex items-center gap-1.5 animate-pulse font-semibold mt-1"><i class="fa-solid fa-arrow-turn-down"></i> Select a time to continue</div>`;
+            } else {
+                html += `<div class="text-sm text-zinc-400 italic py-4">No slots available on this date.</div>`;
+            }
+            
+            container.innerHTML = html;
+        };
+
+        window.selectSlotDate = (date) => {
+            selectedDate = date;
+            window.renderSlotsUI();
+        };
+
+        window.changeMonth = (delta) => {
+            currentMonth.setMonth(currentMonth.getMonth() + delta);
+            window.renderSlotsUI();
+        };
+
+        window.renderSlotsUI();
     }
 
     function selectSlot(slotId, btnElement) {
         selectedSlotId = slotId;
-        document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('bg-emerald-600', 'text-white'));
-        document.querySelectorAll('.slot-btn').forEach(b => b.classList.add('text-emerald-800'));
-        btnElement.classList.remove('bg-emerald-50', 'text-emerald-800');
-        btnElement.classList.add('bg-emerald-600', 'text-white');
+        document.querySelectorAll('.slot-btn').forEach(b => {
+            b.classList.remove('bg-emerald-600', 'text-white', 'shadow-md', 'border-transparent');
+            b.classList.add('text-emerald-800', 'border-emerald-200');
+            b.innerHTML = b.innerHTML.replace(' <i class="fa-solid fa-circle-check"></i>', '');
+        });
         
-        document.getElementById('step-2-details').classList.remove('hidden');
+        btnElement.classList.remove('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+        btnElement.classList.add('bg-emerald-600', 'text-white', 'shadow-md', 'border-transparent');
+        if (!btnElement.innerHTML.includes('fa-circle-check')) {
+            btnElement.innerHTML += ' <i class="fa-solid fa-circle-check"></i>';
+        }
+        
+        const detailsSection = document.getElementById('step-2-details');
+        detailsSection.classList.remove('hidden');
         document.getElementById('session-fee-display').textContent = `৳${selectedEvent.price_per_person}`;
+        
+        setTimeout(() => {
+            detailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     }
 
     async function submitSession() {
@@ -307,8 +402,13 @@
             event_id: TARGET_EVENT_ID,
             name: document.getElementById('session-name').value,
             phone: document.getElementById('session-phone').value,
-            email: document.getElementById('session-email').value
+            email: document.getElementById('session-email').value,
+            message: document.getElementById('session-notes').value
         };
+        
+        if (payload.message) {
+            localStorage.setItem('dekhahok_user_notes', payload.message);
+        }
         
         if(!payload.name || !payload.phone) return alert("Name and phone required");
         
@@ -373,6 +473,12 @@ function selectPaymentMode(mode) {
                 alert("Event not found or has expired.");
                 window.location.href = "/";
                 return;
+            }
+            
+            const savedNotes = localStorage.getItem('dekhahok_user_notes');
+            if (savedNotes) {
+                const notesEl = document.getElementById('session-notes');
+                if (notesEl) notesEl.value = savedNotes;
             }
 
             // Populate top card
@@ -548,17 +654,25 @@ function selectPaymentMode(mode) {
             let hasAvail = false;
             
             if (selectedEvent.available_days) {
-                document.getElementById('b-avail-days-val').textContent = `Available Days: ${selectedEvent.available_days}`;
+                const formattedDays = selectedEvent.available_days.split(',').map(d => d.trim()).join(', ');
+                document.getElementById('b-avail-days-val').textContent = formattedDays;
                 document.getElementById('b-avail-days').classList.remove('hidden');
                 hasAvail = true;
             }
             if (selectedEvent.available_times) {
-                document.getElementById('b-avail-times-val').textContent = `Available Times: ${selectedEvent.available_times}`;
+                const formattedTimes = selectedEvent.available_times.split(',').map(t => {
+                    const [h, m] = t.trim().split(':');
+                    const d = new Date();
+                    d.setHours(parseInt(h || 0, 10));
+                    d.setMinutes(parseInt(m || 0, 10));
+                    return d.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', hour12: true});
+                }).join(', ');
+                document.getElementById('b-avail-times-val').textContent = `${formattedTimes} (Local Time)`;
                 document.getElementById('b-avail-times').classList.remove('hidden');
                 hasAvail = true;
             }
             if (selectedEvent.advance_notice_hours) {
-                document.getElementById('b-avail-notice-val').textContent = `Advance Notice Required: ${selectedEvent.advance_notice_hours} hours`;
+                document.getElementById('b-avail-notice-val').textContent = `${selectedEvent.advance_notice_hours} hours`;
                 document.getElementById('b-avail-notice').classList.remove('hidden');
                 hasAvail = true;
             }

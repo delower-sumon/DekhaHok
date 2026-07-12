@@ -193,33 +193,33 @@
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-zinc-700">Available Days *</label>
                         <div class="flex flex-wrap gap-2" id="ev-days">
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Saturday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Saturday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Saturday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Saturday</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Sunday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Sunday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Sunday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Sunday</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Monday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Monday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Monday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Monday</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Tuesday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Tuesday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Tuesday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Tuesday</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Wednesday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Wednesday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Wednesday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Wednesday</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Thursday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Thursday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Thursday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Thursday</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
-                                <input type="checkbox" value="Friday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold">Friday</span>
+                            <label class="flex items-center gap-1.5 bg-zinc-50 border px-2 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Friday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500 w-3 h-3">
+                                <span class="text-[11px] font-semibold">Friday</span>
                             </label>
                         </div>
                     </div>
@@ -227,7 +227,10 @@
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-zinc-700">Available Times *</label>
                         <div id="times-container" class="space-y-2">
-                            <input type="time" class="time-input w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                            <div class="flex items-center gap-2">
+                                <input type="time" class="time-input w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                                <button type="button" onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
                         </div>
                         <button type="button" onclick="addTimeInput()" class="mt-2 text-xs font-bold text-emerald-600 hover:text-emerald-700">+ Add Time</button>
                     </div>
@@ -663,10 +666,13 @@
 
     function addTimeInput() {
         const container = document.getElementById('times-container');
-        const input = document.createElement('input');
-        input.type = 'time';
-        input.className = 'time-input w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner mt-2';
-        container.appendChild(input);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex items-center gap-2';
+        wrapper.innerHTML = `
+            <input type="time" class="time-input w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+            <button type="button" onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fa-solid fa-xmark"></i></button>
+        `;
+        container.appendChild(wrapper);
     }
 
     async function submitFinalEvent(e) {
