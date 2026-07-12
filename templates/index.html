@@ -124,7 +124,7 @@
     <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
         <span class="font-black text-emerald-800 text-base">
             {% if e.booking_model == 'hire' %}
-                ৳{{ (e.starting_rate or e.price_per_person)|round|int }}<span class="text-xs text-zinc-500 font-bold"> hire rate</span>
+                ৳{{ (e.starting_rate or e.price_per_person)|round|int }}<span class="text-[10px] text-zinc-500 font-bold ml-0.5 align-bottom">min</span>
             {% else %}
                 ৳{{ e.price_per_person|round|int }}<span class="text-xs text-zinc-500 font-bold"> / person</span>
             {% endif %}
@@ -132,7 +132,7 @@
         <button onclick="event.stopPropagation(); openBooking(this.getAttribute('data-event-id'))"
             data-event-id="{{ e.id }}"
             class="w-full max-w-[140px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
-            {% if is_sold_out %}Join Waitlist{% elif e.booking_model == 'hire' %}Send Hire Request{% elif e.booking_model == 'session' %}Reserve Spot{% else %}Book Ticket{% endif %}
+            {% if is_sold_out %}Join Waitlist{% elif e.booking_model == 'hire' %}Submit Request{% elif e.booking_model == 'session' %}Reserve Spot{% else %}Book Ticket{% endif %}
         </button>
     </div>
     </div>

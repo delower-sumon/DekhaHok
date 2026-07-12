@@ -12,6 +12,9 @@ All notable changes to the DekhaHok main branch will be documented in this file.
   - Repaired the event session generator (generate_session_slots_for_event) by updating column references (slot_time, duration_mins) to match the new schema.
   - Fixed host dashboard missing entries by implementing secure database transaction rollbacks (	ry...except db.rollback()) during event creation and updates to prevent silent failures.
   - Corrected the dekhahok_ui.png Social OG image by fixing displaced logo connection dots and significantly optimizing the file size from ~900KB down to 112KB to ensure reliable Facebook/WhatsApp link previews.
+  - **Pricing UI & Terminology**: Renamed "Starting Rate" to "Booking Fee (BDT)min" with subscript styling across host creation/edit forms and homepage/booking cards. Renamed "Send Request" to "Submit Request".
+  - **Availability Note Rendering**: Fixed a bug where the host's custom Availability Note text was saving to the database but failing to render. The text now properly fetches and displays securely in a pre-formatted box across all three booking templates (`booking.html`, `booking_hire.html`, `booking_session.html`).
+  - **Image CLS Optimization**: Eliminated Lighthouse Cumulative Layout Shift (CLS) penalties by automatically injecting strict `width="450"` and `height="138"` dimensions into all instances of the SVG logo (`dekhahok_bn.svg`) across all frontend templates.
 - **Package Tier Removal (UI)**: Removed the legacy "Package Tier" dropdown and associated JavaScript logic from the `host_event_edit.html` template. The platform is now strictly adhering to the 3-model Booking Engine architecture (Event, Session, Hire). The `package_tier` database column remains intact for now and will be dropped in a future migration.
 
 ### Removed

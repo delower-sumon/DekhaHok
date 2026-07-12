@@ -138,6 +138,18 @@
         </div>
     </div>
 
+    <!-- Availability & Notice -->
+    <div id="booking-availability-container" class="hidden mb-8 bg-sky-50 border border-sky-100 rounded-2xl p-4 sm:p-6 shadow-sm">
+        <h3 class="text-xs font-black text-sky-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-clock"></i> Availability Note</h3>
+        <div class="space-y-2 text-sm text-sky-900 font-medium">
+            <p id="b-avail-days" class="hidden"><i class="fa-solid fa-calendar-day w-5 text-sky-600"></i> <span id="b-avail-days-val"></span></p>
+            <p id="b-avail-times" class="hidden"><i class="fa-solid fa-clock-rotate-left w-5 text-sky-600"></i> <span id="b-avail-times-val"></span></p>
+            <p id="b-avail-notice" class="hidden"><i class="fa-solid fa-bullhorn w-5 text-sky-600"></i> <span id="b-avail-notice-val"></span></p>
+            <div id="b-avail-custom-note" class="hidden mt-2 p-3 bg-white/60 rounded-lg text-sm text-sky-800 whitespace-pre-line italic"></div>
+        </div>
+    </div>
+
+
     {% if existing_booking %}
     <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 text-center mt-6">
         <div
@@ -504,6 +516,34 @@ function selectPaymentMode(mode) {
             if(hasMedia) {
                 mediaContainer.classList.remove('hidden');
             }
+
+            
+            // Populate Availability Note
+            const availContainer = document.getElementById('booking-availability-container');
+            let hasAvail = false;
+            
+            if (selectedEvent.available_days) {
+                document.getElementById('b-avail-days-val').textContent = `Available Days: ${selectedEvent.available_days}`;
+                document.getElementById('b-avail-days').classList.remove('hidden');
+                hasAvail = true;
+            }
+            if (selectedEvent.available_times) {
+                document.getElementById('b-avail-times-val').textContent = `Available Times: ${selectedEvent.available_times}`;
+                document.getElementById('b-avail-times').classList.remove('hidden');
+                hasAvail = true;
+            }
+            if (selectedEvent.advance_notice_hours) {
+                document.getElementById('b-avail-notice-val').textContent = `Advance Notice Required: ${selectedEvent.advance_notice_hours} hours`;
+                document.getElementById('b-avail-notice').classList.remove('hidden');
+                hasAvail = true;
+            }
+            if (selectedEvent.availability_note) {
+                document.getElementById('b-avail-custom-note').textContent = selectedEvent.availability_note;
+                document.getElementById('b-avail-custom-note').classList.remove('hidden');
+                hasAvail = true;
+            }
+            
+            if (hasAvail) availContainer.classList.remove('hidden');
 
             document.getElementById('booking-event-card').classList.remove('opacity-0');
 

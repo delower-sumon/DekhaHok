@@ -281,7 +281,8 @@ def serve_frontend(request: Request):
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession, h.experience_years as host_experience, h.is_founding as host_is_founding, e.booking_model
+                   h.profession as host_profession, h.experience_years as host_experience, h.is_founding as host_is_founding, e.booking_model,
+                   e.starting_rate
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -303,6 +304,7 @@ def serve_frontend(request: Request):
                 "host_experience": r[20] or 0,
                 "host_is_founding": bool(r[21]),
                 "booking_model": r[22] or "ticketed",
+                "starting_rate": float(r[23]) if r[23] else 0,
                 "event_date_formatted": local_time_filter(r[10]) if r[10] else "TBA"
             })
             
@@ -597,7 +599,8 @@ def serve_host_event_edit(event_id: int, request: Request):
                        location_name, location_area, event_date, included, image_url, is_recurring,
                        image_url_2, image_url_3, image_url_4, booking_model, youtube_link,
                        start_time, end_time, listing_type, starting_rate, service_area,
-                       session_duration_mins, advance_notice_hours, available_days, available_times
+                       session_duration_mins, advance_notice_hours, available_days, available_times,
+                       availability_note
                 FROM events WHERE id = %s AND host_id = %s
             """, (event_id, host_id))
         else:
@@ -606,7 +609,8 @@ def serve_host_event_edit(event_id: int, request: Request):
                        location_name, location_area, event_date, included, image_url, is_recurring,
                        image_url_2, image_url_3, image_url_4, booking_model, youtube_link,
                        start_time, end_time, listing_type, starting_rate, service_area,
-                       session_duration_mins, advance_notice_hours, available_days, available_times
+                       session_duration_mins, advance_notice_hours, available_days, available_times,
+                       availability_note
                 FROM events WHERE id = %s
             """, (event_id,))
             
@@ -651,7 +655,8 @@ def serve_host_event_edit(event_id: int, request: Request):
             "session_duration_mins": event_row[22] or "",
             "advance_notice_hours": event_row[23] or 24,
             "available_days": event_row[24] or "",
-            "available_times": event_row[25] or ""
+            "available_times": event_row[25] or "",
+            "availability_note": event_row[26] or ""
         }
     finally:
         release_conn(conn)
@@ -1643,7 +1648,8 @@ def api_event_detail(event_id: int):
                    CASE WHEN e.image_url_3 IS NOT NULL AND e.image_url_3 != '' THEN 1 ELSE 0 END as has_image_3,
                    CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
                    e.youtube_link, h.is_founding as host_is_founding, COALESCE(e.views, 0) as views,
-                   e.starting_rate, e.booking_model
+                   e.starting_rate, e.booking_model, e.available_days, e.available_times, e.advance_notice_hours,
+                   e.availability_note
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1676,7 +1682,11 @@ def api_event_detail(event_id: int):
             "host_is_founding": bool(r[27]) if len(r) > 27 else False,
             "views": r[28] if len(r) > 28 else 0,
             "starting_rate": r[29] if len(r) > 29 else None,
-            "booking_model": r[30] if len(r) > 30 else "ticketed"
+            "booking_model": r[30] if len(r) > 30 else "ticketed",
+            "available_days": r[31] if len(r) > 31 else None,
+            "available_times": r[32] if len(r) > 32 else None,
+            "advance_notice_hours": r[33] if len(r) > 33 else None,
+            "availability_note": r[34] if len(r) > 34 else None
         }
         cursor.close()
     finally:
