@@ -216,6 +216,7 @@ def init_db():
                 category VARCHAR(50) NOT NULL,
                 operating_area VARCHAR(100),
                 bio TEXT,
+                host_type VARCHAR(50) DEFAULT 'individual',
                 social_links JSONB DEFAULT '{}',
                 verification_status VARCHAR(20) DEFAULT 'PENDING',
                 is_founding BOOLEAN DEFAULT FALSE,
@@ -234,6 +235,9 @@ def init_db():
                 description TEXT,
                 category VARCHAR(50) NOT NULL,
                 package_tier VARCHAR(20) NOT NULL,
+                listing_type VARCHAR(50) DEFAULT 'event',
+                booking_model VARCHAR(50),
+                external_link VARCHAR(255),
                 price_per_person NUMERIC(8,2) NOT NULL DEFAULT 0.00,
                 capacity INT NOT NULL DEFAULT 10,
                 booked_count INT NOT NULL DEFAULT 0,
@@ -247,6 +251,39 @@ def init_db():
                 is_recurring BOOLEAN DEFAULT FALSE,
                 views INTEGER DEFAULT 0,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """)
+        
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS host_slots (
+                id SERIAL PRIMARY KEY,
+                host_id INTEGER REFERENCES hosts(id),
+                event_id INTEGER REFERENCES events(id),
+                slot_date DATE NOT NULL,
+                slot_time TIME NOT NULL,
+                is_booked BOOLEAN DEFAULT FALSE,
+                booking_id INTEGER,
+                created_at TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE (event_id, slot_date, slot_time)
+            )
+        """)
+        
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS hire_requests (
+                id SERIAL PRIMARY KEY,
+                host_id INTEGER REFERENCES hosts(id),
+                event_id INTEGER REFERENCES events(id),
+                client_name VARCHAR(200) NOT NULL,
+                client_email VARCHAR(200) NOT NULL,
+                client_phone VARCHAR(20),
+                occasion_type VARCHAR(200),
+                event_date DATE,
+                event_location VARCHAR(300),
+                guest_count INTEGER,
+                message TEXT,
+                budget_range VARCHAR(100),
+                status VARCHAR(50) DEFAULT 'pending',
+                created_at TIMESTAMPTZ DEFAULT NOW()
             )
         """)
         
@@ -278,6 +315,22 @@ def init_db():
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author_title TEXT")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author_image_url TEXT")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS vibe VARCHAR(50)")
+        
+        # Phase 1 Migrations
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS listing_type VARCHAR(50) DEFAULT 'event'")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS booking_model VARCHAR(50)")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS external_link VARCHAR(255)")
+        cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS host_type VARCHAR(50) DEFAULT 'individual'")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS starting_rate INTEGER")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS service_area VARCHAR(200)")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS occasion_types TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS portfolio_url TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS availability_note TEXT")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS session_duration_mins INTEGER")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS max_per_session INTEGER DEFAULT 1")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS advance_notice_hours INTEGER DEFAULT 24")
+        cursor.execute("UPDATE events SET booking_model = 'community' WHERE booking_model IS NULL")
+        
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS discount_amount NUMERIC(8,2) DEFAULT 0.00")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS coupon_code VARCHAR(20)")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS image_alt TEXT")
@@ -373,6 +426,21 @@ def init_db():
         ]
         cursor.execute("DELETE FROM blogs WHERE slug IN %s", (tuple(legacy_slugs),))
         
+        # Seed Robindro Sorobor Blog
+        cursor.execute("""
+            INSERT INTO blogs (slug, title, seo_description, content, author, image_url, badge_text)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (slug) DO NOTHING
+        """, (
+            "robindro-sorobor-photography-walk",
+            "A Morning at Robindro Sorobor: Capturing the Soul of Dhaka",
+            "Our recent photography walk at Robindro Sorobor brought together passionate photographers. Here is a recap of our magical morning.",
+            "We recently hosted a photography walk at Robindro Sorobor, one of Dhaka's most iconic and vibrant cultural spots. It was an early morning event, and as the sun rose, casting a golden hue over the lake, over 25 community members gathered with their cameras and smartphones, ready to capture the soul of the city.<br><br>The event kicked off with a brief introduction by our host, an experienced local photographer who shared tips on composition, lighting, and storytelling through lenses. From the rustic boats gently bobbing on the water to the energetic joggers and the tranquil nature surrounding the amphitheater, every corner offered a unique frame.<br><br>What made this walk truly special was the sense of community. Beginners learned from professionals, and strangers bonded over a shared passion. We explored the lakeside pathways, clicking candid portraits, stunning landscapes, and the everyday life of Dhaka waking up.<br><br>After two hours of shooting, we sat down at a nearby cafe for some tea and snacks, reviewing our shots and discussing techniques. The energy was palpable, and the feedback was overwhelmingly positive. It wasn't just about taking pictures; it was about seeing our city from a new perspective and connecting with like-minded individuals.<br><br>If you missed this one, don't worry! We have many more such experiences lined up. Check out our <a href='/' class='text-emerald-600 underline'>Photography Walk listing</a> and join us next time. Let's create beautiful memories and stunning portfolios together!",
+            "DekhaHok Team",
+            "https://dekhahok.com/static/assets/og-default.jpg",
+            "Recap"
+        ))
+        
         # Create default admin user and host
         cursor.execute("""
             INSERT INTO users (email, full_name, role)
@@ -420,6 +488,13 @@ def init_db():
         
         # Ensure is_founding column exists in hosts table for backward compatibility
         cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS is_founding BOOLEAN DEFAULT FALSE")
+
+        # Marketplace model migrations for bookings & hire requests
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS booking_model VARCHAR(50) DEFAULT 'ticketed'")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS slot_id INTEGER REFERENCES host_slots(id) ON DELETE SET NULL")
+        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS hire_request_id INTEGER REFERENCES hire_requests(id) ON DELETE SET NULL")
+        cursor.execute("ALTER TABLE hire_requests ADD COLUMN IF NOT EXISTS tracking_id VARCHAR(50)")
+        cursor.execute("ALTER TABLE host_slots ADD COLUMN IF NOT EXISTS duration_mins INTEGER DEFAULT 60")
 
         # Backfill existing hosts with id <= 100 as Founding 100
         cursor.execute("SELECT COUNT(*) FROM site_settings WHERE key = 'founding_hosts_backfilled'")

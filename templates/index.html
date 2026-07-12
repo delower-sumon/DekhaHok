@@ -91,7 +91,9 @@
                             {% endif %}
                         </div>
                         {% endif %}
-                        {% if e.host_profession %}
+                        {% if e.host_profession == 'Official Host' %}
+                        <span class="text-[9px] font-black text-white bg-gradient-to-r from-emerald-600 to-teal-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-emerald-400/50 tracking-widest uppercase"><i class="fa-solid fa-crown text-[8px] text-emerald-100"></i> ORIGINALS</span>
+                        {% elif e.host_profession %}
                         <span
                             class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-1 block">{{
                             e.host_profession }}</span>
@@ -111,7 +113,7 @@
         <button onclick="event.stopPropagation(); openBooking(this.getAttribute('data-event-id'))"
             data-event-id="{{ e.id }}"
             class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
-            {% if is_sold_out %}Join Waitlist{% else %}Book Now{% endif %}
+            {% if is_sold_out %}Join Waitlist{% elif e.booking_model == 'hire' %}Send Hire Request{% elif e.booking_model == 'session' %}Reserve Spot{% else %}Book Ticket{% endif %}
         </button>
     </div>
     </div>
@@ -179,9 +181,7 @@
                                 class="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs">
                                 💼</div>
                         </div>
-                        <p class="text-xs sm:text-sm text-zinc-500">{{ total_members }}+ Hosts and users have joined
-                            DekhaHok
-                            activities</p>
+                        <p class="text-xs sm:text-sm text-zinc-500">{{ total_members }} people have already joined.</p>
                     </div>
                 </div>
 
@@ -389,11 +389,22 @@
 
                     <div class="flex items-center gap-x-1">
                         <button onclick="setTimeFilter('all')" id="time-all"
-                            class="bg-emerald-100 text-emerald-700 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all">All
+                            class="bg-emerald-100 text-emerald-700 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all whitespace-nowrap">All
                             Time</button>
                         <button onclick="setTimeFilter('weekend')" id="time-weekend"
-                            class="text-zinc-500 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold rounded-full transition-all">This
+                            class="text-zinc-500 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold rounded-full transition-all whitespace-nowrap">This
                             Weekend</button>
+                    </div>
+
+                    <div class="hidden sm:block w-[1px] h-4 bg-zinc-200"></div>
+
+                    <div class="flex items-center gap-x-1 overflow-x-auto no-scrollbar pb-1">
+                        <button onclick="setModelFilter('all')" id="model-all"
+                            class="bg-emerald-100 text-emerald-700 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold rounded-full transition-all whitespace-nowrap">All Types</button>
+                        <button onclick="setModelFilter('session')" id="model-session"
+                            class="text-zinc-500 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold rounded-full transition-all whitespace-nowrap">Sessions</button>
+                        <button onclick="setModelFilter('hire')" id="model-hire"
+                            class="text-zinc-500 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold rounded-full transition-all whitespace-nowrap">Hire</button>
                     </div>
                 </div>
             </div>
@@ -443,7 +454,7 @@
 
         <!-- Sports Section -->
         <section id="sports-section"
-            class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50 {% if not sports_events %}hidden{% endif %}">
+            class="max-w-7xl mx-auto px-4 sm:px-8 py-8 bg-zinc-50/50">
             <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
                 <div>
                     <span
@@ -462,6 +473,7 @@
                 <span class="text-4xl">⚽</span>
                 <h3 class="font-bold mt-4 text-zinc-800">No sports found</h3>
                 <p class="text-zinc-400 text-xs mt-1">Check back later for exciting sports activities!</p>
+                <a href="/host/apply" class="inline-block mt-4 text-emerald-600 font-bold hover:underline text-sm">Host a sports event &rarr;</a>
             </div>
         </section>
 
@@ -1652,6 +1664,7 @@
         let currentCategory = 'all';
         let currentTimeFilter = 'all';
         let currentArea = 'all';
+        let currentBookingModel = 'all';
 
         async function loadEvents() {
             if (typeof INITIAL_EVENTS !== 'undefined' && INITIAL_EVENTS && INITIAL_EVENTS.length > 0) {
@@ -1662,7 +1675,15 @@
             try {
                 const res = await fetch('/api/events');
                 allEvents = await res.json();
-                applyFilters();
+                
+                // Parse URL params for ?type=
+                const urlParams = new URLSearchParams(window.location.search);
+                const typeParam = urlParams.get('type');
+                if (['session', 'hire'].includes(typeParam)) {
+                    setModelFilter(typeParam); // This sets the UI and calls applyFilters
+                } else {
+                    applyFilters();
+                }
             } catch (err) {
                 console.error("Failed to load catalog events:", err);
             }
@@ -1707,6 +1728,27 @@
             applyFilters();
         }
 
+        function setModelFilter(model) {
+            currentBookingModel = model;
+            const btnAll = document.getElementById('model-all');
+            const btnSess = document.getElementById('model-session');
+            const btnHire = document.getElementById('model-hire');
+            
+            [btnAll, btnSess, btnHire].forEach(btn => {
+                if(btn) {
+                    btn.classList.remove('bg-emerald-100', 'text-emerald-700');
+                    btn.classList.add('text-zinc-500');
+                }
+            });
+
+            const activeBtn = document.getElementById(`model-${model}`);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-emerald-100', 'text-emerald-700');
+                activeBtn.classList.remove('text-zinc-500');
+            }
+            applyFilters();
+        }
+
         function applyFilters() {
             let filtered = [...allEvents];
 
@@ -1728,6 +1770,11 @@
                     const day = d.getDay(); // 5 = Friday, 6 = Saturday
                     return day === 5 || day === 6;
                 });
+            }
+
+            // Booking Model Filter
+            if (currentBookingModel !== 'all') {
+                filtered = filtered.filter(e => e.booking_model === currentBookingModel);
             }
 
             displayedEvents = filtered.filter(e => e.category !== 'travel' && e.category !== 'professional' && e.category !== 'sports');
@@ -1812,7 +1859,7 @@
                                             ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
                                         </div>`
                     }
-                                    ${e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-1 block">' + e.host_profession + '</span>' : ''}
+                                    ${e.host_profession === 'Official Host' ? '<span class="text-[9px] font-black text-white bg-gradient-to-r from-emerald-600 to-teal-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-emerald-400/50 tracking-widest uppercase"><i class="fa-solid fa-crown text-[8px] text-emerald-100"></i> ORIGINALS</span>' : (e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-1 block">' + e.host_profession + '</span>' : '')}
                                 </div>
                             </div>
                             <span class="px-2.5 py-1 border text-[9px] font-black rounded-xl uppercase tracking-tight shadow-sm ${badgeClass}">
@@ -1826,7 +1873,7 @@
                 <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
                     <span class="font-black text-emerald-800 text-base hidden">৳${Math.round(e.price_per_person)}</span>
                     <button onclick="event.stopPropagation(); openBooking(${e.id})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center">
-                        ${isSoldOut ? 'Join Waitlist' : 'Book Now'}
+                        ${isSoldOut ? 'Join Waitlist' : (e.booking_model === 'hire' ? 'Send Hire Request' : (e.booking_model === 'session' ? 'Reserve Spot' : 'Book Ticket'))}
                     </button>
                 </div>
             `;
@@ -1841,9 +1888,15 @@
 
         // ── Ticket Status Tracking ─────────────────────────────────────────────────────
         async function checkBookingStatus() {
-            const inputVal = document.getElementById('trackingInput').value.trim();
+            const inputVal = document.getElementById('trackingInput').value.trim().toUpperCase();
             const resultEl = document.getElementById('trackingResult');
             if (!inputVal) return;
+
+            // Route new booking models to dedicated tracking pages
+            if (inputVal.startsWith('HR-') || inputVal.startsWith('SB-')) {
+                window.location.href = '/track/' + inputVal;
+                return;
+            }
 
             resultEl.innerHTML = '<p class="text-zinc-400 font-bold text-center py-6">Searching booking record...</p>';
             resultEl.classList.remove('hidden');

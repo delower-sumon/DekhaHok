@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Track Session - {{ data.tracking_id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-12 px-4 sm:px-6">
+    <div class="bg-white border border-emerald-100 rounded-3xl shadow-sm overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-emerald-600 px-6 py-8 text-center text-white relative">
+            <h1 class="text-2xl font-black tracking-tight mb-2">Session Booking</h1>
+            <p class="text-emerald-100 text-sm font-medium">Tracking ID: <span class="font-mono bg-emerald-700 px-2 py-1 rounded">{{ data.tracking_id }}</span></p>
+            
+            <div class="mt-6 inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-2 rounded-full border border-white/30">
+                {% if data.status == 'confirmed' %}
+                    <i class="fa-solid fa-circle-check text-emerald-300"></i> <span class="text-sm font-bold uppercase tracking-wider text-emerald-50">Confirmed</span>
+                {% elif data.status == 'completed' %}
+                    <i class="fa-solid fa-flag-checkered text-blue-300"></i> <span class="text-sm font-bold uppercase tracking-wider text-blue-50">Completed</span>
+                {% else %}
+                    <i class="fa-solid fa-circle-notch fa-spin text-yellow-300"></i> <span class="text-sm font-bold uppercase tracking-wider text-yellow-50">{{ data.status }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Details -->
+        <div class="p-6 sm:p-8 space-y-8">
+            <!-- Time Slot -->
+            <div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 text-center">
+                <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">Scheduled For</p>
+                <div class="text-xl sm:text-2xl font-black text-emerald-900 mb-1">
+                    {{ data.slot_time.strftime('%A, %B %d, %Y') }}
+                </div>
+                <div class="text-emerald-700 font-bold">
+                    {{ data.slot_time.strftime('%I:%M %p') }} <span class="text-emerald-600 text-sm font-normal">({{ data.duration_mins }} mins)</span>
+                </div>
+            </div>
+
+            <!-- Host Info -->
+            <div>
+                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Host Details</h3>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl font-bold">
+                        {{ data.host_name[0] }}
+                    </div>
+                    <div>
+                        <p class="font-bold text-zinc-900">{{ data.host_name }}</p>
+                        <p class="text-sm text-zinc-500">{{ data.host_email }} • {{ data.host_phone }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Info -->
+            <div>
+                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Booked By</h3>
+                <p class="font-bold text-zinc-900 text-sm">{{ data.client_name }}</p>
+            </div>
+            
+            <div class="text-center pt-4 border-t border-zinc-100">
+                <a href="/" class="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">← Back to Home</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

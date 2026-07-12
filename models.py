@@ -341,12 +341,21 @@ class HostApply(BaseModel):
     nid_number: str
     profession: str
     category: str
+    host_type: str = "community"
     operating_area: Optional[str] = None
     bio: Optional[str] = None
+    experience_years: Optional[int] = 0
     past_experience: Optional[str] = None
     why_host: Optional[str] = None
     social_links: Optional[str] = None
     avatar_url: Optional[str] = None
+
+    @field_validator("host_type")
+    @classmethod
+    def validate_host_type(cls, v):
+        if v not in ("community", "artist", "session"):
+            raise ValueError("host_type must be community, artist, or session")
+        return v
 
     @field_validator("nid_number")
     @classmethod
@@ -359,12 +368,26 @@ class EventCreate(BaseModel):
     title: str
     description: Optional[str] = None
     category: str
-    package_tier: str
+    package_tier: Optional[str] = "circle"
+    listing_type: str = "event"
+    booking_model: str = "ticketed"
+    starting_rate: Optional[int] = None
+    service_area: Optional[str] = None
+    occasion_types: Optional[str] = None
+    portfolio_url: Optional[str] = None
+    availability_note: Optional[str] = None
+    session_duration_mins: Optional[int] = None
+    max_per_session: int = 1
+    advance_notice_hours: int = 24
     price_per_person: float
     capacity: int = 10
     location_name: Optional[str] = None
     location_area: Optional[str] = None
     event_date: Optional[str] = None
+    start_time: Optional[str] = None
+    end_time: Optional[str] = None
+    available_days: Optional[str] = None
+    available_times: Optional[str] = None
     is_recurring: bool = False
     included: Optional[str] = None
     image_base64: Optional[str] = None
@@ -372,13 +395,6 @@ class EventCreate(BaseModel):
     image_base64_3: Optional[str] = None
     image_base64_4: Optional[str] = None
     youtube_link: Optional[str] = None
-
-    @field_validator("package_tier")
-    @classmethod
-    def validate_tier(cls, v):
-        if v not in ("circle", "experience", "premium"):
-            raise ValueError("package_tier must be 'circle', 'experience', or 'premium'")
-        return v
 
     @field_validator("capacity")
     @classmethod
@@ -399,3 +415,24 @@ class EventCreate(BaseModel):
             except json.JSONDecodeError:
                 raise ValueError("must be a valid JSON array")
         return v
+
+class HireRequestCreate(BaseModel):
+    host_id: int
+    event_id: int
+    client_name: str
+    client_email: str
+    client_phone: Optional[str] = None
+    occasion_type: Optional[str] = None
+    event_date: Optional[date] = None
+    event_location: Optional[str] = None
+    guest_count: Optional[int] = None
+    message: Optional[str] = None
+    budget_range: Optional[str] = None
+
+class SessionBookCreate(BaseModel):
+    slot_id: int
+    event_id: int
+    name: str
+    email: str
+    phone: str
+    message: Optional[str] = None

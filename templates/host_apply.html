@@ -1,556 +1,464 @@
 {% extends "base.html" %}
-
-{% block title %}Host হিসেবে আবেদন করুন • DekhaHok{% endblock %}
-
-{% block seo_meta %}
-    <meta name="description" content="দেখা হোকে হোস্ট হিসেবে আবেদন করুন — ভেরিফাইড হোস্ট হয়ে কমিউনিটি ইভেন্ট আয়োজন করুন এবং রেভিনিউ শেয়ার করুন।">
-    <link rel="canonical" href="https://dekhahok.com/host/apply">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://dekhahok.com/host/apply">
-    <meta property="og:title" content="Host হিসেবে আবেদন করুন • DekhaHok">
-    <meta property="og:description" content="দেখা হোকে হোস্ট হিসেবে আবেদন করুন — কমিউনিটি ইভেন্ট আয়োজন করুন এবং রেভিনিউ শেয়ার করুন।">
-    <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
-{% endblock %}
+{% block title %}Apply to Host{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-12">
-    <a href="/host"
-        class="flex items-center gap-2 text-zinc-400 hover:text-emerald-700 mb-8 transition-all font-medium text-sm">
-        <i class="fa-solid fa-arrow-left"></i>
-        <span>Back to Host Overview</span>
-    </a>
+<div class="max-w-2xl mx-auto py-10 px-4 sm:px-6 min-h-[80vh] flex flex-col justify-center">
 
-    <h1 class="bengali text-3xl font-bold mb-2 text-zinc-900">
-        দেখা হোক হোস্ট আবেদন
-        <span class="sr-only">Become a Host</span>
-    </h1>
-    <p class="bengali text-zinc-500 mb-10 text-sm leading-relaxed">
-        বাস্তবমুখী ইভেন্ট আয়োজন, আপনার নিজস্ব কমিউনিটি তৈরি এবং ইভেন্ট থেকে ৭০%-৯৫% পর্যন্ত রেভিনিউ শেয়ার বুঝে নিতে আবেদন করুন।
-        <span class="sr-only">Organize real-world events, grow your community, and earn 70%-95% payouts.</span>
-    </p>
-
-    <!-- Progress Bar -->
-    <div class="flex items-center justify-between mb-10 relative px-2">
-        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-200 -translate-y-1/2 z-0"></div>
-        <div id="host-progress-bar" class="absolute top-1/2 left-0 h-0.5 bg-emerald-600 transition-all duration-500 -translate-y-1/2 z-10 
-            {% if not host %}w-[25%]
-            {% elif host.verification_status == 'PENDING' %}w-[75%]
-            {% else %}w-[100%]
-            {% endif %}">
+    {% if existing_host %}
+        {% if existing_host.verification_status == 'PENDING' %}
+        <div class="bg-white border rounded-3xl p-10 text-center shadow-sm">
+            <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <h1 class="text-2xl font-black text-zinc-900 mb-2">Application Under Review</h1>
+            <p class="text-zinc-500 mb-6">Your host application is currently being reviewed by our team. We'll notify you once approved.</p>
+            <a href="/" class="inline-block bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold px-6 py-2.5 rounded-xl transition-colors">Return to Home</a>
         </div>
-
-        <div id="progress-circle-1"
-            class="z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors">
-            1</div>
-        <div id="progress-circle-2"
-            class="z-20 w-9 h-9 rounded-full {% if host %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm transition-colors">
-            2</div>
-        <div id="progress-circle-3"
-            class="z-20 w-9 h-9 rounded-full {% if host %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm transition-colors">
-            3</div>
-        <div id="progress-circle-4"
-            class="z-20 w-9 h-9 rounded-full {% if host and host.verification_status != 'PENDING' %}bg-emerald-600 text-white{% else %}bg-white border border-zinc-200 text-zinc-400{% endif %} flex items-center justify-center font-medium text-sm transition-colors">
-            4</div>
+        {% elif existing_host.verification_status == 'VERIFIED' %}
+        <script>window.location.href = '/host/dashboard';</script>
+        {% elif existing_host.verification_status == 'REJECTED' %}
+        <div class="bg-white border rounded-3xl p-10 text-center shadow-sm">
+            <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <h1 class="text-2xl font-black text-zinc-900 mb-2">Application Declined</h1>
+            <p class="text-zinc-500 mb-6">Unfortunately, your application was not approved at this time.</p>
+            <a href="/" class="inline-block bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold px-6 py-2.5 rounded-xl transition-colors">Return to Home</a>
+        </div>
+        {% endif %}
+    {% else %}
+    {% if not user %}
+    <div class="bg-white border rounded-[2rem] p-10 text-center shadow-sm max-w-md mx-auto">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h1 class="text-2xl font-black text-zinc-900 mb-2">Become a Host on DekhaHok</h1>
+        <p class="text-zinc-500 mb-6 text-sm">Create experiences, offer mentorship, or get hired for private events. Please log in or sign up to start onboarding.</p>
+        <button onclick="openAuthModal(window.location.pathname)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow text-sm w-full uppercase tracking-wider">Log In / Sign Up to Apply</button>
+    </div>
+    {% else %}
+    
+    <!-- Progress Indicator -->
+    <div id="host-progress-container" class="mb-8 max-w-sm mx-auto">
+        <div class="relative flex justify-between items-center w-full">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-zinc-100 rounded-full -z-10">
+                <div id="host-progress-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+            </div>
+            <!-- Steps -->
+            <div id="progress-circle-0" class="z-20 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs transition-colors shadow-sm">1</div>
+            <div id="progress-circle-1" class="z-20 w-8 h-8 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-xs transition-colors">2</div>
+            <div id="progress-circle-2" class="z-20 w-8 h-8 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-xs transition-colors">3</div>
+            <div id="progress-circle-3" class="z-20 w-8 h-8 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-xs transition-colors">4</div>
+            <div id="progress-circle-4" class="z-20 w-8 h-8 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-xs transition-colors">5</div>
+        </div>
     </div>
 
-    <!-- State Panels -->
-    <div class="bg-white border border-zinc-200/80 rounded-[2rem] p-8 shadow-sm">
-
-        {% if not host %}
-        <!-- Form Step 1: Submit Profile Details (Accessible to anyone) -->
-        <div id="host-step-panel-1" class="space-y-6">
-            <div>
-                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 1: Tell us about yourself</h2>
-                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">NID validation & category</p>
-            </div>
-
-            <form onsubmit="handleStep1Submit(event)" class="space-y-5">
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">National Identity (NID) Number *</label>
-                    <input type="text" id="host-nid" required pattern="^[0-9]{10,17}$"
-                        class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                        placeholder="e.g. 1999261827364536" title="NID must be between 10 and 17 digits">
-                    <span class="text-[9px] text-zinc-400 mt-1 block">Kept strictly confidential. Used only for background verification.</span>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Profession / Title *</label>
-                    <input type="text" id="host-profession" required
-                        class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                        placeholder="e.g. Photographer, Software Engineer, Student">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Host Category *</label>
-                    <select id="host-category" required
-                        class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
-                        <option value="creative">🎨 Creative (Photography, Art, Film, Books)</option>
-                        <option value="professional">💼 Professional (Startups, Design, Tech, Careers)</option>
-                        <option value="lifestyle">🌱 Lifestyle (Food explorer, Cafes, Trips, Fitness)</option>
-                        <option value="sports">⚽ Sports & Wellness (Yoga, Meditation, Marathons)</option>
-                        <option value="entertainment">🎭 Entertainment (Music, Comedy, Theater)</option>
-                        <option value="education">🎓 Education (Workshops, Skill sharing, Languages)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Primary Operating Area *</label>
-                    <input type="text" id="host-area" required
-                        class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                        placeholder="e.g. Dhanmondi / Gulshan / Uttara">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Tell us about your community experience (optional)</label>
-                    <textarea id="host-experience" rows="3"
-                        class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none"
-                        placeholder="Have you led photography walks or organized discussions before?"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Why do you want to host? *</label>
-                    <textarea id="host-why" required rows="3"
-                        class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-none"
-                        placeholder="What kind of connections do you wish to create?"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Official Portrait / Profile Photo *</label>
-                    <input type="file" id="host-avatar-file" accept="image/*"
-                        class="w-full px-4 py-2 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
-                    <span class="text-[9px] text-zinc-400 mt-1 block">A high-quality close-up profile photo is required to build trust with attendees.</span>
-                    <input type="hidden" id="host-avatar-base64">
-                    <div id="avatar-preview-container" class="mt-2 hidden">
-                        <img id="avatar-preview-img" src="" class="w-16 h-16 rounded-xl object-cover border border-zinc-200">
-                    </div>
-                </div>
-
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Next Step</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Form Step 2: Inline Auth Panel (Only shown if user is NOT logged in when clicking next) -->
-        <div id="host-step-panel-auth" class="space-y-6 py-4 hidden">
-            <!-- Logo Header -->
-            <div class="text-center space-y-4">
-                <div class="flex flex-col items-center justify-center gap-y-2 mb-2">
-                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto mx-auto" />
-                </div>
-                <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">
-                    লগইন বা সাইন-আপ করুন
-                    <span class="sr-only">Authentication Required</span>
-                </h2>
-                <p class="bengali text-xs text-zinc-500 leading-relaxed max-w-sm mx-auto">
-                    হোস্ট আবেদন সংরক্ষণের জন্য একটি অ্যাকাউন্ট প্রয়োজন। অনুগ্রহ করে সাইন-ইন বা নতুন অ্যাকাউন্ট তৈরি করুন।
-                    <span class="sr-only">An account is required to save your host application. Please log in or sign up.</span>
-                </p>
-            </div>
-
-            <!-- Google OAuth Authentication -->
-            <a href="/auth/google?next=/host/apply" id="apply-google-login-btn"
-                class="w-full flex items-center justify-center gap-3 border border-zinc-200 hover:border-emerald-500 bg-white hover:bg-emerald-50/20 py-3.5 rounded-2xl font-bold text-sm text-zinc-700 shadow-sm transition active:scale-95">
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                </svg>
-                <span>Continue with Google</span>
-            </a>
-
-            <!-- Separator -->
-            <div class="flex items-center gap-3 text-xs text-zinc-400 font-bold uppercase py-2">
-                <div class="h-[1px] flex-1 bg-zinc-100"></div>
-                <span>Or,</span>
-                <div class="h-[1px] flex-1 bg-zinc-100"></div>
-            </div>
-
-            <!-- Tab Controls -->
-            <div class="flex items-center gap-2 bg-zinc-100/60 border rounded-2xl p-1">
-                <button onclick="switchApplyAuthTab('login')" id="apply-btn-tab-login"
-                    class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm">Login</button>
-                <button onclick="switchApplyAuthTab('signup')" id="apply-btn-tab-signup"
-                    class="flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600">Sign Up</button>
-            </div>
-
-            <!-- Form Panels -->
-            <div>
-                <!-- Login Form -->
-                <form id="apply-auth-login-form" onsubmit="handleApplyLogin(event)" class="space-y-4">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Email Address</label>
-                        <input type="email" id="apply-login-email" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="name@domain.com">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Password</label>
-                        <input type="password" id="apply-login-password" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="••••••••">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-sm shadow-md transition active:scale-95">Log In</button>
-                </form>
-
-                <!-- Signup Form -->
-                <form id="apply-auth-signup-form" onsubmit="handleApplySignup(event)" class="space-y-4 hidden">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Full Name</label>
-                        <input type="text" id="apply-signup-name" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="e.g. Rahat Ahmed">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Email Address</label>
-                        <input type="email" id="apply-signup-email" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="yourmail@domain.com">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Phone Number (Optional)</label>
-                        <input type="tel" id="apply-signup-phone"
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="01XXXXXXXXX">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-zinc-600">Password</label>
-                        <input type="password" id="apply-signup-password" required
-                            class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner"
-                            placeholder="Min 6 characters">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-sm shadow-md transition active:scale-95">Register Account</button>
-                </form>
+    <div class="bg-white border rounded-[2rem] p-6 sm:p-10 shadow-sm relative overflow-hidden">
+        
+        <!-- Form Step 0: Hosting Model -->
+        <div id="host-step-panel-0" class="space-y-6 animate-fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl sm:text-3xl font-black mb-2 text-zinc-900">How would you like to host?</h2>
+                <p class="text-sm text-zinc-500">Choose the model that best fits your expertise.</p>
             </div>
             
-            <div class="flex justify-start border-t pt-5">
-                <button type="button" onclick="goToStep1()" class="px-5 py-2 border rounded-xl hover:bg-zinc-50 font-bold text-xs uppercase">Back</button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button type="button" onclick="selectHostType('community')" class="text-left p-5 rounded-2xl border border-zinc-200 hover:border-emerald-500 hover:bg-emerald-50/30 hover:shadow-md transition-all group flex flex-col justify-between h-full">
+                    <div>
+                        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform origin-left">🤝</div>
+                        <div class="font-bold text-base text-zinc-900 group-hover:text-emerald-700 mb-1">Community Host</div>
+                        <div class="text-xs text-zinc-500 leading-relaxed">Organize meetups, workshops, and guided walks for groups.</div>
+                    </div>
+                </button>
+                <button type="button" onclick="selectHostType('artist')" class="text-left p-5 rounded-2xl border border-zinc-200 hover:border-emerald-500 hover:bg-emerald-50/30 hover:shadow-md transition-all group flex flex-col justify-between h-full">
+                    <div>
+                        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform origin-left">🎸</div>
+                        <div class="font-bold text-base text-zinc-900 group-hover:text-emerald-700 mb-1">Artist / Performer</div>
+                        <div class="text-xs text-zinc-500 leading-relaxed">Get hired for private events, gigs, and special occasions.</div>
+                    </div>
+                </button>
+                <button type="button" onclick="selectHostType('session')" class="text-left p-5 rounded-2xl border border-zinc-200 hover:border-emerald-500 hover:bg-emerald-50/30 hover:shadow-md transition-all group flex flex-col justify-between h-full">
+                    <div>
+                        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform origin-left">🧠</div>
+                        <div class="font-bold text-base text-zinc-900 group-hover:text-emerald-700 mb-1">Sessions & Coaching</div>
+                        <div class="text-xs text-zinc-500 leading-relaxed">Offer personal consultations, mentorship, and coaching.</div>
+                    </div>
+                </button>
+            </div>
+            <input type="hidden" id="host-type-value" value="">
+        </div>
+
+        <!-- Form Step 1: Category Selection -->
+        <div id="host-step-panel-1" class="space-y-6 hidden animate-fade-in">
+            <div class="text-center mb-8">
+                <h2 id="step-1-title" class="text-2xl sm:text-3xl font-black mb-2 text-zinc-900">Choose your category</h2>
+                <p class="text-sm text-zinc-500">What best describes your offering?</p>
+            </div>
+            
+            <div id="category-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <!-- Injected via JS -->
+            </div>
+            <input type="hidden" id="host-category-value" value="">
+            
+            <div class="flex justify-between border-t pt-5 mt-8">
+                <button onclick="goToStep(0)" class="px-6 py-2.5 rounded-xl text-zinc-500 hover:bg-zinc-50 font-bold text-sm transition">Back</button>
+                <button onclick="validateStep1()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">Next</button>
             </div>
         </div>
 
-        <!-- Form Step 3: Policy & Revenue Agreement -->
-        <div id="host-step-panel-2" class="space-y-6 hidden">
-            <div>
-                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 3: Review Guidelines & Revenue</h2>
-                <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Taas partnership terms</p>
+        <!-- Form Step 2: Basic Details -->
+        <div id="host-step-panel-2" class="space-y-6 hidden animate-fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl sm:text-3xl font-black mb-2 text-zinc-900">A bit about you</h2>
+                <p class="text-sm text-zinc-500">Help guests understand your expertise.</p>
             </div>
 
-            <div class="space-y-4 text-sm text-zinc-600">
-                <div class="bg-zinc-50 border p-5 rounded-2xl space-y-3">
-                    <h4 class="font-bold text-zinc-800 text-xs uppercase tracking-wider">🤝 Growth Partner Revenue Model</h4>
-                    <p class="text-xs text-zinc-600 leading-relaxed mt-2">
-                        Revenue share percentage will be finalized and agreed upon during the host verification process. We share a generous 70% to 95% of ticket sales with our verified hosts.<br><br>
-                        <span class="font-bold">হোস্ট ভেরিফিকেশনের সময় ৭০%-৯৫% রেভিনিউ শেয়ার বা পারিশ্রমিক মডেলটি আলোচনা করে নির্ধারণ করা হবে।</span>
-                        <br><br>
-                        • You focus on hosting amazing events.<br>
-                        • We handle marketing, payment gateways, ticketing, and customer support.
-                    </p>
+            <div class="space-y-5 max-w-md mx-auto">
+                <div>
+                    <label class="block text-sm font-bold mb-1.5 text-zinc-800">Profession / Title <span class="text-rose-500">*</span></label>
+                    <input type="text" id="host-profession" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:border-emerald-500 outline-none transition" placeholder="e.g. Senior Product Designer">
                 </div>
-
-                <div class="bg-zinc-50 border p-5 rounded-2xl space-y-3">
-                    <h4 class="font-bold text-zinc-800 text-xs uppercase tracking-wider">🔒 Guidelines & Safety Rules</h4>
-                    <p class="text-xs">1. **Activity-focused, non-dating:** Meetups are built solely around shared experiences.</p>
-                    <p class="text-xs">2. **Zero tolerance for misconduct:** Verification will be suspended immediately if code of conduct is violated.</p>
+                <div>
+                    <label class="block text-sm font-bold mb-1.5 text-zinc-800">Operating Area <span class="text-rose-500">*</span></label>
+                    <input type="text" id="host-area" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:border-emerald-500 outline-none transition" placeholder="e.g. Gulshan, Dhaka">
                 </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1.5 text-zinc-800">How many years of experience do you have? <span class="text-rose-500">*</span></label>
+                    <input type="number" id="host-experience" required min="0" max="50" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:border-emerald-500 outline-none transition" placeholder="e.g. 5">
+                </div>
+            </div>
 
-                <div class="flex items-center gap-2 pt-2">
-                    <input type="checkbox" id="host-agree" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-zinc-300">
-                    <label for="host-agree" class="text-xs font-bold text-zinc-700">I agree to DekhaHok's Host Code of Conduct and Revenue Share Policy.</label>
+            <div class="flex justify-between border-t pt-5 mt-8">
+                <button onclick="goToStep(1)" class="px-6 py-2.5 rounded-xl text-zinc-500 hover:bg-zinc-50 font-bold text-sm transition">Back</button>
+                <button onclick="validateStep2()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">Next</button>
+            </div>
+        </div>
+
+        <!-- Form Step 3: Identity & Avatar -->
+        <div id="host-step-panel-3" class="space-y-6 hidden animate-fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl sm:text-3xl font-black mb-2 text-zinc-900">Verify your identity</h2>
+                <p class="text-sm text-zinc-500">Trust is the foundation of DekhaHok.</p>
+            </div>
+
+            <div class="space-y-6 max-w-md mx-auto">
+                <div>
+                    <label class="block text-sm font-bold mb-1.5 text-zinc-800">National Identity (NID) <span class="text-rose-500">*</span></label>
+                    <input type="text" id="host-nid" required pattern="^[0-9]{10,17}$" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:border-emerald-500 outline-none transition" placeholder="e.g. 1999261827364536" title="NID must be 10-17 digits">
                 </div>
                 
-                <label class="flex items-start gap-3 mt-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100/50 cursor-pointer group">
-                    <input type="checkbox" id="host-safety-ack" class="mt-1 w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500 flex-shrink-0 cursor-pointer">
-                    <span class="text-[11px] text-zinc-600 leading-relaxed font-medium group-hover:text-zinc-800 transition-colors">
-                        আমি বুঝতে পারছি যে দেখা হোক একটি কমিউনিটি প্ল্যাটফর্ম। আমি পেশাদারিত্ব বজায় রাখব, অংশগ্রহণকারীদের নিরাপত্তাকে সম্মান করব। আমি বুঝতে পারছি যে আপত্তিকর আচরণ বা খারাপ প্রতিক্রিয়ার ফলে আমার হোস্ট অ্যাকাউন্ট স্থগিত হতে পারে। <span class="text-rose-500 font-bold">*</span>
-                    </span>
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-zinc-800">Profile Picture <span class="text-rose-500">*</span></label>
+                    
+                    {% if user and user.avatar %}
+                    <div id="existing-avatar-box" class="mb-4 bg-zinc-50 border border-zinc-200 rounded-xl p-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <img src="{{ user.avatar }}" class="w-12 h-12 rounded-full object-cover border border-emerald-100" alt="Current Avatar">
+                            <div>
+                                <p class="text-sm font-bold text-zinc-800">Current Profile Picture</p>
+                                <p class="text-[11px] text-zinc-500">Do you want to use this?</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="keepExistingAvatar('{{ user.avatar }}')" class="px-3 py-1.5 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 rounded-lg text-[10px] font-bold transition">Keep</button>
+                            <button onclick="showAvatarUpload()" class="px-3 py-1.5 border border-zinc-300 text-zinc-600 hover:bg-zinc-100 rounded-lg text-[10px] font-bold transition">Upload New</button>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div id="avatar-upload-box" class="flex items-center gap-4 {% if user and user.avatar %}hidden{% endif %}">
+                        <div id="avatar-preview-container" class="w-16 h-16 rounded-full overflow-hidden border-2 border-emerald-100 hidden flex-shrink-0 bg-zinc-50">
+                            <img id="avatar-preview-img" class="w-full h-full object-cover" src="" alt="Avatar Preview">
+                        </div>
+                        <div class="flex-1">
+                            <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-zinc-200 border-dashed rounded-xl cursor-pointer bg-zinc-50 hover:bg-emerald-50 hover:border-emerald-300 transition group">
+                                <div class="flex flex-col items-center justify-center pt-3 pb-4">
+                                    <i class="fa-solid fa-cloud-arrow-up text-zinc-400 group-hover:text-emerald-500 text-lg mb-1 transition-colors"></i>
+                                    <p class="text-xs text-zinc-500 group-hover:text-emerald-600 font-medium"><span class="font-bold">Click to upload</span> face photo</p>
+                                </div>
+                                <input id="host-avatar" type="file" class="hidden" accept="image/png, image/jpeg, image/webp" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between border-t pt-5 mt-8">
+                <button onclick="goToStep(2)" class="px-6 py-2.5 rounded-xl text-zinc-500 hover:bg-zinc-50 font-bold text-sm transition">Back</button>
+                <button onclick="validateStep3()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">Next</button>
+            </div>
+        </div>
+
+        <!-- Form Step 4: Guidelines -->
+        <div id="host-step-panel-4" class="space-y-6 hidden animate-fade-in">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl sm:text-3xl font-black mb-2 text-zinc-900">Before you submit</h2>
+                <p class="text-sm text-zinc-500">Please review our community guidelines.</p>
+            </div>
+            
+            <div class="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100 mb-6 max-w-lg mx-auto">
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <i class="fa-solid fa-shield-halved text-emerald-600 mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-zinc-800 text-sm">Safety First</h4>
+                            <p class="text-xs text-zinc-600">Hosts must ensure physical and psychological safety for all guests. Vetting is mandatory for community events.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <i class="fa-solid fa-star text-emerald-600 mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-zinc-800 text-sm">Quality Commitment</h4>
+                            <p class="text-xs text-zinc-600">Provide exactly what you promise in your listings. Misleading details may result in account suspension.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3 max-w-lg mx-auto">
+                <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" id="host-agree" class="mt-1 accent-emerald-600 w-4 h-4 cursor-pointer">
+                    <span class="text-sm text-zinc-700 group-hover:text-zinc-900">I have read and agree to the <a href="#" class="text-emerald-600 font-bold underline">Host Guidelines</a> and <a href="#" class="text-emerald-600 font-bold underline">Terms of Service</a>.</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" id="host-safety-ack" class="mt-1 accent-emerald-600 w-4 h-4 cursor-pointer">
+                    <span class="text-sm text-zinc-700 group-hover:text-zinc-900">I understand that I am responsible for the safety of my attendees.</span>
                 </label>
             </div>
 
-            <div class="flex justify-between border-t pt-5">
-                <button onclick="goToStep1()" class="px-5 py-2 border rounded-xl hover:bg-zinc-50 font-bold text-xs uppercase">Back</button>
-                <button onclick="submitHostApplication()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow">Submit Application</button>
+            <div class="flex justify-between border-t pt-5 mt-8">
+                <button onclick="goToStep(3)" class="px-6 py-2.5 rounded-xl text-zinc-500 hover:bg-zinc-50 font-bold text-sm transition">Back</button>
+                <button id="submit-btn" onclick="submitHostApplication()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-2.5 rounded-xl font-bold text-sm transition shadow flex items-center gap-2">
+                    Submit Application
+                </button>
             </div>
         </div>
 
-        {% elif host.verification_status == 'PENDING' %}
-        <!-- Verification Pending Panel -->
-        <div class="text-center py-8 space-y-4">
-            <span class="text-4xl animate-pulse">⏳</span>
-            <h2 class="text-xl font-bold text-zinc-800">Step 4: Verification Pending</h2>
-            <p class="text-zinc-500 text-xs max-w-sm mx-auto">We have received your host credentials. Our review desk is running trust checks and validating NID details. This takes 12-24 hours. You will receive an SMS confirmation.</p>
-            <div class="inline-block bg-zinc-100 px-4 py-1.5 text-[10px] font-mono font-bold text-zinc-500 rounded-lg">Status: Pending Admin Auditing</div>
-        </div>
-
-        {% elif host.verification_status == 'VERIFIED' %}
-        <!-- Approved Verification Panel -->
-        <div class="text-center py-8 space-y-4">
-            <span class="text-4xl">🚀</span>
-            <h2 class="text-xl font-bold text-emerald-700">Verification Approved!</h2>
-            <p class="text-zinc-500 text-xs max-w-sm mx-auto">Congratulations! Your DekhaHok Host verification has been completed. You are now authorized to schedule activities.</p>
-            <a href="/host/dashboard" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow">Go to Host Dashboard</a>
-        </div>
-
-        {% elif host.verification_status == 'SUSPENDED' %}
-        <!-- Account Suspended Panel -->
-        <div class="text-center py-8 space-y-4">
-            <span class="text-4xl">🛑</span>
-            <h2 class="text-xl font-bold text-rose-600">Verification Suspended</h2>
-            <p class="text-zinc-500 text-xs max-w-sm mx-auto">Your host credentials have been suspended due to policy violations or incomplete trust evaluations. Please contact operations support.</p>
-            <a href="https://wa.me/8801884477720" target="_blank" class="inline-block bg-zinc-100 hover:bg-zinc-200 border text-zinc-700 font-bold text-xs px-6 py-3 rounded-xl">Contact Operations</a>
-        </div>
-        {% endif %}
-    </div>
-</div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-    const IS_LOGGED_IN = "{{ 'true' if user else 'false' }}" === "true";
-    let hostAvatarBase64 = "";
-
-    function switchApplyAuthTab(tab) {
-        const btnL = document.getElementById('apply-btn-tab-login');
-        const btnS = document.getElementById('apply-btn-tab-signup');
-        const formL = document.getElementById('apply-auth-login-form');
-        const formS = document.getElementById('apply-auth-signup-form');
-
-        if (tab === 'login') {
-            btnL.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm';
-            btnS.className = 'flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600';
-            formL.classList.remove('hidden');
-            formS.classList.add('hidden');
-        } else {
-            btnS.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-emerald-700 shadow-sm';
-            btnL.className = 'flex-1 py-2 text-xs font-semibold text-zinc-400 rounded-xl transition hover:text-zinc-600';
-            formS.classList.remove('hidden');
-            formL.classList.add('hidden');
-        }
-    }
-
-    // Save current step 1 inputs to session draft
-    function saveFormToDraft() {
-        const draft = {
-            nid_number: document.getElementById('host-nid').value.trim(),
-            profession: document.getElementById('host-profession').value.trim(),
-            category: document.getElementById('host-category').value,
-            operating_area: document.getElementById('host-area').value.trim(),
-            bio: document.getElementById('host-experience').value.trim(),
-            why_host: document.getElementById('host-why').value.trim(),
-            avatar_url: hostAvatarBase64
-        };
-        sessionStorage.setItem('host_apply_draft', JSON.stringify(draft));
-    }
-
-    // Load draft from session on load
-    function loadFormFromDraft() {
-        const draftStr = sessionStorage.getItem('host_apply_draft');
-        if (!draftStr) return false;
-        
-        try {
-            const draft = JSON.parse(draftStr);
-            document.getElementById('host-nid').value = draft.nid_number || '';
-            document.getElementById('host-profession').value = draft.profession || '';
-            document.getElementById('host-category').value = draft.category || 'creative';
-            document.getElementById('host-area').value = draft.operating_area || '';
-            document.getElementById('host-experience').value = draft.bio || '';
-            document.getElementById('host-why').value = draft.why_host || '';
+        <!-- Form Step 5: Success Screen -->
+        <div id="host-step-panel-5" class="space-y-6 hidden animate-fade-in text-center py-10">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black mb-2 text-zinc-900">Application Success</h2>
+            <p class="text-zinc-600 mb-2">✔ We've received your application.</p>
+            <p class="text-zinc-500 mb-8 max-w-sm mx-auto">You'll be able to publish experiences after verification.</p>
             
-            if (draft.avatar_url) {
-                hostAvatarBase64 = draft.avatar_url;
-                document.getElementById('host-avatar-base64').value = hostAvatarBase64;
+            <div class="bg-zinc-50 rounded-2xl p-6 border border-zinc-200 max-w-sm mx-auto mb-8">
+                <p class="text-sm font-bold text-zinc-800 mb-4">Need urgent help?</p>
+                <div class="flex justify-center gap-4">
+                    <a href="https://wa.me/8801825822080" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition text-sm font-bold">
+                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                    </a>
+                    <a href="mailto:hello@dekhahok.com" class="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition text-sm font-bold">
+                        <i class="fa-regular fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+
+            <a href="/" class="inline-block px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow">Back Home</a>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+    .cat-card.selected {
+        border-color: #10b981;
+        background-color: #ecfdf5;
+    }
+</style>
+
+<script>
+    let currentStep = 0;
+    let hostAvatarBase64 = null;
+
+    // Handle avatar upload
+    const avatarInput = document.getElementById('host-avatar');
+    if(avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showToast("Only JPG, PNG and WEBP images are allowed.", "error");
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                showToast("Image size must be less than 2MB", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                hostAvatarBase64 = event.target.result;
                 const preview = document.getElementById('avatar-preview-img');
                 preview.src = hostAvatarBase64;
                 document.getElementById('avatar-preview-container').classList.remove('hidden');
-            }
-            return true;
-        } catch(e) {
-            console.error("Error loading draft", e);
-            return false;
-        }
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        // Read file inputs
-        const fileInput = document.getElementById('host-avatar-file');
-        if (fileInput) {
-            fileInput.addEventListener('change', function (e) {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast("Photo size must be less than 5MB.", "error");
-                    fileInput.value = "";
-                    hostAvatarBase64 = "";
-                    document.getElementById('avatar-preview-container').classList.add('hidden');
-                    return;
+    function updateProgress(step) {
+        currentStep = step;
+        const progressPct = step * 25; // 0, 25, 50, 75, 100
+        document.getElementById('host-progress-bar').style.width = `${progressPct}%`;
+        
+        for (let i = 0; i <= 4; i++) {
+            const circle = document.getElementById(`progress-circle-${i}`);
+            if(circle) {
+                if (i <= step) {
+                    circle.className = "z-20 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs transition-colors shadow-sm";
+                } else {
+                    circle.className = "z-20 w-8 h-8 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-bold text-xs transition-colors";
                 }
-
-                const reader = new FileReader();
-                reader.onload = function (evt) {
-                    hostAvatarBase64 = evt.target.result;
-                    document.getElementById('host-avatar-base64').value = hostAvatarBase64;
-                    const preview = document.getElementById('avatar-preview-img');
-                    preview.src = hostAvatarBase64;
-                    document.getElementById('avatar-preview-container').classList.remove('hidden');
-                    // auto save avatar to draft
-                    saveFormToDraft();
-                };
-                reader.readAsDataURL(file);
-            });
+            }
         }
+    }
 
-        // Restore draft if user just registered/logged in
-        const hasDraft = loadFormFromDraft();
-        if (hasDraft && IS_LOGGED_IN) {
-            // Restore wizard progress directly to Step 3 (Guidelines page)
-            document.getElementById('host-step-panel-1').classList.add('hidden');
-            document.getElementById('host-step-panel-2').classList.remove('hidden');
-            document.getElementById('host-progress-bar').style.width = '50%';
-            
-            // Highlight step indicators
-            document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
-            document.getElementById('progress-circle-3').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
-            
-            // clear session draft so it doesn't double trigger next load
-            sessionStorage.removeItem('host_apply_draft');
+    function goToStep(step) {
+        if(step === 5) {
+            document.getElementById('host-progress-container').classList.add('hidden');
         }
-    });
+        for (let i = 0; i <= 5; i++) {
+            const panel = document.getElementById(`host-step-panel-${i}`);
+            if(panel) panel.classList.add('hidden');
+        }
+        const targetPanel = document.getElementById(`host-step-panel-${step}`);
+        if(targetPanel) targetPanel.classList.remove('hidden');
+        if(step < 5) updateProgress(step);
+    }
 
-    function handleStep1Submit(e) {
-        e.preventDefault();
+    function keepExistingAvatar(url) {
+        hostAvatarBase64 = url;
+        showToast("Using current profile picture.", "success");
+        validateStep3();
+    }
+
+    function showAvatarUpload() {
+        document.getElementById('existing-avatar-box').classList.add('hidden');
+        document.getElementById('avatar-upload-box').classList.remove('hidden');
+        hostAvatarBase64 = null;
+    }
+
+    const categories = {
+        'community': [
+            { id: 'local_exploration', icon: '🗺️', label: 'Local Exploration & Tours', desc: 'Heritage walks, trail hikes, day trips' },
+            { id: 'lifestyle_food', icon: '☕', label: 'Lifestyle & Food', desc: 'Food crawls, coffee tastings, cooking classes' },
+            { id: 'sports_fitness', icon: '🏃', label: 'Sports & Fitness', desc: 'Run clubs, yoga groups, outdoor workouts' },
+            { id: 'entertainment_socials', icon: '🎭', label: 'Entertainment & Socials', desc: 'Board games, trivia, mixers, movie screenings' },
+            { id: 'workshops_learning', icon: '🎓', label: 'Workshops & Learning (group only)', desc: 'Art classes, group bootcamps, language exchanges' }
+        ],
+        'artist': [
+            { id: 'musicians_bands', icon: '🎵', label: 'Musicians & Bands', desc: 'Live singers, DJs, bands, folk artists' },
+            { id: 'performers_stage', icon: '🎭', label: 'Performers & Stage', desc: 'Stand-up comedy, magicians, dancers, actors' },
+            { id: 'visual_live_art', icon: '🎨', label: 'Visual & Live Art', desc: 'Live sketchers, painters, henna, calligraphers' },
+            { id: 'media_content', icon: '📸', label: 'Media & Content', desc: 'Event photography, videography (event coverage)' },
+            { id: 'culinary_artists', icon: '👨‍🍳', label: 'Culinary Artists', desc: 'Private chefs, baristas (hired for events)' }
+        ],
+        'session': [
+            { id: 'career_startups', icon: '💼', label: 'Career & Startups', desc: 'Resume reviews, mock interviews, founder advisory' },
+            { id: 'learning_mentorship', icon: '📚', label: 'Learning & Mentorship', desc: 'Academic tutors, language practice, skill instruction' },
+            { id: 'health_wellness_coaching', icon: '🌱', label: 'Health & Wellness Coaching', desc: 'Fitness counseling, mindfulness coaching (non-clinical)' },
+            { id: 'creative_skills_lessons', icon: '🎨', label: 'Creative Skills & Lessons', desc: 'Portfolio review, private music lessons, design feedback' }
+        ]
+    };
+
+    function selectHostType(type) {
+        document.getElementById('host-type-value').value = type;
         
+        // Render category cards
+        const catGrid = document.getElementById('category-grid');
+        catGrid.innerHTML = '';
+        document.getElementById('host-category-value').value = '';
+        
+        categories[type].forEach(cat => {
+            const card = document.createElement('div');
+            card.className = "cat-card cursor-pointer p-4 border border-zinc-200 rounded-xl hover:border-emerald-400 hover:shadow-sm transition-all";
+            card.onclick = () => selectCategory(cat.id, card);
+            card.innerHTML = `
+                <div class="text-2xl mb-2">${cat.icon}</div>
+                <div class="font-bold text-sm text-zinc-900">${cat.label}</div>
+                <div class="text-[10px] text-zinc-500 mt-0.5">${cat.desc}</div>
+            `;
+            catGrid.appendChild(card);
+        });
+
+        goToStep(1);
+    }
+
+    function selectCategory(catId, cardElement) {
+        document.getElementById('host-category-value').value = catId;
+        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+        cardElement.classList.add('selected');
+        setTimeout(() => validateStep1(), 150);
+    }
+
+    function validateStep1() {
+        if (!document.getElementById('host-category-value').value) {
+            showToast("Please select a category.", "warning");
+            return;
+        }
+        goToStep(2);
+    }
+
+    function validateStep2() {
+        const profession = document.getElementById('host-profession').value.trim();
+        const area = document.getElementById('host-area').value.trim();
+        if (!profession || !area) {
+            showToast("Please fill in the required fields.", "warning");
+            return;
+        }
+        goToStep(3);
+    }
+
+    function validateStep3() {
+        const nid = document.getElementById('host-nid').value.trim();
+        if (!nid || !/^[0-9]{10,17}$/.test(nid)) {
+            showToast("Please enter a valid 10-17 digit NID.", "warning");
+            return;
+        }
         if (!hostAvatarBase64) {
-            showToast("Please upload a portrait picture first.", "error");
+            showToast("Please upload a profile picture.", "warning");
             return;
         }
-
-        // save fields
-        saveFormToDraft();
-
-        if (IS_LOGGED_IN) {
-            // Logged in: Go directly to guidelines page (Step 3)
-            document.getElementById('host-step-panel-1').classList.add('hidden');
-            document.getElementById('host-step-panel-2').classList.remove('hidden');
-            document.getElementById('host-progress-bar').style.width = '50%';
-            
-            document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
-            document.getElementById('progress-circle-3').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
-        } else {
-            // Not logged in: Show Auth Panel (Step 2)
-            document.getElementById('host-step-panel-1').classList.add('hidden');
-            document.getElementById('host-step-panel-auth').classList.remove('hidden');
-            document.getElementById('host-progress-bar').style.width = '25%';
-            
-            document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-medium text-sm transition-colors";
-        }
-    }
-
-    function goToStep1() {
-        document.getElementById('host-step-panel-2').classList.add('hidden');
-        document.getElementById('host-step-panel-auth').classList.add('hidden');
-        document.getElementById('host-step-panel-1').classList.remove('hidden');
-        document.getElementById('host-progress-bar').style.width = '25%';
-        
-        document.getElementById('progress-circle-2').className = "z-20 w-9 h-9 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-medium text-sm transition-colors";
-        document.getElementById('progress-circle-3').className = "z-20 w-9 h-9 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center font-medium text-sm transition-colors";
-    }
-
-    async function handleApplyLogin(e) {
-        e.preventDefault();
-        const payload = {
-            email: document.getElementById('apply-login-email').value.trim(),
-            password: document.getElementById('apply-login-password').value
-        };
-
-        try {
-            const res = await fetch('/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-
-            if (res.ok) {
-                // Draft was saved in Step 1 submit, reload to restore it on logged-in state
-                window.location.reload();
-            } else {
-                showToast(`Login failed: ${data.detail || 'Check credentials'}`, 'error');
-            }
-        } catch (err) {
-            showToast("Network connection error. Try again.", 'error');
-        }
-    }
-
-    async function handleApplySignup(e) {
-        e.preventDefault();
-        const phone = document.getElementById('apply-signup-phone').value.trim();
-        const payload = {
-            full_name: document.getElementById('apply-signup-name').value.trim(),
-            email: document.getElementById('apply-signup-email').value.trim(),
-            phone: phone ? phone.replace(/[\s\-\(\)]/g, '') : null,
-            password: document.getElementById('apply-signup-password').value
-        };
-
-        if (payload.password.length < 6) {
-            showToast("Password must be at least 6 characters.", 'error');
-            return;
-        }
-
-        try {
-            const res = await fetch('/auth/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-
-            if (res.ok) {
-                // Draft is saved in Step 1 submit, reload to restore it on logged-in state
-                window.location.reload();
-            } else {
-                showToast(`Signup failed: ${data.detail || 'Email already exists'}`, 'error');
-            }
-        } catch (err) {
-            showToast("Network connection error. Try again.", 'error');
-        }
+        goToStep(4);
     }
 
     async function submitHostApplication() {
-        const agree = document.getElementById('host-agree').checked;
-        if (!agree) {
+        if (!document.getElementById('host-agree').checked) {
             showToast("You must agree to the guidelines to continue.", "warning");
             return;
         }
-
-        const safetyAck = document.getElementById('host-safety-ack').checked;
-        if (!safetyAck) {
+        if (!document.getElementById('host-safety-ack').checked) {
             showToast("You must acknowledge the safety terms to continue.", "warning");
             return;
         }
 
-        const draftStr = sessionStorage.getItem('host_apply_draft');
-        let appData = {};
-        if (draftStr) {
-            appData = JSON.parse(draftStr);
-        } else if (hostAvatarBase64) {
-            appData = {
-                nid_number: document.getElementById('host-nid').value.trim(),
-                profession: document.getElementById('host-profession').value.trim(),
-                category: document.getElementById('host-category').value,
-                operating_area: document.getElementById('host-area').value.trim(),
-                bio: document.getElementById('host-experience').value.trim(),
-                why_host: document.getElementById('host-why').value.trim(),
-                avatar_url: hostAvatarBase64
-            };
-        } else {
-            showToast("Application session expired. Please fill Step 1 again.", "error");
-            goToStep1();
-            return;
-        }
+        const appData = {
+            nid_number: document.getElementById('host-nid').value.trim(),
+            profession: document.getElementById('host-profession').value.trim(),
+            category: document.getElementById('host-category-value').value,
+            host_type: document.getElementById('host-type-value').value || 'community',
+            operating_area: document.getElementById('host-area').value.trim(),
+            bio: "", // Removed bio field, using experience_years
+            experience_years: parseInt(document.getElementById('host-experience').value) || 0,
+            why_host: "", // Deprecated, sending empty
+            avatar_url: hostAvatarBase64
+        };
+
+        const btn = document.getElementById('submit-btn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+        btn.disabled = true;
 
         try {
             const res = await fetch('/api/host/apply', {
@@ -561,13 +469,16 @@
             const data = await res.json();
 
             if (res.ok) {
-                sessionStorage.removeItem('host_apply_draft'); // clear draft
-                window.location.reload(); // Re-render to show pending status
+                goToStep(5);
             } else {
                 showToast(`Application failed: ${data.detail || 'Try again.'}`, 'error');
+                btn.innerHTML = 'Submit Application';
+                btn.disabled = false;
             }
         } catch (err) {
             showToast("Error sending request.", 'error');
+            btn.innerHTML = 'Submit Application';
+            btn.disabled = false;
         }
     }
 </script>

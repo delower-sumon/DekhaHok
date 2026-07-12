@@ -43,30 +43,97 @@
                     <input type="text" id="ev-title" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Midnight Old Dhaka Photo Walk">
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Category *</label>
-                    <select id="ev-category" onchange="toggleCategoryOther()" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
-                        <option value="art">🎨 Art & Exhibition</option>
-                        <option value="photography">📷 Photography</option>
-                        <option value="food">🍔 Food Exploration</option>
-                        <option value="music">🎵 Music & Concert</option>
-                        <option value="tech">💻 Tech Meetup</option>
-                        <option value="sports">⚽ Sports & Fitness</option>
-                        <option value="workshop">🎓 Workshop & Class</option>
-                        <option value="networking">🤝 Networking</option>
-                        <option value="wellness">🧘 Wellness & Health</option>
-                        <option value="cafe-conversations">☕ Cafe Conversations</option>
-                        <option value="learn-play">♟️ Learn & Play</option>
-                        <option value="travel">🌿 Travel & Nature Escapes</option>
-                        <option value="creative-workshops">🎨 Creative Workshops</option>
-                        <option value="city-exploration">🚶 City Exploration</option>
-                        <option value="other">✨ Other</option>
-                    </select>
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-zinc-700">Question 1: What are you hosting? *</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-category" value="performance" class="peer sr-only" required>
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">🎭</div>
+                                <div class="text-xs font-bold text-zinc-700">Performance</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-category" value="workshop" class="peer sr-only">
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">🗓️</div>
+                                <div class="text-xs font-bold text-zinc-700">Workshop</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-category" value="tour" class="peer sr-only">
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">🌍</div>
+                                <div class="text-xs font-bold text-zinc-700">Tour</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-category" value="community" class="peer sr-only">
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">🎉</div>
+                                <div class="text-xs font-bold text-zinc-700">Community Event</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-category" value="experience" class="peer sr-only">
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">📸</div>
+                                <div class="text-xs font-bold text-zinc-700">Experience</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-category" value="networking" class="peer sr-only">
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">🤝</div>
+                                <div class="text-xs font-bold text-zinc-700">Networking Event</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer md:col-span-3">
+                            <input type="radio" name="ev-category" value="session" class="peer sr-only">
+                            <div class="p-3 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all text-center">
+                                <div class="text-2xl mb-1">🧘</div>
+                                <div class="text-xs font-bold text-zinc-700">Session</div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
 
-                <div id="ev-category-other-container" class="hidden">
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Custom Category Name *</label>
-                    <input type="text" id="ev-category-other" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Pottery Workshop">
+                <div class="space-y-3 pt-2">
+                    <label class="block text-xs font-bold text-zinc-700">Question 2: How can people book this? *</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-booking-model" value="ticketed" class="peer sr-only" required checked>
+                            <div class="p-4 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all flex items-start gap-4">
+                                <div class="text-3xl">📅</div>
+                                <div>
+                                    <h4 class="font-bold text-zinc-900 text-sm">One scheduled date</h4>
+                                    <p class="text-xs text-zinc-500 mt-0.5">Fixed date and time (Event)</p>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-booking-model" value="session" class="peer sr-only">
+                            <div class="p-4 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all flex items-start gap-4">
+                                <div class="text-3xl">🔁</div>
+                                <div>
+                                    <h4 class="font-bold text-zinc-900 text-sm">Weekly recurring schedule</h4>
+                                    <p class="text-xs text-zinc-500 mt-0.5">Fixed days and available slots (Session)</p>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="cursor-pointer">
+                            <input type="radio" name="ev-booking-model" value="hire" class="peer sr-only">
+                            <div class="p-4 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all flex items-start gap-4">
+                                <div class="text-3xl">📩</div>
+                                <div>
+                                    <h4 class="font-bold text-zinc-900 text-sm">Request a custom date</h4>
+                                    <p class="text-xs text-zinc-500 mt-0.5">Guest proposes time, you approve (Hire)</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
 
                 <div>
@@ -81,32 +148,126 @@
             </form>
         </div>
 
-        <!-- Form Step 2: Logistics & Pricing -->
+        <!-- Form Step 2: Scheduling & Pricing -->
         <div id="event-step-2" class="space-y-6 hidden">
             <div>
-                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 2: Logistics & Pricing</h2>
+                <h2 class="text-xl font-bold mb-1 text-zinc-900">Step 2: Scheduling & Pricing</h2>
                 <p class="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Capacity & Cost</p>
             </div>
 
             <form onsubmit="goToStep3(event)" class="space-y-5">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Capacity *</label>
-                        <input type="number" id="ev-capacity" required min="2" max="100" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="12">
+                <div id="group-standard" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Date *</label>
+                            <input type="date" id="ev-date-only" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Max Capacity *</label>
+                            <input type="number" id="ev-capacity" min="1" max="1000" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="12">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Start Time *</label>
+                            <input type="time" id="ev-start-time" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">End Time *</label>
+                            <input type="time" id="ev-end-time" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-zinc-700">Price (BDT) / person *</label>
-                        <input type="number" id="ev-price" required min="0" step="0.01" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="500">
+                        <input type="number" id="ev-price" min="0" step="1" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="500">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Package Tier *</label>
-                    <select id="ev-tier" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
-                        <option value="experience">Base Experience (Standard)</option>
-                        <option value="circle">DekhaHok Circle (Community specific)</option>
-                        <option value="premium">Premium (High-end)</option>
-                    </select>
+                <div id="group-session" class="space-y-4 hidden">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Max Capacity *</label>
+                            <input type="number" id="ev-session-capacity" min="1" max="1000" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="12">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Available Days *</label>
+                        <div class="flex flex-wrap gap-2" id="ev-days">
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Saturday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Saturday</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Sunday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Sunday</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Monday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Monday</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Tuesday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Tuesday</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Wednesday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Wednesday</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Thursday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Thursday</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-zinc-50 border px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-100">
+                                <input type="checkbox" value="Friday" class="day-checkbox rounded text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold">Friday</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Available Times *</label>
+                        <div id="times-container" class="space-y-2">
+                            <input type="time" class="time-input w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
+                        </div>
+                        <button type="button" onclick="addTimeInput()" class="mt-2 text-xs font-bold text-emerald-600 hover:text-emerald-700">+ Add Time</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Session Duration (mins) *</label>
+                            <input type="number" id="ev-session-duration" min="15" max="240" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="60">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Price (BDT) / person *</label>
+                            <input type="number" id="ev-session-price" min="0" step="1" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="1000">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="group-hire" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Availability Note</label>
+                        <textarea id="ev-availability-note" rows="2" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner resize-y" placeholder="e.g. Weekends preferred. Please book 3 days earlier."></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Minimum Notice *</label>
+                            <select id="ev-advance-notice" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
+                                <option value="24">24 Hours</option>
+                                <option value="48">48 Hours</option>
+                                <option value="72">72 Hours</option>
+                                <option value="168">1 Week</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Starting Rate (BDT) *</label>
+                            <input type="number" id="ev-starting-rate" min="0" step="1" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="5000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">Service Area *</label>
+                        <input type="text" id="ev-service-area" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Dhaka City">
+                    </div>
                 </div>
 
                 <div>
@@ -150,14 +311,7 @@
             </div>
 
             <form onsubmit="submitFinalEvent(event)" class="space-y-5">
-                <div id="date-time-container">
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Date & Time *</label>
-                    <input type="datetime-local" id="ev-date" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white shadow-inner">
-                    <label class="flex items-center gap-2 mt-3 cursor-pointer">
-                        <input type="checkbox" id="ev-recurring" class="w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500">
-                        <span class="text-sm font-semibold text-zinc-700">Weekly Recurring Event (Auto-renews)</span>
-                    </label>
-                </div>
+
 
                 <div>
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">What's Included (One item per line) *</label>
@@ -288,6 +442,43 @@
     let eventImageBase64 = null;
     let extraImages = { 2: null, 3: null, 4: null };
 
+    const hostType = "{{ host.host_type }}";
+    const categorySelect = document.getElementById('ev-category');
+    
+    const categoriesByHostType = {
+        'community': [
+            { value: 'local_exploration', label: '🗺️ Local Exploration & Tours' },
+            { value: 'lifestyle_food', label: '☕ Lifestyle & Food' },
+            { value: 'sports_fitness', label: '🏃 Sports & Fitness' },
+            { value: 'entertainment_socials', label: '🎭 Entertainment & Socials' },
+            { value: 'workshops_learning', label: '🎓 Workshops & Learning (group only)' }
+        ],
+        'artist': [
+            { value: 'musicians_bands', label: '🎵 Musicians & Bands' },
+            { value: 'performers_stage', label: '🎭 Performers & Stage' },
+            { value: 'visual_live_art', label: '🎨 Visual & Live Art' },
+            { value: 'media_content', label: '📸 Media & Content' },
+            { value: 'culinary_artists', label: '👨‍🍳 Culinary Artists' }
+        ],
+        'session': [
+            { value: 'career_startups', label: '💼 Career & Startups' },
+            { value: 'learning_mentorship', label: '📚 Learning & Mentorship' },
+            { value: 'health_wellness_coaching', label: '🌱 Health & Wellness Coaching' },
+            { value: 'creative_skills_lessons', label: '🎨 Creative Skills & Lessons' }
+        ]
+    };
+
+    function populateCategories() {
+        const list = categoriesByHostType[hostType] || categoriesByHostType['community'];
+        if (categorySelect) {
+            categorySelect.innerHTML = list.map(cat => `<option value="${cat.value}">${cat.label}</option>`).join('') + '<option value="other">✨ Other</option>';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        populateCategories();
+    });
+
     function showToast(msg, isError=false) {
         const toast = document.getElementById('toast');
         const text = document.getElementById('toast-text');
@@ -335,6 +526,26 @@
         circle2.classList.remove('bg-white', 'border', 'border-zinc-200', 'text-zinc-400');
         circle2.classList.add('bg-emerald-600', 'text-white');
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const bookingRadios = document.querySelectorAll('input[name="ev-booking-model"]');
+        bookingRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const val = e.target.value;
+                document.getElementById('group-hire').classList.add('hidden');
+                document.getElementById('group-session').classList.add('hidden');
+                document.getElementById('group-standard').classList.add('hidden');
+
+                if(val === 'hire') {
+                    document.getElementById('group-hire').classList.remove('hidden');
+                } else if(val === 'session') {
+                    document.getElementById('group-session').classList.remove('hidden');
+                } else {
+                    document.getElementById('group-standard').classList.remove('hidden');
+                }
+            });
+        });
+    });
 
     function goBackToStep1() {
         document.getElementById('event-step-2').classList.add('hidden');
@@ -410,6 +621,14 @@
         reader.readAsDataURL(file);
     }
 
+    function addTimeInput() {
+        const container = document.getElementById('times-container');
+        const input = document.createElement('input');
+        input.type = 'time';
+        input.className = 'time-input w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner mt-2';
+        container.appendChild(input);
+    }
+
     async function submitFinalEvent(e) {
         e.preventDefault();
         
@@ -421,19 +640,59 @@
 
         // Compile payload
         const title = document.getElementById('ev-title').value.trim();
-        let category = document.getElementById('ev-category').value;
-        if (category === 'other') {
-            category = document.getElementById('ev-category-other').value.trim();
-        }
+        const categoryInput = document.querySelector('input[name="ev-category"]:checked');
+        let category = categoryInput ? categoryInput.value : 'other';
         const description = document.getElementById('ev-desc').value.trim();
+        
+        const bookingModelInput = document.querySelector('input[name="ev-booking-model"]:checked');
+        const bookingModel = bookingModelInput ? bookingModelInput.value : 'ticketed';
+        
+        let listingType = 'event';
+        if (bookingModel === 'session') listingType = 'session';
+        if (bookingModel === 'hire') listingType = 'service';
 
-        const capacity = parseInt(document.getElementById('ev-capacity').value);
-        const price = parseFloat(document.getElementById('ev-price').value);
-        const tier = document.getElementById('ev-tier').value;
+        let capacity = 1;
+        let price = 0;
+        let startingRate = null;
+        let serviceArea = null;
+        let sessionDuration = null;
+        let advanceNotice = 24;
+        let eventDate = null;
+        let startTime = null;
+        let endTime = null;
+        let availableDays = null;
+        let availableTimes = null;
+        let availabilityNote = null;
+
+        if (bookingModel === 'ticketed') {
+            capacity = parseInt(document.getElementById('ev-capacity').value) || 1;
+            price = parseFloat(document.getElementById('ev-price').value) || 0;
+            eventDate = document.getElementById('ev-date-only').value;
+            startTime = document.getElementById('ev-start-time').value;
+            endTime = document.getElementById('ev-end-time').value;
+        } else if (bookingModel === 'session') {
+            capacity = parseInt(document.getElementById('ev-session-capacity').value) || 12;
+            sessionDuration = parseInt(document.getElementById('ev-session-duration').value) || 60;
+            price = parseFloat(document.getElementById('ev-session-price').value) || 0;
+            
+            // Gather checkboxes
+            const daysCheckboxes = document.querySelectorAll('.day-checkbox:checked');
+            const daysArr = Array.from(daysCheckboxes).map(cb => cb.value);
+            if(daysArr.length > 0) availableDays = daysArr.join(',');
+
+            // Gather time inputs
+            const timeInputs = document.querySelectorAll('.time-input');
+            const timesArr = Array.from(timeInputs).map(ti => ti.value).filter(v => v);
+            if(timesArr.length > 0) availableTimes = timesArr.join(',');
+        } else if (bookingModel === 'hire') {
+            availabilityNote = document.getElementById('ev-availability-note').value;
+            advanceNotice = parseInt(document.getElementById('ev-advance-notice').value) || 24;
+            startingRate = parseFloat(document.getElementById('ev-starting-rate').value) || 0;
+            serviceArea = document.getElementById('ev-service-area').value;
+        }
+
         const locationName = document.getElementById('ev-location').value.trim();
         const area = document.getElementById('ev-area').value;
-
-        const date = document.getElementById('ev-date').value;
         let included = document.getElementById('ev-includes').value.trim();
 
         if (!included) {
@@ -464,13 +723,23 @@
             title: title,
             description: description,
             category: category,
-            package_tier: tier,
-            price_per_person: price,
+            listing_type: listingType,
+            booking_model: bookingModel,
             capacity: capacity,
+            price_per_person: price,
+            event_date: eventDate,
+            start_time: startTime,
+            end_time: endTime,
+            available_days: availableDays,
+            available_times: availableTimes,
+            availability_note: availabilityNote,
+            starting_rate: startingRate,
+            service_area: serviceArea,
+            session_duration_mins: sessionDuration,
+            advance_notice_hours: advanceNotice,
             location_name: locationName,
             location_area: area,
-            event_date: date,
-            is_recurring: document.getElementById('ev-recurring').checked,
+            is_recurring: bookingModel === 'session',
             included: included,
             image_base64: eventImageBase64,
             image_base64_2: extraImages[2],

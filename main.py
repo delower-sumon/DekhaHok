@@ -1716,6 +1716,52 @@ def host_apply(payload: HostApply, user = Depends(require_role(["user", "host", 
         release_conn(conn)
     return {"message": "Application submitted successfully! It is pending admin approval.", "host_id": host_id}
 
+def generate_session_slots_for_event(cursor, host_id, event_id, available_days_str, available_times_str, session_duration_mins):
+    if not available_days_str or not available_times_str:
+        return
+    
+    days_map = {
+        'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3,
+        'Friday': 4, 'Saturday': 5, 'Sunday': 6
+    }
+    allowed_days = [days_map[d.strip()] for d in available_days_str.split(',') if d.strip() in days_map]
+    if not allowed_days:
+        return
+        
+    start_times = [t.strip() for t in available_times_str.split(',') if t.strip()]
+    if not start_times:
+        return
+        
+    today = datetime.now().date()
+    duration = session_duration_mins or 60
+    
+    for i in range(28): # 4 weeks
+        current_date = today + timedelta(days=i)
+        if current_date.weekday() in allowed_days:
+            for st_str in start_times:
+                try:
+                    # Parse start time
+                    st_time = datetime.strptime(st_str, "%H:%M").time()
+                    st_dt = datetime.combine(current_date, st_time)
+                    
+                    # Calculate end time
+                    et_dt = st_dt + timedelta(minutes=duration)
+                    et_time = et_dt.time()
+                    
+                    # Check if slot already exists
+                    cursor.execute("""
+                        SELECT id FROM host_slots
+                        WHERE event_id = %s AND slot_date = %s AND start_time = %s
+                    """, (event_id, current_date, st_time))
+                    
+                    if not cursor.fetchone():
+                        # Insert slot
+                        cursor.execute("""
+                            INSERT INTO host_slots (host_id, event_id, slot_date, start_time, end_time, is_booked, is_blocked)
+                            VALUES (%s, %s, %s, %s, %s, false, false)
+                        """, (host_id, event_id, current_date, st_time, et_time))
+                except Exception as e:
+                    print(f"Error generating slot: {e}")
 @app.post("/api/host/events/create")
 @app.post("/api/host/listings/create")
 def host_create_event(payload: EventCreate, user = Depends(require_role(["host", "admin"]))):
@@ -1748,18 +1794,28 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
                 starting_rate, service_area, occasion_types, portfolio_url, availability_note,
                 session_duration_mins, max_per_session, advance_notice_hours,
                 price_per_person, capacity, location_name, location_area, event_date, included, status,
-                image_url, image_url_2, image_url_3, image_url_4, youtube_link, is_recurring
+                image_url, image_url_2, image_url_3, image_url_4, youtube_link, is_recurring,
+                start_time, end_time, available_days, available_times
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """, (
             host_id, slug, payload.title, payload.description, payload.category, payload.listing_type, payload.booking_model,
             payload.starting_rate, payload.service_area, payload.occasion_types, payload.portfolio_url, payload.availability_note,
             payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours,
             payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status,
-            payload.image_base64, payload.image_base64_2, payload.image_base64_3, payload.image_base64_4, payload.youtube_link, payload.is_recurring
+            payload.image_base64, payload.image_base64_2, payload.image_base64_3, payload.image_base64_4, payload.youtube_link, payload.is_recurring,
+            payload.start_time, payload.end_time, payload.available_days, payload.available_times
         ))
         event_id = cursor.fetchone()[0]
+        
+        if payload.booking_model == 'session':
+            generate_session_slots_for_event(
+                cursor, host_id, event_id, 
+                payload.available_days, 
+                payload.available_times, 
+                payload.session_duration_mins
+            )
         conn.commit()
         cursor.close()
     finally:
@@ -1794,13 +1850,15 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             "title=%s", "description=%s", "category=%s", "price_per_person=%s", "capacity=%s",
             "location_name=%s", "location_area=%s", "event_date=%s", "included=%s", "is_recurring=%s", "youtube_link=%s",
             "listing_type=%s", "booking_model=%s", "starting_rate=%s", "service_area=%s", "occasion_types=%s",
-            "portfolio_url=%s", "availability_note=%s", "session_duration_mins=%s", "max_per_session=%s", "advance_notice_hours=%s"
+            "portfolio_url=%s", "availability_note=%s", "session_duration_mins=%s", "max_per_session=%s", "advance_notice_hours=%s",
+            "start_time=%s", "end_time=%s", "available_days=%s", "available_times=%s"
         ]
         update_values = [
             payload.title, payload.description, payload.category, payload.price_per_person, payload.capacity,
             payload.location_name, payload.location_area, event_dt, payload.included or '[]', payload.is_recurring, payload.youtube_link,
             payload.listing_type, payload.booking_model, payload.starting_rate, payload.service_area, payload.occasion_types,
-            payload.portfolio_url, payload.availability_note, payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours
+            payload.portfolio_url, payload.availability_note, payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours,
+            payload.start_time, payload.end_time, payload.available_days, payload.available_times
         ]
         
         if payload.image_base64:
@@ -1825,7 +1883,18 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             UPDATE events 
             SET {", ".join(update_fields)}
             WHERE id = %s
+            RETURNING host_id
         """, tuple(update_values))
+        
+        row = cursor.fetchone()
+        if row and payload.booking_model == 'session':
+            ev_host_id = row[0]
+            generate_session_slots_for_event(
+                cursor, ev_host_id, event_id, 
+                payload.available_days, 
+                payload.available_times, 
+                payload.session_duration_mins
+            )
             
         conn.commit()
     finally:
@@ -1928,7 +1997,7 @@ def track_page(request: Request, tracking_id: str):
             """, (tracking_id.upper(),))
             row = cursor.fetchone()
             if not row:
-                raise HTTPException(404, "Tracking ID not found")
+                return RedirectResponse(url="/?error=invalid_tracking")
             data = {
                 "tracking_id": tracking_id.upper(),
                 "client_name": row[0],
