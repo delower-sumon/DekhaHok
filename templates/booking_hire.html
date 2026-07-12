@@ -462,14 +462,39 @@ function selectPaymentMode(mode) {
 
             if(extraImages.length > 0) {
                 // Adjust grid based on number of images
-                if (extraImages.length === 1) galleryGrid.className = "grid grid-cols-1 gap-4 mb-4";
-                else galleryGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4";
+                if (extraImages.length === 1) {
+                    galleryGrid.className = "grid grid-cols-1 gap-4 mb-4";
+                    galleryGrid.innerHTML = extraImages.map(img => `
+                        <div class="h-48 rounded-xl overflow-hidden shadow-sm border border-zinc-200">
+                            <img loading="lazy" src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                        </div>
+                    `).join('');
+                } else if (extraImages.length === 3) {
+                    galleryGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4";
+                    galleryGrid.innerHTML = extraImages.map((img, index) => {
+                        if (index === 2) {
+                            return `
+                                <div class="h-[36rem] sm:h-[25rem] sm:col-start-2 sm:row-start-1 sm:row-span-2 rounded-xl overflow-hidden shadow-sm border border-zinc-200">
+                                    <img loading="lazy" src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                                </div>
+                            `;
+                        }
+                        const rowStart = index + 1;
+                        return `
+                            <div class="h-48 sm:col-start-1 sm:row-start-${rowStart} rounded-xl overflow-hidden shadow-sm border border-zinc-200">
+                                <img loading="lazy" src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    galleryGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4";
+                    galleryGrid.innerHTML = extraImages.map(img => `
+                        <div class="h-48 rounded-xl overflow-hidden shadow-sm border border-zinc-200">
+                            <img loading="lazy" src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                        </div>
+                    `).join('');
+                }
                 
-                galleryGrid.innerHTML = extraImages.map(img => `
-                    <div class="h-48 rounded-xl overflow-hidden shadow-sm border border-zinc-200">
-                        <img loading="lazy" src="${img}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                    </div>
-                `).join('');
                 galleryGrid.classList.remove('hidden');
                 hasMedia = true;
             }

@@ -1900,14 +1900,20 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
         if payload.image_base64_2:
             update_fields.append("image_url_2=%s")
             update_values.append(payload.image_base64_2)
+        elif payload.remove_image_2:
+            update_fields.append("image_url_2=NULL")
             
         if payload.image_base64_3:
             update_fields.append("image_url_3=%s")
             update_values.append(payload.image_base64_3)
+        elif payload.remove_image_3:
+            update_fields.append("image_url_3=NULL")
             
         if payload.image_base64_4:
             update_fields.append("image_url_4=%s")
             update_values.append(payload.image_base64_4)
+        elif payload.remove_image_4:
+            update_fields.append("image_url_4=NULL")
             
         update_values.append(event_id)
         

@@ -394,6 +394,9 @@ class EventCreate(BaseModel):
     image_base64_2: Optional[str] = None
     image_base64_3: Optional[str] = None
     image_base64_4: Optional[str] = None
+    remove_image_2: bool = False
+    remove_image_3: bool = False
+    remove_image_4: bool = False
     youtube_link: Optional[str] = None
 
     @field_validator("capacity")

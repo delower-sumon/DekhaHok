@@ -354,9 +354,9 @@
                 <div class="mt-8 border-t border-zinc-200 pt-6">
                     <h3 class="text-sm font-bold text-zinc-800 mb-4"><i class="fa-solid fa-images text-emerald-600 mr-2"></i>Additional Media (Optional)</h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <!-- Image 2 -->
-                        <div>
+                        <div class="sm:col-start-1 sm:row-start-1">
                             <label class="block text-[10px] font-bold mb-1.5 text-zinc-500 uppercase">Gallery Image 1</label>
                             <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-xl p-4 text-center hover:bg-zinc-50 transition-colors h-32 flex flex-col justify-center items-center" onclick="document.getElementById('ev-image-2').click()">
                                 <input type="file" id="ev-image-2" accept="image/*" class="hidden" onchange="previewGalleryImage(event, 2)">
@@ -365,7 +365,10 @@
                                     <p class="text-[10px] font-bold text-zinc-500">Add Photo</p>
                                     <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
                                 </div>
-                                <div id="preview-container-2" class="{% if not event.image_url_2 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
+                                <div id="preview-container-2" class="{% if not event.image_url_2 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden">
+                                    <button type="button" onclick="removeGalleryImage(event, 2)" class="absolute top-2 right-2 bg-white rounded-full p-1 w-6 h-6 flex items-center justify-center shadow hover:bg-rose-100 text-rose-500 z-10 transition-colors">
+                                        <i class="fa-solid fa-xmark text-xs"></i>
+                                    </button>
                                     <img loading="lazy" id="preview-2" src="{{ event.image_url_2 or '' }}" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <i class="fa-solid fa-pen text-white"></i>
@@ -375,7 +378,7 @@
                         </div>
 
                         <!-- Image 3 -->
-                        <div>
+                        <div class="sm:col-start-1 sm:row-start-2">
                             <label class="block text-[10px] font-bold mb-1.5 text-zinc-500 uppercase">Gallery Image 2</label>
                             <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-xl p-4 text-center hover:bg-zinc-50 transition-colors h-32 flex flex-col justify-center items-center" onclick="document.getElementById('ev-image-3').click()">
                                 <input type="file" id="ev-image-3" accept="image/*" class="hidden" onchange="previewGalleryImage(event, 3)">
@@ -384,7 +387,10 @@
                                     <p class="text-[10px] font-bold text-zinc-500">Add Photo</p>
                                     <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
                                 </div>
-                                <div id="preview-container-3" class="{% if not event.image_url_3 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
+                                <div id="preview-container-3" class="{% if not event.image_url_3 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden">
+                                    <button type="button" onclick="removeGalleryImage(event, 3)" class="absolute top-2 right-2 bg-white rounded-full p-1 w-6 h-6 flex items-center justify-center shadow hover:bg-rose-100 text-rose-500 z-10 transition-colors">
+                                        <i class="fa-solid fa-xmark text-xs"></i>
+                                    </button>
                                     <img loading="lazy" id="preview-3" src="{{ event.image_url_3 or '' }}" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <i class="fa-solid fa-pen text-white"></i>
@@ -394,16 +400,19 @@
                         </div>
 
                         <!-- Image 4 -->
-                        <div>
+                        <div class="sm:col-start-2 sm:row-start-1 sm:row-span-2 h-full flex flex-col">
                             <label class="block text-[10px] font-bold mb-1.5 text-zinc-500 uppercase">Gallery Image 3</label>
                             <div class="relative group cursor-pointer border-2 border-dashed border-zinc-300 rounded-xl p-4 text-center hover:bg-zinc-50 transition-colors h-32 flex flex-col justify-center items-center" onclick="document.getElementById('ev-image-4').click()">
                                 <input type="file" id="ev-image-4" accept="image/*" class="hidden" onchange="previewGalleryImage(event, 4)">
                                 <div id="prompt-4" class="{% if event.image_url_4 %}hidden{% endif %} pointer-events-none">
                                     <i class="fa-solid fa-plus text-zinc-400 text-xl mb-1"></i>
                                     <p class="text-[10px] font-bold text-zinc-500">Add Photo</p>
-                                    <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 600x400 px | Max 2MB</p>
+                                    <p class="text-[8px] text-zinc-400 uppercase tracking-widest mt-1">Recommended: 9:16 Full Body | Max 2MB</p>
                                 </div>
-                                <div id="preview-container-4" class="{% if not event.image_url_4 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden pointer-events-none">
+                                <div id="preview-container-4" class="{% if not event.image_url_4 %}hidden{% endif %} absolute inset-0 w-full h-full rounded-lg overflow-hidden">
+                                    <button type="button" onclick="removeGalleryImage(event, 4)" class="absolute top-2 right-2 bg-white rounded-full p-1 w-6 h-6 flex items-center justify-center shadow hover:bg-rose-100 text-rose-500 z-10 transition-colors">
+                                        <i class="fa-solid fa-xmark text-xs"></i>
+                                    </button>
                                     <img loading="lazy" id="preview-4" src="{{ event.image_url_4 or '' }}" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <i class="fa-solid fa-pen text-white"></i>
@@ -606,6 +615,37 @@
         reader.readAsDataURL(file);
     }
 
+    
+    function removeGalleryImage(event, index) {
+        event.stopPropagation();
+        event.preventDefault();
+        
+        // Clear file input
+        const input = document.getElementById(`ev-image-${index}`);
+        if(input) input.value = '';
+        
+        // Remove from extraImages object if it exists
+        if(typeof extraImages !== 'undefined' && extraImages[index]) {
+            delete extraImages[index];
+        }
+        
+        // Hide preview, show prompt
+        document.getElementById(`preview-container-${index}`).classList.add('hidden');
+        document.getElementById(`prompt-${index}`).classList.remove('hidden');
+        document.getElementById(`preview-${index}`).src = '';
+        
+        // For edit mode, we might need a hidden input to tell backend to delete
+        let removeInput = document.getElementById(`remove-image-${index}`);
+        if(!removeInput) {
+            removeInput = document.createElement('input');
+            removeInput.type = 'hidden';
+            removeInput.name = `remove_image_${index}`;
+            removeInput.id = `remove-image-${index}`;
+            document.querySelector('form').appendChild(removeInput);
+        }
+        removeInput.value = 'true';
+    }
+
     function previewGalleryImage(event, index) {
         const file = event.target.files[0];
         if (!file) return;
@@ -735,6 +775,11 @@
         if (extraImages[2]) payload.image_base64_2 = extraImages[2];
         if (extraImages[3]) payload.image_base64_3 = extraImages[3];
         if (extraImages[4]) payload.image_base64_4 = extraImages[4];
+
+        // Check for removal flags
+        if (document.getElementById('remove-image-2') && document.getElementById('remove-image-2').value === 'true') payload.remove_image_2 = true;
+        if (document.getElementById('remove-image-3') && document.getElementById('remove-image-3').value === 'true') payload.remove_image_3 = true;
+        if (document.getElementById('remove-image-4') && document.getElementById('remove-image-4').value === 'true') payload.remove_image_4 = true;
 
         try {
             const res = await fetch(`/api/host/events/${eventId}/update`, {

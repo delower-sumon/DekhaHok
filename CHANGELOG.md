@@ -2,6 +2,15 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-12] - Host Media UI Improvements
+
+### Added
+- **Image Removal Flow**: Added intuitive remove ('X') buttons to the host event creation and edit media uploader. Clicking the button now immediately clears the image from the queue and flags it for deletion on the backend without triggering the file upload picker.
+
+### Changed
+- **Gallery Layout Alignment**: Fixed the vertical alignment on the booking pages. The 3rd gallery image (portrait) now perfectly matches the combined height of the two left images (`h-[25rem]`).
+- **Host Dashboard UI Sync**: Overhauled the "Additional Media" section in the host dashboard to strictly mirror the masonry grid layout shown to guests, replacing the previous horizontal 3-column layout. This provides hosts with an exact preview of how their 9:16 portrait will appear on the live listing.
+
 ## [2026-07-12] - Booking Engine Cleanup & Package Tier Deprecation
 
 ### Changed
