@@ -276,14 +276,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-zinc-700">Package Tier *</label>
-                    <select id="ev-tier" required class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 bg-white">
-                        <option value="experience" {% if event.package_tier == 'experience' %}selected{% endif %}>Base Experience (Standard)</option>
-                        <option value="circle" {% if event.package_tier == 'circle' %}selected{% endif %}>DekhaHok Circle (Community specific)</option>
-                        <option value="premium" {% if event.package_tier == 'premium' %}selected{% endif %}>Premium (High-end)</option>
-                    </select>
-                </div>
 
                 <div>
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Location Venue *</label>
@@ -474,7 +466,7 @@
             if(existingData.starting_rate) document.getElementById('ev-starting-rate').value = existingData.starting_rate;
             if(existingData.service_area) document.getElementById('ev-service-area').value = existingData.service_area;
 
-            if(existingData.package_tier) document.getElementById('ev-tier').value = existingData.package_tier;
+
             document.getElementById('ev-location').value = existingData.location_name || '';
             if(existingData.location_area) document.getElementById('ev-area').value = existingData.location_area;
             if(existingData.event_date_iso) document.getElementById('ev-date').value = existingData.event_date_iso;
@@ -701,7 +693,6 @@
             serviceArea = document.getElementById('ev-service-area').value;
         }
 
-        const tier = document.getElementById('ev-tier').value;
         const locationName = document.getElementById('ev-location').value.trim();
         const area = document.getElementById('ev-area').value;
         let included = document.getElementById('ev-includes').value.trim();
@@ -730,7 +721,7 @@
             service_area: serviceArea,
             session_duration_mins: sessionDuration,
             advance_notice_hours: advanceNotice,
-            package_tier: tier,
+
             location_name: locationName,
             location_area: area,
             is_recurring: bookingModel === 'session',

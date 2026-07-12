@@ -2,7 +2,14 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
-## [2026-07-06] - Re-Audit Fixes & Consistency (Phases 1-3)
+## [2026-07-12] - Booking Engine Cleanup & Package Tier Deprecation
+
+### Changed
+- **Package Tier Removal (UI)**: Removed the legacy "Package Tier" dropdown and associated JavaScript logic from the `host_event_edit.html` template. The platform is now strictly adhering to the 3-model Booking Engine architecture (Event, Session, Hire). The `package_tier` database column remains intact for now and will be dropped in a future migration.
+
+### Removed
+- **Test Accounts Wipe**: Permanently deleted the 4 safe test accounts (`test_subagent`, `safe.artist`, `safe.session`, `safe.community`) along with all their associated host profiles, mock listings, session slots, and test bookings via a cascade database cleanup script.
+- **Scratch Files Cleanup**: Deleted 10+ temporary development scripts (`create_demos.py`, `check_db_columns.py`, etc.) and the entire `temporary concept folder` from the repository to ensure a clean branch before merging.## [2026-07-06] - Re-Audit Fixes & Consistency (Phases 1-3)
 
 ### Added
 - **Founding 100 Badges Tooltips**: Added descriptive title tooltips explaining early community leader benefits to the Founding 100 badge across homepage cards, dynamic catalog rendering, booking confirmations, and host profiles.
