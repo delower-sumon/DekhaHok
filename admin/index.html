@@ -219,7 +219,7 @@
       </div>
 
       <!-- Platform stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
         <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
           <div class="flex items-center justify-between text-zinc-400 mb-3">
             <span class="text-xs font-bold uppercase tracking-wider">Gross Platform Volume</span>
@@ -267,6 +267,29 @@
           <div class="text-[10px] text-rose-600 font-semibold mt-1"><i class="fa-solid fa-circle-info"></i> bKash
             gateway active</div>
         </div>
+
+        <!-- Phase 1: New booking model stats -->
+        <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between text-zinc-400 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider">Sessions Booked</span>
+            <div class="w-8 h-8 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+              <i class="fa-solid fa-rotate text-sm"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-black text-zinc-900" id="admin-stat-sessions">0</div>
+          <div class="text-[10px] text-violet-600 font-semibold mt-1"><i class="fa-solid fa-calendar-check"></i> SB- model</div>
+        </div>
+
+        <div class="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between text-zinc-400 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider">Hire Pending Review</span>
+            <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <i class="fa-solid fa-envelope-open-text text-sm"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-black text-zinc-900" id="admin-stat-hire">0</div>
+          <div class="text-[10px] text-amber-600 font-semibold mt-1"><i class="fa-solid fa-clock"></i> HR- awaiting action</div>
+        </div>
       </div>
 
       <!-- Admin Tab selection -->
@@ -303,11 +326,15 @@
           <i class="fa-solid fa-money-bill-wave text-xs"></i>
           <span>Payouts</span>
         </button>
+        <!-- LEGACY: Match Groups tab hidden — Phase 1. Data in meetup_groups table is PRESERVED in Neon DB.
+             TODO (cleanup): Remove section-groups HTML, group modals, and all group JS functions once
+             data has been exported and the team confirms the legacy matching engine is retired.
         <button onclick="showSection('groups')" id="admin-tab-btn-groups" data-section="groups"
           class="admin-tab-btn px-3 py-2 border-b-2 border-transparent text-zinc-500 font-semibold text-[10px] md:text-[11px] hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1">
           <i class="fa-solid fa-users text-xs"></i>
           <span>Match Groups</span>
         </button>
+        -->
         <button onclick="showSection('blogs')" id="admin-tab-btn-blogs" data-section="blogs"
           class="admin-tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-500 font-semibold text-[11px] md:text-xs hover:text-zinc-800 hover:bg-zinc-50 rounded-t-lg transition-all flex items-center gap-1.5">
           <i class="fa-solid fa-pen-nib text-xs"></i>
@@ -363,11 +390,13 @@
               <option value="unpaid">Unpaid</option>
               <option value="paid">Paid</option>
             </select>
-            <select id="filterGroupSize" onchange="loadBookings()"
+            <!-- Phase 1: Booking Model filter (replaces legacy group_size filter) -->
+            <select id="filterModel" onchange="loadBookings()"
               class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 font-medium">
-              <option value="">All Sizes</option>
-              <option value="2">2-person</option>
-              <option value="5">5-person</option>
+              <option value="">All Models</option>
+              <option value="event">📅 Ticketed Events (DH-)</option>
+              <option value="session">🔁 Sessions (SB-)</option>
+              <option value="hire">📩 Hire Requests (HR-)</option>
             </select>
           </div>
 
@@ -376,7 +405,10 @@
           </div>
         </section>
 
-        <!-- ── Groups Section ─────────────────────────────────────────── -->
+        <!-- LEGACY: Match Groups section — Phase 1. Data in meetup_groups is PRESERVED in Neon DB.
+             The UI tab is hidden. The backend /api/admin/groups endpoint still works.
+             TODO (cleanup): Remove this entire section, the group modals below, and all group JS
+             functions once the data has been exported and the legacy matching engine is confirmed retired.
         <section id="section-groups" class="section hidden space-y-6">
           <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-gray-800">Meetup Groups</h1>
@@ -386,11 +418,10 @@
             </button>
           </div>
 
-          <!-- Smart Suggestions -->
           <div id="matchSuggestions" class="space-y-4"></div>
-
           <div id="groupsList" class="grid grid-cols-1 gap-4 pt-4 border-t border-gray-100"></div>
         </section>
+        -->
 
         <!-- ── Locations Section ───────────────────────────────────────── -->
         <section id="section-locations" class="section hidden space-y-6">
@@ -1004,7 +1035,8 @@
 
       if (name === 'dashboard') loadDashboard();
       if (name === 'bookings') loadBookings();
-      if (name === 'groups') loadGroups();
+      // Phase 1: 'groups' tab removed from nav; loadGroups() no longer called from here.
+      // Backend endpoint /api/admin/groups still exists for data safety.
       if (name === 'locations') {
         loadAdminLocations();
         loadPartners();
@@ -1099,10 +1131,16 @@
       const bookings = await bookingsRes.json();
 
       // Update static counter cards
-      document.getElementById('admin-stat-volume').textContent = '৳' + Number(stats.revenue).toLocaleString();
+      document.getElementById('admin-stat-volume').textContent = '\u09f3' + Number(stats.revenue).toLocaleString();
       document.getElementById('admin-stat-hosts').textContent = stats.verified_hosts;
       document.getElementById('admin-stat-events').textContent = stats.published_events;
       document.getElementById('admin-stat-tickets').textContent = stats.tickets_issued;
+
+      // Phase 1: New booking model stats
+      const sessEl = document.getElementById('admin-stat-sessions');
+      if (sessEl) sessEl.textContent = stats.sessions_booked || '0';
+      const hireEl = document.getElementById('admin-stat-hire');
+      if (hireEl) hireEl.textContent = stats.hire_pending || '0';
 
       // Update other badges
       const pendingHostsBadge = document.getElementById('admin-badge-pending-hosts');
@@ -1131,12 +1169,13 @@
     async function loadBookings() {
       const status = document.getElementById('filterStatus')?.value || '';
       const payment = document.getElementById('filterPayment')?.value || '';
-      const size = document.getElementById('filterGroupSize')?.value || '';
+      // Phase 1: model filter replaces legacy group_size filter
+      const model = document.getElementById('filterModel')?.value || '';
 
       let url = '/api/admin/bookings?';
       if (status) url += `status=${status}&`;
       if (payment) url += `payment=${payment}&`;
-      if (size) url += `group_size=${size}&`;
+      if (model)  url += `model=${model}&`;
 
       const res = await adminFetch(url);
       allBookings = await res.json();
@@ -1159,39 +1198,53 @@
 
     function bookingsTableHTML(bookings) {
       if (!bookings.length) return `<p class="p-6 text-gray-400 text-sm">No bookings found.</p>`;
+
+      // Phase 1: model badge helper
+      function modelBadge(model) {
+        const cfg = {
+          session: { icon: '\uD83D\uDD01', label: 'Session',  cls: 'bg-violet-50 text-violet-700 border-violet-100' },
+          hire:    { icon: '\uD83D\uDCE9', label: 'Hire Req', cls: 'bg-amber-50  text-amber-700  border-amber-100'  },
+          event:   { icon: '\uD83D\uDCC5', label: 'Event',    cls: 'bg-sky-50    text-sky-700    border-sky-100'    },
+        };
+        const c = cfg[model] || cfg.event;
+        return `<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border text-[8px] font-bold uppercase ${c.cls}">${c.icon} ${c.label}</span>`;
+      }
+
+      // Phase 1: tracking ID helper — SB- and HR- link to /track/{id}, DH- links to edit modal
+      function trackingIdCell(b) {
+        const tid = b.tracking_id;
+        if (tid && (tid.startsWith('SB-') || tid.startsWith('HR-'))) {
+          return `<a href="/track/${tid}" target="_blank" class="font-mono text-[10px] font-black text-violet-700 hover:underline whitespace-nowrap">${tid}</a>`;
+        }
+        return `<span class="font-mono text-[10px] font-black text-emerald-700 whitespace-nowrap">${tid}</span>`;
+      }
+
       return `
     <table class="w-full text-[11px] table-auto">
       <thead class="bg-gray-50 text-gray-500 text-[10px] uppercase">
         <tr>
           <th class="px-2 py-2 text-left">Tracking ID</th>
+          <th class="px-2 py-2 text-left">Model</th>
           <th class="px-2 py-2 text-left">Name</th>
           <th class="px-2 py-2 text-left">Phone</th>
-          <th class="px-2 py-2 text-left">Size</th>
           <th class="px-2 py-2 text-left">Date</th>
-          <th class="px-2 py-2 text-left">Location (Cur/Pref)</th>
-          <th class="px-2 py-2 text-left">Venue</th>
           <th class="px-2 py-2 text-left">Fee</th>
           <th class="px-2 py-2 text-left">Payment</th>
-          <th class="px-2 py-2 text-left cursor-pointer hover:bg-gray-200 transition-colors rounded-lg" onclick="toggleStatusSort()" title="Sort by Status">Status ⇅</th>
+          <th class="px-2 py-2 text-left cursor-pointer hover:bg-gray-200 transition-colors rounded-lg" onclick="toggleStatusSort()" title="Sort by Status">Status &#x21c5;</th>
           <th class="px-2 py-2 text-left">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-50">
         ${bookings.map(b => `
           <tr class="hover:bg-gray-50 border-b border-gray-100">
-            <td class="px-2 py-2 font-mono text-[10px] font-black text-emerald-700 whitespace-nowrap">${b.tracking_id}</td>
+            <td class="px-2 py-2">${trackingIdCell(b)}</td>
+            <td class="px-2 py-2">${modelBadge(b.booking_model)}</td>
             <td class="px-2 py-2 font-bold text-gray-900">${b.name}</td>
             <td class="px-2 py-2 text-gray-500 whitespace-nowrap">${b.phone}</td>
-            <td class="px-2 py-2 whitespace-nowrap">${b.group_size}P</td>
             <td class="px-2 py-2 text-gray-500 whitespace-nowrap leading-tight">
               ${b.preferred_date}<br/>
-              <span class="text-[9px] font-mono text-emerald-700">${b.preferred_time === '17:00:00' ? '5:00 PM' : b.preferred_time === '19:00:00' ? '7:00 PM' : b.preferred_time || '-'}</span>
+              <span class="text-[9px] font-mono text-emerald-700">${b.preferred_time || '-'}</span>
             </td>
-            <td class="px-2 py-2 text-[10px]">
-              <div class="text-emerald-700 font-medium truncate max-w-[120px]">🏠 ${b.current_location || '-'}</div>
-              <div class="text-emerald-500 font-bold truncate max-w-[120px]">📍 ${b.preferred_location || '-'}</div>
-            </td>
-            <td class="px-2 py-2 text-gray-500 whitespace-nowrap">${b.venue_type === 'restaurant' ? '🍽 Resto' : '🌳 Public'}</td>
             <td class="px-2 py-2 font-bold">৳${b.fee_amount}</td>
             <td class="px-2 py-2">
               ${paymentBadge(b.payment_status)}
@@ -2187,7 +2240,7 @@
           if (h.verification_status === 'SUSPENDED') badgeColor = 'bg-red-100 text-red-800';
           if (h.verification_status === 'PENDING') badgeColor = 'bg-amber-100 text-amber-800';
 
-          const foundingBadge = h.is_founding 
+          const foundingBadge = h.is_founding
             ? `<span class="px-2 py-1 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-[9px] font-black cursor-pointer shadow-sm select-none" onclick="toggleHostFounding(${h.id}, false)">Founding</span>`
             : `<span class="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-400 text-[9px] font-bold cursor-pointer select-none" onclick="toggleHostFounding(${h.id}, true)">Add Badge</span>`;
 
@@ -2272,13 +2325,13 @@
         loadHosts();
         return toast("Enter value between 0 and 100", true);
       }
-      
+
       const confirmed = await customConfirm(`Update this host's revenue share to ${sharePct}%?`);
       if (!confirmed) {
         loadHosts();
         return;
       }
-      
+
       const share = sharePct / 100.0;
       try {
         const res = await adminFetch(`/api/admin/hosts/${hostId}`, {
@@ -2333,7 +2386,7 @@
           const isWorkshop = ['workshops_learning', 'learning_mentorship', 'career_startups', 'creative_skills_lessons', 'health_wellness_coaching'].includes(cat);
           const isSports = ['sports', 'sports_fitness'].includes(cat);
           const isShow = ['musicians_bands', 'performers_stage', 'visual_live_art', 'entertainment_socials', 'entertainment'].includes(cat);
-          
+
           let modelLabel = '📅 Event';
           if (evt.booking_model === 'session') modelLabel = '🔁 Session';
           else if (evt.booking_model === 'hire') modelLabel = '📩 Hire';
@@ -2341,7 +2394,7 @@
           else if (isWorkshop) modelLabel = '🎓 Workshop';
           else if (isSports) modelLabel = '🏃 Sports';
           else if (isShow) modelLabel = '🎭 Show';
-          const priceDisplay = evt.booking_model === 'hire' 
+          const priceDisplay = evt.booking_model === 'hire'
             ? `<span class="text-purple-700 font-bold">৳${evt.price}</span><span class="text-zinc-400 text-[9px] ml-1">hire rate</span>`
             : `৳${evt.price}<span class="text-zinc-400 text-[9px] ml-1">/ person</span>`;
 
@@ -2378,8 +2431,8 @@
 
     async function deleteEvent(eventId, status) {
       if (status === 'published') {
-          toast("Cannot delete a published event. Please draft it first.", true);
-          return;
+        toast("Cannot delete a published event. Please draft it first.", true);
+        return;
       }
       const confirmed = await customConfirm(`Are you sure you want to permanently delete this event?`);
       if (!confirmed) return;

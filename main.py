@@ -2804,6 +2804,9 @@ def admin_dashboard(x_admin_key: str = Header(...)):
     """
     Fetches aggregate statistics for the admin overview, 
     including revenue, booking counts by status, and overall totals.
+    Phase 1: Added sessions_booked and hire_pending metrics for the new
+    booking models. Legacy open_groups/active_locations retained for
+    data safety (meetup_groups table is NOT dropped).
     """
     require_admin(x_admin_key)
     conn = get_conn()
@@ -2824,7 +2827,9 @@ def admin_dashboard(x_admin_key: str = Header(...)):
                 (SELECT COUNT(*) FROM hosts WHERE verification_status = 'VERIFIED') AS verified_hosts,
                 (SELECT COUNT(*) FROM events WHERE status = 'published') AS published_events,
                 (SELECT COALESCE(SUM(b.group_size), 0) FROM bookings b JOIN events e ON b.event_id = e.id WHERE e.status = 'completed') AS tickets_issued,
-                (SELECT COUNT(*) FROM hosts WHERE verification_status = 'PENDING') AS pending_hosts
+                (SELECT COUNT(*) FROM hosts WHERE verification_status = 'PENDING') AS pending_hosts,
+                (SELECT COUNT(*) FROM bookings WHERE booking_model = 'session') AS sessions_booked,
+                (SELECT COUNT(*) FROM bookings WHERE booking_model = 'hire' AND booking_status = 'processing') AS hire_pending
             """
         )
         row = cursor.fetchone()
@@ -2833,19 +2838,21 @@ def admin_dashboard(x_admin_key: str = Header(...)):
         release_conn(conn)
 
     return {
-        "total":      row[0] or 0,
-        "processing": row[1] or 0,
-        "confirmed":  row[2] or 0,
-        "completed":  row[3] or 0,
-        "paid":       row[4] or 0,
-        "unpaid":     row[5] or 0,
-        "revenue":    float(row[6] or 0),
-        "open_groups": row[7] or 0,
-        "active_locations": row[8] or 0,
-        "verified_hosts": row[9] or 0,
+        "total":           row[0] or 0,
+        "processing":      row[1] or 0,
+        "confirmed":       row[2] or 0,
+        "completed":       row[3] or 0,
+        "paid":            row[4] or 0,
+        "unpaid":          row[5] or 0,
+        "revenue":         float(row[6] or 0),
+        "open_groups":     row[7] or 0,      # legacy – kept for data safety, not shown in UI
+        "active_locations": row[8] or 0,    # legacy – kept for data safety, not shown in UI
+        "verified_hosts":  row[9] or 0,
         "published_events": row[10] or 0,
-        "tickets_issued": row[11] or 0,
-        "pending_hosts": row[12] or 0,
+        "tickets_issued":  row[11] or 0,
+        "pending_hosts":   row[12] or 0,
+        "sessions_booked": row[13] or 0,    # new: Session model bookings
+        "hire_pending":    row[14] or 0,    # new: Hire requests awaiting review
     }
 
 
@@ -2854,6 +2861,7 @@ def admin_list_bookings(
     status:     Optional[str] = Query(None),
     payment:    Optional[str] = Query(None),
     group_size: Optional[int] = Query(None),
+    model:      Optional[str] = Query(None),   # Phase 1: filter by booking model (event|session|hire)
     x_admin_key: str = Header(...),
 ):
     require_admin(x_admin_key)
@@ -2865,6 +2873,8 @@ def admin_list_bookings(
         filters.append("b.payment_status = %s"); params.append(payment)
     if group_size:
         filters.append("b.group_size = %s");     params.append(group_size)
+    if model:
+        filters.append("b.booking_model = %s");  params.append(model)
 
     where = ("WHERE " + " AND ".join(filters)) if filters else ""
 
@@ -2878,7 +2888,8 @@ def admin_list_bookings(
                    b.current_location, b.preferred_location, b.preferred_meeting_point,
                    b.fee_amount, b.payment_status, b.payment_method, b.payment_sender_digits, b.booking_status,
                    b.assigned_group_id, b.admin_notes, b.is_verified, b.wants_pickup, b.wants_dropoff, b.created_at,
-                   b.interests, b.expectations, b.event_id, e.title as event_title
+                   b.interests, b.expectations, b.event_id, e.title as event_title,
+                   b.booking_model
             FROM bookings b
             LEFT JOIN events e ON b.event_id = e.id
             {where}
@@ -2923,6 +2934,7 @@ def admin_list_bookings(
             "expectations":      r[27],
             "event_id":          r[28],
             "event_title":       r[29] or "DekhaHok Circle Adda",
+            "booking_model":     r[30] or "event",  # Phase 1: booking model field
         }
         for r in rows
     ]
@@ -3871,7 +3883,7 @@ def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(
         cursor = conn.cursor()
         
         # Verify slot is not booked
-        cursor.execute("SELECT is_booked, event_id FROM host_slots WHERE id = %s", (payload.slot_id,))
+        cursor.execute("SELECT is_booked, event_id, slot_date FROM host_slots WHERE id = %s", (payload.slot_id,))
         slot_info = cursor.fetchone()
         if not slot_info:
             raise HTTPException(404, "Slot not found")
@@ -3880,6 +3892,8 @@ def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(
         
         if slot_info[1] != payload.event_id:
             raise HTTPException(400, "Slot does not belong to this event")
+
+        slot_date = slot_info[2]
 
         # Fetch event
         cursor.execute("SELECT host_id, price_per_person FROM events WHERE id = %s", (payload.event_id,))
@@ -3899,10 +3913,10 @@ def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(
         user_id = user["user_id"] if user else None
         
         cursor.execute("""
-            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, slot_id, group_size, interests)
-            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'paid', %s, 'session', %s, 1, %s)
+            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, slot_id, group_size, interests, preferred_date, venue_type)
+            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'paid', %s, 'session', %s, 1, %s, %s, 'na')
             RETURNING id
-        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, fee, payload.slot_id, payload.message))
+        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, fee, payload.slot_id, payload.message, slot_date))
         
         booking_id = cursor.fetchone()[0]
         conn.commit()
