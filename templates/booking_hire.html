@@ -112,7 +112,7 @@
         </div>
         <div class="w-full sm:w-auto sm:text-right pt-4 sm:pt-0 border-t border-emerald-100/50 sm:border-0 mt-1 sm:mt-0 flex flex-row sm:flex-col items-center justify-between sm:items-end">
             <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest sm:mb-0.5" id="b-price-label">Ticket Price</p>
-            <p class="text-3xl font-black text-emerald-700" id="b-event-price">৳0 <span class="text-sm font-bold text-zinc-500">/ person</span></p>
+            <p class="text-3xl font-black text-emerald-700" id="b-event-price">Free</p>
         </div>
     </div>
 
@@ -370,7 +370,7 @@ function selectPaymentMode(mode) {
 
             if (model === 'session') {
                 if (priceLabel) priceLabel.textContent = "Session Fee";
-                if (priceVal) priceVal.innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-xs font-bold text-zinc-500">/ session</span>`;
+                if (priceVal) priceVal.innerHTML = Math.round(selectedEvent.price_per_person) === 0 ? "Free" : `৳${Math.round(selectedEvent.price_per_person)} <span class="text-xs font-bold text-zinc-500">/ session</span>`;
                 if (tierBadge) {
                     tierBadge.textContent = "🧠 1-on-1 Session";
                     tierBadge.className = "bg-purple-100 text-purple-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest";
@@ -380,7 +380,7 @@ function selectPaymentMode(mode) {
             } else if (model === 'hire') {
                 if (priceLabel) priceLabel.textContent = "Starting Rate";
                 const rate = selectedEvent.starting_rate || selectedEvent.price_per_person || 0;
-                if (priceVal) priceVal.innerHTML = `৳${Math.round(rate)}`;
+                if (priceVal) priceVal.innerHTML = Math.round(rate) === 0 ? "Free" : `৳${Math.round(rate)}`;
                 if (tierBadge) {
                     tierBadge.textContent = "🎸 Hireable Artist";
                     tierBadge.className = "bg-amber-100 text-amber-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest";
@@ -390,7 +390,7 @@ function selectPaymentMode(mode) {
             } else {
                 // Ticketed Group Experience
                 if (priceLabel) priceLabel.textContent = "Ticket Price";
-                if (priceVal) priceVal.innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
+                if (priceVal) priceVal.innerHTML = Math.round(selectedEvent.price_per_person) === 0 ? "Free" : `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
                 if (tierBadge) {
                     tierBadge.textContent = selectedEvent.package_tier || "🎟️ Group Event";
                     tierBadge.className = "bg-emerald-100 text-emerald-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest";
@@ -645,8 +645,8 @@ function selectPaymentMode(mode) {
         if (!basePriceEl || !totalPriceEl) return;
 
         if (isWaitlist) {
-            basePriceEl.textContent = '৳0';
-            totalPriceEl.textContent = '৳0';
+            basePriceEl.textContent = 'Free';
+            totalPriceEl.textContent = 'Free';
             return;
         }
 
@@ -667,7 +667,7 @@ function selectPaymentMode(mode) {
 
         const total = Math.max(0, basePrice - discount);
 
-        basePriceEl.textContent = `৳${Math.round(basePrice)}`;
+        basePriceEl.textContent = basePrice === 0 ? 'Free' : `৳${Math.round(basePrice)}`;
 
         const discRow = document.getElementById('booking-discount-row');
         if (discount > 0) {
@@ -677,7 +677,7 @@ function selectPaymentMode(mode) {
             discRow.classList.add('hidden');
         }
 
-        document.getElementById('booking-total-price').textContent = `৳${Math.round(total)}`;
+        document.getElementById('booking-total-price').textContent = total === 0 ? 'Free' : `৳${Math.round(total)}`;
     }
 
     // Recalculate on gender change

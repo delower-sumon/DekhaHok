@@ -23,35 +23,68 @@
 
         <!-- Details -->
         <div class="p-6 sm:p-8 space-y-8">
-            <!-- Time Slot -->
-            <div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 text-center">
-                <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">Scheduled For</p>
-                <div class="text-xl sm:text-2xl font-black text-emerald-900 mb-1">
-                    {{ data.slot_time.strftime('%A, %B %d, %Y') }}
+            <!-- Time Slot & Payment -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 flex flex-col justify-center text-center sm:text-left">
+                    <p class="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-2">Scheduled For</p>
+                    <div class="text-lg font-black text-emerald-900 mb-1">
+                        {{ data.slot_time.strftime('%A, %B %d, %Y') }}
+                    </div>
+                    <div class="text-emerald-700 font-bold mb-4">
+                        {{ data.slot_time.strftime('%I:%M %p') }} <span class="text-emerald-600 text-sm font-normal">({{ data.duration_mins }} mins)</span>
+                    </div>
+                    {% set cal_link = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=DekhaHok+Session+with+" + data.host_name | urlencode + "&dates=" + data.slot_time.strftime('%Y%m%dT%H%M%SZ') + "/" + data.end_time.strftime('%Y%m%dT%H%M%SZ') %}
+                    <div>
+                        <a href="{{ cal_link }}" target="_blank" class="inline-block bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-100 px-4 py-2 rounded-xl text-xs font-bold transition">
+                            <i class="fa-regular fa-calendar-plus mr-1"></i> Add to Calendar
+                        </a>
+                    </div>
                 </div>
-                <div class="text-emerald-700 font-bold">
-                    {{ data.slot_time.strftime('%I:%M %p') }} <span class="text-emerald-600 text-sm font-normal">({{ data.duration_mins }} mins)</span>
+                
+                <div class="bg-zinc-50 rounded-2xl p-6 border border-zinc-200 flex flex-col justify-center text-center sm:text-left">
+                    <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Payment Details</p>
+                    <div class="text-2xl font-black text-zinc-900 mb-2">
+                        ৳{{ data.fee_amount }}
+                    </div>
+                    <div>
+                        {% if data.payment_status == 'paid' %}
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-1 rounded-full font-black uppercase tracking-widest"><i class="fa-solid fa-check"></i> Paid</span>
+                        {% else %}
+                            <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-1 rounded-full font-black uppercase tracking-widest"><i class="fa-regular fa-clock"></i> {{ data.payment_status }}</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
             <!-- Host Info -->
             <div>
-                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Host Details</h3>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl font-bold">
-                        {{ data.host_name[0] }}
+                <h3 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4 border-b pb-2">Host Details</h3>
+                <div class="flex items-center justify-between bg-white border rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl font-bold">
+                            {{ data.host_name[0] }}
+                        </div>
+                        <div>
+                            <p class="font-bold text-zinc-900">{{ data.host_name }}</p>
+                            <p class="text-xs text-zinc-500">{{ data.host_email }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="font-bold text-zinc-900">{{ data.host_name }}</p>
-                        <p class="text-sm text-zinc-500">{{ data.host_email }} • {{ data.host_phone }}</p>
-                    </div>
+                    
+                    <a href="https://wa.me/{{ data.host_phone|replace('+','')|replace('-','')|replace(' ','') }}?text={{ 'Hi ' ~ data.host_name ~ ', I booked a session with you on DekhaHok!' | urlencode }}" target="_blank" class="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 w-10 h-10 rounded-full flex items-center justify-center transition" title="Chat on WhatsApp">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                    </a>
                 </div>
             </div>
 
             <!-- Client Info -->
             <div>
-                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 border-b pb-2">Booked By</h3>
-                <p class="font-bold text-zinc-900 text-sm">{{ data.client_name }}</p>
+                <h3 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4 border-b pb-2">Booked By</h3>
+                <p class="font-bold text-zinc-900 text-sm px-1">{{ data.client_name }}</p>
+            </div>
+            
+            <!-- Cancellation Notice -->
+            <div class="bg-amber-50 text-amber-800 p-4 rounded-xl text-xs leading-relaxed border border-amber-100">
+                <p><i class="fa-solid fa-circle-info text-amber-600 mr-1"></i> <strong>Cancellation Policy:</strong> Sessions can be cancelled or rescheduled up to 24 hours before the scheduled time. For any urgent issues, please contact your host directly via WhatsApp.</p>
             </div>
             
             <div class="text-center pt-4 border-t border-zinc-100">

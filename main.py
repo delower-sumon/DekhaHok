@@ -694,10 +694,13 @@ def serve_host_dashboard(request: Request):
             
         # Retrieve all events for this host
         cursor.execute("""
-            SELECT id, slug, title, description, category, NULL as package_tier, price_per_person, capacity, booked_count, location_name, location_area, event_date, status, included, booking_model, starting_rate 
-            FROM events 
-            WHERE host_id = %s 
-            ORDER BY event_date DESC
+            SELECT e.id, e.slug, e.title, e.description, e.category, NULL as package_tier, e.price_per_person, 
+                   CASE WHEN e.booking_model = 'session' THEN (SELECT COUNT(*) FROM host_slots hs WHERE hs.event_id = e.id) ELSE e.capacity END as capacity,
+                   CASE WHEN e.booking_model = 'session' THEN (SELECT COALESCE(SUM(b.group_size), 0) FROM bookings b WHERE b.event_id = e.id AND b.payment_status = 'paid') ELSE e.booked_count END as booked_count,
+                   e.location_name, e.location_area, e.event_date, e.status, e.included, e.booking_model, e.starting_rate 
+            FROM events e 
+            WHERE e.host_id = %s 
+            ORDER BY e.event_date DESC
         """, (host_id,))
         event_rows = cursor.fetchall()
         
@@ -1594,7 +1597,9 @@ def api_list_events(category: Optional[str] = None):
         cursor = conn.cursor()
         query = """
             SELECT e.id, e.title, e.description, e.category, NULL as package_tier, e.price_per_person,
-                   e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date,
+                   CASE WHEN e.booking_model = 'session' THEN (SELECT COUNT(*) FROM host_slots hs WHERE hs.event_id = e.id) ELSE e.capacity END as capacity,
+                   CASE WHEN e.booking_model = 'session' THEN (SELECT COALESCE(SUM(b.group_size), 0) FROM bookings b WHERE b.event_id = e.id AND b.payment_status = 'paid') ELSE e.booked_count END as booked_count,
+                   e.location_name, e.location_area, e.event_date,
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
@@ -1620,12 +1625,11 @@ def api_list_events(category: Optional[str] = None):
                 "booked_count": r[7], "location_name": r[8], "location_area": r[9],
                 "event_date": str(r[10]) if r[10] else None, "image_url": f"/api/events/{r[0]}/image" if r[11] else None, "included": r[12] or [],
                 "status": r[13], "host_id": r[14], "host_name": r[15] or "DekhaHok Host",
-                "host_avatar": f"/api/users/{r[17]}/avatar" if r[17] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
+                "host_avatar": f"/api/users/{r[16]}/avatar" if r[16] else f"https://api.dicebear.com/7.x/adventurer/svg?seed={r[15]}",
                 "host_verification_status": r[18],
                 "host_profession": r[19] or "",
-                "host_experience": r[20] or 0,
-                "host_is_founding": bool(r[21]),
-                "booking_model": r[22] or "ticketed"
+                "host_is_founding": bool(r[20]),
+                "booking_model": r[21] or "ticketed"
             })
         cursor.close()
     finally:
@@ -2045,7 +2049,7 @@ def track_page(request: Request, tracking_id: str):
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT b.name, b.booking_status, hs.slot_time, hs.duration_mins, u.full_name as host_name, u.email as host_email, u.phone as host_phone
+                SELECT b.name, b.booking_status, hs.slot_date, hs.slot_time, hs.duration_mins, u.full_name as host_name, u.email as host_email, u.phone as host_phone, b.fee_amount, b.payment_status
                 FROM bookings b
                 JOIN host_slots hs ON b.slot_id = hs.id
                 JOIN events e ON b.event_id = e.id
@@ -2056,15 +2060,23 @@ def track_page(request: Request, tracking_id: str):
             row = cursor.fetchone()
             if not row:
                 return RedirectResponse(url="/?error=invalid_tracking")
+            
+            from datetime import datetime, timedelta
+            slot_datetime = datetime.combine(row[2], row[3])
+            end_time = slot_datetime + timedelta(minutes=row[4])
+            
             data = {
                 "tracking_id": tracking_id.upper(),
                 "client_name": row[0],
                 "status": row[1],
-                "slot_time": row[2],
-                "duration_mins": row[3],
-                "host_name": row[4],
-                "host_email": row[5],
-                "host_phone": row[6]
+                "slot_time": slot_datetime,
+                "end_time": end_time,
+                "duration_mins": row[4],
+                "host_name": row[5],
+                "host_email": row[6],
+                "host_phone": row[7],
+                "fee_amount": row[8],
+                "payment_status": row[9]
             }
             return templates.TemplateResponse("track_session.html", {"request": request, "data": data})
         finally:
@@ -3697,7 +3709,10 @@ def get_admin_events(x_admin_key: str = Header(...)):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT e.id, e.title, e.category, NULL as package_tier, e.price_per_person, e.capacity, e.booked_count, e.location_name, e.location_area, e.event_date, e.status, u.full_name as host_name, e.host_id, e.booking_model
+            SELECT e.id, e.title, e.category, NULL as package_tier, e.price_per_person, 
+                   CASE WHEN e.booking_model = 'session' THEN (SELECT COUNT(*) FROM host_slots hs WHERE hs.event_id = e.id) ELSE e.capacity END as capacity,
+                   CASE WHEN e.booking_model = 'session' THEN (SELECT COALESCE(SUM(b.group_size), 0) FROM bookings b WHERE b.event_id = e.id AND b.payment_status = 'paid') ELSE e.booked_count END as booked_count,
+                   e.location_name, e.location_area, e.event_date, e.status, u.full_name as host_name, e.host_id, e.booking_model
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id

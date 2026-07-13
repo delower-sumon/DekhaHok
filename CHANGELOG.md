@@ -2,6 +2,24 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-13] - Frontend UI Polish & Dashboard Fixes
+
+### Added
+- **Clipboard Utility**: Added a copy-to-clipboard button next to the payment receiver number in the checkout instruction block. Features a smooth transition to a checkmark upon successful copy to improve the payment flow user experience.
+
+### Changed
+- **Pricing Display**: Updated all pricing templates (`index.html`, `booking.html`, `booking_session.html`, `booking_hire.html`) and client-side rendering logic to display "Free" instead of "৳0" when an event/session rate equals zero.
+- **Authentication Modal Refactor**: Streamlined the global popup login modal and standalone auth page. Google OAuth is now visually prioritized as the primary flow, while the email/password section is elegantly tucked behind a collapsible toggle, keeping the UI compact and preventing vertical scrollbars.
+- **Event Card UI Polish**: Constrained and optimized the action buttons ("Book Ticket", "Submit Request", "Reserve Spot") on the homepage event cards to wrap tightly to their text labels instead of stretching across the full width, resulting in a cleaner footer layout.
+- **Footer Theming**: Updated the localized Bengali taglines across all 8 page footers to match the `emerald-400` styling of the primary English tagline, establishing brand consistency.
+
+### Removed
+- **Legacy Admin Routes**: Hid and disabled the "Operations & Data" tab from the admin dashboard. This tab primarily governed the deprecated "Match Suggestions" engine, which has been superseded by the direct booking flow. 
+
+### Fixed
+- **Host Dashboard Metrics**: Resolved a bug in `main.py` (`serve_host_dashboard`) where the "Attending" count on the host dashboard incorrectly calculated bookings by summing the number of active bookings instead of the sum of `participants`. The metric now properly reflects actual headcounts across standard events, sessions, and hire requests.
+
+
 ## [2026-07-13] - Calendar Availability Sync & UI Fixes
 
 ### Added

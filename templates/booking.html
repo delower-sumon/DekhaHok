@@ -77,16 +77,16 @@
                     id="b-event-tier">EXPERIENCE</span>
                 <h1 class="text-lg sm:text-2xl font-bold text-zinc-900 mt-1 mb-1 leading-tight" id="b-event-title">
                     Loading Event...</h1>
-                 <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium">
-                    <span id="b-event-date-wrapper" class="flex items-center gap-1"><i class="fa-regular fa-calendar text-emerald-600"></i> <span
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium">
+                    <span id="b-event-date-wrapper" class="flex items-center gap-1"><i
+                            class="fa-regular fa-calendar text-emerald-600"></i> <span
                             id="b-event-date">TBA</span></span>
                     <span class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-emerald-600"></i>
                         <span id="b-event-location">TBA</span></span>
                     <span id="b-event-spots-wrapper"
                         class="flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md"><i
                             class="fa-solid fa-user-check"></i> <span id="b-event-top-spots">0/0 Booked</span></span>
-                    <span
-                        class="flex items-center gap-1 text-zinc-500 bg-zinc-100/60 px-2 py-0.5 rounded-md"><i
+                    <span class="flex items-center gap-1 text-zinc-500 bg-zinc-100/60 px-2 py-0.5 rounded-md"><i
                             class="fa-regular fa-eye text-zinc-400"></i> <span id="b-event-views">0 Views</span></span>
                 </div>
                 <!-- Event Description -->
@@ -110,9 +110,12 @@
                 </div>
             </div>
         </div>
-        <div class="w-full sm:w-auto sm:text-right pt-4 sm:pt-0 border-t border-emerald-100/50 sm:border-0 mt-1 sm:mt-0 flex flex-row sm:flex-col items-center justify-between sm:items-end">
-            <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest sm:mb-0.5" id="b-price-label">Price</p>
-            <p class="text-3xl font-black text-emerald-700" id="b-event-price">৳0 <span class="text-sm font-bold text-zinc-500">/ person</span></p>
+        <div
+            class="w-full sm:w-auto sm:text-right pt-4 sm:pt-0 border-t border-emerald-100/50 sm:border-0 mt-1 sm:mt-0 flex flex-row sm:flex-col items-center justify-between sm:items-end">
+            <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest sm:mb-0.5" id="b-price-label">Price
+            </p>
+            <p class="text-3xl font-black text-emerald-700" id="b-event-price">৳0 <span
+                    class="text-sm font-bold text-zinc-500">/ person</span></p>
         </div>
     </div>
 
@@ -129,32 +132,40 @@
 
     <!-- Media Gallery & Video -->
     <div id="booking-media-container" class="hidden mb-8">
-        <h3 class="text-xs font-black text-emerald-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-images"></i> Event Gallery & Video</h3>
+        <h3 class="text-xs font-black text-emerald-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i
+                class="fa-solid fa-images"></i> Event Gallery & Video</h3>
         <div id="booking-gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 hidden">
             <!-- Gallery images dynamically inserted here -->
         </div>
-        <div id="booking-video-container" class="w-full aspect-video rounded-2xl overflow-hidden hidden shadow-sm border border-zinc-100">
+        <div id="booking-video-container"
+            class="w-full aspect-video rounded-2xl overflow-hidden hidden shadow-sm border border-zinc-100">
             <!-- YouTube Iframe dynamically inserted here -->
         </div>
     </div>
 
     <!-- Availability & Notice -->
-    <div id="booking-availability-container" class="hidden mb-8 bg-sky-50 border border-sky-100 rounded-2xl p-4 sm:p-6 shadow-sm">
-        <h3 class="text-xs font-black text-sky-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fa-solid fa-clock"></i> Availability Note</h3>
+    <div id="booking-availability-container"
+        class="hidden mb-8 bg-sky-50 border border-sky-100 rounded-2xl p-4 sm:p-6 shadow-sm">
+        <h3 class="text-xs font-black text-sky-800 uppercase tracking-widest mb-3 flex items-center gap-2"><i
+                class="fa-solid fa-clock"></i> Availability Note</h3>
         <div class="space-y-4 text-sm text-sky-900 font-medium">
             <div id="b-avail-days" class="hidden break-words">
-                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-calendar-day w-4"></i> Available Days</span>
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i
+                        class="fa-solid fa-calendar-day w-4"></i> Available Days</span>
                 <span id="b-avail-days-val" class="block font-semibold"></span>
             </div>
             <div id="b-avail-times" class="hidden">
-                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-clock-rotate-left w-4"></i> Available Times</span>
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i
+                        class="fa-solid fa-clock-rotate-left w-4"></i> Available Times</span>
                 <span id="b-avail-times-val" class="block font-semibold"></span>
             </div>
             <div id="b-avail-notice" class="hidden">
-                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-bullhorn w-4"></i> Advance Notice Required</span>
+                <span class="block text-[10px] font-bold text-sky-700 uppercase tracking-widest mb-1"><i
+                        class="fa-solid fa-bullhorn w-4"></i> Advance Notice Required</span>
                 <span id="b-avail-notice-val" class="block font-semibold"></span>
             </div>
-            <div id="b-avail-custom-note" class="hidden mt-2 p-3 bg-white/60 rounded-lg text-sm text-sky-800 whitespace-pre-line italic"></div>
+            <div id="b-avail-custom-note"
+                class="hidden mt-2 p-3 bg-white/60 rounded-lg text-sm text-sky-800 whitespace-pre-line italic"></div>
         </div>
     </div>
 
@@ -300,8 +311,10 @@
             <div
                 class="bg-amber-50 text-amber-800 p-4 rounded-xl text-xs flex items-start gap-3 border border-amber-100 mb-6">
                 <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-600"></i>
-                <p><span class="sr-only">Anti-Flake Policy: Tickets are non-refundable within 48 hours of the event to ensure
-                    group sizing and host preparation.</span>গ্রুপ সাইজ ও হোস্টের প্রস্তুতি নিশ্চিত করতে ইভেন্টের ৪৮ ঘণ্টার মধ্যে টিকিট অফেরতযোগ্য।</p>
+                <p><span class="sr-only">Anti-Flake Policy: Tickets are non-refundable within 48 hours of the event to
+                        ensure
+                        group sizing and host preparation.</span>গ্রুপ সাইজ ও হোস্টের প্রস্তুতি নিশ্চিত করতে ইভেন্টের ৪৮
+                    ঘণ্টার মধ্যে টিকিট অফেরতযোগ্য।</p>
             </div>
 
             <!-- Qty Selector -->
@@ -350,8 +363,11 @@
                         </button>
                     </div>
                     <div class="text-xs text-zinc-500 space-y-1">
-                        <p>1. Send <strong>Cash Out</strong> or <strong>Send Money</strong> of total amount to:
-                            <strong class="text-zinc-800">01884477720</strong>
+                        <p class="flex items-center">1. Send <strong class="mx-1">Money</strong> of total amount to: 
+                            <strong class="text-zinc-800 ml-1" id="booking-payment-number">01884477720</strong>
+                            <button onclick="copyBookingNumber()" id="btn-copy-booking" type="button" class="inline-flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 hover:bg-emerald-100 transition duration-300 focus:outline-none" title="Copy Number">
+                                <i class="fa-regular fa-copy text-xs transition-transform duration-300"></i>
+                            </button>
                         </p>
                         <p>2. Enter your payment sender last 2 digits below for manual verification ledger matching.
                         </p>
@@ -395,11 +411,18 @@
                 </div>
             </div>
 
-            <label class="flex items-start gap-3 mt-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100/50 cursor-pointer group">
-                <input type="checkbox" id="safety-ack" class="mt-1 w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500 flex-shrink-0 cursor-pointer">
-                <span class="text-[11px] text-zinc-600 leading-relaxed font-medium group-hover:text-zinc-800 transition-colors">
-                    <span class="sr-only">I understand that DekhaHok is a community platform. I will respect other participants, follow the host's guidelines, and help maintain a safe and welcoming environment. I understand that abusive behavior may result in suspension of my account.</span>
-                    আমি বুঝতে পারছি যে দেখা হোক একটি কমিউনিটি প্ল্যাটফর্ম। আমি অংশগ্রহণকারীদের সম্মান করব, হোস্টের নির্দেশিকা মেনে চলব এবং একটি সৌহার্দ্যপূর্ণ পরিবেশ বজায় রাখতে সাহায্য করব। আমি বুঝতে পারছি যে আপত্তিকর আচরণের ফলে আমার অ্যাকাউন্ট স্থগিত হতে পারে। <span class="text-rose-500 font-bold">*</span>
+            <label
+                class="flex items-start gap-3 mt-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100/50 cursor-pointer group">
+                <input type="checkbox" id="safety-ack"
+                    class="mt-1 w-4 h-4 text-emerald-600 rounded border-zinc-300 focus:ring-emerald-500 flex-shrink-0 cursor-pointer">
+                <span
+                    class="text-[11px] text-zinc-600 leading-relaxed font-medium group-hover:text-zinc-800 transition-colors">
+                    <span class="sr-only">I understand that DekhaHok is a community platform. I will respect other
+                        participants, follow the host's guidelines, and help maintain a safe and welcoming environment.
+                        I understand that abusive behavior may result in suspension of my account.</span>
+                    আমি বুঝতে পারছি যে দেখা হোক একটি কমিউনিটি প্ল্যাটফর্ম। আমি অংশগ্রহণকারীদের সম্মান করব, হোস্টের
+                    নির্দেশিকা মেনে চলব এবং একটি সৌহার্দ্যপূর্ণ পরিবেশ বজায় রাখতে সাহায্য করব। আমি বুঝতে পারছি যে
+                    আপত্তিকর আচরণের ফলে আমার অ্যাকাউন্ট স্থগিত হতে পারে। <span class="text-rose-500 font-bold">*</span>
                 </span>
             </label>
 
@@ -499,7 +522,7 @@
         try {
             const res = await fetch('/api/events/' + TARGET_EVENT_ID);
             selectedEvent = await res.json();
-            
+
             if (!res.ok || !selectedEvent) {
                 alert("Event not found or has expired.");
                 window.location.href = "/";
@@ -520,7 +543,7 @@
 
             if (model === 'session') {
                 if (priceLabel) priceLabel.textContent = "Session Fee";
-                if (priceVal) priceVal.innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-xs font-bold text-zinc-500">/ session</span>`;
+                if (priceVal) priceVal.innerHTML = Math.round(selectedEvent.price_per_person) === 0 ? "Free" : `৳${Math.round(selectedEvent.price_per_person)} <span class="text-xs font-bold text-zinc-500">/ session</span>`;
                 if (tierBadge) {
                     tierBadge.textContent = "🧠 1-on-1 Session";
                     tierBadge.className = "bg-purple-100 text-purple-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest";
@@ -530,7 +553,7 @@
             } else if (model === 'hire') {
                 if (priceLabel) priceLabel.innerHTML = `Booking Fee <span class="text-[9px] align-bottom text-zinc-400 ml-0.5">min</span>`;
                 const rate = selectedEvent.starting_rate || selectedEvent.price_per_person || 0;
-                if (priceVal) priceVal.innerHTML = `৳${Math.round(rate)}`;
+                if (priceVal) priceVal.innerHTML = Math.round(rate) === 0 ? "Free" : `৳${Math.round(rate)}`;
                 if (tierBadge) {
                     tierBadge.textContent = "🎸 Hireable Artist";
                     tierBadge.className = "bg-amber-100 text-amber-800 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest";
@@ -561,7 +584,7 @@
                 }
 
                 if (priceLabel) priceLabel.textContent = priceTag;
-                if (priceVal) priceVal.innerHTML = `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
+                if (priceVal) priceVal.innerHTML = Math.round(selectedEvent.price_per_person) === 0 ? "Free" : `৳${Math.round(selectedEvent.price_per_person)} <span class="text-sm font-bold text-zinc-500">/ person</span>`;
                 if (tierBadge) {
                     tierBadge.textContent = tierLabel;
                     tierBadge.className = `${tierClass} text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest`;
@@ -572,17 +595,17 @@
                 }
                 if (spotsWrapper) spotsWrapper.classList.remove('hidden');
             }
-            
+
             document.getElementById('b-event-location').textContent = selectedEvent.location_name || 'TBA';
 
             // Populate Host Info
             document.getElementById('b-event-host-avatar').src = selectedEvent.host_avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${selectedEvent.host_name}`;
-            
+
             const nameContainer = document.getElementById('b-event-host-name-container');
-            const verifiedSvg = selectedEvent.host_verification_status === 'VERIFIED' 
-                ? `<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>` 
+            const verifiedSvg = selectedEvent.host_verification_status === 'VERIFIED'
+                ? `<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>`
                 : '';
-                
+
             if (selectedEvent.host_is_founding) {
                 nameContainer.className = "relative inline-block w-max mt-1 mb-0.5";
                 nameContainer.innerHTML = `
@@ -634,13 +657,13 @@
             const galleryGrid = document.getElementById('booking-gallery-grid');
             const videoContainer = document.getElementById('booking-video-container');
             let hasMedia = false;
-            
-            const extraImages = [];
-            if(selectedEvent.image_url_2) extraImages.push(selectedEvent.image_url_2);
-            if(selectedEvent.image_url_3) extraImages.push(selectedEvent.image_url_3);
-            if(selectedEvent.image_url_4) extraImages.push(selectedEvent.image_url_4);
 
-            if(extraImages.length > 0) {
+            const extraImages = [];
+            if (selectedEvent.image_url_2) extraImages.push(selectedEvent.image_url_2);
+            if (selectedEvent.image_url_3) extraImages.push(selectedEvent.image_url_3);
+            if (selectedEvent.image_url_4) extraImages.push(selectedEvent.image_url_4);
+
+            if (extraImages.length > 0) {
                 // Adjust grid based on number of images
                 if (extraImages.length === 1) {
                     galleryGrid.className = "grid grid-cols-1 gap-4 mb-4";
@@ -674,7 +697,7 @@
                         </div>
                     `).join('');
                 }
-                
+
                 galleryGrid.classList.remove('hidden');
                 hasMedia = true;
             }
@@ -682,7 +705,7 @@
             // Populate Availability Note
             const availContainer = document.getElementById('booking-availability-container');
             let hasAvail = false;
-            
+
             if (selectedEvent.available_days) {
                 const formattedDays = selectedEvent.available_days.split(',').map(d => d.trim()).join(', ');
                 document.getElementById('b-avail-days-val').textContent = formattedDays;
@@ -704,21 +727,21 @@
                 document.getElementById('b-avail-custom-note').classList.remove('hidden');
                 hasAvail = true;
             }
-            
+
             if (hasAvail) availContainer.classList.remove('hidden');
 
-            if(selectedEvent.youtube_link) {
+            if (selectedEvent.youtube_link) {
                 let videoId = null;
                 const ytMatch = selectedEvent.youtube_link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([\w-]{11})/i);
-                if(ytMatch && ytMatch[1]) {
+                if (ytMatch && ytMatch[1]) {
                     videoId = ytMatch[1];
                     videoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                     videoContainer.classList.remove('hidden');
                     hasMedia = true;
                 }
             }
-            
-            if(hasMedia) {
+
+            if (hasMedia) {
                 mediaContainer.classList.remove('hidden');
             }
 
@@ -809,14 +832,14 @@
         if (!selectedEvent) return;
 
         const isWaitlist = (selectedEvent.capacity - selectedEvent.booked_count) <= 0;
-        
+
         const basePriceEl = document.getElementById('booking-base-price');
         const totalPriceEl = document.getElementById('booking-total-price');
         if (!basePriceEl || !totalPriceEl) return;
 
         if (isWaitlist) {
-            basePriceEl.textContent = '৳0';
-            totalPriceEl.textContent = '৳0';
+            basePriceEl.textContent = 'Free';
+            totalPriceEl.textContent = 'Free';
             return;
         }
 
@@ -837,7 +860,7 @@
 
         const total = Math.max(0, basePrice - discount);
 
-        basePriceEl.textContent = `৳${Math.round(basePrice)}`;
+        basePriceEl.textContent = basePrice === 0 ? 'Free' : `৳${Math.round(basePrice)}`;
 
         const discRow = document.getElementById('booking-discount-row');
         if (discount > 0) {
@@ -847,7 +870,7 @@
             discRow.classList.add('hidden');
         }
 
-        document.getElementById('booking-total-price').textContent = `৳${Math.round(total)}`;
+        document.getElementById('booking-total-price').textContent = total === 0 ? 'Free' : `৳${Math.round(total)}`;
     }
 
     // Recalculate on gender change
@@ -979,6 +1002,18 @@
             setTimeout(() => {
                 icon.className = 'fa-regular fa-copy text-xl';
                 text.classList.add('hidden');
+            }, 2000);
+        });
+    }
+
+    function copyBookingNumber() {
+        const num = document.getElementById('booking-payment-number').textContent;
+        navigator.clipboard.writeText(num).then(() => {
+            const btn = document.getElementById('btn-copy-booking');
+            const icon = btn.querySelector('i');
+            icon.className = 'fa-solid fa-check text-xs text-emerald-600';
+            setTimeout(() => {
+                icon.className = 'fa-regular fa-copy text-xs transition-transform duration-300';
             }, 2000);
         });
     }
