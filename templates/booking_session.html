@@ -261,6 +261,16 @@
                 </div>
             </div>
 
+            <!-- Inline Tracking Status Container -->
+            <div id="inline-tracking-container" class="hidden bg-white border border-emerald-100 rounded-2xl p-5 max-w-sm mx-auto text-left shadow-sm mt-4">
+                <h4 class="font-bold text-xs text-emerald-800 flex items-center gap-2 uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-satellite-dish text-emerald-600"></i> Live Status
+                </h4>
+                <div id="inline-tracking-content" class="space-y-2">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
             <!-- Auto Account Creation Notice -->
             <div id="booking-credentials-box"
                 class="hidden bg-zinc-50 border border-zinc-200 rounded-2xl p-5 max-w-sm mx-auto text-left shadow-sm">
@@ -450,6 +460,7 @@
                 document.getElementById('booking-media-container').classList.add('hidden');
                 document.getElementById('booking-step-3').classList.remove('hidden');
                 document.getElementById('success-ticket-id').textContent = data.tracking_id;
+                loadInlineTrackingStatus(data.tracking_id);
             } else {
                 alert(data.detail || "Booking failed");
                 document.getElementById('btn-submit-session').disabled = false;
@@ -457,6 +468,35 @@
             }
         } catch(e) {
             alert("Network error");
+            document.getElementById('btn-submit-session').disabled = false;
+            document.getElementById('btn-submit-session').textContent = "Confirm & Book";
+        }
+    }
+
+    async function loadInlineTrackingStatus(trackingId) {
+        try {
+            const res = await fetch(`/api/bookings/track/${trackingId}`);
+            if(!res.ok) return;
+            const data = await res.json();
+            
+            const container = document.getElementById('inline-tracking-container');
+            const content = document.getElementById('inline-tracking-content');
+            
+            let statusHtml = `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Booking Status</span>
+                    <span class="text-xs font-bold ${data.status === 'confirmed' ? 'text-emerald-600' : (data.status === 'completed' ? 'text-blue-600' : 'text-amber-600')} uppercase">${data.status || 'processing'}</span>
+                </div>
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Payment</span>
+                    <span class="text-xs font-bold ${data.payment_status === 'paid' ? 'text-emerald-600' : 'text-rose-500'} uppercase">${data.payment_status || 'unpaid'}</span>
+                </div>
+            `;
+            
+            content.innerHTML = statusHtml;
+            container.classList.remove('hidden');
+        } catch(e) {
+            console.error(e);
         }
     }
 
