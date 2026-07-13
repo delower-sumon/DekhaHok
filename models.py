@@ -439,3 +439,5 @@ class SessionBookCreate(BaseModel):
     email: str
     phone: str
     message: Optional[str] = None
+    payment_method: Optional[str] = None
+    payment_sender_digits: Optional[str] = None

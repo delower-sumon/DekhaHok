@@ -3913,10 +3913,10 @@ def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(
         user_id = user["user_id"] if user else None
         
         cursor.execute("""
-            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, fee_amount, booking_model, slot_id, group_size, interests, preferred_date, venue_type)
-            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'paid', %s, 'session', %s, 1, %s, %s, 'na')
+            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, payment_method, payment_sender_digits, fee_amount, booking_model, slot_id, group_size, interests, preferred_date, venue_type)
+            VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'unpaid', %s, %s, %s, 'session', %s, 1, %s, %s, 'na')
             RETURNING id
-        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, fee, payload.slot_id, payload.message, slot_date))
+        """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, payload.payment_method, payload.payment_sender_digits, fee, payload.slot_id, payload.message, slot_date))
         
         booking_id = cursor.fetchone()[0]
         conn.commit()

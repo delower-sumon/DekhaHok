@@ -206,11 +206,31 @@
             </div>
             
             <h3 class="text-sm font-bold text-emerald-800 border-t pt-6 mt-4">3. Payment</h3>
-            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex justify-between items-center">
+            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex justify-between items-center mb-4">
                 <span class="text-sm font-bold text-zinc-700">Total Fee</span>
                 <span class="text-lg font-black text-emerald-700" id="session-fee-display">৳0</span>
             </div>
             
+            <div class="grid grid-cols-4 gap-2 mb-4">
+                <button id="btn-pay-bkash" onclick="selectPaymentMode('bkash')" class="flex items-center justify-center gap-2 border-2 border-emerald-600 bg-emerald-50/50 p-3 rounded-xl font-bold text-sm transition focus:outline-none">
+                    <img src="/static/assets/bkash.png" class="h-6" alt="bKash" onerror="this.src='https://placehold.co/40x20/e2136e/fff?text=bKash'">
+                </button>
+                <button id="btn-pay-nagad" onclick="selectPaymentMode('nagad')" class="flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition focus:outline-none">
+                    <img src="/static/assets/nagad.png" class="h-6" alt="Nagad" onerror="this.src='https://placehold.co/40x20/ec1c24/fff?text=Nagad'">
+                </button>
+                <button id="btn-pay-dbbl" onclick="selectPaymentMode('dbbl')" class="flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition focus:outline-none">
+                    <span class="font-bold text-sm">DBBL</span>
+                </button>
+                <button id="btn-pay-upay" onclick="selectPaymentMode('upay')" class="flex items-center justify-center gap-2 border-2 border-zinc-200 bg-white p-3 rounded-xl font-bold text-sm text-zinc-500 transition focus:outline-none">
+                    <span class="font-bold text-sm text-[#F4BE1D]">UPAY</span>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-xs font-bold mb-1.5 text-zinc-600">Send Money to host / DekhaHok and enter last 2 digits of sender number</label>
+                <input type="text" id="session-payment-digits" placeholder="e.g. 45" maxlength="2" class="border rounded-xl px-4 py-3 text-sm w-full font-mono font-bold tracking-widest text-emerald-800">
+            </div>
+
             <button onclick="submitSession()" id="btn-submit-session" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition shadow mt-4">Confirm & Book</button>
         </div>
     </div>
@@ -403,7 +423,9 @@
             name: document.getElementById('session-name').value,
             phone: document.getElementById('session-phone').value,
             email: document.getElementById('session-email').value,
-            message: document.getElementById('session-notes').value
+            message: document.getElementById('session-notes').value,
+            payment_method: selectedPayment,
+            payment_sender_digits: document.getElementById('session-payment-digits').value
         };
         
         if (payload.message) {
