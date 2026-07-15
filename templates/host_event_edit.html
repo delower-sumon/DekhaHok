@@ -605,20 +605,31 @@
         const file = event.target.files[0];
         if (!file) return;
 
-        if (file.size > 2 * 1024 * 1024) {
-            showToast("File size must be under 2MB", true);
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("File size must be under 5MB", true);
             event.target.value = '';
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            eventImageBase64 = e.target.result;
+        // Show loading state
+        document.getElementById('image-upload-prompt').innerText = "Uploading...";
+
+        const formData = new FormData();
+        formData.append("file", file);
+        fetch('/api/upload', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.url) throw new Error("Upload failed");
+            eventImageBase64 = data.url; // store URL but keep variable name
             document.getElementById('image-upload-prompt').classList.add('hidden');
+            document.getElementById('image-upload-prompt').innerText = "Click to upload a cover photo";
             document.getElementById('image-preview-container').classList.remove('hidden');
-            document.getElementById('image-preview').src = eventImageBase64;
-        }
-        reader.readAsDataURL(file);
+            document.getElementById('image-preview').src = data.url;
+        })
+        .catch(e => {
+            showToast("Image upload failed.", true);
+            document.getElementById('image-upload-prompt').innerText = "Click to upload a cover photo";
+        });
     }
 
     
@@ -656,20 +667,30 @@
         const file = event.target.files[0];
         if (!file) return;
 
-        if (file.size > 2 * 1024 * 1024) {
-            showToast("File size must be under 2MB", true);
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("File size must be under 5MB", true);
             event.target.value = '';
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            extraImages[index] = e.target.result;
+        document.getElementById(`prompt-${index}`).innerText = "Uploading...";
+
+        const formData = new FormData();
+        formData.append("file", file);
+        fetch('/api/upload', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.url) throw new Error("Upload failed");
+            extraImages[index] = data.url;
             document.getElementById(`prompt-${index}`).classList.add('hidden');
+            document.getElementById(`prompt-${index}`).innerText = "+ Add Image";
             document.getElementById(`preview-container-${index}`).classList.remove('hidden');
-            document.getElementById(`preview-${index}`).src = e.target.result;
-        }
-        reader.readAsDataURL(file);
+            document.getElementById(`preview-${index}`).src = data.url;
+        })
+        .catch(e => {
+            showToast("Image upload failed.", true);
+            document.getElementById(`prompt-${index}`).innerText = "+ Add Image";
+        });
     }
 
     function addTimeInput() {
@@ -779,11 +800,11 @@
         };
         
         if (eventImageBase64) {
-            payload.image_base64 = eventImageBase64;
+            payload.image_url = eventImageBase64;
         }
-        if (extraImages[2]) payload.image_base64_2 = extraImages[2];
-        if (extraImages[3]) payload.image_base64_3 = extraImages[3];
-        if (extraImages[4]) payload.image_base64_4 = extraImages[4];
+        if (extraImages[2]) payload.image_url_2 = extraImages[2];
+        if (extraImages[3]) payload.image_url_3 = extraImages[3];
+        if (extraImages[4]) payload.image_url_4 = extraImages[4];
 
         // Check for removal flags
         if (document.getElementById('remove-image-2') && document.getElementById('remove-image-2').value === 'true') payload.remove_image_2 = true;

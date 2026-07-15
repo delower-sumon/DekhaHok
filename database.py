@@ -95,8 +95,6 @@ CREATE TABLE IF NOT EXISTS bookings (
     booking_status    VARCHAR(15)  NOT NULL DEFAULT 'processing',
     assigned_group_id INT,
     admin_notes       TEXT,
-    wants_pickup      BOOLEAN DEFAULT FALSE,
-    wants_dropoff     BOOLEAN DEFAULT FALSE,
     vibe              VARCHAR(50),
     discount_amount   NUMERIC(8,2) DEFAULT 0.00,
     coupon_code       VARCHAR(20),
@@ -234,7 +232,6 @@ def init_db():
                 title VARCHAR(300) NOT NULL,
                 description TEXT,
                 category VARCHAR(50) NOT NULL,
-                package_tier VARCHAR(20) NOT NULL,
                 listing_type VARCHAR(50) DEFAULT 'event',
                 booking_model VARCHAR(50),
                 external_link VARCHAR(255),
@@ -298,19 +295,12 @@ def init_db():
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_sender_digits VARCHAR(10)")
         cursor.execute("ALTER TABLE meetup_groups ALTER COLUMN group_code TYPE VARCHAR(20)")
         cursor.execute("ALTER TABLE meeting_points ADD COLUMN IF NOT EXISTS point_type VARCHAR(20) DEFAULT 'public_place'")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS rejection_reason TEXT")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS referral_code VARCHAR(12) UNIQUE")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS referred_by VARCHAR(12)")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS wants_pickup BOOLEAN DEFAULT FALSE")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS wants_dropoff BOOLEAN DEFAULT FALSE")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS image_url TEXT")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS badge_text VARCHAR(50)")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS shares INTEGER DEFAULT 0")
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS admin_notes TEXT")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS interests TEXT")
-        cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS expectations TEXT")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS is_pivoted BOOLEAN DEFAULT FALSE")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author_title TEXT")
         cursor.execute("ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author_image_url TEXT")
@@ -466,8 +456,8 @@ def init_db():
             unlinked_count = cursor.fetchone()[0]
             if unlinked_count > 0:
                 cursor.execute("""
-                    INSERT INTO events (host_id, slug, title, description, category, package_tier, price_per_person, capacity, status)
-                    VALUES (%s, 'dekhahok-circle-adda', 'DekhaHok Circle Adda', 'Casual cafe adda for meeting new friends.', 'Lifestyle', 'circle', 299.00, 10000, 'published')
+                    INSERT INTO events (host_id, slug, title, description, category, price_per_person, capacity, status)
+                    VALUES (%s, 'dekhahok-circle-adda', 'DekhaHok Circle Adda', 'Casual cafe adda for meeting new friends.', 'Lifestyle', 299.00, 10000, 'published')
                     ON CONFLICT (slug) DO NOTHING
                 """, (team_host_id,))
                 

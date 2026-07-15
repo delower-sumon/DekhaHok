@@ -297,14 +297,23 @@
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                hostAvatarBase64 = event.target.result;
-                const preview = document.getElementById('avatar-preview-img');
-                preview.src = hostAvatarBase64;
-                document.getElementById('avatar-preview-container').classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
+            document.getElementById('avatar-preview-container').classList.remove('hidden');
+            document.getElementById('avatar-preview-container').innerHTML = `<p class="text-xs text-zinc-500">Uploading...</p>`;
+
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            fetch('/api/upload', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.url) throw new Error("Upload failed");
+                hostAvatarBase64 = data.url; // store URL
+                document.getElementById('avatar-preview-container').innerHTML = `<img id="avatar-preview-img" src="${data.url}" class="w-full h-full object-cover">`;
+            })
+            .catch(e => {
+                showToast("Image upload failed.", "error");
+                document.getElementById('avatar-preview-container').classList.add('hidden');
+            });
         });
     }
 
@@ -450,10 +459,10 @@
             category: document.getElementById('host-category-value').value,
             host_type: document.getElementById('host-type-value').value || 'community',
             operating_area: document.getElementById('host-area').value.trim(),
-            bio: "", // Removed bio field, using experience_years
+            bio: "", 
             experience_years: parseInt(document.getElementById('host-experience').value) || 0,
-            why_host: "", // Deprecated, sending empty
-            avatar_url: hostAvatarBase64
+            why_host: "", 
+            avatar_url: hostAvatarBase64 // Changed backend to accept URL string
         };
 
         const btn = document.getElementById('submit-btn');

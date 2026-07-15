@@ -597,20 +597,31 @@
         const file = event.target.files[0];
         if (!file) return;
 
-        if (file.size > 2 * 1024 * 1024) {
-            showToast("File size must be under 2MB", true);
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("File size must be under 5MB", true);
             event.target.value = '';
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            eventImageBase64 = e.target.result;
+        // Show loading state
+        document.getElementById('image-upload-prompt').innerText = "Uploading...";
+
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            if (!res.ok) throw new Error("Upload failed");
+            const data = await res.json();
+            eventImageBase64 = data.url; // store URL but keep variable name to minimize changes
+
             document.getElementById('image-upload-prompt').classList.add('hidden');
+            document.getElementById('image-upload-prompt').innerText = "Click to upload a cover photo";
             document.getElementById('image-preview-container').classList.remove('hidden');
-            document.getElementById('image-preview').src = eventImageBase64;
+            document.getElementById('image-preview').src = data.url;
+        } catch (e) {
+            showToast("Image upload failed.", true);
+            document.getElementById('image-upload-prompt').innerText = "Click to upload a cover photo";
         }
-        reader.readAsDataURL(file);
     }
 
     
@@ -644,24 +655,34 @@
         removeInput.value = 'true';
     }
 
-    function previewGalleryImage(event, index) {
+    async function previewGalleryImage(event, index) {
         const file = event.target.files[0];
         if (!file) return;
 
-        if (file.size > 2 * 1024 * 1024) {
-            showToast("File size must be under 2MB", true);
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("File size must be under 5MB", true);
             event.target.value = '';
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            extraImages[index] = e.target.result;
+        document.getElementById(`prompt-${index}`).innerText = "Uploading...";
+
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            if (!res.ok) throw new Error("Upload failed");
+            const data = await res.json();
+            extraImages[index] = data.url;
+
             document.getElementById(`prompt-${index}`).classList.add('hidden');
+            document.getElementById(`prompt-${index}`).innerText = "+ Add Image";
             document.getElementById(`preview-container-${index}`).classList.remove('hidden');
-            document.getElementById(`preview-${index}`).src = e.target.result;
+            document.getElementById(`preview-${index}`).src = data.url;
+        } catch (e) {
+            showToast("Image upload failed.", true);
+            document.getElementById(`prompt-${index}`).innerText = "+ Add Image";
         }
-        reader.readAsDataURL(file);
     }
 
     function addTimeInput() {
@@ -787,10 +808,10 @@
             location_area: area,
             is_recurring: bookingModel === 'session',
             included: included,
-            image_base64: eventImageBase64,
-            image_base64_2: extraImages[2],
-            image_base64_3: extraImages[3],
-            image_base64_4: extraImages[4],
+            image_url: eventImageBase64,
+            image_url_2: extraImages[2],
+            image_url_3: extraImages[3],
+            image_url_4: extraImages[4],
             youtube_link: document.getElementById('ev-youtube').value.trim()
         };
 

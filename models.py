@@ -26,11 +26,6 @@ class BookingCreate(BaseModel):
     gender:             Optional[str] = None
     payment_method:     Optional[str] = None         # "bkash", "nagad", "dbbl", or "upay"
     payment_sender_digits: Optional[str] = None      # last 2 digits
-    referred_by:        Optional[str] = None # referral code
-    interests:          Optional[str] = None # Acquisition: interests
-    expectations:       Optional[str] = None # Acquisition: expectations
-    wants_pickup:       bool = False
-    wants_dropoff:      bool = False
     vibe:               Optional[str] = None # Career, Travel, Philosophy
     coupon_code:        Optional[str] = None
     event_id:           Optional[int] = None
@@ -113,14 +108,8 @@ class TrackingResponse(BaseModel):
     payment_sender_digits: Optional[str] = None
     group_members: Optional[list] = [] # list of {name, phone, age, rating}
     rated_member_ids: Optional[list[int]] = [] # list of member ids already rated by this user
-    rejection_reason: Optional[str] = None
     assigned_group_id: Optional[int] = None
-    referral_code:     Optional[str] = None
     is_verified:       bool = False
-    interests:         Optional[str] = None
-    expectations:      Optional[str] = None
-    wants_pickup:      bool = False
-    wants_dropoff:     bool = False
     vibe:              Optional[str] = None
     discount_amount:   float = 0.0
 
@@ -133,10 +122,7 @@ class AdminBookingUpdate(BaseModel):
     payment_status: Optional[str] = None
     booking_status: Optional[str] = None
     admin_notes:    Optional[str] = None
-    rejection_reason: Optional[str] = None
     is_verified:    Optional[bool] = None
-    wants_pickup:   Optional[bool] = None
-    wants_dropoff:  Optional[bool] = None
 
     @field_validator("payment_status")
     @classmethod
@@ -390,10 +376,10 @@ class EventCreate(BaseModel):
     available_times: Optional[str] = None
     is_recurring: bool = False
     included: Optional[str] = None
-    image_base64: Optional[str] = None
-    image_base64_2: Optional[str] = None
-    image_base64_3: Optional[str] = None
-    image_base64_4: Optional[str] = None
+    image_url: Optional[str] = None
+    image_url_2: Optional[str] = None
+    image_url_3: Optional[str] = None
+    image_url_4: Optional[str] = None
     remove_image_2: bool = False
     remove_image_3: bool = False
     remove_image_4: bool = False

@@ -8,11 +8,13 @@ import hmac
 import base64
 import httpx
 import re
+import uuid
+import boto3
 from typing import Optional
 from pydantic import BaseModel
 
 from datetime import datetime, timedelta, time
-from fastapi import FastAPI, HTTPException, Header, Query, Request, Response, Body, Cookie, Depends
+from fastapi import FastAPI, HTTPException, Header, Query, Request, Response, Body, Cookie, Depends, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -40,9 +42,36 @@ app = FastAPI(title="DekhaHok API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Cloudflare R2 Configuration
+R2_ACCESS_KEY_ID = "6c4c93436c1faf807e4358b023020876"
+R2_SECRET_ACCESS_KEY = "0eebdf38ed686870bdd4eba3f11a758bcf62b70390dbe4ffb2cdd9dcb37d0942"
+R2_ENDPOINT_URL = "https://761a4d4f3e425cbaef3c8d97bae1b082.r2.cloudflarestorage.com"
+R2_BUCKET_NAME = "dekhahok-assets"
+R2_PUBLIC_URL = "https://assets.dekhahok.com"
+
+s3_client = boto3.client(
+    "s3",
+    endpoint_url=R2_ENDPOINT_URL,
+    aws_access_key_id=R2_ACCESS_KEY_ID,
+    aws_secret_access_key=R2_SECRET_ACCESS_KEY,
+    region_name="auto"
+)
+
+def upload_to_r2(file_content: bytes, original_filename: str, folder: str = "uploads") -> str:
+    ext = original_filename.split(".")[-1] if "." in original_filename else "jpg"
+    unique_filename = f"{folder}/{uuid.uuid4().hex}.{ext}"
+    s3_client.put_object(
+        Bucket=R2_BUCKET_NAME,
+        Key=unique_filename,
+        Body=file_content,
+        ContentType=f"image/{ext}" if ext in ["jpg", "jpeg", "png", "webp", "gif"] else "application/octet-stream"
+    )
+    return f"{R2_PUBLIC_URL}/{unique_filename}"
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
@@ -1246,33 +1275,32 @@ def update_user_profile(payload: dict = Body(...), current_user = Depends(get_cu
     if not current_user:
         raise HTTPException(status_code=401, detail="Please log in to update your profile.")
         
-    avatar_base64 = payload.get("avatar_base64")
+    avatar_url = payload.get("avatar_url") or payload.get("avatar_base64")
     full_name = payload.get("full_name")
     experience_years = payload.get("experience_years")
     
-    if not avatar_base64 and not full_name and experience_years is None:
+    if not avatar_url and not full_name and experience_years is None:
         raise HTTPException(status_code=400, detail="No updates provided.")
     
     conn = get_conn()
     try:
         cursor = conn.cursor()
         
-        if avatar_base64 and full_name:
+        if avatar_url and full_name:
             cursor.execute(
                 "UPDATE users SET avatar_url = %s, full_name = %s WHERE id = %s",
-                (avatar_base64, full_name, current_user["user_id"])
+                (avatar_url, full_name, current_user["user_id"])
             )
-        elif avatar_base64:
+        elif avatar_url:
             cursor.execute(
                 "UPDATE users SET avatar_url = %s WHERE id = %s",
-                (avatar_base64, current_user["user_id"])
+                (avatar_url, current_user["user_id"])
             )
         elif full_name:
             cursor.execute(
                 "UPDATE users SET full_name = %s WHERE id = %s",
                 (full_name, current_user["user_id"])
             )
-            
         if experience_years is not None and current_user["role"] in ["host", "admin"]:
             cursor.execute(
                 "UPDATE hosts SET experience_years = %s WHERE user_id = %s",
@@ -1280,11 +1308,38 @@ def update_user_profile(payload: dict = Body(...), current_user = Depends(get_cu
             )
             
         conn.commit()
-        cursor.close()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
+        cursor.close()
         release_conn(conn)
-    
+        
     return {"message": "Profile updated successfully"}
+@app.post("/api/upload")
+async def upload_image(
+    file: UploadFile = File(...), 
+    current_user = Depends(get_current_user),
+    x_admin_key: Optional[str] = Header(None)
+):
+    """Unified endpoint to upload images to Cloudflare R2"""
+    role = None
+    if x_admin_key == ADMIN_KEY:
+        role = "admin"
+    elif current_user:
+        role = current_user["role"]
+    else:
+        raise HTTPException(status_code=401, detail="Please log in to upload files.")
+        
+    contents = await file.read()
+    if len(contents) > 5 * 1024 * 1024: # 5MB limit
+        raise HTTPException(status_code=400, detail="File too large (max 5MB).")
+        
+    try:
+        url = upload_to_r2(contents, file.filename, folder=role + "s")
+        return {"url": url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @app.get("/api/users/{user_id}/avatar")
 def get_user_avatar(user_id: int):
@@ -1505,9 +1560,9 @@ def create_booking(payload: BookingCreate, current_user = Depends(get_current_us
                          preferred_date, preferred_time, venue_type,
                          conversation_style, preferred_people, current_location, preferred_location, 
                          preferred_meeting_point, payment_method, payment_sender_digits, fee_amount,
-                         interests, expectations, wants_pickup, wants_dropoff, vibe, discount_amount, 
+                         vibe, discount_amount, 
                          coupon_code, payment_status, booking_status, gender, event_id, host_id, user_id)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     RETURNING id
                     """,
                     (
@@ -1528,10 +1583,6 @@ def create_booking(payload: BookingCreate, current_user = Depends(get_current_us
                         payload.payment_method,
                         payload.payment_sender_digits,
                         fee,
-                        payload.interests,
-                        payload.expectations,
-                        payload.wants_pickup,
-                        payload.wants_dropoff,
                         payload.vibe,
                         discount,
                         coupon_cleaned or None,
@@ -1853,7 +1904,7 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
             payload.starting_rate, payload.service_area, payload.occasion_types, payload.portfolio_url, payload.availability_note,
             payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours,
             payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status,
-            payload.image_base64, payload.image_base64_2, payload.image_base64_3, payload.image_base64_4, payload.youtube_link, payload.is_recurring,
+            payload.image_url, payload.image_url_2, payload.image_url_3, payload.image_url_4, payload.youtube_link, payload.is_recurring,
             payload.start_time, payload.end_time, payload.available_days, payload.available_times
         ))
         event_id = cursor.fetchone()[0]
@@ -1913,25 +1964,25 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             payload.start_time, payload.end_time, payload.available_days, payload.available_times
         ]
         
-        if payload.image_base64:
+        if payload.image_url:
             update_fields.append("image_url=%s")
-            update_values.append(payload.image_base64)
+            update_values.append(payload.image_url)
             
-        if payload.image_base64_2:
+        if payload.image_url_2:
             update_fields.append("image_url_2=%s")
-            update_values.append(payload.image_base64_2)
+            update_values.append(payload.image_url_2)
         elif payload.remove_image_2:
             update_fields.append("image_url_2=NULL")
             
-        if payload.image_base64_3:
+        if payload.image_url_3:
             update_fields.append("image_url_3=%s")
-            update_values.append(payload.image_base64_3)
+            update_values.append(payload.image_url_3)
         elif payload.remove_image_3:
             update_fields.append("image_url_3=NULL")
             
-        if payload.image_base64_4:
+        if payload.image_url_4:
             update_fields.append("image_url_4=%s")
-            update_values.append(payload.image_base64_4)
+            update_values.append(payload.image_url_4)
         elif payload.remove_image_4:
             update_fields.append("image_url_4=NULL")
             
@@ -2155,8 +2206,7 @@ def track_booking(tracking_id: str):
                 b.preferred_time, b.venue_type, b.booking_status, b.payment_status, b.fee_amount,
                 g.venue_name, g.meet_date, g.meet_time, b.current_location, b.preferred_location,
                 b.payment_method, b.payment_sender_digits, b.preferred_meeting_point,
-                b.id, g.id, b.rejection_reason, b.referral_code, b.is_verified,
-                b.interests, b.expectations, b.wants_pickup, b.wants_dropoff, b.vibe, b.discount_amount
+                b.id, g.id, b.is_verified, b.vibe, b.discount_amount
             FROM bookings b
             LEFT JOIN group_members gm ON gm.booking_id = b.id
             LEFT JOIN meetup_groups g  ON g.id = gm.group_id
@@ -2239,16 +2289,10 @@ def track_booking(tracking_id: str):
         preferred_meeting_point=row[16],
         group_members=group_members,
         rated_member_ids=rated_member_ids,
-        rejection_reason=row[19],
         assigned_group_id=row[18],
-        referral_code=row[20],
-        is_verified=row[21],
-        interests=row[22],
-        expectations=row[23],
-        wants_pickup=row[24],
-        wants_dropoff=row[25],
-        vibe=row[26],
-        discount_amount=float(row[27] or 0.0)
+        is_verified=row[19],
+        vibe=row[20],
+        discount_amount=float(row[21] or 0.0)
     )
 
 
@@ -2414,15 +2458,15 @@ def list_blogs():
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC")
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, author_title, author_image_url, created_at, is_pivoted FROM blogs WHERE status = 'published' ORDER BY is_pivoted DESC, created_at DESC")
         rows = cursor.fetchall()
         return [
             BlogResponse(
                 id=r[0], title=r[1], slug=r[2], content=r[3], 
                 keywords=r[4], seo_description=r[5], image_url=r[6], 
                 image_alt=r[7], badge_text=r[8], likes=r[9], shares=r[10],
-                status=r[11], author=r[12], created_at=str(r[13]),
-                is_pivoted=r[14]
+                status=r[11], author=r[12], author_title=r[13], author_image_url=r[14], created_at=str(r[15]),
+                is_pivoted=r[16]
             ) for r in rows
         ]
     finally:
@@ -2434,7 +2478,7 @@ def get_blog(slug: str):
     conn = get_conn()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, created_at, is_pivoted FROM blogs WHERE slug = %s", (slug,))
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, author_title, author_image_url, created_at, is_pivoted FROM blogs WHERE slug = %s", (slug,))
         row = cursor.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="Blog not found")
@@ -2442,8 +2486,8 @@ def get_blog(slug: str):
             id=row[0], title=row[1], slug=row[2], content=row[3], 
             keywords=row[4], seo_description=row[5], image_url=row[6], 
             image_alt=row[7], badge_text=row[8], likes=row[9], shares=row[10],
-            status=row[11], author=row[12], created_at=str(row[13]),
-            is_pivoted=row[14]
+            status=row[11], author=row[12], author_title=row[13], author_image_url=row[14], created_at=str(row[15]),
+            is_pivoted=row[16]
         )
     finally:
         release_conn(conn)
@@ -2899,8 +2943,8 @@ def admin_list_bookings(
                    b.preferred_date, b.preferred_time, b.venue_type, b.conversation_style, b.preferred_people,
                    b.current_location, b.preferred_location, b.preferred_meeting_point,
                    b.fee_amount, b.payment_status, b.payment_method, b.payment_sender_digits, b.booking_status,
-                   b.assigned_group_id, b.admin_notes, b.is_verified, b.wants_pickup, b.wants_dropoff, b.created_at,
-                   b.interests, b.expectations, b.event_id, e.title as event_title,
+                   b.assigned_group_id, b.admin_notes, b.is_verified, b.created_at,
+                   b.event_id, e.title as event_title,
                    b.booking_model
             FROM bookings b
             LEFT JOIN events e ON b.event_id = e.id
@@ -2939,14 +2983,10 @@ def admin_list_bookings(
             "assigned_group_id": r[20],
             "admin_notes":       r[21],
             "is_verified":       r[22],
-            "wants_pickup":      r[23],
-            "wants_dropoff":     r[24],
-            "created_at":        str(r[25]),
-            "interests":         r[26],
-            "expectations":      r[27],
-            "event_id":          r[28],
-            "event_title":       r[29] or "DekhaHok Circle Adda",
-            "booking_model":     r[30] or "event",  # Phase 1: booking model field
+            "created_at":        str(r[23]),
+            "event_id":          r[24],
+            "event_title":       r[25] or "DekhaHok Circle Adda",
+            "booking_model":     r[26] or "event",  # Phase 1: booking model field
         }
         for r in rows
     ]
@@ -2963,10 +3003,7 @@ def admin_update_booking(
     if payload.payment_status is not None: updates["payment_status"] = payload.payment_status
     if payload.booking_status is not None: updates["booking_status"] = payload.booking_status
     if payload.admin_notes    is not None: updates["admin_notes"]    = payload.admin_notes
-    if payload.rejection_reason is not None: updates["rejection_reason"] = payload.rejection_reason
     if payload.is_verified is not None: updates["is_verified"] = payload.is_verified
-    if payload.wants_pickup is not None: updates["wants_pickup"] = payload.wants_pickup
-    if payload.wants_dropoff is not None: updates["wants_dropoff"] = payload.wants_dropoff
 
     if not updates:
         raise HTTPException(status_code=400, detail="Nothing to update.")
@@ -3509,6 +3546,26 @@ def admin_delete_location(location_id: int, x_admin_key: str = Header(...)):
         release_conn(conn)
     return {"message": "Location deleted."}
 
+@app.get("/api/admin/blogs", response_model=list[BlogResponse])
+def admin_list_blogs(x_admin_key: str = Header(...)):
+    require_admin(x_admin_key)
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, title, slug, content, keywords, seo_description, image_url, image_alt, badge_text, likes, shares, status, author, author_title, author_image_url, created_at, is_pivoted FROM blogs ORDER BY is_pivoted DESC, created_at DESC")
+        rows = cursor.fetchall()
+        return [
+            BlogResponse(
+                id=r[0], title=r[1], slug=r[2], content=r[3], 
+                keywords=r[4], seo_description=r[5], image_url=r[6], 
+                image_alt=r[7], badge_text=r[8], likes=r[9], shares=r[10],
+                status=r[11], author=r[12], author_title=r[13], author_image_url=r[14], created_at=str(r[15]),
+                is_pivoted=r[16]
+            ) for r in rows
+        ]
+    finally:
+        release_conn(conn)
+
 
 @app.post("/api/admin/blogs", response_model=BlogResponse)
 def admin_create_blog(payload: BlogCreate, x_admin_key: str = Header(...)):
@@ -3928,7 +3985,7 @@ def book_session(payload: SessionBookCreate, dh_session: Optional[str] = Cookie(
         user_id = user["user_id"] if user else None
         
         cursor.execute("""
-            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, payment_method, payment_sender_digits, fee_amount, booking_model, slot_id, group_size, interests, preferred_date, venue_type)
+            INSERT INTO bookings (tracking_id, user_id, event_id, name, phone, email, booking_status, payment_status, payment_method, payment_sender_digits, fee_amount, booking_model, slot_id, group_size, admin_notes, preferred_date, venue_type)
             VALUES (%s, %s, %s, %s, %s, %s, 'confirmed', 'unpaid', %s, %s, %s, 'session', %s, 1, %s, %s, 'na')
             RETURNING id
         """, (tracking_id, user_id, payload.event_id, payload.name, payload.phone, payload.email, payload.payment_method, payload.payment_sender_digits, fee, payload.slot_id, payload.message, slot_date))

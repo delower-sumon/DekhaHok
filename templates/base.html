@@ -682,12 +682,14 @@
 
         // --- User Avatar Modal Javascript ---
         let userAvatarBase64 = "";
+        let userAvatarFile = null;
 
         function openAvatarModal() {
             const modal = document.getElementById('avatar-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             userAvatarBase64 = "";
+            userAvatarFile = null;
             document.getElementById('btn-save-avatar').disabled = true;
             document.getElementById('avatar-preview-img').src = "{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name if user else '' }}";
         }
@@ -701,6 +703,8 @@
         function previewUserAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
+            
+            userAvatarFile = file;
 
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -713,14 +717,44 @@
 
         async function updateUserProfile() {
             const newName = document.getElementById('user-profile-name').value.trim();
-            if (!userAvatarBase64 && !newName) return;
+            if (!userAvatarFile && !newName) return;
 
             const btn = document.getElementById('btn-save-profile');
             btn.disabled = true;
             btn.textContent = "Saving...";
 
+            let avatarUrl = null;
+            if (userAvatarFile) {
+                btn.textContent = "Uploading Image...";
+                const formData = new FormData();
+                formData.append('file', userAvatarFile);
+
+                try {
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!uploadRes.ok) {
+                        const err = await uploadRes.json();
+                        showToast(err.detail || "Image upload failed", "error");
+                        btn.disabled = false;
+                        btn.textContent = "Save Changes";
+                        return;
+                    }
+                    const uploadData = await uploadRes.json();
+                    avatarUrl = uploadData.url;
+                } catch (e) {
+                    showToast("Error uploading image.", "error");
+                    btn.disabled = false;
+                    btn.textContent = "Save Changes";
+                    return;
+                }
+            }
+
+            btn.textContent = "Saving Profile...";
+
             let payload = {};
-            if (userAvatarBase64) payload.avatar_base64 = userAvatarBase64;
+            if (avatarUrl) payload.avatar_url = avatarUrl;
             if (newName) payload.full_name = newName;
             
             const expEl = document.getElementById('user-profile-experience');

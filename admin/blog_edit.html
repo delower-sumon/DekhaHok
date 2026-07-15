@@ -208,26 +208,62 @@
             });
         }
 
-        function handleBlogImageUpload(event) {
+        async function handleBlogImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            document.getElementById('blogImageStatus').textContent = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('blogImage').value = e.target.result;
-            };
-            reader.readAsDataURL(file);
+            if (file.size > 5 * 1024 * 1024) {
+                toast("File size must be under 5MB", true);
+                event.target.value = '';
+                return;
+            }
+            document.getElementById('blogImageStatus').textContent = "Uploading...";
+            
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            try {
+                const res = await adminFetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!res) throw new Error("Upload failed");
+                const data = await res.json();
+                document.getElementById('blogImage').value = data.url;
+                document.getElementById('blogImageStatus').textContent = "Uploaded: " + file.name;
+            } catch (e) {
+                toast("Image upload failed.", true);
+                document.getElementById('blogImageStatus').textContent = "Upload failed.";
+                event.target.value = '';
+            }
         }
 
-        function handleAuthorImageUpload(event) {
+        async function handleAuthorImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            document.getElementById('blogAuthorImageStatus').textContent = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('blogAuthorImage').value = e.target.result;
-            };
-            reader.readAsDataURL(file);
+            if (file.size > 5 * 1024 * 1024) {
+                toast("File size must be under 5MB", true);
+                event.target.value = '';
+                return;
+            }
+            document.getElementById('blogAuthorImageStatus').textContent = "Uploading...";
+            
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            try {
+                const res = await adminFetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!res) throw new Error("Upload failed");
+                const data = await res.json();
+                document.getElementById('blogAuthorImage').value = data.url;
+                document.getElementById('blogAuthorImageStatus').textContent = "Uploaded: " + file.name;
+            } catch (e) {
+                toast("Image upload failed.", true);
+                document.getElementById('blogAuthorImageStatus').textContent = "Upload failed.";
+                event.target.value = '';
+            }
         }
 
         // Load Existing Data
@@ -236,7 +272,7 @@
         }
 
         async function loadBlogData() {
-            const res = await adminFetch('/api/blogs');
+            const res = await adminFetch('/api/admin/blogs');
             if (!res) return;
             const blogs = await res.json();
             const b = blogs.find(bl => bl.id == targetId);
@@ -266,7 +302,7 @@
                 document.getElementById('blogAuthorImageStatus').textContent = "Existing photo loaded";
             }
 
-            quill.clipboard.dangerouslyPasteHTML(b.content || '');
+            quill.root.innerHTML = b.content || '';
         }
 
         async function saveBlog() {

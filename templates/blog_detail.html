@@ -245,7 +245,10 @@
 
 {% block extra_scripts %}
 <script>
-    lucide.createIcons();
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 
     const BLOG_ID = parseInt('{{ blog.id }}', 10);
     let liked = localStorage.getItem('liked_blog_' + BLOG_ID) === '1';
@@ -284,6 +287,7 @@
     async function loadComments() {
         try {
             const res = await fetch('/api/blogs/' + BLOG_ID + '/comments');
+            if (!res.ok) throw new Error('Failed to fetch comments');
             const comments = await res.json();
             const list = document.getElementById('commentsList');
             document.getElementById('commentCount').textContent = comments.length;
@@ -344,5 +348,6 @@
     }
 
     loadComments();
+});
 </script>
 {% endblock %}
