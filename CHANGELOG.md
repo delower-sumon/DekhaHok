@@ -2,6 +2,20 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-15] - Cloudflare R2 Image Migration & Schema Cleanup
+
+### Added
+- **Cloudflare R2 Integration**: Migrated image uploads across the entire application to use Cloudflare R2 object storage natively instead of bloating the PostgreSQL database with base64 strings.
+- **Unified Upload API**: Implemented a central `/api/upload` endpoint powered by `boto3` that processes all image uploads (user avatars, event covers, gallery images, blog posts) and returns a lightweight CDN URL.
+
+### Changed
+- **Frontend Pre-flight Uploads**: Upgraded the upload architecture on `admin/blog_edit.html`, `host_event_create.html`, `host_event_edit.html`, `host_apply.html`, and `base.html`. The frontend now seamlessly streams files to R2 in the background upon selection, greatly reducing the payload size of primary form submissions.
+- **Pydantic Schemas**: Updated `EventCreate` and related processing logic to map to `image_url` instead of `image_base64`.
+
+### Removed
+- **Legacy Database Columns**: Executed a schema cleanup by stripping outdated operational columns (`package_tier`, `wants_pickup`, `wants_dropoff`, `interests`, `expectations`) from `events`, `bookings`, and `hosts` tables, subsequently removing their references from application models to ensure faster query processing and prevent internal server errors.
+
+
 ## [2026-07-13] - Frontend UI Polish & Dashboard Fixes
 
 ### Added
