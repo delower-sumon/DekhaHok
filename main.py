@@ -52,7 +52,7 @@ R2_ACCESS_KEY_ID = "6c4c93436c1faf807e4358b023020876"
 R2_SECRET_ACCESS_KEY = "0eebdf38ed686870bdd4eba3f11a758bcf62b70390dbe4ffb2cdd9dcb37d0942"
 R2_ENDPOINT_URL = "https://761a4d4f3e425cbaef3c8d97bae1b082.r2.cloudflarestorage.com"
 R2_BUCKET_NAME = "dekhahok-assets"
-R2_PUBLIC_URL = "https://assets.dekhahok.com"
+R2_PUBLIC_URL = "https://cdn.dekhahok.com"
 
 s3_client = boto3.client(
     "s3",
