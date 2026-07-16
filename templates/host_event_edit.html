@@ -133,6 +133,17 @@
                                 </div>
                             </div>
                         </label>
+
+                        <label class="cursor-pointer" {% if user.email != 'picks@dekhahok.com' and user.role != 'admin' %}style="display:none;"{% endif %}>
+                            <input type="radio" name="ev-booking-model" value="external" class="peer sr-only" {% if event.booking_model == 'external' %}checked{% endif %}>
+                            <div class="p-4 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all flex items-start gap-4">
+                                <div class="text-3xl">🔗</div>
+                                <div>
+                                    <h4 class="font-bold text-zinc-900 text-sm">External Booking Link</h4>
+                                    <p class="text-xs text-zinc-500 mt-0.5">Redirect users to external booking page</p>
+                                </div>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -279,6 +290,25 @@
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-zinc-700">Service Area *</label>
                         <input type="text" id="ev-service-area" value="{{ event.service_area }}" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Dhaka City">
+                    </div>
+                </div>
+
+                <div id="group-external" class="space-y-4 {% if event.booking_model != 'external' %}hidden{% endif %}">
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">External Booking URL *</label>
+                        <input type="url" id="ev-external-link" value="{{ event.external_link or '' }}" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="https://example.com/events/123">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Display Price (BDT)</label>
+                            <input type="number" id="ev-external-price" min="0" step="1" value="{{ event.price_per_person or 0 }}" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="0">
+                        </div>
+                        <div class="flex items-center pt-6">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="ev-hide-price" class="w-5 h-5 rounded text-emerald-600 focus:ring-emerald-500 border-zinc-300" {% if event.hide_price %}checked{% endif %}>
+                                <span class="text-sm font-bold text-zinc-700">Hide Price on Card</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -490,6 +520,46 @@
             if(existingData.included && existingData.included.length > 0) {
                 document.getElementById('ev-includes').value = existingData.included.join("\n");
             }
+
+            // Map old categories to new ones and set radio
+            if(existingData.category) {
+                let cat = existingData.category.toLowerCase();
+                const isTour = ['travel', 'tour', 'local_exploration'].includes(cat);
+                const isWorkshop = ['workshops_learning', 'learning_mentorship', 'career_startups', 'creative_skills_lessons', 'health_wellness_coaching'].includes(cat);
+                const isSports = ['sports', 'sports_fitness'].includes(cat);
+                const isShow = ['musicians_bands', 'performers_stage', 'visual_live_art', 'entertainment_socials', 'entertainment', 'performance'].includes(cat);
+                const isCommunity = ['community', 'networking'].includes(cat);
+                
+                let targetCat = 'experience';
+                if(isTour) targetCat = 'tour';
+                else if(isWorkshop) targetCat = 'workshop';
+                else if(isSports) targetCat = 'experience'; 
+                else if(isShow) targetCat = 'performance';
+                else if(isCommunity) targetCat = 'community';
+                else if(cat === 'session') targetCat = 'session';
+                else if(cat === 'networking') targetCat = 'networking';
+
+                const catRadio = document.querySelector(`input[name="ev-category"][value="${targetCat}"]`);
+                if(catRadio) catRadio.checked = true;
+            }
+
+            // Set booking model
+            if (existingData.booking_model) {
+                const modelRadio = document.querySelector(`input[name="ev-booking-model"][value="${existingData.booking_model}"]`);
+                if(modelRadio) {
+                    modelRadio.checked = true;
+                    // Trigger change event to show/hide relevant sections
+                    modelRadio.dispatchEvent(new Event('change'));
+                }
+            }
+
+            if(existingData.external_link && document.getElementById('ev-external-link')) {
+                document.getElementById('ev-external-link').value = existingData.external_link;
+            }
+            if(existingData.hide_price !== undefined && document.getElementById('ev-hide-price')) {
+                document.getElementById('ev-hide-price').checked = existingData.hide_price;
+            }
+
             
             if(existingData.image_url) {
                 document.getElementById('image-upload-prompt').classList.add('hidden');
@@ -522,11 +592,14 @@
                 document.getElementById('group-hire').classList.add('hidden');
                 document.getElementById('group-session').classList.add('hidden');
                 document.getElementById('group-standard').classList.add('hidden');
+                document.getElementById('group-external').classList.add('hidden');
 
                 if(val === 'hire') {
                     document.getElementById('group-hire').classList.remove('hidden');
                 } else if(val === 'session') {
                     document.getElementById('group-session').classList.remove('hidden');
+                } else if(val === 'external') {
+                    document.getElementById('group-external').classList.remove('hidden');
                 } else {
                     document.getElementById('group-standard').classList.remove('hidden');
                 }
@@ -601,7 +674,7 @@
         circle3.classList.remove('bg-emerald-600', 'text-white');
     }
 
-    function previewImage(event) {
+    async function previewImage(event) {
         const file = event.target.files[0];
         if (!file) return;
 
@@ -663,7 +736,7 @@
         removeInput.value = 'true';
     }
 
-    function previewGalleryImage(event, index) {
+    async function previewGalleryImage(event, index) {
         const file = event.target.files[0];
         if (!file) return;
 
@@ -761,6 +834,8 @@
             advanceNotice = parseInt(document.getElementById('ev-advance-notice').value) || 24;
             startingRate = parseFloat(document.getElementById('ev-starting-rate').value) || 0;
             serviceArea = document.getElementById('ev-service-area').value;
+        } else if (bookingModel === 'external') {
+            price = parseFloat(document.getElementById('ev-external-price').value) || 0;
         }
 
         const locationName = document.getElementById('ev-location').value.trim();
@@ -796,7 +871,9 @@
             location_area: area,
             is_recurring: bookingModel === 'session',
             included: included,
-            youtube_link: document.getElementById('ev-youtube').value.trim()
+            youtube_link: document.getElementById('ev-youtube').value.trim(),
+            external_link: bookingModel === 'external' ? document.getElementById('ev-external-link').value.trim() : null,
+            hide_price: bookingModel === 'external' ? document.getElementById('ev-hide-price').checked : false
         };
         
         if (eventImageBase64) {

@@ -80,7 +80,7 @@
                                 100</span>
                             <div
                                 class="flex items-center gap-1 text-[11px] font-bold text-emerald-800 leading-none px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">
-                                <span class="truncate max-w-[90px]">By {{ e.host_name.split(' ')[0] }}</span>
+                                <span class="truncate max-w-[90px]">{{ e.host_name if e.host_name in ['DekhaHok Picks', 'DekhaHok Pics'] else e.host_name.split(' ')[:2] | join(' ') }}</span>
                                 {% if e.host_verification_status == 'VERIFIED' %}
                                 <svg class="w-[11px] h-[11px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24"
                                     fill="currentColor" title="Verified Host">
@@ -92,8 +92,7 @@
                         </div>
                         {% else %}
                         <div class="flex items-center gap-1">
-                            <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By {{
-                                e.host_name.split(' ')[0] }}</span>
+                            <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">{{ e.host_name if e.host_name in ['DekhaHok Picks', 'DekhaHok Pics'] else e.host_name.split(' ')[:2] | join(' ') }}</span>
                             {% if e.host_verification_status == 'VERIFIED' %}
                             <svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24"
                                 fill="currentColor" title="Verified Host">
@@ -103,7 +102,9 @@
                             {% endif %}
                         </div>
                         {% endif %}
-                        {% if e.host_profession == 'Official Host' %}
+                        {% if e.host_profession in ['DekhaHok Picks', 'DekhaHok Pics'] %}
+                        <span class="text-[9px] font-black text-white bg-gradient-to-r from-indigo-600 to-violet-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-indigo-400/50 tracking-widest uppercase"><i class="fa-solid fa-arrow-trend-up text-[8px] text-indigo-100"></i> TRENDING</span>
+                        {% elif e.host_profession == 'Official Host' %}
                         <span class="text-[9px] font-black text-white bg-gradient-to-r from-emerald-600 to-teal-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-emerald-400/50 tracking-widest uppercase"><i class="fa-solid fa-crown text-[8px] text-emerald-100"></i> ORIGINALS</span>
                         {% elif e.host_profession %}
                         <span
@@ -123,17 +124,26 @@
     <!-- Footer Checkout CTA -->
     <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
         <span class="font-black text-emerald-800 text-base">
-            {% if e.booking_model == 'hire' %}
+            {% if e.hide_price %}
+                <span class="text-[11px] text-zinc-500 font-bold">See event page</span>
+            {% elif e.booking_model == 'hire' %}
                 {% set r = (e.starting_rate or e.price_per_person)|round|int %}{% if r == 0 %}Free{% else %}৳{{ r }}<span{% endif %} class="text-[10px] text-zinc-500 font-bold ml-0.5 align-bottom">min</span>
             {% else %}
                 {% set r = e.price_per_person|round|int %}{% if r == 0 %}Free{% else %}৳{{ r }}<span class="text-xs{% endif %} text-zinc-500 font-bold"> / person</span>
             {% endif %}
         </span>
+        {% if e.booking_model == 'external' and e.external_link %}
+        <a href="{{ e.external_link }}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] px-5 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center whitespace-nowrap">
+            View Event ↗
+        </a>
+        {% else %}
         <button onclick="event.stopPropagation(); openBooking(this.getAttribute('data-event-id'))"
             data-event-id="{{ e.id }}"
             class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] px-5 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center whitespace-nowrap">
             {% if is_sold_out %}Join Waitlist{% elif e.booking_model == 'hire' %}Submit Request{% elif e.booking_model == 'session' %}Reserve Spot{% else %}Book Ticket{% endif %}
         </button>
+        {% endif %}
     </div>
     </div>
     {% endmacro %}
@@ -187,20 +197,6 @@
                             Become a Host
                         </a>
 
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex -space-x-2">
-                            <div
-                                class="w-8 h-8 rounded-full bg-emerald-100 border-2 border-white flex items-center justify-center text-xs">
-                                📸</div>
-                            <div
-                                class="w-8 h-8 rounded-full bg-amber-100 border-2 border-white flex items-center justify-center text-xs">
-                                ☕</div>
-                            <div
-                                class="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs">
-                                💼</div>
-                        </div>
-                        <p class="text-xs sm:text-sm text-zinc-500">{{ total_members }} people have already joined.</p>
                     </div>
                 </div>
 
@@ -751,7 +747,7 @@
                         </div>
                         <div
                             class="p-6 pt-0 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400 mt-4">
-                            <span>By {{ b.author }}</span>
+                            <span>{{ b.author }}</span>
                             <span class="text-emerald-700 font-bold group-hover:underline">Read More</span>
                         </div>
                     </a>
@@ -1893,16 +1889,16 @@
                         ? `<div class="relative inline-block w-max mt-1 mb-0.5">
                                             <span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400" title="Honoring our founding hosts and community leaders. The first 100 hosts will receive long-term benefits and exclusive deals, including a free verified badge.">Founding 100</span>
                                             <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-800 leading-none px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">
-                                                <span class="truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
+                                                <span class="truncate max-w-[90px]">${['DekhaHok Picks', 'DekhaHok Pics'].includes(e.host_name) ? e.host_name : e.host_name.split(' ').slice(0, 2).join(' ')}</span>
                                                 ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[11px] h-[11px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
                                             </div>
                                         </div>`
                         : `<div class="flex items-center gap-1">
-                                            <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">By ${e.host_name.split(' ')[0]}</span>
+                                            <span class="text-[11px] font-bold text-zinc-700 truncate max-w-[90px]">${['DekhaHok Picks', 'DekhaHok Pics'].includes(e.host_name) ? e.host_name : e.host_name.split(' ').slice(0, 2).join(' ')}</span>
                                             ${e.host_verification_status === 'VERIFIED' ? '<svg class="w-[12px] h-[12px] text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Verified Host"><path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.86l-4.24-4.24 1.41-1.41 2.83 2.83 7.07-7.07 1.41 1.41-8.48 8.48z" /></svg>' : ''}
                                         </div>`
                     }
-                                    ${e.host_profession === 'Official Host' ? '<span class="text-[9px] font-black text-white bg-gradient-to-r from-emerald-600 to-teal-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-emerald-400/50 tracking-widest uppercase"><i class="fa-solid fa-crown text-[8px] text-emerald-100"></i> ORIGINALS</span>' : (e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-1 block">' + e.host_profession + '</span>' : '')}
+                                    ${['DekhaHok Picks', 'DekhaHok Pics'].includes(e.host_profession) ? '<span class="text-[9px] font-black text-white bg-gradient-to-r from-indigo-600 to-violet-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-indigo-400/50 tracking-widest uppercase"><i class="fa-solid fa-arrow-trend-up text-[8px] text-indigo-100"></i> TRENDING</span>' : (e.host_profession === 'Official Host' ? '<span class="text-[9px] font-black text-white bg-gradient-to-r from-emerald-600 to-teal-500 px-2.5 py-0.5 rounded-full mt-1 inline-flex items-center gap-1 shadow-sm ring-1 ring-emerald-400/50 tracking-widest uppercase"><i class="fa-solid fa-crown text-[8px] text-emerald-100"></i> ORIGINALS</span>' : (e.host_profession ? '<span class="text-[9.5px] text-zinc-400 font-semibold truncate max-w-[110px] leading-none mt-1 block">' + e.host_profession + '</span>' : ''))}
                                 </div>
                             </div>
                             <span class="px-2.5 py-1 border text-[9px] font-black rounded-xl uppercase tracking-tight shadow-sm ${badgeClass}">
@@ -1914,10 +1910,16 @@
 
                 <!-- Footer Checkout CTA -->
                 <div class="p-5 pt-0 mt-4 flex items-center justify-between border-t border-zinc-50 pt-4">
-                    <span class="font-black text-emerald-800 text-base">${e.booking_model === 'hire' ? Math.round(e.starting_rate || e.price_per_person) === 0 ? 'Free' : '৳' + Math.round(e.starting_rate || e.price_per_person) + '<span class="text-xs text-zinc-500 font-bold"> hire rate</span>' : Math.round(e.price_per_person) === 0 ? 'Free' : '৳' + Math.round(e.price_per_person) + '<span class="text-xs text-zinc-500 font-bold"> / person</span>'}</span>
+                    <span class="font-black text-emerald-800 text-base">${e.hide_price ? '<span class="text-[11px] text-zinc-500 font-bold">See event page</span>' : (e.booking_model === 'hire' ? Math.round(e.starting_rate || e.price_per_person) === 0 ? 'Free' : '৳' + Math.round(e.starting_rate || e.price_per_person) + '<span class="text-[10px] text-zinc-500 font-bold ml-0.5 align-bottom">min</span>' : Math.round(e.price_per_person) === 0 ? 'Free' : '৳' + Math.round(e.price_per_person) + '<span class="text-xs text-zinc-500 font-bold"> / person</span>')}</span>
+                    ${e.booking_model === 'external' && e.external_link ? `
+                    <a href="${e.external_link}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] px-5 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center whitespace-nowrap">
+                        View Event ↗
+                    </a>
+                    ` : `
                     <button onclick="event.stopPropagation(); openBooking(${e.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] px-5 py-2.5 rounded-xl transition shadow active:scale-95 uppercase text-center whitespace-nowrap">
                         ${isSoldOut ? 'Join Waitlist' : (e.booking_model === 'hire' ? 'Submit Request' : (e.booking_model === 'session' ? 'Reserve Spot' : 'Book Ticket'))}
                     </button>
+                    `}
                 </div>
             `;
                 grid.appendChild(card);

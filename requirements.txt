@@ -5,5 +5,4 @@ python-dotenv==1.0.1
 pydantic[email]==2.12.5
 gunicorn==22.0.0
 httpx==0.28.1
-
-
+boto3==1.43.49

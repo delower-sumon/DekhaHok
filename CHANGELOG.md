@@ -2,6 +2,20 @@
 
 All notable changes to the DekhaHok main branch will be documented in this file.
 
+## [2026-07-16] - External Event Flow & Host Edit Fixes
+
+### Added
+- **External Booking Model**: Introduced a new `external` booking model, restricted to the `DekhaHok Picks` account and admin users, allowing for redirection to external event pages.
+- **External Event Panel**: Built a custom panel in the event details page (`booking.html`) that replaces the standard booking flow with a clear, dynamic call-to-action redirecting users to the external provider's booking page.
+
+### Changed
+- **Host Name Display**: Polished event cards across `index.html` and `booking.html` to gracefully remove "By " prefixes and accurately display the host's first and last name (up to two words) instead of strictly truncating at the first word.
+
+### Fixed
+- **Host Dashboard Data Fetching**: Patched the backend SQL query in `main.py` for `/host/events/{event_id}/edit` to properly fetch `external_link` and `hide_price`.
+- **Legacy Category Mapping**: Restored correct JavaScript mapping logic in `host_event_edit.html` that ensures older events (with legacy categories like `sports_fitness`) correctly populate the simplified UI radio buttons (`experience`, `performance`, etc.) upon editing.
+
+
 ## [2026-07-15] - Cloudflare R2 Image Migration & Schema Cleanup
 
 ### Added

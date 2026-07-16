@@ -311,7 +311,7 @@ def serve_frontend(request: Request):
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
                    h.profession as host_profession, h.experience_years as host_experience, h.is_founding as host_is_founding, e.booking_model,
-                   e.starting_rate
+                   e.starting_rate, e.external_link, e.hide_price
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -334,6 +334,8 @@ def serve_frontend(request: Request):
                 "host_is_founding": bool(r[21]),
                 "booking_model": r[22] or "ticketed",
                 "starting_rate": float(r[23]) if r[23] else 0,
+                "external_link": r[24] or "",
+                "hide_price": bool(r[25]) if len(r) > 25 else False,
                 "event_date_formatted": local_time_filter(r[10]) if r[10] else "TBA"
             })
             
@@ -447,7 +449,7 @@ def serve_booking_page(request: Request, event_id: int):
         conn.commit()
 
         # 1. Fetch Event details for SEO tags and fallback
-        cursor.execute("SELECT id, title, description, image_url, price_per_person, slug, COALESCE(views, 0), booking_model FROM events WHERE id = %s", (event_id,))
+        cursor.execute("SELECT id, title, description, image_url, price_per_person, slug, COALESCE(views, 0), booking_model, external_link FROM events WHERE id = %s", (event_id,))
         evt_row = cursor.fetchone()
         if evt_row:
             event = {
@@ -458,9 +460,9 @@ def serve_booking_page(request: Request, event_id: int):
                 "price": float(evt_row[4]),
                 "slug": evt_row[5],
                 "views": evt_row[6],
-                "booking_model": evt_row[7] or "ticketed"
+                "booking_model": evt_row[7] or "ticketed",
+                "external_link": evt_row[8]
             }
-            
         # 2. Check for existing booking if user is logged in
         if user:
             cursor.execute("SELECT tracking_id FROM bookings WHERE user_id = %s AND event_id = %s AND booking_status NOT IN ('cancelled', 'rejected')", (user["user_id"], event_id))
@@ -502,7 +504,7 @@ def serve_host_landing(request: Request):
             SELECT h.id, u.full_name, u.avatar_url, h.profession, h.operating_area, h.bio, h.is_founding, u.id
             FROM hosts h
             JOIN users u ON h.user_id = u.id
-            WHERE h.verification_status = 'VERIFIED' AND u.id != 1
+            WHERE h.verification_status = 'VERIFIED' AND u.id != 1 AND u.email != 'picks@dekhahok.com'
             ORDER BY h.id DESC
             LIMIT 6
         """)
@@ -629,7 +631,7 @@ def serve_host_event_edit(event_id: int, request: Request):
                        image_url_2, image_url_3, image_url_4, booking_model, youtube_link,
                        start_time, end_time, listing_type, starting_rate, service_area,
                        session_duration_mins, advance_notice_hours, available_days, available_times,
-                       availability_note
+                       availability_note, external_link, hide_price
                 FROM events WHERE id = %s AND host_id = %s
             """, (event_id, host_id))
         else:
@@ -639,7 +641,7 @@ def serve_host_event_edit(event_id: int, request: Request):
                        image_url_2, image_url_3, image_url_4, booking_model, youtube_link,
                        start_time, end_time, listing_type, starting_rate, service_area,
                        session_duration_mins, advance_notice_hours, available_days, available_times,
-                       availability_note
+                       availability_note, external_link, hide_price
                 FROM events WHERE id = %s
             """, (event_id,))
             
@@ -661,7 +663,7 @@ def serve_host_event_edit(event_id: int, request: Request):
             "id": event_row[0],
             "title": event_row[1],
             "description": event_row[2],
-            "category": event_row[3],
+            "category": (event_row[3] or "other").strip().lower(),
             "price_per_person": float(event_row[4]),
             "capacity": event_row[5],
             "location_name": event_row[6],
@@ -678,14 +680,16 @@ def serve_host_event_edit(event_id: int, request: Request):
             "youtube_link": event_row[16] or "",
             "start_time": str(event_row[17]) if event_row[17] else "",
             "end_time": str(event_row[18]) if event_row[18] else "",
-            "listing_type": event_row[19] or "event",
+            "listing_type": (event_row[19] or "event").strip().lower(),
             "starting_rate": event_row[20] or "",
             "service_area": event_row[21] or "",
             "session_duration_mins": event_row[22] or "",
             "advance_notice_hours": event_row[23] or 24,
             "available_days": event_row[24] or "",
             "available_times": event_row[25] or "",
-            "availability_note": event_row[26] or ""
+            "availability_note": event_row[26] or "",
+            "external_link": event_row[27] or "",
+            "hide_price": bool(event_row[28])
         }
     finally:
         release_conn(conn)
@@ -1654,7 +1658,8 @@ def api_list_events(category: Optional[str] = None):
                    CASE WHEN e.image_url IS NOT NULL AND e.image_url != '' THEN 1 ELSE 0 END as has_image, 
                    e.included, e.status, h.id as host_id, u.full_name as host_name,
                    u.avatar_url as host_avatar, u.id as user_id, h.verification_status as host_verification_status,
-                   h.profession as host_profession, h.is_founding as host_is_founding, e.booking_model
+                   h.profession as host_profession, h.is_founding as host_is_founding, e.booking_model,
+                   e.external_link, e.hide_price
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1680,7 +1685,9 @@ def api_list_events(category: Optional[str] = None):
                 "host_verification_status": r[18],
                 "host_profession": r[19] or "",
                 "host_is_founding": bool(r[20]),
-                "booking_model": r[21] or "ticketed"
+                "booking_model": r[21] or "ticketed",
+                "external_link": r[22] or "",
+                "hide_price": bool(r[23]) if len(r) > 23 else False
             })
         cursor.close()
     finally:
@@ -1704,7 +1711,7 @@ def api_event_detail(event_id: int):
                    CASE WHEN e.image_url_4 IS NOT NULL AND e.image_url_4 != '' THEN 1 ELSE 0 END as has_image_4,
                    e.youtube_link, h.is_founding as host_is_founding, COALESCE(e.views, 0) as views,
                    e.starting_rate, e.booking_model, e.available_days, e.available_times, e.advance_notice_hours,
-                   e.availability_note
+                   e.availability_note, e.external_link, e.hide_price
             FROM events e
             LEFT JOIN hosts h ON e.host_id = h.id
             LEFT JOIN users u ON h.user_id = u.id
@@ -1741,7 +1748,9 @@ def api_event_detail(event_id: int):
             "available_days": r[31] if len(r) > 31 else None,
             "available_times": r[32] if len(r) > 32 else None,
             "advance_notice_hours": r[33] if len(r) > 33 else None,
-            "availability_note": r[34] if len(r) > 34 else None
+            "availability_note": r[34] if len(r) > 34 else None,
+            "external_link": r[35] if len(r) > 35 else None,
+            "hide_price": bool(r[36]) if len(r) > 36 else False
         }
         cursor.close()
     finally:
@@ -1875,6 +1884,10 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
         host_id, status = host_row
         if status != 'VERIFIED' and user["role"] != 'admin':
             raise HTTPException(status_code=403, detail="Host verification pending. You cannot publish events yet.")
+            
+        if payload.booking_model == 'external':
+            if user.get("email") not in ['picks@dekhahok.com', 'dh_picks_1@dekhahok.com'] and user.get("role") != 'admin':
+                raise HTTPException(status_code=403, detail="External booking model is restricted to the DekhaHok Picks account.")
         
         slug = re.sub(r'[^a-z0-9]+', '-', payload.title.lower()).strip('-')
         slug += f"-{int(datetime.now().timestamp())}"
@@ -1894,17 +1907,17 @@ def host_create_event(payload: EventCreate, user = Depends(require_role(["host",
                 starting_rate, service_area, occasion_types, portfolio_url, availability_note,
                 session_duration_mins, max_per_session, advance_notice_hours,
                 price_per_person, capacity, location_name, location_area, event_date, included, status,
-                image_url, image_url_2, image_url_3, image_url_4, youtube_link, is_recurring,
+                image_url, image_url_2, image_url_3, image_url_4, youtube_link, external_link, hide_price, is_recurring,
                 start_time, end_time, available_days, available_times
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """, (
             host_id, slug, payload.title, payload.description, payload.category, payload.listing_type, payload.booking_model,
             payload.starting_rate, payload.service_area, payload.occasion_types, payload.portfolio_url, payload.availability_note,
             payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours,
             payload.price_per_person, payload.capacity, payload.location_name, payload.location_area, event_dt, payload.included or '[]', status,
-            payload.image_url, payload.image_url_2, payload.image_url_3, payload.image_url_4, payload.youtube_link, payload.is_recurring,
+            payload.image_url, payload.image_url_2, payload.image_url_3, payload.image_url_4, payload.youtube_link, payload.external_link, payload.hide_price, payload.is_recurring,
             payload.start_time, payload.end_time, payload.available_days, payload.available_times
         ))
         event_id = cursor.fetchone()[0]
@@ -1941,6 +1954,10 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             if not cursor.fetchone():
                 raise HTTPException(status_code=403, detail="Not your event.")
                 
+        if payload.booking_model == 'external':
+            if user.get("email") not in ['picks@dekhahok.com', 'dh_picks_1@dekhahok.com'] and user.get("role") != 'admin':
+                raise HTTPException(status_code=403, detail="External booking model is restricted to the DekhaHok Picks account.")
+                
         event_dt = None
         if payload.event_date:
             try:
@@ -1954,14 +1971,14 @@ def host_update_event(event_id: int, payload: EventCreate, user = Depends(requir
             "location_name=%s", "location_area=%s", "event_date=%s", "included=%s", "is_recurring=%s", "youtube_link=%s",
             "listing_type=%s", "booking_model=%s", "starting_rate=%s", "service_area=%s", "occasion_types=%s",
             "portfolio_url=%s", "availability_note=%s", "session_duration_mins=%s", "max_per_session=%s", "advance_notice_hours=%s",
-            "start_time=%s", "end_time=%s", "available_days=%s", "available_times=%s"
+            "start_time=%s", "end_time=%s", "available_days=%s", "available_times=%s", "external_link=%s", "hide_price=%s"
         ]
         update_values = [
             payload.title, payload.description, payload.category, payload.price_per_person, payload.capacity,
             payload.location_name, payload.location_area, event_dt, payload.included or '[]', payload.is_recurring, payload.youtube_link,
             payload.listing_type, payload.booking_model, payload.starting_rate, payload.service_area, payload.occasion_types,
             payload.portfolio_url, payload.availability_note, payload.session_duration_mins, payload.max_per_session, payload.advance_notice_hours,
-            payload.start_time, payload.end_time, payload.available_days, payload.available_times
+            payload.start_time, payload.end_time, payload.available_days, payload.available_times, payload.external_link, payload.hide_price
         ]
         
         if payload.image_url:
@@ -3820,6 +3837,12 @@ def update_admin_event(event_id: int, payload: dict = Body(...), x_admin_key: st
         if "capacity" in payload:
             cols.append("capacity = %s")
             vals.append(payload["capacity"])
+        if "external_link" in payload:
+            cols.append("external_link = %s")
+            vals.append(payload["external_link"])
+        if "hide_price" in payload:
+            cols.append("hide_price = %s")
+            vals.append(payload["hide_price"])
             
         if not cols:
             cursor.close()

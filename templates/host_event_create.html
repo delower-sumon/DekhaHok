@@ -133,6 +133,17 @@
                                 </div>
                             </div>
                         </label>
+
+                        <label class="cursor-pointer" {% if user.email != 'picks@dekhahok.com' and user.role != 'admin' %}style="display:none;"{% endif %}>
+                            <input type="radio" name="ev-booking-model" value="external" class="peer sr-only">
+                            <div class="p-4 border border-zinc-200 rounded-xl hover:border-emerald-500 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition-all flex items-start gap-4">
+                                <div class="text-3xl">🔗</div>
+                                <div>
+                                    <h4 class="font-bold text-zinc-900 text-sm">External Booking Link</h4>
+                                    <p class="text-xs text-zinc-500 mt-0.5">Redirect users to external booking page</p>
+                                </div>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -270,6 +281,25 @@
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-zinc-700">Service Area *</label>
                         <input type="text" id="ev-service-area" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="e.g. Dhaka City">
+                    </div>
+                </div>
+
+                <div id="group-external" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5 text-zinc-700">External Booking URL *</label>
+                        <input type="url" id="ev-external-link" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="https://example.com/events/123">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1.5 text-zinc-700">Display Price (BDT)</label>
+                            <input type="number" id="ev-external-price" min="0" step="1" class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="0">
+                        </div>
+                        <div class="flex items-center pt-6">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="ev-hide-price" class="w-5 h-5 rounded text-emerald-600 focus:ring-emerald-500 border-zinc-300">
+                                <span class="text-sm font-bold text-zinc-700">Hide Price on Card</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -547,11 +577,14 @@
                 document.getElementById('group-hire').classList.add('hidden');
                 document.getElementById('group-session').classList.add('hidden');
                 document.getElementById('group-standard').classList.add('hidden');
+                document.getElementById('group-external').classList.add('hidden');
 
                 if(val === 'hire') {
                     document.getElementById('group-hire').classList.remove('hidden');
                 } else if(val === 'session') {
                     document.getElementById('group-session').classList.remove('hidden');
+                } else if(val === 'external') {
+                    document.getElementById('group-external').classList.remove('hidden');
                 } else {
                     document.getElementById('group-standard').classList.remove('hidden');
                 }
@@ -593,7 +626,7 @@
         circle3.classList.remove('bg-emerald-600', 'text-white');
     }
 
-    function previewImage(event) {
+    async function previewImage(event) {
         const file = event.target.files[0];
         if (!file) return;
 
@@ -756,6 +789,8 @@
             advanceNotice = parseInt(document.getElementById('ev-advance-notice').value) || 24;
             startingRate = parseFloat(document.getElementById('ev-starting-rate').value) || 0;
             serviceArea = document.getElementById('ev-service-area').value;
+        } else if (bookingModel === 'external') {
+            price = parseFloat(document.getElementById('ev-external-price').value) || 0;
         }
 
         const locationName = document.getElementById('ev-location').value.trim();
@@ -812,7 +847,9 @@
             image_url_2: extraImages[2],
             image_url_3: extraImages[3],
             image_url_4: extraImages[4],
-            youtube_link: document.getElementById('ev-youtube').value.trim()
+            youtube_link: document.getElementById('ev-youtube').value.trim(),
+            external_link: bookingModel === 'external' ? document.getElementById('ev-external-link').value.trim() : null,
+            hide_price: bookingModel === 'external' ? document.getElementById('ev-hide-price').checked : false
         };
 
         try {

@@ -384,6 +384,8 @@ class EventCreate(BaseModel):
     remove_image_3: bool = False
     remove_image_4: bool = False
     youtube_link: Optional[str] = None
+    external_link: Optional[str] = None
+    hide_price: bool = False
 
     @field_validator("capacity")
     @classmethod

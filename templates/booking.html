@@ -191,6 +191,23 @@
     </div>
     {% else %}
 
+    {% if event.booking_model == 'external' %}
+    <!-- External Event Panel -->
+    <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 sm:p-8 text-center mt-6">
+        <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-arrow-up-right-from-square text-2xl"></i>
+        </div>
+        <h2 class="text-xl font-bold text-zinc-900 mb-2">Book on External Site</h2>
+        <p class="text-sm text-zinc-600 mb-6">This event is managed externally. Click below to view the full details and book your tickets on the host's platform.</p>
+        <div>
+            <a href="{{ event.external_link }}" target="_blank" rel="noopener noreferrer"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow transition inline-block">
+                View Event ↗
+            </a>
+        </div>
+    </div>
+    {% else %}
+
     <!-- Progress Bar -->
     <div class="flex items-center justify-between mb-8 relative px-2 max-w-xl mx-auto">
         <div class="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-200 -translate-y-1/2 z-0"></div>
@@ -491,6 +508,7 @@
 
     </div>
     {% endif %}
+    {% endif %}
 </div>
 
 <script>
@@ -611,14 +629,14 @@
                 nameContainer.innerHTML = `
                     <span class="absolute -top-2 left-1 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-[5px] font-black px-[3px] py-[1px] rounded-[2px] shadow z-10 leading-none whitespace-nowrap border border-emerald-400" title="Honoring our founding hosts and community leaders. The first 100 hosts will receive long-term benefits and exclusive deals, including a free verified badge.">Founding 100</span>
                     <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-800 leading-none px-1.5 py-[3px] rounded border border-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.5)] bg-emerald-50 relative">
-                        <span>By ${selectedEvent.host_name.split(' ')[0]}</span>
+                        <span>${['DekhaHok Picks', 'DekhaHok Pics'].includes(selectedEvent.host_name) ? selectedEvent.host_name : selectedEvent.host_name.split(' ').slice(0, 2).join(' ')}</span>
                         ${verifiedSvg}
                     </div>
                 `;
             } else {
                 nameContainer.className = "flex items-center gap-1";
                 nameContainer.innerHTML = `
-                    <span class="text-[11px] font-bold text-zinc-700" id="b-event-host-name">By ${selectedEvent.host_name.split(' ')[0]}</span>
+                    <span class="text-[11px] font-bold text-zinc-700" id="b-event-host-name">${['DekhaHok Picks', 'DekhaHok Pics'].includes(selectedEvent.host_name) ? selectedEvent.host_name : selectedEvent.host_name.split(' ').slice(0, 2).join(' ')}</span>
                     <span id="b-event-host-badge">${verifiedSvg}</span>
                 `;
             }
@@ -627,6 +645,8 @@
                 const profEl = document.getElementById('b-event-host-profession');
                 if (selectedEvent.host_profession === 'Official Host') {
                     profEl.innerHTML = '<span class="text-[9px] font-black text-white bg-gradient-to-r from-emerald-600 to-teal-500 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm ring-1 ring-emerald-400/50 tracking-widest uppercase"><i class="fa-solid fa-crown text-[8px] text-emerald-100"></i> ORIGINALS</span>';
+                } else if (['DekhaHok Picks', 'DekhaHok Pics'].includes(selectedEvent.host_profession)) {
+                    profEl.innerHTML = '<span class="text-[9px] font-black text-white bg-gradient-to-r from-indigo-600 to-violet-500 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm ring-1 ring-indigo-400/50 tracking-widest uppercase"><i class="fa-solid fa-arrow-trend-up text-[8px] text-indigo-100"></i> TRENDING</span>';
                 } else {
                     profEl.textContent = selectedEvent.host_profession;
                 }

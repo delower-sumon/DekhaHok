@@ -319,6 +319,7 @@ def init_db():
         cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS session_duration_mins INTEGER")
         cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS max_per_session INTEGER DEFAULT 1")
         cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS advance_notice_hours INTEGER DEFAULT 24")
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS hide_price BOOLEAN DEFAULT FALSE")
         cursor.execute("UPDATE events SET booking_model = 'community' WHERE booking_model IS NULL")
         
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS discount_amount NUMERIC(8,2) DEFAULT 0.00")
