@@ -479,6 +479,9 @@ def init_db():
         
         # Ensure is_founding column exists in hosts table for backward compatibility
         cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS is_founding BOOLEAN DEFAULT FALSE")
+        
+        # Ensure experience_years column exists (was missing from initial schema definition)
+        cursor.execute("ALTER TABLE hosts ADD COLUMN IF NOT EXISTS experience_years INTEGER DEFAULT 0")
 
         # Marketplace model migrations for bookings & hire requests
         cursor.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS booking_model VARCHAR(50) DEFAULT 'ticketed'")

@@ -20,8 +20,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Fonts (Optimized) -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"></noscript>
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap">
+    </noscript>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -89,16 +94,19 @@
     <link rel="canonical" href="{% block canonical_url %}https://dekhahok.com/{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{% block og_url %}https://dekhahok.com/{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}দেখা হোক | কমিউনিটি ইভেন্ট, নেটওয়ার্কিং ও ট্র্যাভেল{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।{% endblock %}">
+    <meta property="og:title"
+        content="{% block og_title %}দেখা হোক | কমিউনিটি ইভেন্ট, নেটওয়ার্কিং ও ট্র্যাভেল{% endblock %}">
+    <meta property="og:description"
+        content="{% block og_description %}লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।{% endblock %}">
     <meta property="og:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://dekhahok.com/">
     <meta name="twitter:title" content="দেখা হোক | কমিউনিটি ইভেন্ট, নেটওয়ার্কিং ও ট্র্যাভেল">
-    <meta name="twitter:description" content="লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।">
+    <meta name="twitter:description"
+        content="লোকাল কমিউনিটি, ভেরিফাইড হোস্ট, ক্রিয়েটিভ ইভেন্টস এবং ট্র্যাভেলের মাধ্যমে বাস্তব অভিজ্ঞতা। দেখা হোক।">
     <meta name="twitter:image" content="https://dekhahok.com/static/assets/dekhahok_ui.png">
-    
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -130,6 +138,16 @@
 
 <body class="bg-zinc-50 text-zinc-800 font-sans min-h-screen flex flex-col justify-between">
 
+    <!-- Maintenance Notice Bar -->
+    <div
+        class="bg-amber-100 border-b border-amber-200 text-amber-800 px-4 py-3 text-center sm:text-sm text-xs font-medium relative z-[100]">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2">
+            <i class="fa-solid fa-person-digging animate-bounce"></i>
+            <span><strong>রক্ষণাবেক্ষণ চলছে:</strong> আমাদের সার্ভার আপগ্রেড চলছে। পুরানো ইভেন্ট বা ডেটা সাময়িকভাবে
+                দেখা নাও যেতে পারে। সাময়িক অসুবিধার জন্য আমরা দুঃখিত।</span>
+        </div>
+    </div>
+
     <!-- Global Toast Container -->
     <div id="toast-container" class="fixed top-6 right-6 z-[99999] flex flex-col gap-3 pointer-events-none"></div>
 
@@ -139,7 +157,8 @@
             <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-x-2 group">
-                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto" width="450" height="138" />
+                    <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] md:h-[34px] w-auto"
+                        width="450" height="138" />
                     <!-- Animated Connection Logo -->
                     <svg class="h-[30px] md:h-[36px] w-[30px] md:w-[36px] flex-shrink-0" viewBox="0 0 100 100"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -338,7 +357,8 @@
                         <button aria-label="User Menu"
                             class="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden border border-emerald-100 focus:outline-none"
                             title="Profile Details">
-                            <img loading="lazy" src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}"
+                            <img loading="lazy"
+                                src="{{ user.avatar or 'https://api.dicebear.com/7.x/adventurer/svg?seed=' ~ user.name }}"
                                 alt="{{ user.name }}" class="w-full h-full object-cover" referrerpolicy="no-referrer">
                         </button>
                         <!-- User Dropdown Menu Wrapper (Bridges hover gap) -->
@@ -392,7 +412,8 @@
             <div>
                 <div class="flex justify-between items-center pb-6 border-b">
                     <div class="flex items-center gap-x-2">
-                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto" width="450" height="138" />
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto" width="450"
+                            height="138" />
                         <!-- Animated Connection Logo (Mobile) -->
                         <svg class="h-[28px] w-[28px] flex-shrink-0" viewBox="0 0 100 100" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -512,11 +533,14 @@
                 <!-- Branding -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-x-2.5">
-                        <div class="h-8 w-auto bg-emerald-400" style="width: 104px; -webkit-mask: url('/static/assets/dekhahok_bn.svg') no-repeat left center; mask: url('/static/assets/dekhahok_bn.svg') no-repeat left center; -webkit-mask-size: contain; mask-size: contain;" aria-label="দেখা হোক" role="img"></div>
+                        <div class="h-8 w-auto bg-emerald-400"
+                            style="width: 104px; -webkit-mask: url('/static/assets/dekhahok_bn.svg') no-repeat left center; mask: url('/static/assets/dekhahok_bn.svg') no-repeat left center; -webkit-mask-size: contain; mask-size: contain;"
+                            aria-label="দেখা হোক" role="img"></div>
                     </div>
                     <p class="text-emerald-400 text-[10px] tracking-wide mt-1">Beyond the digital bubble.</p>
                     <p class="text-emerald-400 text-xs sm:text-sm mt-3 mb-2">
-                        <span class="sr-only">Bangladesh's marketplace for verified hosts, community events, and travel.</span>
+                        <span class="sr-only">Bangladesh's marketplace for verified hosts, community events, and
+                            travel.</span>
                         কমিউনিটি ইভেন্ট, ভেরিফাইড হোস্ট ও ট্র্যাভেল।
                     </p>
 
@@ -539,7 +563,8 @@
                     <h4 class="font-bold text-xs uppercase tracking-widest text-zinc-300 mb-4">Guidelines & Safety</h4>
                     <ul class="space-y-2.5 text-xs text-zinc-400">
                         <li><a href="/privacy-policy" class="hover:text-emerald-400 transition">Privacy Policy</a></li>
-                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition">Terms of Service</a></li>
+                        <li><a href="/terms-of-service" class="hover:text-emerald-400 transition">Terms of Service</a>
+                        </li>
                         <li><a href="/safety" class="hover:text-emerald-400 transition">Safety Guidelines</a></li>
                         <li><a href="/host-guidelines" class="hover:text-emerald-400 transition">Host Agreement</a></li>
                     </ul>
@@ -553,21 +578,36 @@
                         <li><a href="/contact" class="hover:text-emerald-400 transition">Contact Support</a></li>
                     </ul>
                     <div class="flex items-center gap-3.5 mt-5">
-                        <a href="https://facebook.com/dekhahok" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="DekhaHok Facebook Page" class="p-3 -m-3 flex items-center justify-center">
-                            <i class="fa-brands fa-facebook text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
+                        <a href="https://facebook.com/dekhahok" target="_blank" rel="noopener noreferrer"
+                            title="Facebook" aria-label="DekhaHok Facebook Page"
+                            class="p-3 -m-3 flex items-center justify-center">
+                            <i
+                                class="fa-brands fa-facebook text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://www.instagram.com/dekha_hok" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="DekhaHok Instagram Page" class="p-3 -m-3 flex items-center justify-center">
-                            <i class="fa-brands fa-instagram text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
+                        <a href="https://www.instagram.com/dekha_hok" target="_blank" rel="noopener noreferrer"
+                            title="Instagram" aria-label="DekhaHok Instagram Page"
+                            class="p-3 -m-3 flex items-center justify-center">
+                            <i
+                                class="fa-brands fa-instagram text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://linkedin.com/company/dekhahok" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="DekhaHok LinkedIn Page" class="p-3 -m-3 flex items-center justify-center">
-                            <i class="fa-brands fa-linkedin text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
+                        <a href="https://linkedin.com/company/dekhahok" target="_blank" rel="noopener noreferrer"
+                            title="LinkedIn" aria-label="DekhaHok LinkedIn Page"
+                            class="p-3 -m-3 flex items-center justify-center">
+                            <i
+                                class="fa-brands fa-linkedin text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://youtube.com/@DekhaHokbd" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="DekhaHok YouTube Channel" class="p-3 -m-3 flex items-center justify-center">
-                            <i class="fa-brands fa-youtube text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
+                        <a href="https://youtube.com/@DekhaHokbd" target="_blank" rel="noopener noreferrer"
+                            title="YouTube" aria-label="DekhaHok YouTube Channel"
+                            class="p-3 -m-3 flex items-center justify-center">
+                            <i
+                                class="fa-brands fa-youtube text-zinc-400 hover:text-emerald-400 transition-colors text-base"></i>
                         </a>
-                        <a href="https://x.com/dekhahok" target="_blank" rel="noopener noreferrer" title="X (Twitter)" aria-label="DekhaHok on X" class="p-3 -m-3 flex items-center justify-center">
-                            <svg class="w-3.5 h-3.5 text-zinc-400 hover:text-emerald-400 transition-colors fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
+                        <a href="https://x.com/dekhahok" target="_blank" rel="noopener noreferrer" title="X (Twitter)"
+                            aria-label="DekhaHok on X" class="p-3 -m-3 flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-zinc-400 hover:text-emerald-400 transition-colors fill-current"
+                                viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z" />
                             </svg>
                         </a>
                     </div>
@@ -703,7 +743,7 @@
         function previewUserAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             userAvatarFile = file;
 
             const reader = new FileReader();
@@ -756,7 +796,7 @@
             let payload = {};
             if (avatarUrl) payload.avatar_url = avatarUrl;
             if (newName) payload.full_name = newName;
-            
+
             const expEl = document.getElementById('user-profile-experience');
             if (expEl) {
                 payload.experience_years = parseInt(expEl.value) || 0;
@@ -818,7 +858,8 @@
                 {% if user and user.role == 'host' %}
                 <div class="text-left">
                     <label class="block text-xs font-bold mb-1.5 text-zinc-700">Years of Experience</label>
-                    <input type="number" id="user-profile-experience" value="{{ user.experience_years if user.experience_years is defined else 0 }}" min="0" max="50"
+                    <input type="number" id="user-profile-experience"
+                        value="{{ user.experience_years if user.experience_years is defined else 0 }}" min="0" max="50"
                         class="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:border-emerald-500 shadow-inner">
                 </div>
                 {% endif %}
@@ -927,7 +968,8 @@
                                     repeatCount="indefinite" />
                             </circle>
                         </svg>
-                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto mx-auto" width="450" height="138" />
+                        <img src="/static/assets/dekhahok_bn.svg" alt="দেখা হোক" class="h-[28px] w-auto mx-auto"
+                            width="450" height="138" />
                     </div>
                     <h2 class="bengali text-xl font-black text-zinc-900 tracking-tight">লগইন / রেজিস্ট্রেশন</h2>
                     <p class="text-xs text-zinc-400">Join the trust layer of Dhaka and connect with like minded people!
@@ -952,7 +994,8 @@
 
                 <!-- Separator / Collapsible Email Option -->
                 <div class="text-center pt-2">
-                    <button onclick="toggleModalEmailAuth()" class="text-xs font-bold text-zinc-400 hover:text-emerald-600 transition underline underline-offset-4">
+                    <button onclick="toggleModalEmailAuth()"
+                        class="text-xs font-bold text-zinc-400 hover:text-emerald-600 transition underline underline-offset-4">
                         Use Email/Password instead
                     </button>
                 </div>
@@ -975,13 +1018,16 @@
                         <!-- Login Form -->
                         <form id="modal-auth-login-form" onsubmit="handleModalLogin(event)" class="space-y-3">
                             <div class="space-y-0.5">
-                                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Email Address</label>
+                                <label
+                                    class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Email
+                                    Address</label>
                                 <input type="email" id="modal-login-email" required
                                     class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                     placeholder="name@domain.com">
                             </div>
                             <div class="space-y-0.5">
-                                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Password</label>
+                                <label
+                                    class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Password</label>
                                 <input type="password" id="modal-login-password" required
                                     class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                     placeholder="••••••••">
@@ -995,26 +1041,33 @@
                         <!-- Signup Form -->
                         <form id="modal-auth-signup-form" onsubmit="handleModalSignup(event)" class="space-y-3 hidden">
                             <div class="space-y-0.5">
-                                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Full Name</label>
+                                <label
+                                    class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Full
+                                    Name</label>
                                 <input type="text" id="modal-signup-name" required
                                     class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                     placeholder="e.g. Rahat Ahmed">
                             </div>
                             <div class="space-y-0.5">
-                                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Email Address</label>
+                                <label
+                                    class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Email
+                                    Address</label>
                                 <input type="email" id="modal-signup-email" required
                                     class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                     placeholder="yourmail@domain.com">
                             </div>
                             <div class="space-y-0.5">
-                                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Phone Number
+                                <label
+                                    class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Phone
+                                    Number
                                     (Optional)</label>
                                 <input type="tel" id="modal-signup-phone"
                                     class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                     placeholder="01XXXXXXXXX">
                             </div>
                             <div class="space-y-0.5">
-                                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Password</label>
+                                <label
+                                    class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider text-left">Password</label>
                                 <input type="password" id="modal-signup-password" required
                                     class="w-full px-3 py-2 rounded-xl border border-zinc-200 text-[13px] focus:outline-none focus:border-emerald-500 shadow-inner"
                                     placeholder="Min 6 chars">
